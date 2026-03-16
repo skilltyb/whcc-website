@@ -1,0 +1,15 @@
+# Windows
+nul
+Thumbs.db
+Desktop.ini
+
+# Large source photos (not needed in repo)
+*.JPG
+*.jpg
+
+# Python
+__pycache__/
+*.pyc
+
+# Claude internals
+.claude/settings.local.json
