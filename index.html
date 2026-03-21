@@ -794,6 +794,25 @@ footer{background:var(--deep);padding:80px 80px 40px}
 .confirm-btn.danger:hover{background:#c07070;color:var(--deep)}
 .confirm-btn.cancel-btn{background:transparent;border-color:rgba(184,151,106,.3);color:rgba(245,240,232,.45)}
 .confirm-btn.cancel-btn:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ── EVENT REGISTRATION MODAL ── */
+.reg-overlay{position:fixed;inset:0;background:rgba(17,26,20,.75);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.reg-modal{background:var(--cream);width:100%;max-width:520px;max-height:90vh;overflow-y:auto;padding:48px 44px;position:relative}
+.reg-modal-close{position:absolute;top:16px;right:20px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted);line-height:1}
+.reg-modal-tag{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.reg-modal-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:400;color:var(--forest);margin-bottom:4px;line-height:1.1}
+.reg-modal-meta{font-size:12px;color:var(--muted);margin-bottom:28px}
+.reg-field{margin-bottom:16px}
+.reg-field label{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--forest);margin-bottom:6px;font-weight:600}
+.reg-field input,.reg-field select,.reg-field textarea{width:100%;border:1px solid rgba(26,43,31,.2);background:var(--cream);padding:10px 14px;font-family:'Raleway',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border .2s}
+.reg-field input:focus,.reg-field select:focus,.reg-field textarea:focus{border-color:var(--gold)}
+.reg-field textarea{resize:vertical;min-height:80px}
+.reg-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.reg-error{font-size:12px;color:#c0392b;margin-bottom:12px;display:none}
+.reg-success{text-align:center;padding:32px 0}
+.reg-success-icon{font-size:48px;margin-bottom:16px}
+.reg-success-title{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--forest);margin-bottom:8px}
+.reg-success-body{font-size:13px;color:var(--muted);line-height:1.7}
 </style>
 </head>
 <body>
@@ -1496,25 +1515,25 @@ footer{background:var(--deep);padding:80px 80px 40px}
     <p class="eyebrow fade-up">2026 Calendar</p>
     <h2 class="sec-title fade-up d1">Upcoming <em>events</em></h2>
     <div class="cal-grid">
-      <div class="ev-card fade-up d1"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Mar</span><span class="ecd-d">14</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">St. Patty's Shootout</div><div class="ev-card-detail">10:30 AM – 2:30 PM · Fun format to kick off the season · All members welcome</div></div><div class="ev-card-footer"><a class="ev-cta">Sign Up →</a></div></div>
-      <div class="ev-card fade-up d2"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Apr</span><span class="ecd-d">7</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Ladies Opening Day</div><div class="ev-card-detail">9:00 AM – 1:00 PM · Kick off the season with our ladies opening day event</div></div><div class="ev-card-footer"><a class="ev-cta">Sign Up →</a></div></div>
-      <div class="ev-card fade-up d3"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Apr</span><span class="ecd-d">8</span><span class="ecd-y">2026</span></div><span class="ev-type social">Social</span></div><div class="ev-card-body"><div class="ev-card-name">Men's Golf Master Dinner</div><div class="ev-card-detail">6:30 – 9:30 PM · Annual Masters watch party &amp; dinner · Great food, great company</div></div><div class="ev-card-footer"><a class="ev-cta">RSVP →</a></div></div>
-      <div class="ev-card fade-up d1"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Apr</span><span class="ecd-d">13</span><span class="ecd-y">2026</span></div><span class="ev-type tournament">Tournament</span></div><div class="ev-card-body"><div class="ev-card-name">Poplar Bluff Mules Invitational</div><div class="ev-card-detail">9:00 AM – 2:00 PM · Supporting Poplar Bluff athletics</div></div><div class="ev-card-footer"><a class="ev-cta">Register →</a></div></div>
-      <div class="ev-card fade-up d2"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Apr</span><span class="ecd-d">17</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">MGA Opening Day Draft</div><div class="ev-card-detail">6:00 – 10:00 PM · Men's Golf Association season draft night</div></div><div class="ev-card-footer"><a class="ev-cta">Sign Up →</a></div></div>
-      <div class="ev-card fade-up d3"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Apr</span><span class="ecd-d">18</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Men's Opening Day</div><div class="ev-card-detail">9:30 AM – 2:00 PM · Registration deadline April 16 at 5:00 PM</div></div><div class="ev-card-footer"><a class="ev-cta">Sign Up →</a></div></div>
-      <div class="ev-card fade-up d1"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Apr</span><span class="ecd-d">25</span><span class="ecd-y">2026</span></div><span class="ev-type tournament">Tournament</span></div><div class="ev-card-body"><div class="ev-card-name">Ozark Invitational</div><div class="ev-card-detail">2-day tournament · Apr 25–26 · Westwood Hills' signature invitational event</div></div><div class="ev-card-footer"><a class="ev-cta">Register →</a></div></div>
-      <div class="ev-card fade-up d2"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">1</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Friday Night Fights Begins</div><div class="ev-card-detail">6:00 – 10:00 PM · Weekly competitive series kicks off · Runs through the season</div></div><div class="ev-card-footer"><a class="ev-cta">Sign Up →</a></div></div>
-      <div class="ev-card fade-up d3"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">6</span><span class="ecd-y">2026</span></div><span class="ev-type social">Social</span></div><div class="ev-card-body"><div class="ev-card-name">Hit &amp; Giggle</div><div class="ev-card-detail">7:00 – 11:00 PM · Recurring social golf series · A great way to socialize on and off the course</div></div><div class="ev-card-footer"><a class="ev-cta">Sign Up →</a></div></div>
-      <div class="ev-card fade-up d1"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">7</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Men's League Opening Night</div><div class="ev-card-detail">5:00 – 9:00 PM · Weekly men's league begins · Every Thursday through the season</div></div><div class="ev-card-footer"><a class="ev-cta">Sign Up →</a></div></div>
-      <div class="ev-card fade-up d2"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">16</span><span class="ecd-y">2026</span></div><span class="ev-type tournament">Tournament</span></div><div class="ev-card-body"><div class="ev-card-name">Spring 2-Man Scramble</div><div class="ev-card-detail">2-day event · May 16–17 · 8:00 AM shotgun start</div></div><div class="ev-card-footer"><a class="ev-cta">Register →</a></div></div>
-      <div class="ev-card fade-up d3"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">23</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">MGA 2-Man Best Ball</div><div class="ev-card-detail">8:00 AM – 12:00 PM · Men's Golf Association event</div></div><div class="ev-card-footer"><a class="ev-cta">Sign Up →</a></div></div>
-      <div class="ev-card fade-up d1"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">25</span><span class="ecd-y">2026</span></div><span class="ev-type social">Social</span></div><div class="ev-card-body"><div class="ev-card-name">Memorial Day Wing Ding</div><div class="ev-card-detail">10:00 AM – 2:00 PM · Annual Memorial Day celebration · Food, fun, &amp; fellowship</div></div><div class="ev-card-footer"><a class="ev-cta">RSVP →</a></div></div>
-      <div class="ev-card fade-up d2"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Jun</span><span class="ecd-d">5</span><span class="ecd-y">2026</span></div><span class="ev-type tournament">Tournament</span></div><div class="ev-card-body"><div class="ev-card-name">UCAN Golf Outing</div><div class="ev-card-detail">9:30 AM – 1:30 PM · Charity tournament raising money for local cancer patients</div></div><div class="ev-card-footer"><a class="ev-cta">Register →</a></div></div>
-      <div class="ev-card fade-up d3"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Jun</span><span class="ecd-d">6</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Ladies Cup Challenge Matches</div><div class="ev-card-detail">9:00 AM – 1:00 PM · Annual ladies match play competition</div></div><div class="ev-card-footer"><a class="ev-cta">Sign Up →</a></div></div>
-      <div class="ev-card fade-up d1"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Jun</span><span class="ecd-d">9</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Ladies Powder Puff</div><div class="ev-card-detail">9:00 AM – 1:00 PM · Ladies 2-player scramble</div></div><div class="ev-card-footer"><a class="ev-cta">Sign Up →</a></div></div>
-      <div class="ev-card fade-up d2"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Jun</span><span class="ecd-d">12</span><span class="ecd-y">2026</span></div><span class="ev-type tournament">Tournament</span></div><div class="ev-card-body"><div class="ev-card-name">Three Rivers College Outing</div><div class="ev-card-detail">9:30 AM – 2:00 PM · Supporting Three Rivers College</div></div><div class="ev-card-footer"><a class="ev-cta">Register →</a></div></div>
-      <div class="ev-card fade-up d3"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Jun</span><span class="ecd-d">18</span><span class="ecd-y">2026</span></div><span class="ev-type tournament">Tournament</span></div><div class="ev-card-body"><div class="ev-card-name">Steak Stag — SEMO Qualifier</div><div class="ev-card-detail">6:00 – 10:00 PM · SEMO Cup qualifying event · Steak dinner included</div></div><div class="ev-card-footer"><a class="ev-cta">Register →</a></div></div>
-      <div class="ev-card fade-up d1"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Aug</span><span class="ecd-d">11</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Ladies Sweet Treat</div><div class="ev-card-detail">4-player ladies scramble · Full day event</div></div><div class="ev-card-footer"><a class="ev-cta">Sign Up →</a></div></div>
+      <div class="ev-card fade-up d1"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Mar</span><span class="ecd-d">14</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">St. Patty's Shootout</div><div class="ev-card-detail">10:30 AM – 2:30 PM · Fun format to kick off the season · All members welcome</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('St. Patty\'s Shootout','Mar 14 · 10:30 AM – 2:30 PM',false)" style="cursor:pointer">Sign Up →</a></div></div>
+      <div class="ev-card fade-up d2"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Apr</span><span class="ecd-d">7</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Ladies Opening Day</div><div class="ev-card-detail">9:00 AM – 1:00 PM · Kick off the season with our ladies opening day event</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Ladies Opening Day','Apr 7 · 9:00 AM – 1:00 PM',false)" style="cursor:pointer">Sign Up →</a></div></div>
+      <div class="ev-card fade-up d3"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Apr</span><span class="ecd-d">8</span><span class="ecd-y">2026</span></div><span class="ev-type social">Social</span></div><div class="ev-card-body"><div class="ev-card-name">Men's Golf Master Dinner</div><div class="ev-card-detail">6:30 – 9:30 PM · Annual Masters watch party &amp; dinner · Great food, great company</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Men\'s Golf Master Dinner','Apr 8 · 6:30 – 9:30 PM',false)" style="cursor:pointer">RSVP →</a></div></div>
+      <div class="ev-card fade-up d1"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Apr</span><span class="ecd-d">13</span><span class="ecd-y">2026</span></div><span class="ev-type tournament">Tournament</span></div><div class="ev-card-body"><div class="ev-card-name">Poplar Bluff Mules Invitational</div><div class="ev-card-detail">9:00 AM – 2:00 PM · Supporting Poplar Bluff athletics</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Poplar Bluff Mules Invitational','Apr 13 · 9:00 AM – 2:00 PM',true)" style="cursor:pointer">Register →</a></div></div>
+      <div class="ev-card fade-up d2"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Apr</span><span class="ecd-d">17</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">MGA Opening Day Draft</div><div class="ev-card-detail">6:00 – 10:00 PM · Men's Golf Association season draft night</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('MGA Opening Day Draft','Apr 17 · 6:00 – 10:00 PM',false)" style="cursor:pointer">Sign Up →</a></div></div>
+      <div class="ev-card fade-up d3"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Apr</span><span class="ecd-d">18</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Men's Opening Day</div><div class="ev-card-detail">9:30 AM – 2:00 PM · Registration deadline April 16 at 5:00 PM</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Men\'s Opening Day','Apr 18 · 9:30 AM – 2:00 PM',false)" style="cursor:pointer">Sign Up →</a></div></div>
+      <div class="ev-card fade-up d1"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Apr</span><span class="ecd-d">25</span><span class="ecd-y">2026</span></div><span class="ev-type tournament">Tournament</span></div><div class="ev-card-body"><div class="ev-card-name">Ozark Invitational</div><div class="ev-card-detail">2-day tournament · Apr 25–26 · Westwood Hills' signature invitational event</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Ozark Invitational','Apr 25–26 · 2-Day Tournament',true)" style="cursor:pointer">Register →</a></div></div>
+      <div class="ev-card fade-up d2"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">1</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Friday Night Fights Begins</div><div class="ev-card-detail">6:00 – 10:00 PM · Weekly competitive series kicks off · Runs through the season</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Friday Night Fights','May 1 · 6:00 – 10:00 PM',false)" style="cursor:pointer">Sign Up →</a></div></div>
+      <div class="ev-card fade-up d3"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">6</span><span class="ecd-y">2026</span></div><span class="ev-type social">Social</span></div><div class="ev-card-body"><div class="ev-card-name">Hit &amp; Giggle</div><div class="ev-card-detail">7:00 – 11:00 PM · Recurring social golf series · A great way to socialize on and off the course</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Hit &amp; Giggle','May 6 · 7:00 – 11:00 PM',false)" style="cursor:pointer">Sign Up →</a></div></div>
+      <div class="ev-card fade-up d1"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">7</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Men's League Opening Night</div><div class="ev-card-detail">5:00 – 9:00 PM · Weekly men's league begins · Every Thursday through the season</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Men\'s League Opening Night','May 7 · 5:00 – 9:00 PM',false)" style="cursor:pointer">Sign Up →</a></div></div>
+      <div class="ev-card fade-up d2"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">16</span><span class="ecd-y">2026</span></div><span class="ev-type tournament">Tournament</span></div><div class="ev-card-body"><div class="ev-card-name">Spring 2-Man Scramble</div><div class="ev-card-detail">2-day event · May 16–17 · 8:00 AM shotgun start</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Spring 2-Man Scramble','May 16–17 · 8:00 AM Shotgun',true)" style="cursor:pointer">Register →</a></div></div>
+      <div class="ev-card fade-up d3"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">23</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">MGA 2-Man Best Ball</div><div class="ev-card-detail">8:00 AM – 12:00 PM · Men's Golf Association event</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('MGA 2-Man Best Ball','May 23 · 8:00 AM – 12:00 PM',true)" style="cursor:pointer">Sign Up →</a></div></div>
+      <div class="ev-card fade-up d1"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">25</span><span class="ecd-y">2026</span></div><span class="ev-type social">Social</span></div><div class="ev-card-body"><div class="ev-card-name">Memorial Day Wing Ding</div><div class="ev-card-detail">10:00 AM – 2:00 PM · Annual Memorial Day celebration · Food, fun, &amp; fellowship</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Memorial Day Wing Ding','May 25 · 10:00 AM – 2:00 PM',false)" style="cursor:pointer">RSVP →</a></div></div>
+      <div class="ev-card fade-up d2"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Jun</span><span class="ecd-d">5</span><span class="ecd-y">2026</span></div><span class="ev-type tournament">Tournament</span></div><div class="ev-card-body"><div class="ev-card-name">UCAN Golf Outing</div><div class="ev-card-detail">9:30 AM – 1:30 PM · Charity tournament raising money for local cancer patients</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('UCAN Golf Outing','Jun 5 · 9:30 AM – 1:30 PM',true)" style="cursor:pointer">Register →</a></div></div>
+      <div class="ev-card fade-up d3"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Jun</span><span class="ecd-d">6</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Ladies Cup Challenge Matches</div><div class="ev-card-detail">9:00 AM – 1:00 PM · Annual ladies match play competition</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Ladies Cup Challenge Matches','Jun 6 · 9:00 AM – 1:00 PM',false)" style="cursor:pointer">Sign Up →</a></div></div>
+      <div class="ev-card fade-up d1"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Jun</span><span class="ecd-d">9</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Ladies Powder Puff</div><div class="ev-card-detail">9:00 AM – 1:00 PM · Ladies 2-player scramble</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Ladies Powder Puff','Jun 9 · 9:00 AM – 1:00 PM',true)" style="cursor:pointer">Sign Up →</a></div></div>
+      <div class="ev-card fade-up d2"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Jun</span><span class="ecd-d">12</span><span class="ecd-y">2026</span></div><span class="ev-type tournament">Tournament</span></div><div class="ev-card-body"><div class="ev-card-name">Three Rivers College Outing</div><div class="ev-card-detail">9:30 AM – 2:00 PM · Supporting Three Rivers College</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Three Rivers College Outing','Jun 12 · 9:30 AM – 2:00 PM',true)" style="cursor:pointer">Register →</a></div></div>
+      <div class="ev-card fade-up d3"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Jun</span><span class="ecd-d">18</span><span class="ecd-y">2026</span></div><span class="ev-type tournament">Tournament</span></div><div class="ev-card-body"><div class="ev-card-name">Steak Stag — SEMO Qualifier</div><div class="ev-card-detail">6:00 – 10:00 PM · SEMO Cup qualifying event · Steak dinner included</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Steak Stag — SEMO Qualifier','Jun 18 · 6:00 – 10:00 PM',false)" style="cursor:pointer">Register →</a></div></div>
+      <div class="ev-card fade-up d1"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Aug</span><span class="ecd-d">11</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Ladies Sweet Treat</div><div class="ev-card-detail">4-player ladies scramble · Full day event</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Ladies Sweet Treat','Aug 11 · Full Day Event',true)" style="cursor:pointer">Sign Up →</a></div></div>
     </div>
     <div style="text-align:center;margin-top:32px;" class="fade-up">
       <p style="font-size:12px;color:var(--muted);">Recurring events: <strong>Super Saturday Shootout</strong> (1st &amp; 3rd Saturdays) · <strong>Men's League</strong> (Thursdays) · <strong>Women's Events</strong> (Tuesdays at 5:30) · <strong>Hit &amp; Giggle</strong> (monthly) · <strong>Friday Night Fights</strong> (weekly, May–Sep)</p>
@@ -1798,6 +1817,7 @@ footer{background:var(--deep);padding:80px 80px 40px}
 <button class="staff-view-btn" onclick="staffView('scoring',this)">📊 Scoring</button>
         <button class="staff-view-btn" onclick="staffView('daily',this)">📋 Daily</button>
         <button class="staff-view-btn" onclick="staffView('menus',this)">🍽 Menus</button>
+<button class="staff-view-btn" onclick="staffView('registrations',this)">📋 Registrations</button>
         <span style="width:1px;background:rgba(184,151,106,.2);margin:0 4px;"></span>
         <button class="staff-view-btn active" id="sv-venue-hoovers" onclick="staffSwitchVenue('hoovers',this)" style="font-size:9px;">Hoover's</button>
         <button class="staff-view-btn" id="sv-venue-grille" onclick="staffSwitchVenue('grille',this)" style="font-size:9px;">Westwood Grill</button>
@@ -2102,6 +2122,25 @@ footer{background:var(--deep);padding:80px 80px 40px}
 
         </div>
 
+        <!-- Registrations view -->
+        <div id="sv-registrations" style="display:none;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:#f5f0e8;">Event <em style="color:#d4b483;">Registrations</em></div>
+            <div style="display:flex;gap:8px;">
+              <button class="staff-add-btn" onclick="regExportCSV()">⬇ CSV</button>
+              <button class="staff-add-btn" onclick="regPrintList()">🖨 Print</button>
+              <button class="staff-add-btn" onclick="regEmailList()">✉ Email</button>
+            </div>
+          </div>
+          <div style="margin-bottom:12px;">
+            <select id="reg-event-filter" onchange="renderStaffRegs()" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(184,151,106,.2);color:#f5f0e8;padding:8px 12px;font-size:12px;border-radius:2px;">
+              <option value="">— All Events —</option>
+            </select>
+          </div>
+          <div style="font-size:11px;color:rgba(245,240,232,.35);margin-bottom:10px;" id="reg-count-label"></div>
+          <div id="sv-reg-list"></div>
+        </div>
+
       </div>
 
       <!-- Right panel: detail -->
@@ -2185,6 +2224,109 @@ window.storage = {
 };
 </script>
 <script>
+// ═══════════════════════════════════════
+// EVENT REGISTRATION SYSTEM
+// ═══════════════════════════════════════
+var WHCC_SCRIPT_URL = 'https://script.google.com/macros/s/WHCC_SCRIPT_ID/exec';
+var currentRegEvent = null;
+
+function openRegModal(eventTitle, eventMeta, isTeam) {
+  currentRegEvent = { title: eventTitle, meta: eventMeta, isTeam: !!isTeam };
+  document.getElementById('reg-event-title').textContent = eventTitle;
+  document.getElementById('reg-event-meta').textContent = eventMeta || '';
+  document.getElementById('reg-team-row').style.display = isTeam ? 'grid' : 'none';
+  document.getElementById('reg-form-wrap').style.display = 'block';
+  document.getElementById('reg-success').style.display = 'none';
+  document.getElementById('reg-error').style.display = 'none';
+  document.getElementById('reg-overlay').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  // Pre-fill if member is logged in via app
+  try {
+    var u = JSON.parse(localStorage.getItem('wh_current_user') || 'null');
+    if (u) {
+      document.getElementById('reg-fname').value = u.firstName || '';
+      document.getElementById('reg-lname').value = u.lastName || '';
+      document.getElementById('reg-email').value = u.email || '';
+      document.getElementById('reg-membernum').value = u.memberNum || '';
+    }
+  } catch(e) {}
+}
+
+function closeRegModal() {
+  document.getElementById('reg-overlay').style.display = 'none';
+  document.body.style.overflow = '';
+  // Reset form
+  ['reg-fname','reg-lname','reg-email','reg-phone','reg-partner','reg-notes','reg-membernum'].forEach(function(id){
+    var el = document.getElementById(id); if(el) el.value = '';
+  });
+  currentRegEvent = null;
+}
+
+function submitRegForm(e) {
+  e.preventDefault();
+  var btn = document.getElementById('reg-submit-btn');
+  var errEl = document.getElementById('reg-error');
+  errEl.style.display = 'none';
+  btn.textContent = 'Registering…';
+  btn.disabled = true;
+
+  var reg = {
+    event: currentRegEvent ? currentRegEvent.title : '',
+    eventMeta: currentRegEvent ? currentRegEvent.meta : '',
+    firstName: document.getElementById('reg-fname').value.trim(),
+    lastName: document.getElementById('reg-lname').value.trim(),
+    email: document.getElementById('reg-email').value.trim(),
+    phone: document.getElementById('reg-phone').value.trim(),
+    partner: document.getElementById('reg-partner').value.trim(),
+    players: document.getElementById('reg-players').value,
+    memberNum: document.getElementById('reg-membernum').value.trim(),
+    notes: document.getElementById('reg-notes').value.trim(),
+    timestamp: new Date().toISOString(),
+    source: 'website'
+  };
+
+  // Save to localStorage first (always works, good for demos)
+  saveRegLocal(reg);
+
+  // Try to POST to Google Apps Script
+  if (WHCC_SCRIPT_URL.indexOf('WHCC_SCRIPT_ID') === -1) {
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(reg),
+      headers: { 'Content-Type': 'text/plain' }
+    }).catch(function() {});  // Silent fail — localStorage backup already saved
+  }
+
+  // Show success
+  btn.textContent = 'Complete Registration';
+  btn.disabled = false;
+  document.getElementById('reg-form-wrap').style.display = 'none';
+  document.getElementById('reg-success').style.display = 'block';
+  document.getElementById('reg-success-body').textContent =
+    'You\'re signed up for ' + reg.event + '. The Pro Shop will confirm your registration within 24 hours at ' + (reg.email || reg.phone || 'the contact provided') + '.';
+}
+
+function saveRegLocal(reg) {
+  try {
+    var all = JSON.parse(localStorage.getItem('wh_registrations') || '[]');
+    reg.id = Date.now().toString();
+    all.push(reg);
+    localStorage.setItem('wh_registrations', JSON.stringify(all));
+  } catch(e) {}
+}
+
+function getRegsForEvent(eventTitle) {
+  try {
+    var all = JSON.parse(localStorage.getItem('wh_registrations') || '[]');
+    return all.filter(function(r){ return r.event === eventTitle; });
+  } catch(e) { return []; }
+}
+
+function getAllRegs() {
+  try { return JSON.parse(localStorage.getItem('wh_registrations') || '[]'); }
+  catch(e) { return []; }
+}
+
 // ── NAVIGATION ──────────────────────────────────
 function navigate(page) {
   // Hide all pages
@@ -3279,7 +3421,7 @@ function staffView(view, btn, useSecondary) {
       .find(b => (b.getAttribute('onclick') || '').includes("'" + view + "'"));
     if (found) found.classList.add(navClass);
   }
-  ['calendar','upcoming','search','guests','settings','scoring','daily','menus'].forEach(v => {
+  ['calendar','upcoming','search','guests','settings','scoring','daily','menus','registrations'].forEach(v => {
     const el = document.getElementById('sv-' + v);
     if (el) el.style.display = v === view ? 'block' : 'none';
   });
@@ -3294,6 +3436,117 @@ function staffView(view, btn, useSecondary) {
   if (view === 'scoring') lsAdminLoad();
   if (view === 'daily') duAdminLoad();
   if (view === 'menus') smLoad();
+  if (view === 'registrations') staffViewRegistrations();
+}
+
+// ═══════════════════════════════════════
+// STAFF REGISTRATION PORTAL
+// ═══════════════════════════════════════
+function staffViewRegistrations() {
+  // Populate event filter dropdown
+  var regs = getAllRegs();
+  var events = [...new Set(regs.map(function(r){return r.event;}))].sort();
+  var sel = document.getElementById('reg-event-filter');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">— All Events —</option>';
+  events.forEach(function(ev){
+    var opt = document.createElement('option');
+    opt.value = ev; opt.textContent = ev + ' (' + regs.filter(function(r){return r.event===ev;}).length + ')';
+    sel.appendChild(opt);
+  });
+  renderStaffRegs();
+}
+
+function renderStaffRegs() {
+  var filter = (document.getElementById('reg-event-filter')||{}).value || '';
+  var regs = getAllRegs().filter(function(r){ return !filter || r.event === filter; });
+  regs.sort(function(a,b){ return new Date(b.timestamp) - new Date(a.timestamp); });
+  var label = document.getElementById('reg-count-label');
+  if (label) label.textContent = regs.length + ' registration' + (regs.length!==1?'s':'') + (filter?' for '+filter:'');
+  var list = document.getElementById('sv-reg-list');
+  if (!list) return;
+  if (!regs.length) { list.innerHTML = '<div style="font-size:.8rem;color:rgba(245,240,232,.35);text-align:center;padding:20px;">No registrations yet</div>'; return; }
+  list.innerHTML = regs.map(function(r,i){
+    var d = r.timestamp ? new Date(r.timestamp).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}) : '';
+    var partner = r.partner ? ' · Partner: '+r.partner : '';
+    var players = r.players && r.players !== '1' ? ' · '+r.players+' players' : '';
+    return '<div style="background:rgba(255,255,255,.04);border-left:3px solid rgba(184,151,106,.4);padding:10px 12px;margin-bottom:6px;border-radius:0 2px 2px 0;">'
+      + '<div style="display:flex;justify-content:space-between;align-items:flex-start;">'
+      + '<div style="font-size:.86rem;font-weight:700;color:#f5f0e8;">' + (r.firstName||'') + ' ' + (r.lastName||'') + '</div>'
+      + '<div style="font-size:.68rem;color:rgba(245,240,232,.35);">' + d + '</div></div>'
+      + '<div style="font-size:.76rem;color:rgba(245,240,232,.55);margin-top:3px;">' + r.event + (r.eventMeta?' · '+r.eventMeta:'') + '</div>'
+      + '<div style="font-size:.74rem;color:rgba(184,151,106,.7);margin-top:3px;">' + (r.email||'') + (r.phone?' · '+r.phone:'') + partner + players + '</div>'
+      + (r.memberNum ? '<div style="font-size:.7rem;color:rgba(245,240,232,.35);margin-top:2px;">Member #'+r.memberNum+'</div>' : '')
+      + (r.notes ? '<div style="font-size:.74rem;color:rgba(245,240,232,.45);margin-top:4px;font-style:italic;">'+r.notes+'</div>' : '')
+      + '<div style="display:flex;gap:6px;margin-top:6px;">'
+      + '<button onclick="deleteReg(\''+r.id+'\')" style="font-size:.68rem;padding:2px 8px;background:rgba(220,38,38,.12);color:#f87171;border:none;border-radius:3px;cursor:pointer;">Remove</button>'
+      + '</div></div>';
+  }).join('');
+}
+
+function deleteReg(id) {
+  if (!confirm('Remove this registration?')) return;
+  try {
+    var all = JSON.parse(localStorage.getItem('wh_registrations') || '[]');
+    all = all.filter(function(r){ return r.id !== id; });
+    localStorage.setItem('wh_registrations', JSON.stringify(all));
+    renderStaffRegs();
+    staffViewRegistrations();
+  } catch(e) {}
+}
+
+function regExportCSV() {
+  var filter = (document.getElementById('reg-event-filter')||{}).value || '';
+  var regs = getAllRegs().filter(function(r){ return !filter || r.event === filter; });
+  if (!regs.length) { alert('No registrations to export.'); return; }
+  var headers = ['Event','Date/Time','First Name','Last Name','Email','Phone','Partner','Players','Member #','Notes','Registered'];
+  var rows = regs.map(function(r){
+    return [r.event,r.eventMeta,r.firstName,r.lastName,r.email,r.phone,r.partner,r.players,r.memberNum,r.notes,r.timestamp].map(function(v){
+      return '"'+(v||'').replace(/"/g,'""')+'"';
+    }).join(',');
+  });
+  var csv = [headers.join(',')].concat(rows).join('\n');
+  var blob = new Blob([csv], {type:'text/csv'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (filter||'All-Events').replace(/\s+/g,'-') + '-Registrations-' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+}
+
+function regPrintList() {
+  var filter = (document.getElementById('reg-event-filter')||{}).value || '';
+  var regs = getAllRegs().filter(function(r){ return !filter || r.event === filter; });
+  if (!regs.length) { alert('No registrations to print.'); return; }
+  var html = '<html><head><title>Registration List</title><style>body{font-family:Arial,sans-serif;font-size:12px;color:#111}h1{font-size:16px;margin-bottom:4px}h2{font-size:13px;color:#555;font-weight:normal;margin-bottom:16px}table{width:100%;border-collapse:collapse}th{background:#1a2b1f;color:#f5f0e8;padding:6px 10px;text-align:left;font-size:11px}td{padding:5px 10px;border-bottom:1px solid #e8e0d0}tr:nth-child(even){background:#f9f6f0}.footer{margin-top:20px;font-size:10px;color:#999}</style></head><body>';
+  html += '<h1>Westwood Hills Country Club — Event Registration List</h1>';
+  html += '<h2>' + (filter || 'All Events') + ' · Printed ' + new Date().toLocaleDateString() + '</h2>';
+  html += '<table><thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Event</th><th>Partner</th><th>Players</th><th>Member #</th><th>Notes</th></tr></thead><tbody>';
+  regs.forEach(function(r,i){
+    html += '<tr><td>'+(i+1)+'</td><td>'+(r.firstName||'')+' '+(r.lastName||'')+'</td><td>'+(r.email||'')+'</td><td>'+(r.phone||'')+'</td><td>'+(r.event||'')+'</td><td>'+(r.partner||'')+'</td><td>'+(r.players||'')+'</td><td>'+(r.memberNum||'')+'</td><td>'+(r.notes||'')+'</td></tr>';
+  });
+  html += '</tbody></table><div class="footer">Westwood Hills CC · (573) 785-8211 · Generated ' + new Date().toISOString() + '</div></body></html>';
+  var w = window.open('','_blank');
+  w.document.write(html);
+  w.document.close();
+  w.print();
+}
+
+function regEmailList() {
+  var filter = (document.getElementById('reg-event-filter')||{}).value || '';
+  var regs = getAllRegs().filter(function(r){ return !filter || r.event === filter; });
+  if (!regs.length) { alert('No registrations to email.'); return; }
+  var body = 'Registration List: ' + (filter || 'All Events') + '\n\n';
+  regs.forEach(function(r,i){
+    body += (i+1) + '. ' + (r.firstName||'') + ' ' + (r.lastName||'');
+    if (r.email) body += ' — ' + r.email;
+    if (r.phone) body += ' · ' + r.phone;
+    if (r.partner) body += ' · Partner: ' + r.partner;
+    if (r.memberNum) body += ' · Member #' + r.memberNum;
+    body += '\n';
+  });
+  body += '\nTotal: ' + regs.length + ' registrations\nGenerated: ' + new Date().toLocaleDateString();
+  var subject = encodeURIComponent('WHCC Registration List — ' + (filter || 'All Events'));
+  window.location.href = 'mailto:?subject=' + subject + '&body=' + encodeURIComponent(body);
 }
 
 // ── CALENDAR ──
@@ -3984,6 +4237,43 @@ function staffConfirmClose() {
 
 <!-- Toast container -->
 <div id="staff-toast"></div>
+
+<!-- ═══ EVENT REGISTRATION MODAL ═══ -->
+<div class="reg-overlay" id="reg-overlay" style="display:none" onclick="if(event.target===this)closeRegModal()">
+  <div class="reg-modal">
+    <button class="reg-modal-close" onclick="closeRegModal()">×</button>
+    <div id="reg-form-wrap">
+      <p class="reg-modal-tag">Event Registration</p>
+      <h2 class="reg-modal-title" id="reg-event-title">Event Name</h2>
+      <p class="reg-modal-meta" id="reg-event-meta"></p>
+      <form onsubmit="submitRegForm(event)">
+        <div class="reg-row">
+          <div class="reg-field"><label>First Name *</label><input type="text" id="reg-fname" required placeholder="Jane"/></div>
+          <div class="reg-field"><label>Last Name *</label><input type="text" id="reg-lname" required placeholder="Smith"/></div>
+        </div>
+        <div class="reg-row">
+          <div class="reg-field"><label>Email *</label><input type="email" id="reg-email" required placeholder="jane@email.com"/></div>
+          <div class="reg-field"><label>Phone</label><input type="tel" id="reg-phone" placeholder="(573) 555-0000"/></div>
+        </div>
+        <div class="reg-row" id="reg-team-row" style="display:none">
+          <div class="reg-field"><label>Team / Partner Name</label><input type="text" id="reg-partner" placeholder="e.g. John Doe"/></div>
+          <div class="reg-field"><label>Players in Group</label><select id="reg-players"><option value="1">1 Player</option><option value="2" selected>2 Players</option><option value="3">3 Players</option><option value="4">4 Players</option></select></div>
+        </div>
+        <div class="reg-field"><label>Member #</label><input type="text" id="reg-membernum" placeholder="Optional — speeds up check-in"/></div>
+        <div class="reg-field"><label>Notes / Special Requests</label><textarea id="reg-notes" placeholder="Dietary needs, tee time preference, etc."></textarea></div>
+        <div class="reg-error" id="reg-error"></div>
+        <button type="submit" class="btn-p" style="width:100%;margin-top:8px" id="reg-submit-btn">Complete Registration</button>
+        <p style="font-size:11px;color:var(--muted);margin-top:12px;text-align:center">Registrations are confirmed by the Pro Shop within 24 hours · (573) 785-8211</p>
+      </form>
+    </div>
+    <div class="reg-success" id="reg-success" style="display:none">
+      <div class="reg-success-icon">✓</div>
+      <div class="reg-success-title">You're registered!</div>
+      <p class="reg-success-body" id="reg-success-body"></p>
+      <button class="btn-g" style="margin-top:20px" onclick="closeRegModal()">Close</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
