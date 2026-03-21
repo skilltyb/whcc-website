@@ -2124,21 +2124,34 @@ footer{background:var(--deep);padding:80px 80px 40px}
 
         <!-- Registrations view -->
         <div id="sv-registrations" style="display:none;">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-            <div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:#f5f0e8;">Event <em style="color:#d4b483;">Registrations</em></div>
-            <div style="display:flex;gap:8px;">
-              <button class="staff-add-btn" onclick="regExportCSV()">⬇ CSV</button>
-              <button class="staff-add-btn" onclick="regPrintList()">🖨 Print</button>
-              <button class="staff-add-btn" onclick="regEmailList()">✉ Email</button>
-            </div>
-          </div>
-          <div style="margin-bottom:12px;">
-            <select id="reg-event-filter" onchange="renderStaffRegs()" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(184,151,106,.2);color:#f5f0e8;padding:8px 12px;font-size:12px;border-radius:2px;">
-              <option value="">— All Events —</option>
-            </select>
-          </div>
-          <div style="font-size:11px;color:rgba(245,240,232,.35);margin-bottom:10px;" id="reg-count-label"></div>
-          <div id="sv-reg-list"></div>
+  <!-- Header row -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+    <div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:#f5f0e8;">Event <em style="color:#d4b483;">Signup Sheets</em></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+      <button class="staff-add-btn" onclick="regExportCSV()">⬇ CSV</button>
+      <button class="staff-add-btn" onclick="regPrintSignupSheet()">🖨 Print Sheet</button>
+      <button class="staff-add-btn" onclick="regEmailList()">✉ Email</button>
+    </div>
+  </div>
+  <!-- Event filter -->
+  <div style="margin-bottom:10px;">
+    <select id="reg-event-filter" onchange="renderStaffRegs()" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(184,151,106,.2);color:#f5f0e8;padding:8px 12px;font-size:12px;border-radius:2px;">
+      <option value="">— All Events —</option>
+    </select>
+  </div>
+  <!-- Capacity bar -->
+  <div id="reg-capacity-bar" style="margin-bottom:12px;display:none;">
+    <div style="display:flex;justify-content:space-between;font-size:.72rem;color:rgba(245,240,232,.5);margin-bottom:4px;">
+      <span id="reg-cap-label"></span>
+      <span id="reg-cap-pct"></span>
+    </div>
+    <div style="background:rgba(255,255,255,.08);border-radius:3px;height:6px;overflow:hidden;">
+      <div id="reg-cap-fill" style="height:100%;background:#d4b483;border-radius:3px;transition:width .3s;"></div>
+    </div>
+  </div>
+  <div style="font-size:.72rem;color:rgba(245,240,232,.35);margin-bottom:10px;" id="reg-count-label"></div>
+  <!-- Signup sheet -->
+  <div id="sv-reg-list"></div>
         </div>
 
       </div>
@@ -2225,22 +2238,87 @@ window.storage = {
 </script>
 <script>
 // ═══════════════════════════════════════
+// EVENT REGISTRY — types: 'single', 'twosome', 'foursome'
+// ═══════════════════════════════════════
+var WHCC_EVENTS = {
+  "St. Patty's Shootout":           { type:'single',   capacity:60,  fee:'Member Event' },
+  "Ladies Opening Day":              { type:'single',   capacity:40,  fee:'Member Event' },
+  "Men's Golf Master Dinner":        { type:'single',   capacity:50,  fee:'$45/person' },
+  "Poplar Bluff Mules Invitational": { type:'foursome', capacity:18,  fee:'$80/team' },
+  "MGA Opening Day Draft":           { type:'single',   capacity:64,  fee:'Member Event' },
+  "Men's Opening Day":               { type:'single',   capacity:72,  fee:'Member Event' },
+  "Ozark Invitational":              { type:'twosome',  capacity:48,  fee:'$150/team' },
+  "Friday Night Fights":             { type:'single',   capacity:48,  fee:'$10/round' },
+  "Hit & Giggle":                    { type:'single',   capacity:40,  fee:'Member Event' },
+  "Men's League Opening Night":      { type:'single',   capacity:80,  fee:'League Fee' },
+  "Spring 2-Man Scramble":           { type:'twosome',  capacity:40,  fee:'$120/team' },
+  "MGA 2-Man Best Ball":             { type:'twosome',  capacity:32,  fee:'Member Event' },
+  "Memorial Day Wing Ding":          { type:'single',   capacity:120, fee:'$20/person' },
+  "UCAN Golf Outing":                { type:'foursome', capacity:18,  fee:'$80/player' },
+  "Ladies Cup Challenge Matches":    { type:'single',   capacity:32,  fee:'Member Event' },
+  "Ladies Powder Puff":              { type:'twosome',  capacity:20,  fee:'Member Event' },
+  "Three Rivers College Outing":     { type:'foursome', capacity:18,  fee:'$75/player' },
+  "Steak Stag — SEMO Qualifier":     { type:'single',   capacity:48,  fee:'$60/player' },
+  "Ladies Sweet Treat":              { type:'foursome', capacity:12,  fee:'Member Event' }
+};
+
+function getEventInfo(title) {
+  return WHCC_EVENTS[title] || { type:'single', capacity:72, fee:'Member Event' };
+}
+
+// ═══════════════════════════════════════
 // EVENT REGISTRATION SYSTEM
 // ═══════════════════════════════════════
 var WHCC_SCRIPT_URL = 'https://script.google.com/macros/s/WHCC_SCRIPT_ID/exec';
 var currentRegEvent = null;
 
 function openRegModal(eventTitle, eventMeta, isTeam) {
-  currentRegEvent = { title: eventTitle, meta: eventMeta, isTeam: !!isTeam };
+  var info = getEventInfo(eventTitle);
+  var evType = info.type;
+  currentRegEvent = { title: eventTitle, meta: eventMeta, type: evType, capacity: info.capacity, fee: info.fee };
+
   document.getElementById('reg-event-title').textContent = eventTitle;
-  document.getElementById('reg-event-meta').textContent = eventMeta || '';
-  document.getElementById('reg-team-row').style.display = isTeam ? 'grid' : 'none';
+  document.getElementById('reg-event-meta').textContent = (eventMeta||'') + (info.fee && info.fee !== 'Member Event' ? ' · ' + info.fee : '');
+
+  // Show/hide and label team fields based on event type
+  var teamRow = document.getElementById('reg-team-row');
+  var partnerInput = document.getElementById('reg-partner');
+  var playersSelect = document.getElementById('reg-players');
+
+  if (evType === 'single') {
+    teamRow.style.display = 'none';
+  } else if (evType === 'twosome') {
+    teamRow.style.display = 'grid';
+    partnerInput.placeholder = 'Partner\'s full name';
+    partnerInput.previousElementSibling.textContent = 'Partner Name';
+    // For twosome, hide the players count — it's always 2
+    playersSelect.parentElement.style.display = 'none';
+  } else if (evType === 'foursome') {
+    teamRow.style.display = 'grid';
+    partnerInput.placeholder = 'Partner 1 (others can be added in notes)';
+    partnerInput.previousElementSibling.textContent = 'Partner Names';
+    playersSelect.parentElement.style.display = 'block';
+    // Update player options for foursome
+    playersSelect.innerHTML = '<option value="1">1 (others TBD)</option><option value="2">2 Players</option><option value="3">3 Players</option><option value="4" selected>Full Group of 4</option>';
+  }
+
+  // Show spots remaining
+  var regs = getRegsForEvent(eventTitle);
+  var spotsEl = document.getElementById('reg-spots-remaining');
+  if (spotsEl) {
+    var taken = regs.length;
+    var remaining = info.capacity - taken;
+    spotsEl.textContent = remaining > 0 ? remaining + ' spots remaining of ' + info.capacity : 'FULL — join waitlist';
+    spotsEl.style.color = remaining <= 5 ? '#c0392b' : 'var(--muted)';
+  }
+
   document.getElementById('reg-form-wrap').style.display = 'block';
   document.getElementById('reg-success').style.display = 'none';
   document.getElementById('reg-error').style.display = 'none';
   document.getElementById('reg-overlay').style.display = 'flex';
   document.body.style.overflow = 'hidden';
-  // Pre-fill if member is logged in via app
+
+  // Pre-fill if user data available
   try {
     var u = JSON.parse(localStorage.getItem('wh_current_user') || 'null');
     if (u) {
@@ -3443,15 +3521,20 @@ function staffView(view, btn, useSecondary) {
 // STAFF REGISTRATION PORTAL
 // ═══════════════════════════════════════
 function staffViewRegistrations() {
-  // Populate event filter dropdown
   var regs = getAllRegs();
-  var events = [...new Set(regs.map(function(r){return r.event;}))].sort();
+  var events = [];
+  var seen = {};
+  regs.forEach(function(r){ if(r.event && !seen[r.event]){ seen[r.event]=true; events.push(r.event); }});
+  events.sort();
   var sel = document.getElementById('reg-event-filter');
   if (!sel) return;
   sel.innerHTML = '<option value="">— All Events —</option>';
   events.forEach(function(ev){
+    var count = regs.filter(function(r){return r.event===ev;}).length;
+    var info = getEventInfo ? getEventInfo(ev) : {capacity:72};
     var opt = document.createElement('option');
-    opt.value = ev; opt.textContent = ev + ' (' + regs.filter(function(r){return r.event===ev;}).length + ')';
+    opt.value = ev;
+    opt.textContent = ev + ' (' + count + '/' + info.capacity + ')';
     sel.appendChild(opt);
   });
   renderStaffRegs();
@@ -3460,28 +3543,124 @@ function staffViewRegistrations() {
 function renderStaffRegs() {
   var filter = (document.getElementById('reg-event-filter')||{}).value || '';
   var regs = getAllRegs().filter(function(r){ return !filter || r.event === filter; });
-  regs.sort(function(a,b){ return new Date(b.timestamp) - new Date(a.timestamp); });
+  regs.sort(function(a,b){ return new Date(a.timestamp) - new Date(b.timestamp); });
+
+  // Capacity bar
+  var capBar = document.getElementById('reg-capacity-bar');
+  var capLabel = document.getElementById('reg-cap-label');
+  var capPct = document.getElementById('reg-cap-pct');
+  var capFill = document.getElementById('reg-cap-fill');
+  if (filter && capBar) {
+    var info = getEventInfo ? getEventInfo(filter) : {capacity:72, type:'single'};
+    var pct = Math.min(100, Math.round(regs.length / info.capacity * 100));
+    capBar.style.display = 'block';
+    capLabel.textContent = regs.length + ' registered · ' + (info.capacity - regs.length) + ' spots remaining';
+    capPct.textContent = pct + '% full';
+    capFill.style.width = pct + '%';
+    capFill.style.background = pct >= 90 ? '#f87171' : pct >= 70 ? '#fbbf24' : '#d4b483';
+  } else if (capBar) {
+    capBar.style.display = 'none';
+  }
+
   var label = document.getElementById('reg-count-label');
-  if (label) label.textContent = regs.length + ' registration' + (regs.length!==1?'s':'') + (filter?' for '+filter:'');
+  if (label) label.textContent = regs.length + ' registration' + (regs.length!==1?'s':'') + (filter ? ' — ' + filter : ' across all events');
+
   var list = document.getElementById('sv-reg-list');
   if (!list) return;
-  if (!regs.length) { list.innerHTML = '<div style="font-size:.8rem;color:rgba(245,240,232,.35);text-align:center;padding:20px;">No registrations yet</div>'; return; }
-  list.innerHTML = regs.map(function(r,i){
-    var d = r.timestamp ? new Date(r.timestamp).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}) : '';
-    var partner = r.partner ? ' · Partner: '+r.partner : '';
-    var players = r.players && r.players !== '1' ? ' · '+r.players+' players' : '';
-    return '<div style="background:rgba(255,255,255,.04);border-left:3px solid rgba(184,151,106,.4);padding:10px 12px;margin-bottom:6px;border-radius:0 2px 2px 0;">'
-      + '<div style="display:flex;justify-content:space-between;align-items:flex-start;">'
-      + '<div style="font-size:.86rem;font-weight:700;color:#f5f0e8;">' + (r.firstName||'') + ' ' + (r.lastName||'') + '</div>'
-      + '<div style="font-size:.68rem;color:rgba(245,240,232,.35);">' + d + '</div></div>'
-      + '<div style="font-size:.76rem;color:rgba(245,240,232,.55);margin-top:3px;">' + r.event + (r.eventMeta?' · '+r.eventMeta:'') + '</div>'
-      + '<div style="font-size:.74rem;color:rgba(184,151,106,.7);margin-top:3px;">' + (r.email||'') + (r.phone?' · '+r.phone:'') + partner + players + '</div>'
-      + (r.memberNum ? '<div style="font-size:.7rem;color:rgba(245,240,232,.35);margin-top:2px;">Member #'+r.memberNum+'</div>' : '')
-      + (r.notes ? '<div style="font-size:.74rem;color:rgba(245,240,232,.45);margin-top:4px;font-style:italic;">'+r.notes+'</div>' : '')
-      + '<div style="display:flex;gap:6px;margin-top:6px;">'
-      + '<button onclick="deleteReg(\''+r.id+'\')" style="font-size:.68rem;padding:2px 8px;background:rgba(220,38,38,.12);color:#f87171;border:none;border-radius:3px;cursor:pointer;">Remove</button>'
-      + '</div></div>';
-  }).join('');
+  if (!regs.length) {
+    list.innerHTML = '<div style="font-size:.8rem;color:rgba(245,240,232,.35);text-align:center;padding:24px;">No registrations yet</div>';
+    return;
+  }
+
+  // Determine event type
+  var evType = 'single';
+  if (filter && typeof getEventInfo === 'function') evType = getEventInfo(filter).type || 'single';
+
+  if (filter && evType !== 'single') {
+    // GROUPED VIEW for twosome / foursome
+    var groupSize = evType === 'twosome' ? 2 : 4;
+    var html = '<div style="font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(184,151,106,.7);margin-bottom:8px;">' + (evType==='twosome'?'Teams of 2':'Foursomes') + '</div>';
+    regs.forEach(function(r, i) {
+      var groupNum = i + 1;
+      var d = r.timestamp ? new Date(r.timestamp).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
+      html += '<div style="background:rgba(255,255,255,.04);border:1px solid rgba(184,151,106,.15);padding:12px 14px;margin-bottom:8px;border-radius:2px;">';
+      html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">';
+      html += '<div style="font-size:.72rem;font-weight:700;color:#d4b483;letter-spacing:.1em;">GROUP ' + groupNum + '</div>';
+      html += '<div style="display:flex;gap:6px;align-items:center;">';
+      html += '<div style="font-size:.65rem;color:rgba(245,240,232,.3);">' + d + '</div>';
+      html += '<button onclick="deleteReg(\'' + r.id + '\')" style="font-size:.65rem;padding:1px 7px;background:rgba(220,38,38,.12);color:#f87171;border:none;border-radius:3px;cursor:pointer;">✕</button>';
+      html += '</div></div>';
+      // Player 1 (registrant)
+      html += '<div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);">';
+      html += '<div style="width:20px;height:20px;border-radius:50%;background:rgba(184,151,106,.2);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:#d4b483;font-weight:700;flex-shrink:0;">1</div>';
+      html += '<div><div style="font-size:.82rem;font-weight:600;color:#f5f0e8;">' + (r.firstName||'') + ' ' + (r.lastName||'') + '</div>';
+      html += '<div style="font-size:.7rem;color:rgba(245,240,232,.45);">' + (r.email||'') + (r.phone?' · '+r.phone:'') + (r.memberNum?' · #'+r.memberNum:'') + '</div></div></div>';
+      // Partners
+      if (r.partner) {
+        var partners = r.partner.split(/[,;&\/]+/).map(function(p){return p.trim();}).filter(Boolean);
+        partners.forEach(function(p, pi) {
+          html += '<div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);">';
+          html += '<div style="width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:rgba(245,240,232,.5);font-weight:700;flex-shrink:0;">' + (pi+2) + '</div>';
+          html += '<div style="font-size:.82rem;color:rgba(245,240,232,.7);">' + p + '</div></div>';
+        });
+        // Fill remaining slots
+        var totalFilled = 1 + partners.length;
+        for (var s = totalFilled; s < groupSize; s++) {
+          html += '<div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);">';
+          html += '<div style="width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.03);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:rgba(245,240,232,.2);flex-shrink:0;">' + (s+1) + '</div>';
+          html += '<div style="font-size:.75rem;color:rgba(245,240,232,.2);font-style:italic;">Open slot</div></div>';
+        }
+      } else {
+        for (var s2 = 1; s2 < groupSize; s2++) {
+          html += '<div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);">';
+          html += '<div style="width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.03);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:rgba(245,240,232,.2);flex-shrink:0;">' + (s2+1) + '</div>';
+          html += '<div style="font-size:.75rem;color:rgba(245,240,232,.2);font-style:italic;">Open slot</div></div>';
+        }
+      }
+      if (r.notes) html += '<div style="font-size:.72rem;color:rgba(245,240,232,.4);margin-top:6px;font-style:italic;">📝 ' + r.notes + '</div>';
+      html += '</div>';
+    });
+    list.innerHTML = html;
+  } else {
+    // INDIVIDUAL LIST VIEW (single events or all-events view)
+    var html2 = '';
+    if (!filter) {
+      // Group by event when showing all
+      var byEvent = {};
+      regs.forEach(function(r){ if(!byEvent[r.event]) byEvent[r.event]=[]; byEvent[r.event].push(r); });
+      Object.keys(byEvent).sort().forEach(function(ev) {
+        var evRegs = byEvent[ev];
+        var evInfo = getEventInfo ? getEventInfo(ev) : {capacity:72};
+        html2 += '<div style="margin-bottom:20px;">';
+        html2 += '<div style="font-size:.78rem;font-weight:700;color:#d4b483;letter-spacing:.08em;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid rgba(184,151,106,.2);">' + ev + ' <span style="font-weight:400;color:rgba(245,240,232,.35);">(' + evRegs.length + '/' + evInfo.capacity + ')</span></div>';
+        evRegs.forEach(function(r, i) {
+          html2 += renderRegRow(r, i+1, false);
+        });
+        html2 += '</div>';
+      });
+    } else {
+      regs.forEach(function(r, i) { html2 += renderRegRow(r, i+1, true); });
+    }
+    list.innerHTML = html2 || '<div style="font-size:.8rem;color:rgba(245,240,232,.35);text-align:center;padding:24px;">No registrations yet</div>';
+  }
+}
+
+function renderRegRow(r, num, showDelete) {
+  var d = r.timestamp ? new Date(r.timestamp).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
+  return '<div style="background:rgba(255,255,255,.04);border-left:3px solid rgba(184,151,106,.35);padding:9px 12px;margin-bottom:5px;border-radius:0 2px 2px 0;">'
+    + '<div style="display:flex;justify-content:space-between;align-items:flex-start;">'
+    + '<div style="display:flex;align-items:center;gap:8px;">'
+    + '<div style="font-size:.7rem;color:rgba(184,151,106,.6);font-weight:700;min-width:18px;">' + num + '</div>'
+    + '<div>'
+    + '<div style="font-size:.84rem;font-weight:700;color:#f5f0e8;">' + (r.firstName||'') + ' ' + (r.lastName||'') + '</div>'
+    + '<div style="font-size:.72rem;color:rgba(245,240,232,.5);margin-top:1px;">' + (r.email||'') + (r.phone?' · '+r.phone:'') + (r.memberNum?' · Member #'+r.memberNum:'') + '</div>'
+    + (r.partner?'<div style="font-size:.72rem;color:rgba(184,151,106,.7);margin-top:2px;">Partner: '+r.partner+'</div>':'')
+    + (r.notes?'<div style="font-size:.7rem;color:rgba(245,240,232,.4);font-style:italic;margin-top:2px;">'+r.notes+'</div>':'')
+    + '</div></div>'
+    + '<div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">'
+    + '<div style="font-size:.65rem;color:rgba(245,240,232,.3);">' + d + '</div>'
+    + (showDelete?'<button onclick="deleteReg(\''+r.id+'\')" style="font-size:.65rem;padding:1px 7px;background:rgba(220,38,38,.12);color:#f87171;border:none;border-radius:3px;cursor:pointer;">✕</button>':'')
+    + '</div></div></div>';
 }
 
 function deleteReg(id) {
@@ -3526,6 +3705,97 @@ function regPrintList() {
   });
   html += '</tbody></table><div class="footer">Westwood Hills CC · (573) 785-8211 · Generated ' + new Date().toISOString() + '</div></body></html>';
   var w = window.open('','_blank');
+  w.document.write(html);
+  w.document.close();
+  w.print();
+}
+
+function regPrintSignupSheet() {
+  var filter = (document.getElementById('reg-event-filter')||{}).value || '';
+  var regs = getAllRegs().filter(function(r){ return !filter || r.event === filter; });
+  var info = filter && typeof getEventInfo==='function' ? getEventInfo(filter) : {type:'single',capacity:72,fee:'Member Event'};
+  var evType = info.type || 'single';
+  var groupSize = evType==='foursome' ? 4 : evType==='twosome' ? 2 : 1;
+
+  var html = '<html><head><title>Signup Sheet</title><style>';
+  html += 'body{font-family:Georgia,serif;font-size:12px;color:#111;margin:0.5in;}';
+  html += 'h1{font-size:22px;margin-bottom:2px;} .sub{font-size:12px;color:#555;margin-bottom:20px;}';
+  html += '.group{border:1px solid #ccc;margin-bottom:12px;page-break-inside:avoid;}';
+  html += '.group-header{background:#1a2b1f;color:#f5f0e8;padding:6px 12px;font-size:11px;letter-spacing:.1em;display:flex;justify-content:space-between;}';
+  html += '.player-row{display:flex;align-items:center;padding:7px 12px;border-bottom:1px solid #eee;}';
+  html += '.player-row:last-child{border-bottom:none;}';
+  html += '.num{width:22px;height:22px;border-radius:50%;border:1px solid #ccc;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;margin-right:10px;}';
+  html += '.name{font-weight:bold;font-size:13px;min-width:180px;} .detail{font-size:11px;color:#666;margin-left:auto;}';
+  html += '.empty{color:#bbb;font-style:italic;font-size:12px;}';
+  html += '.single-row{padding:6px 10px;border-bottom:1px solid #eee;display:flex;} .snum{width:24px;color:#999;font-size:11px;} ';
+  html += '.footer{margin-top:24px;font-size:10px;color:#999;border-top:1px solid #eee;padding-top:8px;}';
+  html += '@media print{.no-print{display:none}}';
+  html += '</style></head><body>';
+
+  // Header
+  html += '<div style="display:flex;align-items:flex-start;justify-content:space-between;">';
+  html += '<div><h1>' + (filter||'All Events') + '</h1>';
+  html += '<div class="sub">' + (info.fee||'') + ' · Capacity: ' + info.capacity + ' · ' + regs.length + ' registered · Printed ' + new Date().toLocaleDateString() + '</div></div>';
+  html += '<div style="font-size:10px;color:#999;">Westwood Hills CC</div></div>';
+
+  if (evType === 'single') {
+    // Simple numbered list
+    html += '<table style="width:100%;border-collapse:collapse;">';
+    html += '<thead><tr style="background:#f5f0e8;"><th style="padding:6px 10px;text-align:left;font-size:11px;">#</th><th style="padding:6px 10px;text-align:left;">Name</th><th style="padding:6px 10px;text-align:left;">Email</th><th style="padding:6px 10px;text-align:left;">Phone</th><th style="padding:6px 10px;text-align:left;">Member #</th><th style="padding:6px 10px;text-align:left;">Notes</th></tr></thead><tbody>';
+    regs.forEach(function(r,i){
+      html += '<tr style="border-bottom:1px solid #eee;' + (i%2===0?'':'background:#fafaf8;') + '">';
+      html += '<td style="padding:5px 10px;color:#999;">' + (i+1) + '</td>';
+      html += '<td style="padding:5px 10px;font-weight:bold;">' + (r.firstName||'') + ' ' + (r.lastName||'') + '</td>';
+      html += '<td style="padding:5px 10px;">' + (r.email||'') + '</td>';
+      html += '<td style="padding:5px 10px;">' + (r.phone||'') + '</td>';
+      html += '<td style="padding:5px 10px;">' + (r.memberNum||'') + '</td>';
+      html += '<td style="padding:5px 10px;font-style:italic;color:#666;">' + (r.notes||'') + '</td></tr>';
+    });
+    // Add empty rows to fill up to capacity (max 20 blank rows)
+    var blanks = Math.min(20, info.capacity - regs.length);
+    for (var b = 0; b < blanks; b++) {
+      html += '<tr style="border-bottom:1px solid #eee;' + ((regs.length+b)%2===0?'':'background:#fafaf8;') + '">';
+      html += '<td style="padding:5px 10px;color:#bbb;">' + (regs.length+b+1) + '</td>';
+      html += '<td colspan="5" style="padding:5px 10px;border-bottom:1px solid #e0dbd0;">&nbsp;</td></tr>';
+    }
+    html += '</tbody></table>';
+  } else {
+    // Group cards for twosome/foursome
+    var groupLabel = evType === 'twosome' ? 'TEAM' : 'GROUP';
+    regs.forEach(function(r, gi) {
+      var partners = r.partner ? r.partner.split(/[,;&\/]+/).map(function(p){return p.trim();}).filter(Boolean) : [];
+      html += '<div class="group"><div class="group-header"><span>' + groupLabel + ' ' + (gi+1) + '</span><span>' + (r.event||'') + '</span></div>';
+      // Player 1
+      html += '<div class="player-row"><div class="num">1</div><div class="name">' + (r.firstName||'') + ' ' + (r.lastName||'') + '</div><div class="detail">' + (r.email||'') + (r.phone?' · '+r.phone:'') + (r.memberNum?' · #'+r.memberNum:'') + '</div></div>';
+      // Partners
+      partners.forEach(function(p, pi) {
+        html += '<div class="player-row"><div class="num">' + (pi+2) + '</div><div class="name">' + p + '</div><div class="detail"></div></div>';
+      });
+      // Open slots
+      var filled = 1 + partners.length;
+      for (var s = filled; s < groupSize; s++) {
+        html += '<div class="player-row" style="background:#fafaf8;"><div class="num" style="border-color:#ddd;color:#ccc;">' + (s+1) + '</div><div class="empty">Open slot</div></div>';
+      }
+      if (r.notes) html += '<div style="padding:4px 12px 8px;font-size:11px;color:#888;font-style:italic;">📝 ' + r.notes + '</div>';
+      html += '</div>';
+    });
+    // Add empty groups to fill remaining capacity
+    var filledGroups = regs.length;
+    var totalGroups = info.capacity;
+    var emptyGroups = Math.min(10, totalGroups - filledGroups);
+    for (var eg = 0; eg < emptyGroups; eg++) {
+      html += '<div class="group"><div class="group-header"><span>' + groupLabel + ' ' + (filledGroups+eg+1) + '</span><span style="opacity:.4;">Open</span></div>';
+      for (var es = 0; es < groupSize; es++) {
+        html += '<div class="player-row" style="background:#fafaf8;"><div class="num" style="border-color:#ddd;color:#ccc;">' + (es+1) + '</div><div class="empty">Open slot</div></div>';
+      }
+      html += '</div>';
+    }
+  }
+
+  html += '<div class="footer">Westwood Hills Country Club · (573) 785-8211 · Generated ' + new Date().toISOString() + '</div>';
+  html += '</body></html>';
+
+  var w = window.open('', '_blank');
   w.document.write(html);
   w.document.close();
   w.print();
@@ -4246,6 +4516,7 @@ function staffConfirmClose() {
       <p class="reg-modal-tag">Event Registration</p>
       <h2 class="reg-modal-title" id="reg-event-title">Event Name</h2>
       <p class="reg-modal-meta" id="reg-event-meta"></p>
+      <p style="font-size:11px;margin-bottom:20px;" id="reg-spots-remaining"></p>
       <form onsubmit="submitRegForm(event)">
         <div class="reg-row">
           <div class="reg-field"><label>First Name *</label><input type="text" id="reg-fname" required placeholder="Jane"/></div>
