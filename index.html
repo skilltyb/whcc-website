@@ -2269,7 +2269,7 @@ function getEventInfo(title) {
 // ═══════════════════════════════════════
 // EVENT REGISTRATION SYSTEM
 // ═══════════════════════════════════════
-var WHCC_SCRIPT_URL = 'https://script.google.com/macros/s/WHCC_SCRIPT_ID/exec';
+var WHCC_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxLIwXQMtgijncf-a6nnP4EsCliKGEM-yTsfja9hYFzLueQujBhevo-n8ICUHFRAEp1/exec';
 var currentRegEvent = null;
 
 function openRegModal(eventTitle, eventMeta, isTeam) {
@@ -2334,7 +2334,7 @@ function closeRegModal() {
   document.getElementById('reg-overlay').style.display = 'none';
   document.body.style.overflow = '';
   // Reset form
-  ['reg-fname','reg-lname','reg-email','reg-phone','reg-partner','reg-notes','reg-membernum'].forEach(function(id){
+  ['reg-fname','reg-lname','reg-email','reg-phone','reg-partner','reg-notes','reg-membernum','reg-ghin'].forEach(function(id){
     var el = document.getElementById(id); if(el) el.value = '';
   });
   currentRegEvent = null;
@@ -2358,6 +2358,7 @@ function submitRegForm(e) {
     partner: document.getElementById('reg-partner').value.trim(),
     players: document.getElementById('reg-players').value,
     memberNum: document.getElementById('reg-membernum').value.trim(),
+    ghin: document.getElementById('reg-ghin') ? document.getElementById('reg-ghin').value.trim() : '',
     notes: document.getElementById('reg-notes').value.trim(),
     timestamp: new Date().toISOString(),
     source: 'website'
@@ -3678,9 +3679,9 @@ function regExportCSV() {
   var filter = (document.getElementById('reg-event-filter')||{}).value || '';
   var regs = getAllRegs().filter(function(r){ return !filter || r.event === filter; });
   if (!regs.length) { alert('No registrations to export.'); return; }
-  var headers = ['Event','Date/Time','First Name','Last Name','Email','Phone','Partner','Players','Member #','Notes','Registered'];
+  var headers = ['Event','Date/Time','First Name','Last Name','Email','Phone','Partner','Players','Member #','GHIN #','Notes','Registered'];
   var rows = regs.map(function(r){
-    return [r.event,r.eventMeta,r.firstName,r.lastName,r.email,r.phone,r.partner,r.players,r.memberNum,r.notes,r.timestamp].map(function(v){
+    return [r.event,r.eventMeta,r.firstName,r.lastName,r.email,r.phone,r.partner,r.players,r.memberNum,r.ghin||"",r.notes,r.timestamp].map(function(v){
       return '"'+(v||'').replace(/"/g,'""')+'"';
     }).join(',');
   });
@@ -4530,7 +4531,7 @@ function staffConfirmClose() {
           <div class="reg-field"><label>Team / Partner Name</label><input type="text" id="reg-partner" placeholder="e.g. John Doe"/></div>
           <div class="reg-field"><label>Players in Group</label><select id="reg-players"><option value="1">1 Player</option><option value="2" selected>2 Players</option><option value="3">3 Players</option><option value="4">4 Players</option></select></div>
         </div>
-        <div class="reg-field"><label>Member #</label><input type="text" id="reg-membernum" placeholder="Optional — speeds up check-in"/></div>
+        <div class="reg-row"><div class="reg-field"><label>Member #</label><input type="text" id="reg-membernum" placeholder="Optional"/></div><div class="reg-field"><label>GHIN #</label><input type="text" id="reg-ghin" placeholder="Optional — handicap index"/></div></div>
         <div class="reg-field"><label>Notes / Special Requests</label><textarea id="reg-notes" placeholder="Dietary needs, tee time preference, etc."></textarea></div>
         <div class="reg-error" id="reg-error"></div>
         <button type="submit" class="btn-p" style="width:100%;margin-top:8px" id="reg-submit-btn">Complete Registration</button>
