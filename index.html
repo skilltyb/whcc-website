@@ -2142,6 +2142,25 @@ footer{background:var(--deep);padding:80px 80px 40px}
   <div style="margin-bottom:10px;">
     <select id="reg-event-filter" onchange="currentRegFilter=this.value;renderStaffRegs()" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(184,151,106,.2);color:#f5f0e8;padding:8px 12px;font-size:12px;border-radius:2px;">
       <option value="">— All Events —</option>
+      <option value="St. Patty's Shootout">St. Patty's Shootout</option>
+      <option value="Ladies Opening Day">Ladies Opening Day</option>
+      <option value="Masters Dinner">Masters Dinner</option>
+      <option value="Mules Invitational">Mules Invitational</option>
+      <option value="Spring 2-Man Scramble">Spring 2-Man Scramble</option>
+      <option value="Ladies Sweet Treat">Ladies Sweet Treat</option>
+      <option value="MGA Draft Day">MGA Draft Day</option>
+      <option value="Men's Opening Day">Men's Opening Day</option>
+      <option value="Ozark Invitational">Ozark Invitational</option>
+      <option value="Couples Scramble">Couples Scramble</option>
+      <option value="Ladies Invitational">Ladies Invitational</option>
+      <option value="4th of July Scramble">4th of July Scramble</option>
+      <option value="Member-Guest">Member-Guest</option>
+      <option value="Club Championship">Club Championship</option>
+      <option value="Ladies Club Championship">Ladies Club Championship</option>
+      <option value="Fall 2-Man Scramble">Fall 2-Man Scramble</option>
+      <option value="Senior Scramble">Senior Scramble</option>
+      <option value="Closing Day Scramble">Closing Day Scramble</option>
+      <option value="Halloween Costume Scramble">Halloween Costume Scramble</option>
     </select>
   </div>
   <!-- Capacity bar -->
@@ -3671,15 +3690,15 @@ function buildRegDropdown(regs) {
     });
   }
 
-  // Remove all options except the first ("— All Events —"), then add one per event
-  while (sel.options.length > 1) sel.remove(1);
-  for (var i = 0; i < WHCC_EVENT_ORDER.length; i++) {
-    var ev  = WHCC_EVENT_ORDER[i];
+  // Update text of each option with live counts (options already exist in HTML)
+  for (var i = 1; i < sel.options.length; i++) {
+    var opt = sel.options[i];
+    var ev  = opt.value;
     var cnt = counts[ev] || 0;
     var cap = (WHCC_EVENTS && WHCC_EVENTS[ev]) ? WHCC_EVENTS[ev].capacity : 72;
     var pct = cap > 0 ? Math.round(cnt / cap * 100) : 0;
-    var opt = new Option(ev + '  (' + cnt + '/' + cap + '  ' + pct + '%)', ev, false, ev === currentRegFilter);
-    sel.add(opt);
+    opt.text = ev + '  (' + cnt + '/' + cap + '  ' + pct + '%)';
+    opt.selected = (ev === currentRegFilter);
   }
 }
 
