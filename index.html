@@ -4876,7 +4876,7 @@ function staffConfirmClose() {
 var pairRoster = [];
 var pairTeams  = [];
 var pairSwapSource = null;
-var pairConfig = { groupSize: 4, mode: 'league' };
+var pairConfig = { groupSize: 4, mode: 'league', teamSize: 2 };
 var pairEventFilter = '';
 var pairHistory = [];
 
@@ -4953,7 +4953,15 @@ function pairAddPlayer() {
 }
 
 function pairRemovePlayer(id) {
-  pairRoster = pairRoster.filter(function(p){ return p.id !== id; });
+  // If the player is part of a locked group, remove the whole group
+  var target = pairRoster.find ? pairRoster.find(function(p){ return p.id === id; })
+    : (function(){ for(var i=0;i<pairRoster.length;i++) if(pairRoster[i].id===id) return pairRoster[i]; }());
+  if (target && target.lockedGroupId) {
+    var gid = target.lockedGroupId;
+    pairRoster = pairRoster.filter(function(p){ return p.lockedGroupId !== gid; });
+  } else {
+    pairRoster = pairRoster.filter(function(p){ return p.id !== id; });
+  }
   pairSave();
   pairRenderRoster();
   if (pairTeams.length) pairGenerate();
@@ -5118,9 +5126,10 @@ function pairRenderRoster() {
       '</div>';
     }
     var hcapStr = (p.hcap > 0 ? '+' : '') + p.hcap;
+    var lockIcon = p.lockedGroupId ? '<span title="Pre-registered group" style="font-size:10px;margin-right:3px;opacity:.6;">🔒</span>' : '';
     return '<div class="pair-player-row" style="cursor:default;">' +
       '<div class="pair-tier ' + t.tierClass + '">' + t.tier + '</div>' +
-      '<div class="pair-name">' + pairEsc(p.name) + '</div>' +
+      '<div class="pair-name">' + lockIcon + pairEsc(p.name) + '</div>' +
       '<div class="pair-hcap">' + hcapStr + '</div>' +
       removeBtn +
     '</div>';
@@ -5222,13 +5231,19 @@ function pairUpdateEventBadge() {
   badge.textContent = count + ' registrant' + (count !== 1 ? 's' : '');
 }
 
-// Auto-switch pairing mode based on event type
+// Auto-switch pairing mode and team size based on event type
 function pairAutoMode() {
   if (!pairEventFilter) return;
   var info = (typeof getEventInfo === 'function') ? getEventInfo(pairEventFilter) : { type: 'single' };
-  var suggested = (info.type === 'twosome' || info.type === 'foursome') ? 'team' : 'league';
-  if (suggested !== pairConfig.mode) {
-    pairSetMode(suggested);
+  if (info.type === 'twosome') {
+    pairConfig.teamSize = 2;
+    if (pairConfig.mode !== 'team') pairSetMode('team');
+  } else if (info.type === 'foursome') {
+    pairConfig.teamSize = 4;
+    if (pairConfig.mode !== 'team') pairSetMode('team');
+  } else {
+    pairConfig.teamSize = 1;
+    if (pairConfig.mode !== 'league') pairSetMode('league');
   }
 }
 
@@ -5257,22 +5272,55 @@ function pairImportFromRegs() {
   var added = 0;
 
   if (pairConfig.mode === 'team') {
-    // In team mode: detect partner field and build locked pairs
-    list.forEach(function(r) {
-      var name1   = ((r.firstName || '') + ' ' + (r.lastName || '')).trim();
-      var name2   = (r.partner || '').trim();
-      if (!name1) return;
+    var isF = pairConfig.teamSize === 4;   // foursome event?
+    var isT = pairConfig.teamSize === 2;   // twosome event?
 
-      // If no partner listed, fall back to individual import
+    list.forEach(function(r) {
+      var name1 = ((r.firstName || '') + ' ' + (r.lastName || '')).trim();
+      if (!name1) return;
+      var hcap1 = parseFloat(r.ghin); if (isNaN(hcap1)) hcap1 = 18;
+      hcap1 = Math.round(hcap1 * 10) / 10;
+
+      // ── FOURSOME path ──────────────────────────────────────────
+      if (isF) {
+        var partnerNames = r.partner
+          ? r.partner.split(/[,;&\/]+/).map(function(p){ return p.trim(); }).filter(Boolean)
+          : [];
+        var allNames = [name1].concat(partnerNames);
+
+        // Is this a complete pre-registered group (registrant + 3 partners)?
+        if (partnerNames.length >= 3) {
+          // Skip if any name is already in the roster
+          var alreadyAny = allNames.some(function(n) {
+            return pairRoster.some(function(p){ return p.name.toLowerCase() === n.toLowerCase(); });
+          });
+          if (alreadyAny) return;
+          var lockId = Date.now() + Math.floor(Math.random() * 10000);
+          allNames.slice(0, 4).forEach(function(n, i) {
+            pairRoster.push({ id: lockId + i, name: n, hcap: hcap1, lockedGroupId: lockId });
+          });
+          added++;
+        } else {
+          // Individual (no full group) — import as solo player
+          if (pairRoster.some(function(p){ return p.name.toLowerCase() === name1.toLowerCase(); })) return;
+          pairRoster.push({ id: Date.now() + Math.floor(Math.random() * 10000), name: name1, hcap: hcap1 });
+          added++;
+        }
+        return;
+      }
+
+      // ── TWOSOME path ───────────────────────────────────────────
+      var name2 = (r.partner || '').trim();
+
+      // No partner — import as individual
       if (!name2) {
         if (pairRoster.some(function(p){ return !p.isCouple && p.name.toLowerCase() === name1.toLowerCase(); })) return;
-        var h = parseFloat(r.ghin); if (isNaN(h)) h = 18;
-        pairRoster.push({ name: name1, hcap: h, id: Date.now() + Math.floor(Math.random() * 10000) });
+        pairRoster.push({ name: name1, hcap: hcap1, id: Date.now() + Math.floor(Math.random() * 10000) });
         added++;
         return;
       }
 
-      // Skip if either name already appears in a couple in the roster
+      // Skip if either name already in roster
       var already = pairRoster.some(function(p) {
         if (!p.isCouple) return p.name.toLowerCase() === name1.toLowerCase();
         return p.name1.toLowerCase() === name1.toLowerCase() ||
@@ -5282,14 +5330,8 @@ function pairImportFromRegs() {
       });
       if (already) return;
 
-      var hcap1 = parseFloat(r.ghin);
-      if (isNaN(hcap1)) hcap1 = 18;
-
-      // Partner handicap: try partnerGhin field first, then fall back to same as primary
       var hcap2 = parseFloat(r.partnerGhin);
       if (isNaN(hcap2)) hcap2 = hcap1;
-
-      hcap1 = Math.round(hcap1 * 10) / 10;
       hcap2 = Math.round(hcap2 * 10) / 10;
       var cid = Date.now() + Math.floor(Math.random() * 10000);
       pairRoster.push({
@@ -5301,9 +5343,11 @@ function pairImportFromRegs() {
       });
       added++;
     });
+
     pairSave();
     pairRenderRoster();
-    alert('Imported ' + added + ' couple' + (added !== 1 ? 's' : '') + ' from "' + pairEventFilter + '".');
+    var label = isF ? 'group' : 'couple';
+    alert('Imported ' + added + ' ' + label + (added !== 1 ? 's' : '') + ' from "' + pairEventFilter + '".');
     return;
   }
 
@@ -5511,7 +5555,72 @@ function pairBuildTeamGroups(lockedUnits, singles) {
   return groups;
 }
 
+// Build groups for foursome events: locked groups stay together,
+// singles snake-sorted by HCP into balanced 4-person groups.
+function pairBuildFoursomeGroups() {
+  var tierLabels  = ['A','B','C','D'];
+  var tierClasses = ['tier-a','tier-b','tier-c','tier-d'];
+  var groups  = [];
+  var teamId  = 1;
+
+  // Step 1: Collect locked groups (pre-registered foursomes)
+  var lockMap = {};
+  var singles = [];
+  pairRoster.forEach(function(p) {
+    if (p.lockedGroupId) {
+      if (!lockMap[p.lockedGroupId]) lockMap[p.lockedGroupId] = [];
+      lockMap[p.lockedGroupId].push(p);
+    } else {
+      singles.push(p);
+    }
+  });
+
+  // Each locked group becomes a complete group
+  Object.keys(lockMap).forEach(function(lid) {
+    var members = lockMap[lid];
+    var g = { id: teamId++, players: [], repeatDate: null };
+    members.forEach(function(m, i) {
+      g.players.push({ player: m, tier: tierLabels[i] || 'D', tierClass: tierClasses[i] || 'tier-d' });
+    });
+    groups.push(g);
+  });
+
+  // Step 2: Snake-assign singles by handicap into balanced 4-person groups
+  singles.sort(function(a, b) { return a.hcap - b.hcap; });
+  var newGroupCount = Math.ceil(singles.length / 4);
+  var newGroups = [];
+  for (var i = 0; i < newGroupCount; i++) {
+    newGroups.push({ id: teamId++, players: [], repeatDate: null });
+  }
+  // Snake draft: low HCP to high HCP across groups, then reverse
+  var dir = 1, gi = 0;
+  singles.forEach(function(s) {
+    var ti = newGroups[gi].players.length;
+    newGroups[gi].players.push({ player: s, tier: tierLabels[ti] || 'D', tierClass: tierClasses[ti] || 'tier-d' });
+    gi += dir;
+    if (gi >= newGroupCount) { dir = -1; gi = newGroupCount - 1; }
+    else if (gi < 0)         { dir =  1; gi = 0; }
+  });
+  newGroups.forEach(function(g) { groups.push(g); });
+
+  return groups;
+}
+
 function pairGenerateTeamMode() {
+  // Route to foursome builder if needed
+  if (pairConfig.teamSize === 4) {
+    if (pairRoster.length < 4) { alert('Need at least 4 players to generate groups.'); return; }
+    pairTeams = pairBuildFoursomeGroups();
+    pairSwapSource = null;
+    var hint = document.getElementById('pair-swap-hint');
+    if (hint) hint.classList.remove('show');
+    var saveBtn = document.getElementById('pair-save-week-btn');
+    if (saveBtn) { saveBtn.style.display = 'inline-block'; saveBtn.disabled = false; saveBtn.textContent = '💾 Save Week'; }
+    pairRenderRoster();
+    pairRenderTeams();
+    return;
+  }
+
   var locked  = pairRoster.filter(function(p){ return p.isCouple; });
   var singles = pairRoster.filter(function(p){ return !p.isCouple; });
   if (locked.length + singles.length < 2) {
