@@ -3658,64 +3658,45 @@ function buildRegDropdown(regs) {
   if (!sel) return;
   var prevVal = sel.value;
 
-  // Count registrations per event from whatever data we have
+  // Build count map
   var counts = {};
-  (regs || []).forEach(function(r){ if (r.event) counts[r.event] = (counts[r.event] || 0) + 1; });
+  try {
+    (regs || []).forEach(function(r) {
+      if (r.event) counts[r.event] = (counts[r.event] || 0) + 1;
+    });
+  } catch(e) {}
 
+  // Always rebuild from the known event list — never depends on regs being non-empty
   sel.innerHTML = '<option value="">— All Events —</option>';
-
-  // Always show all 19 known events in season order — never depends on regs being populated
   WHCC_EVENT_ORDER.forEach(function(ev) {
     var count = counts[ev] || 0;
-    var info  = getEventInfo ? getEventInfo(ev) : { capacity: 72 };
-    var pct   = info.capacity > 0 ? Math.round(count / info.capacity * 100) : 0;
+    var cap   = (WHCC_EVENTS && WHCC_EVENTS[ev]) ? WHCC_EVENTS[ev].capacity : 72;
+    var pct   = cap > 0 ? Math.round(count / cap * 100) : 0;
     var opt   = document.createElement('option');
-    opt.value = ev;
-    opt.textContent = ev + '  (' + count + '/' + info.capacity + ' · ' + pct + '%)';
+    opt.value       = ev;
+    opt.textContent = ev + '  (' + count + '/' + cap + ' · ' + pct + '%)';
     sel.appendChild(opt);
   });
 
-  // Also append any extra events found in the data that aren't in the known list
-  Object.keys(counts).forEach(function(ev) {
-    if (WHCC_EVENT_ORDER.indexOf(ev) === -1) {
-      var opt = document.createElement('option');
-      opt.value = ev;
-      opt.textContent = ev + '  (' + counts[ev] + ')';
-      sel.appendChild(opt);
-    }
-  });
-
+  // Restore previous selection if it still exists
   if (prevVal) sel.value = prevVal;
 }
 
 function staffViewRegistrations() {
-  var sel = document.getElementById('reg-event-filter');
-  if (!sel) return;
+  // Always populate dropdown immediately — shows 0 counts if no data yet
+  buildRegDropdown(getAllRegs());
+  renderStaffRegs();
 
-  var cached = getAllRegs();
-  if (cached.length > 0) {
-    // Show cached data immediately, then silently refresh in background
-    buildRegDropdown(cached);
-    renderStaffRegs();
-  } else {
-    // No local data — fetch from Sheet first
-    sel.innerHTML = '<option value="">⟳ Loading from Sheet…</option>';
-  }
-
-  // Always refresh from Sheet when tab opens
+  // Then fetch live data from Sheet and update counts
   WHCC_SYNC.fetchAll(function(regs, err) {
-    if (err || !regs) {
-      if (cached.length === 0) {
-        sel.innerHTML = '<option value="">⚠ Could not load — check connection</option>';
+    if (!err && regs) {
+      buildRegDropdown(regs);
+      renderStaffRegs();
+      var lbl = document.getElementById('reg-count-label');
+      if (lbl) {
+        lbl.textContent = lbl.textContent.replace(/ · synced.*/,'') +
+                          ' · synced ' + new Date().toLocaleTimeString();
       }
-      return;
-    }
-    buildRegDropdown(regs);
-    renderStaffRegs();
-    var lbl = document.getElementById('reg-count-label');
-    if (lbl) {
-      var base = (lbl.textContent || '').replace(/ · synced.*/,'');
-      lbl.textContent = base + ' · synced ' + new Date().toLocaleTimeString();
     }
   });
 }
