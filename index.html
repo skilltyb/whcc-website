@@ -365,6 +365,34 @@ footer{background:var(--deep);padding:80px 80px 40px}
 /* ── STAFF DASHBOARD ── */
 .staff-header{border-bottom:1px solid rgba(184,151,106,.2);padding:20px 28px;display:flex;flex-direction:column;align-items:flex-start;gap:14px}
 #reg-event-filter option{background:#1e3a20;color:#f5f0e8;}
+/* ── PAIRING BUILDER ── */
+.pair-section{display:flex;gap:16px;min-height:400px;}
+@media(max-width:700px){.pair-section{flex-direction:column;}}
+.pair-col{flex:1;min-width:0;}
+.pair-col-head{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
+.pair-player-row{display:flex;align-items:center;gap:6px;padding:5px 8px;background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);border-radius:2px;margin-bottom:4px;cursor:pointer;transition:all .15s;}
+.pair-player-row:hover{background:rgba(184,151,106,.08);border-color:rgba(184,151,106,.3);}
+.pair-player-row.swap-source{background:rgba(184,151,106,.18);border-color:var(--gold);}
+.pair-tier{width:18px;height:18px;border-radius:50%;font-size:9px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.tier-a{background:#2e7d32;color:#fff;}.tier-b{background:#1565c0;color:#fff;}.tier-c{background:#6a1f8a;color:#fff;}.tier-d{background:#b8600a;color:#fff;}
+.pair-name{flex:1;font-size:12px;color:var(--cream);}
+.pair-hcap{font-size:11px;color:rgba(245,240,232,.45);width:36px;text-align:right;}
+.pair-team-card{background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.15);border-radius:2px;margin-bottom:8px;overflow:hidden;}
+.pair-team-head{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:rgba(184,151,106,.07);border-bottom:1px solid rgba(184,151,106,.1);}
+.pair-team-num{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);}
+.pair-team-total{font-size:11px;color:rgba(245,240,232,.45);}
+.pair-team-body{padding:4px 6px;}
+.pair-ctrl{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center;}
+.pair-btn{padding:6px 14px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;background:transparent;color:rgba(245,240,232,.6);border:1px solid rgba(184,151,106,.3);cursor:pointer;font-family:'Raleway',sans-serif;transition:all .2s;white-space:nowrap;}
+.pair-btn:hover{background:rgba(184,151,106,.1);color:var(--cream);border-color:rgba(184,151,106,.5);}
+.pair-btn.active{background:rgba(184,151,106,.15);color:var(--gold-lt);border-color:var(--gold);}
+.pair-btn.primary{background:var(--gold);color:var(--deep);border-color:var(--gold);}
+.pair-btn.primary:hover{background:var(--gold-lt);}
+.pair-input{background:rgba(255,255,255,.05);border:1px solid rgba(184,151,106,.25);color:var(--cream);padding:5px 8px;font-size:12px;font-family:'Raleway',sans-serif;}
+.pair-input::placeholder{color:rgba(245,240,232,.3);}
+.pair-balance{font-size:11px;color:rgba(245,240,232,.4);padding:4px 0;}
+.pair-swap-hint{font-size:10px;color:var(--gold);padding:4px 8px;background:rgba(184,151,106,.1);border:1px solid rgba(184,151,106,.25);border-radius:2px;display:none;}
+.pair-swap-hint.show{display:inline-block;}
 .staff-tag{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
 .staff-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;color:var(--cream);letter-spacing:.02em}
 .staff-title em{font-style:italic;color:var(--gold-lt);font-weight:300}
@@ -1823,6 +1851,7 @@ footer{background:var(--deep);padding:80px 80px 40px}
         <button class="staff-view-btn" onclick="staffView('daily',this)">📋 Daily</button>
         <button class="staff-view-btn" onclick="staffView('menus',this)">🍽 Menus</button>
         <button class="staff-view-btn" onclick="staffView('registrations',this)">📋 Registrations</button>
+        <button class="staff-view-btn" onclick="staffView('pairings',this)">⛳ Pairings</button>
         <span style="width:1px;background:rgba(184,151,106,.2);margin:0 4px;"></span>
         <button class="staff-view-btn active" id="sv-venue-hoovers" onclick="staffSwitchVenue('hoovers',this)" style="font-size:9px;">Hoover's</button>
         <button class="staff-view-btn" id="sv-venue-grille" onclick="staffSwitchVenue('grille',this)" style="font-size:9px;">Westwood Grill</button>
@@ -2178,6 +2207,61 @@ footer{background:var(--deep);padding:80px 80px 40px}
   <!-- Signup sheet -->
   <div id="sv-reg-list"></div>
         </div>
+
+        <!-- Pairings view -->
+        <div id="sv-pairings" style="display:none;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:#f5f0e8;">Team <em style="color:#d4b483;">Pairing Builder</em></div>
+          </div>
+          <!-- Top controls -->
+          <div class="pair-ctrl">
+            <button class="pair-btn primary" onclick="pairGenerate()">⚡ Generate Teams</button>
+            <button class="pair-btn" onclick="pairReshuffle()">🔀 Reshuffle</button>
+            <button class="pair-btn" onclick="pairImportFromRegs()">⬆ Import Registrations</button>
+            <button class="pair-btn" onclick="pairPrint()">🖨 Print</button>
+            <button class="pair-btn" onclick="pairClearTeams()">✕ Clear Teams</button>
+          </div>
+          <!-- Config row -->
+          <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;">
+            <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.4);">Group Size</div>
+            <button class="pair-btn" id="pair-sz-2" onclick="pairSetSize(2,this)">2</button>
+            <button class="pair-btn" id="pair-sz-3" onclick="pairSetSize(3,this)">3</button>
+            <button class="pair-btn active" id="pair-sz-4" onclick="pairSetSize(4,this)">4</button>
+            <div style="width:1px;background:rgba(184,151,106,.2);height:20px;margin:0 4px;"></div>
+            <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.4);">Mode</div>
+            <button class="pair-btn active" id="pair-mode-league" onclick="pairSetMode('league',this)">League</button>
+            <button class="pair-btn" id="pair-mode-tournament" onclick="pairSetMode('tournament',this)">Tournament</button>
+            <div style="width:1px;background:rgba(184,151,106,.2);height:20px;margin:0 4px;"></div>
+            <span id="pair-balance-label" class="pair-balance"></span>
+            <span id="pair-swap-hint" class="pair-swap-hint">Click another player to swap — or same player to cancel</span>
+          </div>
+          <!-- Two-column body -->
+          <div class="pair-section">
+            <!-- Left: Roster -->
+            <div class="pair-col" style="max-width:290px;">
+              <div class="pair-col-head">
+                <span>Roster <span id="pair-roster-count" style="color:rgba(245,240,232,.4);font-weight:400;">(0)</span></span>
+                <button class="pair-btn" style="padding:3px 8px;font-size:9px;" onclick="pairClearRoster()">Clear All</button>
+              </div>
+              <!-- Add player -->
+              <div style="display:flex;gap:5px;margin-bottom:10px;">
+                <input class="pair-input" id="pair-add-name" placeholder="Player name" style="flex:1;" onkeydown="if(event.key==='Enter')pairAddPlayer()" />
+                <input class="pair-input" id="pair-add-hcap" placeholder="HCP" style="width:54px;" type="number" min="-10" max="54" step="0.1" onkeydown="if(event.key==='Enter')pairAddPlayer()" />
+                <button class="pair-btn primary" style="padding:5px 10px;font-size:13px;letter-spacing:0;" onclick="pairAddPlayer()">+</button>
+              </div>
+              <div id="pair-roster-list"></div>
+            </div>
+            <!-- Right: Teams -->
+            <div class="pair-col">
+              <div class="pair-col-head">
+                <span>Teams <span id="pair-team-count" style="color:rgba(245,240,232,.4);font-weight:400;"></span></span>
+              </div>
+              <div id="pair-teams-list">
+                <div style="color:rgba(245,240,232,.2);font-size:12px;padding:20px 0;">Add players to the roster, then click ⚡ Generate Teams.</div>
+              </div>
+            </div>
+          </div>
+        </div><!-- end sv-pairings -->
 
       </div>
 
@@ -3629,7 +3713,7 @@ function staffView(view, btn, useSecondary) {
       .find(b => (b.getAttribute('onclick') || '').includes("'" + view + "'"));
     if (found) found.classList.add(navClass);
   }
-  ['calendar','upcoming','search','guests','settings','scoring','daily','menus','registrations'].forEach(v => {
+  ['calendar','upcoming','search','guests','settings','scoring','daily','menus','registrations','pairings'].forEach(v => {
     const el = document.getElementById('sv-' + v);
     if (el) el.style.display = v === view ? 'block' : 'none';
   });
@@ -3645,6 +3729,10 @@ function staffView(view, btn, useSecondary) {
   if (view === 'daily') duAdminLoad();
   if (view === 'menus') smLoad();
   if (view === 'registrations') staffViewRegistrations();
+  if (view === 'pairings') pairViewLoad();
+  // Hide right panel for full-width views
+  var rightPanel = document.getElementById('staff-right');
+  if (rightPanel) rightPanel.style.display = (view === 'registrations' || view === 'pairings') ? 'none' : '';
 }
 
 // ═══════════════════════════════════════
@@ -4641,6 +4729,371 @@ function staffConfirmOk() {
 function staffConfirmClose() {
   document.getElementById('staff-confirm').classList.remove('active');
   _confirmCallback = null;
+}
+
+// ═══════════════════════════════════════
+// TEAM PAIRING BUILDER
+// ═══════════════════════════════════════
+var pairRoster = [];
+var pairTeams  = [];
+var pairSwapSource = null;
+var pairConfig = { groupSize: 4, mode: 'league' };
+
+function pairViewLoad() {
+  var saved = localStorage.getItem('whcc-pairings-roster');
+  if (saved) { try { pairRoster = JSON.parse(saved); } catch(e){} }
+  var cfg = localStorage.getItem('whcc-pairings-config');
+  if (cfg) { try { Object.assign(pairConfig, JSON.parse(cfg)); } catch(e){} }
+  pairApplyConfig();
+  pairRenderRoster();
+  pairRenderTeams();
+}
+
+function pairSave() {
+  localStorage.setItem('whcc-pairings-roster', JSON.stringify(pairRoster));
+  localStorage.setItem('whcc-pairings-config', JSON.stringify(pairConfig));
+}
+
+function pairApplyConfig() {
+  [2,3,4].forEach(function(n) {
+    var b = document.getElementById('pair-sz-' + n);
+    if (b) b.classList.toggle('active', n === pairConfig.groupSize);
+  });
+  ['league','tournament'].forEach(function(m) {
+    var b = document.getElementById('pair-mode-' + m);
+    if (b) b.classList.toggle('active', m === pairConfig.mode);
+  });
+}
+
+function pairSetSize(n) {
+  pairConfig.groupSize = n;
+  pairSave();
+  pairApplyConfig();
+  if (pairTeams.length) pairGenerate();
+}
+
+function pairSetMode(m) {
+  pairConfig.mode = m;
+  pairSave();
+  pairApplyConfig();
+}
+
+function pairAddPlayer() {
+  var nameEl = document.getElementById('pair-add-name');
+  var hcapEl = document.getElementById('pair-add-hcap');
+  var name = nameEl.value.trim();
+  var hcap = parseFloat(hcapEl.value);
+  if (!name) { nameEl.focus(); return; }
+  if (isNaN(hcap)) hcap = 18;
+  hcap = Math.round(hcap * 10) / 10;
+  pairRoster.push({ name: name, hcap: hcap, id: Date.now() + Math.floor(Math.random() * 1000) });
+  pairSave();
+  pairRenderRoster();
+  nameEl.value = '';
+  hcapEl.value = '';
+  nameEl.focus();
+}
+
+function pairRemovePlayer(id) {
+  pairRoster = pairRoster.filter(function(p){ return p.id !== id; });
+  pairSave();
+  pairRenderRoster();
+  if (pairTeams.length) pairGenerate();
+}
+
+function pairClearRoster() {
+  if (!confirm('Clear all players from the roster?')) return;
+  pairRoster = [];
+  pairTeams  = [];
+  pairSwapSource = null;
+  pairSave();
+  pairRenderRoster();
+  pairRenderTeams();
+}
+
+function pairClearTeams() {
+  pairTeams = [];
+  pairSwapSource = null;
+  var hint = document.getElementById('pair-swap-hint');
+  if (hint) hint.classList.remove('show');
+  pairRenderTeams();
+}
+
+// Assign tier labels to sorted players (A=best, D=worst)
+function pairAssignTiers(sorted, gs) {
+  var n = sorted.length;
+  var labels    = ['A','B','C','D'].slice(0, gs);
+  var tierClass = ['tier-a','tier-b','tier-c','tier-d'];
+  var base = Math.floor(n / gs);
+  var rem  = n % gs;
+  var result = [];
+  var idx = 0;
+  for (var t = 0; t < gs; t++) {
+    var size = base + (t < rem ? 1 : 0);
+    for (var j = 0; j < size; j++) {
+      result.push({ player: sorted[idx], tier: labels[t], tierClass: tierClass[t], tierIdx: t });
+      idx++;
+    }
+  }
+  return result;
+}
+
+// Serpentine team builder: A ascending, B descending, C ascending, D descending
+function pairBuildTeams(tiers, gs) {
+  var teamCount = tiers[0].length; // use largest tier size... actually we need minimum
+  teamCount = tiers.reduce(function(m, tier) { return Math.min(m, tier.length); }, tiers[0].length);
+  // Handle extra players (put remainder in final team slot)
+  var maxTeams = tiers[0].length; // A tier is largest or equal
+
+  var teams = [];
+  for (var i = 0; i < teamCount; i++) {
+    var team = { id: i + 1, players: [] };
+    for (var t = 0; t < gs; t++) {
+      // Even tiers: ascending (index i), Odd tiers: descending (index tierLen-1-i)
+      var tier = tiers[t];
+      var pi = (t % 2 === 0) ? i : (tier.length - 1 - i);
+      if (pi >= 0 && pi < tier.length) {
+        team.players.push({ player: tier[pi], tier: ['A','B','C','D'][t], tierClass: ['tier-a','tier-b','tier-c','tier-d'][t] });
+      }
+    }
+    teams.push(team);
+  }
+  // Leftover players (if any tier has more members than the min)
+  var allAssigned = {};
+  teams.forEach(function(t){ t.players.forEach(function(tp){ allAssigned[tp.player.id] = true; }); });
+  var leftover = pairRoster.filter(function(p){ return !allAssigned[p.id]; });
+  if (leftover.length > 0) {
+    var extra = { id: teams.length + 1, players: [] };
+    leftover.forEach(function(p, i) {
+      extra.players.push({ player: p, tier: ['A','B','C','D'][i] || '?', tierClass: ['tier-a','tier-b','tier-c','tier-d'][i] || '' });
+    });
+    teams.push(extra);
+  }
+  return teams;
+}
+
+function pairGenerate() {
+  var gs = pairConfig.groupSize;
+  if (pairRoster.length < gs) {
+    alert('Need at least ' + gs + ' players to generate teams.');
+    return;
+  }
+  var sorted = pairRoster.slice().sort(function(a,b){ return a.hcap - b.hcap; });
+  var tiered = pairAssignTiers(sorted, gs);
+  var tiers = [];
+  for (var t = 0; t < gs; t++) {
+    tiers.push(tiered.filter(function(x){ return x.tierIdx === t; }).map(function(x){ return x.player; }));
+  }
+  pairTeams = pairBuildTeams(tiers, gs);
+  pairSwapSource = null;
+  var hint = document.getElementById('pair-swap-hint');
+  if (hint) hint.classList.remove('show');
+  pairRenderRoster();
+  pairRenderTeams();
+}
+
+function pairReshuffle() {
+  var gs = pairConfig.groupSize;
+  if (pairRoster.length < gs) { pairGenerate(); return; }
+  var sorted = pairRoster.slice().sort(function(a,b){ return a.hcap - b.hcap; });
+  var tiered = pairAssignTiers(sorted, gs);
+  var tiers = [];
+  for (var t = 0; t < gs; t++) {
+    var tier = tiered.filter(function(x){ return x.tierIdx === t; }).map(function(x){ return x.player; });
+    // Fisher-Yates shuffle within tier
+    for (var i = tier.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = tier[i]; tier[i] = tier[j]; tier[j] = tmp;
+    }
+    tiers.push(tier);
+  }
+  pairTeams = pairBuildTeams(tiers, gs);
+  pairSwapSource = null;
+  var hint = document.getElementById('pair-swap-hint');
+  if (hint) hint.classList.remove('show');
+  pairRenderRoster();
+  pairRenderTeams();
+}
+
+function pairCalcBalance() {
+  if (!pairTeams.length) return null;
+  var totals = pairTeams.map(function(t){
+    return t.players.reduce(function(s, tp){ return s + tp.player.hcap; }, 0);
+  });
+  var min = Math.min.apply(null, totals);
+  var max = Math.max.apply(null, totals);
+  return { spread: Math.round((max - min) * 10) / 10 };
+}
+
+function pairRenderRoster() {
+  var list    = document.getElementById('pair-roster-list');
+  var countEl = document.getElementById('pair-roster-count');
+  if (!list) return;
+  if (countEl) countEl.textContent = '(' + pairRoster.length + ')';
+  if (!pairRoster.length) {
+    list.innerHTML = '<div style="font-size:11px;color:rgba(245,240,232,.25);padding:8px 0;">No players added yet</div>';
+    return;
+  }
+  // Build tier map from current sorted roster
+  var gs = pairConfig.groupSize;
+  var sorted = pairRoster.slice().sort(function(a,b){ return a.hcap - b.hcap; });
+  var tiered = pairAssignTiers(sorted, gs);
+  var tierMap = {};
+  tiered.forEach(function(x){ tierMap[x.player.id] = x; });
+
+  list.innerHTML = pairRoster.map(function(p) {
+    var t = tierMap[p.id] || { tier: '?', tierClass: '' };
+    var hcapStr = (p.hcap > 0 ? '+' : '') + p.hcap;
+    return '<div class="pair-player-row" style="cursor:default;">' +
+      '<div class="pair-tier ' + t.tierClass + '">' + t.tier + '</div>' +
+      '<div class="pair-name">' + pairEsc(p.name) + '</div>' +
+      '<div class="pair-hcap">' + hcapStr + '</div>' +
+      '<button onclick="pairRemovePlayer(' + p.id + ')" style="background:none;border:none;color:rgba(245,240,232,.3);cursor:pointer;font-size:14px;padding:0 2px;line-height:1;" title="Remove">×</button>' +
+    '</div>';
+  }).join('');
+}
+
+function pairRenderTeams() {
+  var list     = document.getElementById('pair-teams-list');
+  var countEl  = document.getElementById('pair-team-count');
+  var balLabel = document.getElementById('pair-balance-label');
+  if (!list) return;
+
+  if (!pairTeams.length) {
+    list.innerHTML = '<div style="color:rgba(245,240,232,.2);font-size:12px;padding:20px 0;">Add players to the roster, then click ⚡ Generate Teams.</div>';
+    if (countEl)  countEl.textContent = '';
+    if (balLabel) balLabel.textContent = '';
+    return;
+  }
+
+  if (countEl) countEl.textContent = '(' + pairTeams.length + ')';
+  var bal = pairCalcBalance();
+  if (balLabel && bal) balLabel.textContent = 'Balance spread: ' + bal.spread + ' strokes';
+
+  list.innerHTML = pairTeams.map(function(team) {
+    var total = Math.round(team.players.reduce(function(s, tp){ return s + tp.player.hcap; }, 0) * 10) / 10;
+    var playersHtml = team.players.map(function(tp) {
+      var isSwapSrc = pairSwapSource && pairSwapSource.playerId === tp.player.id;
+      var hcapStr   = (tp.player.hcap > 0 ? '+' : '') + tp.player.hcap;
+      return '<div class="pair-player-row' + (isSwapSrc ? ' swap-source' : '') + '" onclick="pairTeamClick(' + tp.player.id + ',' + team.id + ')" title="Click to swap">' +
+        '<div class="pair-tier ' + tp.tierClass + '">' + tp.tier + '</div>' +
+        '<div class="pair-name">' + pairEsc(tp.player.name) + '</div>' +
+        '<div class="pair-hcap">' + hcapStr + '</div>' +
+      '</div>';
+    }).join('');
+    return '<div class="pair-team-card">' +
+      '<div class="pair-team-head"><span class="pair-team-num">Team ' + team.id + '</span><span class="pair-team-total">Combined HCP: ' + total + '</span></div>' +
+      '<div class="pair-team-body">' + playersHtml + '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function pairTeamClick(playerId, teamId) {
+  if (!pairSwapSource) {
+    pairSwapSource = { playerId: playerId, teamId: teamId };
+    var hint = document.getElementById('pair-swap-hint');
+    if (hint) hint.classList.add('show');
+    pairRenderTeams();
+    return;
+  }
+  if (pairSwapSource.playerId === playerId) {
+    // Cancel swap
+    pairSwapSource = null;
+    var hint = document.getElementById('pair-swap-hint');
+    if (hint) hint.classList.remove('show');
+    pairRenderTeams();
+    return;
+  }
+  // Execute swap: find both players and swap their .player references
+  var srcId = pairSwapSource.playerId;
+  var dstId = playerId;
+  var srcRef = null, dstRef = null;
+  pairTeams.forEach(function(t) {
+    t.players.forEach(function(tp, i) {
+      if (tp.player.id === srcId) srcRef = { team: t, idx: i };
+      if (tp.player.id === dstId) dstRef = { team: t, idx: i };
+    });
+  });
+  if (srcRef && dstRef) {
+    var tmp = srcRef.team.players[srcRef.idx].player;
+    srcRef.team.players[srcRef.idx].player = dstRef.team.players[dstRef.idx].player;
+    dstRef.team.players[dstRef.idx].player = tmp;
+  }
+  pairSwapSource = null;
+  var hint = document.getElementById('pair-swap-hint');
+  if (hint) hint.classList.remove('show');
+  pairRenderTeams();
+}
+
+function pairImportFromRegs() {
+  var regs   = (typeof getAllRegs === 'function') ? getAllRegs() : [];
+  var filter = (typeof currentRegFilter !== 'undefined') ? currentRegFilter : '';
+  var list   = filter ? regs.filter(function(r){ return r.event === filter; }) : regs;
+  if (!list.length) {
+    alert('No registrations found' + (filter ? ' for "' + filter + '"' : '') + '.\nGo to Registrations tab, select an event filter, then come back and import.');
+    return;
+  }
+  var added = 0;
+  list.forEach(function(r) {
+    var name = ((r.firstName || '') + ' ' + (r.lastName || '')).trim();
+    if (!name) return;
+    if (pairRoster.some(function(p){ return p.name.toLowerCase() === name.toLowerCase(); })) return;
+    var hcap = parseFloat(r.ghin);
+    if (isNaN(hcap) || r.ghin === '') hcap = 18;
+    pairRoster.push({ name: name, hcap: hcap, id: Date.now() + Math.floor(Math.random() * 10000) });
+    added++;
+  });
+  pairSave();
+  pairRenderRoster();
+  alert('Imported ' + added + ' player' + (added !== 1 ? 's' : '') + (filter ? ' from "' + filter + '"' : '') + '.');
+}
+
+function pairPrint() {
+  if (!pairTeams.length) { alert('Generate teams first.'); return; }
+  var bal = pairCalcBalance();
+  var html = '<!DOCTYPE html><html><head><title>Team Pairings</title><style>' +
+    'body{font-family:Arial,sans-serif;padding:24px;color:#111;max-width:900px;margin:0 auto;}' +
+    'h1{font-size:22px;margin-bottom:4px;}' +
+    '.meta{font-size:12px;color:#666;margin-bottom:20px;}' +
+    '.teams{display:flex;flex-wrap:wrap;gap:12px;}' +
+    '.team{border:1px solid #ccc;border-radius:4px;min-width:180px;padding:10px 12px;break-inside:avoid;}' +
+    '.th{font-weight:bold;font-size:13px;border-bottom:1px solid #eee;margin-bottom:6px;padding-bottom:4px;display:flex;justify-content:space-between;align-items:center;}' +
+    '.tot{font-size:11px;color:#888;font-weight:normal;}' +
+    '.pl{display:flex;align-items:center;gap:7px;font-size:12px;padding:3px 0;}' +
+    '.ti{width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:bold;font-size:10px;color:#fff;flex-shrink:0;}' +
+    '.ta{background:#2e7d32;}.tb{background:#1565c0;}.tc{background:#6a1f8a;}.td{background:#b8600a;}' +
+    '@media print{body{padding:8px;} .teams{gap:8px;}}' +
+    '</style></head><body>' +
+    '<h1>Team Pairings</h1>' +
+    '<div class="meta">' +
+      pairTeams.length + ' teams &nbsp;·&nbsp; ' + pairRoster.length + ' players' +
+      (bal ? ' &nbsp;·&nbsp; Balance spread: ' + bal.spread + ' strokes' : '') +
+      ' &nbsp;·&nbsp; ' + new Date().toLocaleDateString() +
+    '</div>' +
+    '<div class="teams">' +
+    pairTeams.map(function(team) {
+      var total = Math.round(team.players.reduce(function(s,tp){ return s + tp.player.hcap; }, 0) * 10) / 10;
+      return '<div class="team">' +
+        '<div class="th"><span>Team ' + team.id + '</span><span class="tot">HCP ' + total + '</span></div>' +
+        team.players.map(function(tp) {
+          var tc = { A:'ta', B:'tb', C:'tc', D:'td' }[tp.tier] || 'ta';
+          var hcapStr = (tp.player.hcap > 0 ? '+' : '') + tp.player.hcap;
+          return '<div class="pl"><span class="ti ' + tc + '">' + tp.tier + '</span>' +
+            pairEsc(tp.player.name) + ' <span style="color:#aaa;margin-left:2px;">(' + hcapStr + ')</span></div>';
+        }).join('') +
+      '</div>';
+    }).join('') +
+    '</div></body></html>';
+  var w = window.open('', '_blank');
+  if (!w) { alert('Pop-up blocked — please allow pop-ups for this page.'); return; }
+  w.document.write(html);
+  w.document.close();
+  w.focus();
+  setTimeout(function(){ w.print(); }, 500);
+}
+
+function pairEsc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 </script>
 
