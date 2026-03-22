@@ -2289,52 +2289,63 @@ var WHCC_SYNC = {
 
   // Fetch live event counts from Sheet (lightweight — just counts per event)
   fetchCounts: function(cb) {
-    var ts = +localStorage.getItem('wh_counts_ts') || 0;
-    var stale = (Date.now() - ts) > this.TTL;
-    if (!stale && !cb) return; // fresh cache, no callback needed
-    fetch(WHCC_SCRIPT_URL + '?action=counts')
-      .then(function(r) { return r.json(); })
-      .then(function(c) {
-        localStorage.setItem('wh_counts', JSON.stringify(c));
-        localStorage.setItem('wh_counts_ts', Date.now());
-        if (cb) cb(c, null);
-      })
-      .catch(function(err) { if (cb) cb(null, err); });
+    try {
+      var ts = +localStorage.getItem('wh_counts_ts') || 0;
+      var stale = (Date.now() - ts) > this.TTL;
+      if (!stale && !cb) return; // fresh cache, no callback needed
+      fetch(WHCC_SCRIPT_URL + '?action=counts')
+        .then(function(r) {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json();
+        })
+        .then(function(c) {
+          if (c && typeof c === 'object') {
+            localStorage.setItem('wh_counts', JSON.stringify(c));
+            localStorage.setItem('wh_counts_ts', Date.now());
+          }
+          if (cb) cb(c, null);
+        })
+        .catch(function(err) { if (cb) cb(null, err); });
+    } catch(e) { if (cb) cb(null, e); }
   },
 
   // Fetch ALL registrations from Sheet → rebuild localStorage + counts cache
   fetchAll: function(cb) {
-    fetch(WHCC_SCRIPT_URL + '?action=all')
-      .then(function(r) { return r.json(); })
-      .then(function(rows) {
-        if (!Array.isArray(rows)) { if (cb) cb(null, 'bad data'); return; }
-        var regs = rows.map(function(row) {
-          return {
-            id:        row['ID']              || '',
-            event:     row['Event']           || '',
-            eventMeta: row['Event Date/Time'] || '',
-            firstName: row['First Name']      || '',
-            lastName:  row['Last Name']       || '',
-            email:     row['Email']           || '',
-            phone:     row['Phone']           || '',
-            partner:   row['Partner/Team']    || '',
-            players:   row['Players']         || '1',
-            memberNum: row['Member #']        || '',
-            ghin:      row['GHIN']            || '',
-            notes:     row['Notes']           || '',
-            timestamp: row['Registered At']   || '',
-            source:    row['Source']          || ''
-          };
-        }).filter(function(r) { return r.firstName || r.lastName; });
-        localStorage.setItem('wh_registrations', JSON.stringify(regs));
-        // Rebuild count cache from full data
-        var c = {};
-        regs.forEach(function(r) { if (r.event) c[r.event] = (c[r.event] || 0) + 1; });
-        localStorage.setItem('wh_counts', JSON.stringify(c));
-        localStorage.setItem('wh_counts_ts', Date.now());
-        if (cb) cb(regs, null);
-      })
-      .catch(function(err) { if (cb) cb(null, err); });
+    try {
+      fetch(WHCC_SCRIPT_URL + '?action=all')
+        .then(function(r) {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json();
+        })
+        .then(function(rows) {
+          if (!Array.isArray(rows)) { if (cb) cb(null, 'bad data'); return; }
+          var regs = rows.map(function(row) {
+            return {
+              id:        row['ID']              || '',
+              event:     row['Event']           || '',
+              eventMeta: row['Event Date/Time'] || '',
+              firstName: row['First Name']      || '',
+              lastName:  row['Last Name']       || '',
+              email:     row['Email']           || '',
+              phone:     row['Phone']           || '',
+              partner:   row['Partner/Team']    || '',
+              players:   row['Players']         || '1',
+              memberNum: row['Member #']        || '',
+              ghin:      row['GHIN']            || '',
+              notes:     row['Notes']           || '',
+              timestamp: row['Registered At']   || '',
+              source:    row['Source']          || ''
+            };
+          }).filter(function(r) { return r.firstName || r.lastName; });
+          localStorage.setItem('wh_registrations', JSON.stringify(regs));
+          var c = {};
+          regs.forEach(function(r) { if (r.event) c[r.event] = (c[r.event] || 0) + 1; });
+          localStorage.setItem('wh_counts', JSON.stringify(c));
+          localStorage.setItem('wh_counts_ts', Date.now());
+          if (cb) cb(regs, null);
+        })
+        .catch(function(err) { if (cb) cb(null, err); });
+    } catch(e) { if (cb) cb(null, e); }
   },
 
   // Delete from Sheet + localStorage simultaneously (optimistic local update)
