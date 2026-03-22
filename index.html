@@ -393,6 +393,17 @@ footer{background:var(--deep);padding:80px 80px 40px}
 .pair-balance{font-size:11px;color:rgba(245,240,232,.4);padding:4px 0;}
 .pair-swap-hint{font-size:10px;color:var(--gold);padding:4px 8px;background:rgba(184,151,106,.1);border:1px solid rgba(184,151,106,.25);border-radius:2px;display:none;}
 .pair-swap-hint.show{display:inline-block;}
+/* ── TEE SHEET TABLE ── */
+.ts-table{width:100%;border-collapse:collapse;}
+.ts-table th{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.35);padding:6px 8px;border-bottom:1px solid rgba(184,151,106,.15);text-align:left;white-space:nowrap;}
+.ts-table td{padding:7px 8px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle;}
+.ts-table tr:hover td{background:rgba(255,255,255,.02);}
+.ts-time{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--gold-lt);white-space:nowrap;}
+.ts-hole{font-size:11px;color:rgba(245,240,232,.45);white-space:nowrap;}
+.ts-group{font-size:11px;color:rgba(245,240,232,.5);white-space:nowrap;}
+.ts-score-input{background:rgba(255,255,255,.06);border:1px solid rgba(184,151,106,.2);color:var(--cream);padding:3px 6px;font-size:12px;width:70px;font-family:'Raleway',sans-serif;text-align:center;border-radius:1px;}
+.ts-score-input:focus{outline:none;border-color:var(--gold);}
+.pair-couple-card{padding:6px 8px;background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);border-radius:2px;margin-bottom:5px;}
 .staff-tag{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
 .staff-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;color:var(--cream);letter-spacing:.02em}
 .staff-title em{font-style:italic;color:var(--gold-lt);font-weight:300}
@@ -2210,57 +2221,134 @@ footer{background:var(--deep);padding:80px 80px 40px}
 
         <!-- Pairings view -->
         <div id="sv-pairings" style="display:none;">
+          <!-- Header + sub-tabs -->
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
             <div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:#f5f0e8;">Team <em style="color:#d4b483;">Pairing Builder</em></div>
-          </div>
-          <!-- Top controls -->
-          <div class="pair-ctrl">
-            <button class="pair-btn primary" onclick="pairGenerate()">⚡ Generate Teams</button>
-            <button class="pair-btn" onclick="pairReshuffle()">🔀 Reshuffle</button>
-            <button class="pair-btn" onclick="pairImportFromRegs()">⬆ Import Registrations</button>
-            <button class="pair-btn" onclick="pairPrint()">🖨 Print</button>
-            <button class="pair-btn" onclick="pairClearTeams()">✕ Clear Teams</button>
-          </div>
-          <!-- Config row -->
-          <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;">
-            <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.4);">Group Size</div>
-            <button class="pair-btn" id="pair-sz-2" onclick="pairSetSize(2,this)">2</button>
-            <button class="pair-btn" id="pair-sz-3" onclick="pairSetSize(3,this)">3</button>
-            <button class="pair-btn active" id="pair-sz-4" onclick="pairSetSize(4,this)">4</button>
-            <div style="width:1px;background:rgba(184,151,106,.2);height:20px;margin:0 4px;"></div>
-            <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.4);">Mode</div>
-            <button class="pair-btn active" id="pair-mode-league" onclick="pairSetMode('league',this)">League</button>
-            <button class="pair-btn" id="pair-mode-tournament" onclick="pairSetMode('tournament',this)">Tournament</button>
-            <div style="width:1px;background:rgba(184,151,106,.2);height:20px;margin:0 4px;"></div>
-            <span id="pair-balance-label" class="pair-balance"></span>
-            <span id="pair-swap-hint" class="pair-swap-hint">Click another player to swap — or same player to cancel</span>
-          </div>
-          <!-- Two-column body -->
-          <div class="pair-section">
-            <!-- Left: Roster -->
-            <div class="pair-col" style="max-width:290px;">
-              <div class="pair-col-head">
-                <span>Roster <span id="pair-roster-count" style="color:rgba(245,240,232,.4);font-weight:400;">(0)</span></span>
-                <button class="pair-btn" style="padding:3px 8px;font-size:9px;" onclick="pairClearRoster()">Clear All</button>
-              </div>
-              <!-- Add player -->
-              <div style="display:flex;gap:5px;margin-bottom:10px;">
-                <input class="pair-input" id="pair-add-name" placeholder="Player name" style="flex:1;" onkeydown="if(event.key==='Enter')pairAddPlayer()" />
-                <input class="pair-input" id="pair-add-hcap" placeholder="HCP" style="width:54px;" type="number" min="-10" max="54" step="0.1" onkeydown="if(event.key==='Enter')pairAddPlayer()" />
-                <button class="pair-btn primary" style="padding:5px 10px;font-size:13px;letter-spacing:0;" onclick="pairAddPlayer()">+</button>
-              </div>
-              <div id="pair-roster-list"></div>
-            </div>
-            <!-- Right: Teams -->
-            <div class="pair-col">
-              <div class="pair-col-head">
-                <span>Teams <span id="pair-team-count" style="color:rgba(245,240,232,.4);font-weight:400;"></span></span>
-              </div>
-              <div id="pair-teams-list">
-                <div style="color:rgba(245,240,232,.2);font-size:12px;padding:20px 0;">Add players to the roster, then click ⚡ Generate Teams.</div>
-              </div>
+            <div style="display:flex;gap:4px;">
+              <button class="pair-btn active" id="pair-subtab-groups" onclick="pairSubtab('groups')">⛳ Groups</button>
+              <button class="pair-btn" id="pair-subtab-teesheet" onclick="pairSubtab('teesheet')">📋 Tee Sheet</button>
             </div>
           </div>
+
+          <!-- ── GROUPS TAB ── -->
+          <div id="pair-tab-groups">
+            <div class="pair-ctrl">
+              <button class="pair-btn primary" onclick="pairGenerate()">⚡ Generate Groups</button>
+              <button class="pair-btn" onclick="pairReshuffle()">🔀 Reshuffle</button>
+              <button class="pair-btn" onclick="pairImportFromRegs()">⬆ Import Registrations</button>
+              <button class="pair-btn" onclick="pairPrint()">🖨 Print</button>
+              <button class="pair-btn" onclick="pairClearTeams()">✕ Clear Groups</button>
+            </div>
+            <!-- Config row -->
+            <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;">
+              <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.4);">Group Size</div>
+              <button class="pair-btn" id="pair-sz-2" onclick="pairSetSize(2)">2</button>
+              <button class="pair-btn" id="pair-sz-3" onclick="pairSetSize(3)">3</button>
+              <button class="pair-btn active" id="pair-sz-4" onclick="pairSetSize(4)">4</button>
+              <div style="width:1px;background:rgba(184,151,106,.2);height:20px;margin:0 4px;"></div>
+              <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.4);">Mode</div>
+              <button class="pair-btn active" id="pair-mode-league" onclick="pairSetMode('league')">League</button>
+              <button class="pair-btn" id="pair-mode-tournament" onclick="pairSetMode('tournament')">Tournament</button>
+              <button class="pair-btn" id="pair-mode-couples" onclick="pairSetMode('couples')">Couples</button>
+              <div style="width:1px;background:rgba(184,151,106,.2);height:20px;margin:0 4px;"></div>
+              <span id="pair-balance-label" class="pair-balance"></span>
+              <span id="pair-swap-hint" class="pair-swap-hint">Click another player to swap — or same player to cancel</span>
+            </div>
+            <!-- Two-column body -->
+            <div class="pair-section">
+              <!-- Left: Roster -->
+              <div class="pair-col" style="max-width:300px;">
+                <div class="pair-col-head">
+                  <span>Roster <span id="pair-roster-count" style="color:rgba(245,240,232,.4);font-weight:400;">(0)</span></span>
+                  <button class="pair-btn" style="padding:3px 8px;font-size:9px;" onclick="pairClearRoster()">Clear All</button>
+                </div>
+                <!-- Individual add form -->
+                <div id="pair-add-individual" style="display:flex;gap:5px;margin-bottom:10px;">
+                  <input class="pair-input" id="pair-add-name" placeholder="Player name" style="flex:1;" onkeydown="if(event.key==='Enter')pairAddPlayer()" />
+                  <input class="pair-input" id="pair-add-hcap" placeholder="HCP" style="width:54px;" type="number" min="-10" max="54" step="0.1" onkeydown="if(event.key==='Enter')pairAddPlayer()" />
+                  <button class="pair-btn primary" style="padding:5px 10px;font-size:13px;letter-spacing:0;" onclick="pairAddPlayer()">+</button>
+                </div>
+                <!-- Couples add form (shown in Couples mode) -->
+                <div id="pair-add-couple" style="display:none;margin-bottom:10px;">
+                  <div style="display:flex;gap:5px;margin-bottom:4px;">
+                    <input class="pair-input" id="pair-c-name1" placeholder="Player 1" style="flex:1;" />
+                    <input class="pair-input" id="pair-c-hcap1" placeholder="HCP" style="width:54px;" type="number" min="-10" max="54" step="0.1" />
+                  </div>
+                  <div style="display:flex;gap:5px;margin-bottom:5px;">
+                    <input class="pair-input" id="pair-c-name2" placeholder="Player 2 (partner)" style="flex:1;" onkeydown="if(event.key==='Enter')pairAddCouple()" />
+                    <input class="pair-input" id="pair-c-hcap2" placeholder="HCP" style="width:54px;" type="number" min="-10" max="54" step="0.1" onkeydown="if(event.key==='Enter')pairAddCouple()" />
+                  </div>
+                  <button class="pair-btn primary" style="width:100%;" onclick="pairAddCouple()">+ Add Couple</button>
+                </div>
+                <div id="pair-roster-list"></div>
+              </div>
+              <!-- Right: Groups -->
+              <div class="pair-col">
+                <div class="pair-col-head">
+                  <span>Groups <span id="pair-team-count" style="color:rgba(245,240,232,.4);font-weight:400;"></span></span>
+                </div>
+                <div id="pair-teams-list">
+                  <div style="color:rgba(245,240,232,.2);font-size:12px;padding:20px 0;">Add players to the roster, then click ⚡ Generate Groups.</div>
+                </div>
+              </div>
+            </div>
+          </div><!-- end pair-tab-groups -->
+
+          <!-- ── TEE SHEET TAB ── -->
+          <div id="pair-tab-teesheet" style="display:none;">
+            <!-- Config panel -->
+            <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:12px 14px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;">
+              <div>
+                <div style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.4);margin-bottom:4px;">Start Time</div>
+                <input class="pair-input" id="ts-start-time" type="time" value="08:00" style="width:100px;" />
+              </div>
+              <div>
+                <div style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.4);margin-bottom:4px;">Interval (min)</div>
+                <input class="pair-input" id="ts-interval" type="number" value="10" min="5" max="30" style="width:70px;" />
+              </div>
+              <div>
+                <div style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.4);margin-bottom:4px;">Start Hole</div>
+                <input class="pair-input" id="ts-start-hole" type="number" value="1" min="1" max="18" style="width:60px;" />
+              </div>
+              <div>
+                <div style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.4);margin-bottom:4px;">Format</div>
+                <div style="display:flex;gap:4px;">
+                  <button class="pair-btn active" id="ts-fmt-seq" onclick="tsSetFormat('sequential')">Sequential</button>
+                  <button class="pair-btn" id="ts-fmt-shot" onclick="tsSetFormat('shotgun')">Shotgun</button>
+                </div>
+              </div>
+              <div>
+                <div style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.4);margin-bottom:4px;">Sort Order</div>
+                <div style="display:flex;gap:4px;flex-wrap:wrap;">
+                  <button class="pair-btn active" id="ts-sort-leaders-last" onclick="tsSetSort('leaders-last')">Leaders Last</button>
+                  <button class="pair-btn" id="ts-sort-leaders-first" onclick="tsSetSort('leaders-first')">Leaders First</button>
+                  <button class="pair-btn" id="ts-sort-hcp" onclick="tsSetSort('hcp')">By HCP</button>
+                </div>
+              </div>
+            </div>
+            <!-- Round selector + actions -->
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center;">
+              <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.4);">Round</div>
+              <button class="pair-btn active" id="ts-round-1" onclick="tsSetRound(1)">Round 1</button>
+              <button class="pair-btn" id="ts-round-2" onclick="tsSetRound(2)">Round 2</button>
+              <button class="pair-btn" id="ts-round-3" onclick="tsSetRound(3)">Round 3</button>
+              <button class="pair-btn" id="ts-round-4" onclick="tsSetRound(4)">Round 4</button>
+              <div style="margin-left:auto;display:flex;gap:6px;">
+                <button class="pair-btn primary" onclick="tsBuild()">📋 Build Tee Sheet</button>
+                <button class="pair-btn" onclick="tsPrint()">🖨 Print</button>
+              </div>
+            </div>
+            <!-- Score entry (round 2+) -->
+            <div id="ts-score-section" style="display:none;margin-bottom:18px;">
+              <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Enter Round <span id="ts-score-round-label"></span> Scores</div>
+              <div id="ts-score-inputs"></div>
+            </div>
+            <!-- Tee sheet output -->
+            <div id="ts-sheet-output">
+              <div style="color:rgba(245,240,232,.2);font-size:12px;padding:20px 0;">Configure settings above, then click 📋 Build Tee Sheet.</div>
+            </div>
+          </div><!-- end pair-tab-teesheet -->
+
         </div><!-- end sv-pairings -->
 
       </div>
@@ -4759,10 +4847,15 @@ function pairApplyConfig() {
     var b = document.getElementById('pair-sz-' + n);
     if (b) b.classList.toggle('active', n === pairConfig.groupSize);
   });
-  ['league','tournament'].forEach(function(m) {
+  ['league','tournament','couples'].forEach(function(m) {
     var b = document.getElementById('pair-mode-' + m);
     if (b) b.classList.toggle('active', m === pairConfig.mode);
   });
+  var isCouples = pairConfig.mode === 'couples';
+  var indiv = document.getElementById('pair-add-individual');
+  var coupl = document.getElementById('pair-add-couple');
+  if (indiv) indiv.style.display = isCouples ? 'none' : 'flex';
+  if (coupl) coupl.style.display = isCouples ? 'block' : 'none';
 }
 
 function pairSetSize(n) {
@@ -4873,9 +4966,10 @@ function pairBuildTeams(tiers, gs) {
 }
 
 function pairGenerate() {
+  if (pairConfig.mode === 'couples') { pairGenerateCouples(); return; }
   var gs = pairConfig.groupSize;
   if (pairRoster.length < gs) {
-    alert('Need at least ' + gs + ' players to generate teams.');
+    alert('Need at least ' + gs + ' players to generate groups.');
     return;
   }
   var sorted = pairRoster.slice().sort(function(a,b){ return a.hcap - b.hcap; });
@@ -5084,6 +5178,339 @@ function pairPrint() {
       '</div>';
     }).join('') +
     '</div></body></html>';
+  var w = window.open('', '_blank');
+  if (!w) { alert('Pop-up blocked — please allow pop-ups for this page.'); return; }
+  w.document.write(html);
+  w.document.close();
+  w.focus();
+  setTimeout(function(){ w.print(); }, 500);
+}
+
+// ── PAIRING SUB-TABS ──
+function pairSubtab(tab) {
+  ['groups','teesheet'].forEach(function(t) {
+    var el  = document.getElementById('pair-tab-' + t);
+    var btn = document.getElementById('pair-subtab-' + t);
+    if (el)  el.style.display = t === tab ? 'block' : 'none';
+    if (btn) btn.classList.toggle('active', t === tab);
+  });
+  if (tab === 'teesheet') tsInit();
+}
+
+// ── COUPLES MODE ──
+function pairAddCouple() {
+  var n1 = (document.getElementById('pair-c-name1').value || '').trim();
+  var n2 = (document.getElementById('pair-c-name2').value || '').trim();
+  var h1 = parseFloat(document.getElementById('pair-c-hcap1').value);
+  var h2 = parseFloat(document.getElementById('pair-c-hcap2').value);
+  if (!n1 || !n2) { alert('Enter both player names.'); document.getElementById('pair-c-name1').focus(); return; }
+  if (isNaN(h1)) h1 = 18;
+  if (isNaN(h2)) h2 = 18;
+  h1 = Math.round(h1 * 10) / 10;
+  h2 = Math.round(h2 * 10) / 10;
+  var cid = Date.now() + Math.floor(Math.random() * 10000);
+  // Store as a single roster entry with isCouple flag
+  pairRoster.push({
+    id: cid, isCouple: true,
+    name: n1 + ' & ' + n2,
+    hcap: Math.round((h1 + h2) * 10) / 10,
+    name1: n1, hcap1: h1,
+    name2: n2, hcap2: h2
+  });
+  pairSave();
+  pairRenderRoster();
+  ['pair-c-name1','pair-c-hcap1','pair-c-name2','pair-c-hcap2'].forEach(function(id){ document.getElementById(id).value = ''; });
+  document.getElementById('pair-c-name1').focus();
+}
+
+function pairGenerateCouples() {
+  var couples = pairRoster.filter(function(p){ return p.isCouple; });
+  if (couples.length < 2) { alert('Need at least 2 couples to generate groups.'); return; }
+  // Sort by combined HCP ascending
+  var sorted = couples.slice().sort(function(a,b){ return a.hcap - b.hcap; });
+  var n = sorted.length;
+  var used = new Array(n).fill(false);
+  var teamId = 1;
+  pairTeams = [];
+  var lo = 0, hi = n - 1;
+  while (lo < hi) {
+    while (lo < n && used[lo]) lo++;
+    while (hi >= 0 && used[hi]) hi--;
+    if (lo >= hi) break;
+    var ca = sorted[lo], cb = sorted[hi];
+    var team = { id: teamId++, players: [
+      { player: { id: ca.id,       name: ca.name1, hcap: ca.hcap1 }, tier: 'A', tierClass: 'tier-a' },
+      { player: { id: ca.id + 0.5, name: ca.name2, hcap: ca.hcap2 }, tier: 'A', tierClass: 'tier-a' },
+      { player: { id: cb.id,       name: cb.name1, hcap: cb.hcap1 }, tier: 'B', tierClass: 'tier-b' },
+      { player: { id: cb.id + 0.5, name: cb.name2, hcap: cb.hcap2 }, tier: 'B', tierClass: 'tier-b' }
+    ]};
+    pairTeams.push(team);
+    used[lo] = true; used[hi] = true;
+    lo++; hi--;
+  }
+  // Leftover odd couple gets its own group
+  for (var i = 0; i < n; i++) {
+    if (!used[i]) {
+      var ca = sorted[i];
+      pairTeams.push({ id: teamId++, players: [
+        { player: { id: ca.id,       name: ca.name1, hcap: ca.hcap1 }, tier: 'A', tierClass: 'tier-a' },
+        { player: { id: ca.id + 0.5, name: ca.name2, hcap: ca.hcap2 }, tier: 'A', tierClass: 'tier-a' }
+      ]});
+    }
+  }
+  pairSwapSource = null;
+  var hint = document.getElementById('pair-swap-hint');
+  if (hint) hint.classList.remove('show');
+  pairRenderRoster();
+  pairRenderTeams();
+}
+
+// ── TEE SHEET ENGINE ──
+var teeConfig = { startTime: '08:00', intervalMin: 10, startHole: 1, format: 'sequential', sort: 'leaders-last' };
+var teeRound  = 1;
+var teeScores = {};
+var teeSheet  = [];
+
+function tsInit() {
+  var el;
+  if ((el = document.getElementById('ts-start-time'))) el.value = teeConfig.startTime;
+  if ((el = document.getElementById('ts-interval')))   el.value = teeConfig.intervalMin;
+  if ((el = document.getElementById('ts-start-hole'))) el.value = teeConfig.startHole;
+  tsApplyFormat();
+  tsApplySort();
+  tsApplyRound();
+}
+
+function tsSetFormat(fmt) { teeConfig.format = fmt; tsApplyFormat(); }
+function tsApplyFormat() {
+  var s = document.getElementById('ts-fmt-seq');
+  var h = document.getElementById('ts-fmt-shot');
+  if (s) s.classList.toggle('active', teeConfig.format === 'sequential');
+  if (h) h.classList.toggle('active', teeConfig.format === 'shotgun');
+}
+
+function tsSetSort(s) { teeConfig.sort = s; tsApplySort(); }
+function tsApplySort() {
+  ['leaders-last','leaders-first','hcp'].forEach(function(x) {
+    var b = document.getElementById('ts-sort-' + x);
+    if (b) b.classList.toggle('active', x === teeConfig.sort);
+  });
+}
+
+function tsSetRound(r) { teeRound = r; tsApplyRound(); }
+function tsApplyRound() {
+  [1,2,3,4].forEach(function(n) {
+    var b = document.getElementById('ts-round-' + n);
+    if (b) b.classList.toggle('active', n === teeRound);
+  });
+  var sec   = document.getElementById('ts-score-section');
+  var label = document.getElementById('ts-score-round-label');
+  if (sec)   sec.style.display = teeRound > 1 ? 'block' : 'none';
+  if (label) label.textContent  = teeRound - 1;
+  if (teeRound > 1) tsRenderScoreInputs();
+}
+
+function tsRenderScoreInputs() {
+  var el = document.getElementById('ts-score-inputs');
+  if (!el) return;
+  if (!pairTeams.length) {
+    el.innerHTML = '<div style="font-size:11px;color:rgba(245,240,232,.4);padding:6px 0;">Generate groups on the Groups tab first.</div>';
+    return;
+  }
+  var prevRound = teeRound - 1;
+  el.innerHTML = '<table class="ts-table" style="max-width:520px;"><thead><tr>' +
+    '<th>Group</th><th>Players</th><th style="width:80px;text-align:center;">R' + prevRound + ' Score</th>' +
+    '</tr></thead><tbody>' +
+    pairTeams.map(function(team) {
+      var key     = 'r' + prevRound + '_t' + team.id;
+      var val     = teeScores[key] !== undefined ? teeScores[key] : '';
+      var players = team.players.map(function(tp){ return tp.player.name; }).join(', ');
+      return '<tr>' +
+        '<td style="color:var(--gold);white-space:nowrap;">Group ' + team.id + '</td>' +
+        '<td style="color:rgba(245,240,232,.55);font-size:11px;">' + pairEsc(players) + '</td>' +
+        '<td style="text-align:center;">' +
+          '<input class="ts-score-input" value="' + val + '" placeholder="—" type="number" min="40" max="200" ' +
+            'onchange="teeScores[\'' + key + '\']=this.value===\'\'?undefined:+this.value" /></td>' +
+      '</tr>';
+    }).join('') +
+    '</tbody></table>';
+}
+
+function tsBuild() {
+  var startStr  = document.getElementById('ts-start-time').value  || '08:00';
+  var interval  = parseInt(document.getElementById('ts-interval').value) || 10;
+  var startHole = parseInt(document.getElementById('ts-start-hole').value) || 1;
+  teeConfig.startTime   = startStr;
+  teeConfig.intervalMin = interval;
+  teeConfig.startHole   = startHole;
+  var out = document.getElementById('ts-sheet-output');
+  if (!pairTeams.length) {
+    out.innerHTML = '<div style="color:rgba(245,240,232,.35);font-size:12px;padding:16px 0;">No groups yet — build groups on the Groups tab first.</div>';
+    return;
+  }
+  // Order groups
+  var ordered = pairTeams.slice();
+  var sort     = teeConfig.sort;
+  if (sort === 'hcp') {
+    ordered.sort(function(a,b) {
+      var ha = a.players.reduce(function(s,tp){ return s + tp.player.hcap; }, 0);
+      var hb = b.players.reduce(function(s,tp){ return s + tp.player.hcap; }, 0);
+      return ha - hb;
+    });
+  } else if (teeRound > 1) {
+    ordered.sort(function(a,b) {
+      var sa = tsCumScore(a.id, teeRound - 1);
+      var sb = tsCumScore(b.id, teeRound - 1);
+      if (sa === null && sb === null) return 0;
+      if (sa === null) return -1;
+      if (sb === null) return  1;
+      // Leaders Last: lowest score (best in golf) tees off last → sort ascending
+      return sort === 'leaders-last' ? sa - sb : sb - sa;
+    });
+  }
+  // Build tee time / hole assignments
+  var parts    = startStr.split(':');
+  var totalMin = parseInt(parts[0]) * 60 + (parseInt(parts[1]) || 0);
+  teeSheet     = [];
+  if (teeConfig.format === 'sequential') {
+    ordered.forEach(function(team, i) {
+      var mins  = totalMin + i * interval;
+      var h     = Math.floor(mins / 60) % 24;
+      var m     = mins % 60;
+      var ampm  = h >= 12 ? 'PM' : 'AM';
+      var h12   = h % 12 || 12;
+      var timeStr = h12 + ':' + (m < 10 ? '0' : '') + m + ' ' + ampm;
+      var hole  = ((startHole - 1 + i) % 18) + 1;
+      teeSheet.push({ teeTime: timeStr, hole: hole, team: team });
+    });
+  } else {
+    // Shotgun: same clock time, different starting holes
+    var h    = Math.floor(totalMin / 60) % 24;
+    var m    = totalMin % 60;
+    var ampm = h >= 12 ? 'PM' : 'AM';
+    var h12  = h % 12 || 12;
+    var timeStr = h12 + ':' + (m < 10 ? '0' : '') + m + ' ' + ampm;
+    ordered.forEach(function(team, i) {
+      var hole = ((startHole - 1 + i) % 18) + 1;
+      teeSheet.push({ teeTime: timeStr, hole: hole, team: team });
+    });
+  }
+  tsRenderSheet();
+}
+
+function tsCumScore(teamId, throughRound) {
+  var total = 0, hasAny = false;
+  for (var r = 1; r <= throughRound; r++) {
+    var v = teeScores['r' + r + '_t' + teamId];
+    if (v !== undefined) { total += +v; hasAny = true; }
+  }
+  return hasAny ? total : null;
+}
+
+function tsRenderSheet() {
+  var el = document.getElementById('ts-sheet-output');
+  if (!el || !teeSheet.length) return;
+  var showScore = teeRound > 1;
+  var rHeaders  = '';
+  if (showScore) {
+    for (var r = 1; r < teeRound; r++) rHeaders += '<th style="text-align:center;">R' + r + '</th>';
+    rHeaders += '<th style="text-align:center;">Total</th>';
+  }
+  el.innerHTML =
+    '<div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">' +
+      'Round ' + teeRound + ' Tee Sheet &nbsp;·&nbsp; ' + teeSheet.length + ' groups' +
+    '</div>' +
+    '<table class="ts-table"><thead><tr>' +
+      '<th>' + (teeConfig.format === 'shotgun' ? 'Shotgun' : 'Tee Time') + '</th>' +
+      '<th>Hole</th><th>Group</th><th>Players</th>' + rHeaders +
+    '</tr></thead><tbody>' +
+    teeSheet.map(function(entry) {
+      var playersHtml = entry.team.players.map(function(tp) {
+        var hcapStr = (tp.player.hcap > 0 ? '+' : '') + tp.player.hcap;
+        return '<div style="display:flex;align-items:center;gap:4px;padding:1px 0;">' +
+          '<span class="pair-tier ' + tp.tierClass + '" style="width:14px;height:14px;font-size:8px;">' + tp.tier + '</span>' +
+          '<span style="font-size:12px;">' + pairEsc(tp.player.name) + '</span>' +
+          '<span style="font-size:10px;color:rgba(245,240,232,.3);">(' + hcapStr + ')</span>' +
+        '</div>';
+      }).join('');
+      var scoreCells = '';
+      if (showScore) {
+        for (var r = 1; r < teeRound; r++) {
+          var v = teeScores['r' + r + '_t' + entry.team.id];
+          scoreCells += '<td style="text-align:center;font-size:13px;">' +
+            (v !== undefined ? v : '<span style="color:rgba(245,240,232,.2);">—</span>') + '</td>';
+        }
+        var cum = tsCumScore(entry.team.id, teeRound - 1);
+        scoreCells += '<td style="text-align:center;font-size:14px;font-weight:600;color:var(--gold-lt);">' +
+          (cum !== null ? cum : '<span style="color:rgba(245,240,232,.2);">—</span>') + '</td>';
+      }
+      return '<tr>' +
+        '<td class="ts-time">' + entry.teeTime + '</td>' +
+        '<td class="ts-hole">' + (teeConfig.format === 'shotgun' ? 'Hole ' : '#') + entry.hole + '</td>' +
+        '<td class="ts-group">Group ' + entry.team.id + '</td>' +
+        '<td>' + playersHtml + '</td>' + scoreCells +
+      '</tr>';
+    }).join('') +
+    '</tbody></table>';
+}
+
+function tsPrint() {
+  if (!teeSheet.length) { tsBuild(); }
+  if (!teeSheet.length) { alert('Build the tee sheet first.'); return; }
+  var showScore = teeRound > 1;
+  var rHeaders  = '';
+  if (showScore) {
+    for (var r = 1; r < teeRound; r++) rHeaders += '<th>R' + r + '</th>';
+    rHeaders += '<th>Total</th>';
+  }
+  var html = '<!DOCTYPE html><html><head><title>Tee Sheet — Round ' + teeRound + '</title><style>' +
+    'body{font-family:Arial,sans-serif;padding:20px;color:#111;max-width:960px;margin:0 auto;}' +
+    'h1{font-size:20px;margin-bottom:4px;}' +
+    '.meta{font-size:12px;color:#666;margin-bottom:18px;}' +
+    'table{width:100%;border-collapse:collapse;font-size:12px;}' +
+    'th{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#888;padding:6px 8px;border-bottom:2px solid #ddd;text-align:left;}' +
+    'td{padding:7px 8px;border-bottom:1px solid #eee;vertical-align:top;}' +
+    'tr:nth-child(even) td{background:#fafafa;}' +
+    '.tt{font-size:15px;font-weight:bold;white-space:nowrap;}' +
+    '.sc{text-align:center;} .tot{text-align:center;font-weight:bold;}' +
+    '.ti{width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:bold;font-size:9px;color:#fff;vertical-align:middle;margin-right:3px;}' +
+    '.ta{background:#2e7d32;}.tb{background:#1565c0;}.tc{background:#6a1f8a;}.td{background:#b8600a;}' +
+    '@media print{body{padding:8px;}}' +
+    '</style></head><body>' +
+    '<h1>Tee Sheet — Round ' + teeRound + '</h1>' +
+    '<div class="meta">' +
+      (teeConfig.format === 'shotgun' ? 'Shotgun Start' : 'Sequential Tee Times') +
+      ' &nbsp;·&nbsp; ' + teeSheet.length + ' groups' +
+      ' &nbsp;·&nbsp; ' + new Date().toLocaleDateString() +
+    '</div>' +
+    '<table><thead><tr>' +
+      '<th>' + (teeConfig.format === 'shotgun' ? 'Start' : 'Tee Time') + '</th>' +
+      '<th>Hole</th><th>Group</th><th>Players</th>' + rHeaders +
+    '</tr></thead><tbody>' +
+    teeSheet.map(function(entry) {
+      var players = entry.team.players.map(function(tp) {
+        var tc      = { A:'ta', B:'tb', C:'tc', D:'td' }[tp.tier] || 'ta';
+        var hcapStr = (tp.player.hcap > 0 ? '+' : '') + tp.player.hcap;
+        return '<div><span class="ti ' + tc + '">' + tp.tier + '</span>' +
+          pairEsc(tp.player.name) + ' <span style="color:#aaa;font-size:11px;">(' + hcapStr + ')</span></div>';
+      }).join('');
+      var scoreCells = '';
+      if (showScore) {
+        for (var r = 1; r < teeRound; r++) {
+          var v = teeScores['r' + r + '_t' + entry.team.id];
+          scoreCells += '<td class="sc">' + (v !== undefined ? v : '—') + '</td>';
+        }
+        var cum = tsCumScore(entry.team.id, teeRound - 1);
+        scoreCells += '<td class="tot">' + (cum !== null ? cum : '—') + '</td>';
+      }
+      return '<tr>' +
+        '<td class="tt">' + entry.teeTime + '</td>' +
+        '<td>' + (teeConfig.format === 'shotgun' ? 'Hole ' : '#') + entry.hole + '</td>' +
+        '<td>Group ' + entry.team.id + '</td>' +
+        '<td>' + players + '</td>' + scoreCells +
+      '</tr>';
+    }).join('') +
+    '</tbody></table></body></html>';
   var w = window.open('', '_blank');
   if (!w) { alert('Pop-up blocked — please allow pop-ups for this page.'); return; }
   w.document.write(html);
