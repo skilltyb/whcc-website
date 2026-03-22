@@ -3663,26 +3663,24 @@ function buildRegDropdown(regs) {
   var sel = document.getElementById('reg-event-filter');
   if (!sel) return;
 
-  // Build count map
+  // Build count map from registration data
   var counts = {};
-  try {
-    (regs || []).forEach(function(r) {
-      if (r.event) counts[r.event] = (counts[r.event] || 0) + 1;
+  if (Array.isArray(regs)) {
+    regs.forEach(function(r) {
+      if (r && r.event) counts[r.event] = (counts[r.event] || 0) + 1;
     });
-  } catch(e) {}
+  }
 
-  // Rebuild from known event list in season/date order — use currentRegFilter to restore selection
-  sel.innerHTML = '<option value="">— All Events —</option>';
-  WHCC_EVENT_ORDER.forEach(function(ev) {
-    var count = counts[ev] || 0;
-    var cap   = (WHCC_EVENTS && WHCC_EVENTS[ev]) ? WHCC_EVENTS[ev].capacity : 72;
-    var pct   = cap > 0 ? Math.round(count / cap * 100) : 0;
-    var opt   = document.createElement('option');
-    opt.value       = ev;
-    opt.textContent = ev + '  (' + count + '/' + cap + ' · ' + pct + '%)';
-    if (ev === currentRegFilter) opt.selected = true;
-    sel.appendChild(opt);
-  });
+  // Remove all options except the first ("— All Events —"), then add one per event
+  while (sel.options.length > 1) sel.remove(1);
+  for (var i = 0; i < WHCC_EVENT_ORDER.length; i++) {
+    var ev  = WHCC_EVENT_ORDER[i];
+    var cnt = counts[ev] || 0;
+    var cap = (WHCC_EVENTS && WHCC_EVENTS[ev]) ? WHCC_EVENTS[ev].capacity : 72;
+    var pct = cap > 0 ? Math.round(cnt / cap * 100) : 0;
+    var opt = new Option(ev + '  (' + cnt + '/' + cap + '  ' + pct + '%)', ev, false, ev === currentRegFilter);
+    sel.add(opt);
+  }
 }
 
 function staffViewRegistrations() {
