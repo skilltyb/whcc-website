@@ -2243,7 +2243,7 @@ footer{background:var(--deep);padding:80px 80px 40px}
           <div id="pair-tab-groups">
             <!-- Event selector -->
             <div style="margin-bottom:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-              <select id="pair-event-filter" onchange="pairEventFilter=this.value;pairUpdateEventBadge();pairAutoMode()" style="flex:1;max-width:360px;background:#1e3a20;border:1px solid rgba(184,151,106,.4);color:#f5f0e8;padding:7px 10px;font-size:12px;border-radius:2px;">
+              <select id="pair-event-filter" onchange="pairEventFilter=this.value;pairUpdateEventBadge();pairAutoMode();pairClearRosterAndGroups()" style="flex:1;max-width:360px;background:#1e3a20;border:1px solid rgba(184,151,106,.4);color:#f5f0e8;padding:7px 10px;font-size:12px;border-radius:2px;">
                 <option value="">— Select Event to Import —</option>
                 <option value="St. Patty's Shootout">St. Patty's Shootout</option>
                 <option value="Ladies Opening Day">Ladies Opening Day</option>
@@ -5230,6 +5230,16 @@ function pairAutoMode() {
   if (suggested !== pairConfig.mode) {
     pairSetMode(suggested);
   }
+}
+
+// Clear roster and groups when switching events
+function pairClearRosterAndGroups() {
+  pairRoster = [];
+  pairTeams  = [];
+  pairSwapSource = null;
+  pairSave();
+  pairRenderRoster();
+  pairRenderTeams();
 }
 
 function pairImportFromRegs() {
