@@ -2243,7 +2243,7 @@ footer{background:var(--deep);padding:80px 80px 40px}
           <div id="pair-tab-groups">
             <!-- Event selector -->
             <div style="margin-bottom:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-              <select id="pair-event-filter" onchange="pairEventFilter=this.value;pairUpdateEventBadge()" style="flex:1;max-width:360px;background:#1e3a20;border:1px solid rgba(184,151,106,.4);color:#f5f0e8;padding:7px 10px;font-size:12px;border-radius:2px;">
+              <select id="pair-event-filter" onchange="pairEventFilter=this.value;pairUpdateEventBadge();pairAutoMode()" style="flex:1;max-width:360px;background:#1e3a20;border:1px solid rgba(184,151,106,.4);color:#f5f0e8;padding:7px 10px;font-size:12px;border-radius:2px;">
                 <option value="">— Select Event to Import —</option>
                 <option value="St. Patty's Shootout">St. Patty's Shootout</option>
                 <option value="Ladies Opening Day">Ladies Opening Day</option>
@@ -5220,6 +5220,16 @@ function pairUpdateEventBadge() {
   var regs = (typeof getAllRegs === 'function') ? getAllRegs() : [];
   var count = regs.filter(function(r){ return r.event === pairEventFilter; }).length;
   badge.textContent = count + ' registrant' + (count !== 1 ? 's' : '');
+}
+
+// Auto-switch pairing mode based on event type
+function pairAutoMode() {
+  if (!pairEventFilter) return;
+  var info = (typeof getEventInfo === 'function') ? getEventInfo(pairEventFilter) : { type: 'single' };
+  var suggested = (info.type === 'twosome' || info.type === 'foursome') ? 'team' : 'league';
+  if (suggested !== pairConfig.mode) {
+    pairSetMode(suggested);
+  }
 }
 
 function pairImportFromRegs() {
