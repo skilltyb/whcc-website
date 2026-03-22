@@ -683,6 +683,50 @@
     </div>
   </div>
 
+  <!-- TEE SHEET TAB -->
+  <div class="tab-content" id="m-tab-teesheet">
+    <div style="padding:16px;">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:#f5f0e8;margin-bottom:4px;">Today's <em style="color:#d4b483;">Tee Sheet</em></div>
+      <div style="font-size:.72rem;color:rgba(245,240,232,.45);margin-bottom:14px;">Current groupings and tee times · Auto-refreshes every 60s</div>
+
+      <!-- Event selector -->
+      <select id="m-ts-event" onchange="mTeeSheetLoad()" style="width:100%;background:#1e3a20;border:1px solid rgba(184,151,106,.4);color:#f5f0e8;padding:8px 10px;font-size:12px;border-radius:2px;margin-bottom:10px;">
+        <option value="">— Select Event —</option>
+        <option value="St. Patty's Shootout">St. Patty's Shootout</option>
+        <option value="Ladies Opening Day">Ladies Opening Day</option>
+        <option value="Masters Dinner">Masters Dinner</option>
+        <option value="Mules Invitational">Mules Invitational</option>
+        <option value="Spring 2-Man Scramble">Spring 2-Man Scramble</option>
+        <option value="Ladies Sweet Treat">Ladies Sweet Treat</option>
+        <option value="MGA Draft Day">MGA Draft Day</option>
+        <option value="Men's Opening Day">Men's Opening Day</option>
+        <option value="Ozark Invitational">Ozark Invitational</option>
+        <option value="Couples Scramble">Couples Scramble</option>
+        <option value="Ladies Invitational">Ladies Invitational</option>
+        <option value="4th of July Scramble">4th of July Scramble</option>
+        <option value="Member-Guest">Member-Guest</option>
+        <option value="Club Championship">Club Championship</option>
+        <option value="Ladies Club Championship">Ladies Club Championship</option>
+        <option value="Fall 2-Man Scramble">Fall 2-Man Scramble</option>
+        <option value="Senior Scramble">Senior Scramble</option>
+        <option value="Closing Day Scramble">Closing Day Scramble</option>
+        <option value="Halloween Costume Scramble">Halloween Costume Scramble</option>
+      </select>
+
+      <!-- Round selector -->
+      <div style="display:flex;gap:6px;margin-bottom:12px;" id="m-ts-round-row" style="display:none;">
+        <span style="font-size:.7rem;color:rgba(245,240,232,.4);align-self:center;">Round:</span>
+        <button onclick="mTeeSheetSetRound(1)" id="m-ts-r1" style="padding:4px 10px;font-size:.68rem;background:rgba(184,151,106,.2);border:1px solid rgba(184,151,106,.4);color:#d4b483;border-radius:2px;cursor:pointer;">1</button>
+        <button onclick="mTeeSheetSetRound(2)" id="m-ts-r2" style="padding:4px 10px;font-size:.68rem;background:transparent;border:1px solid rgba(255,255,255,.1);color:rgba(245,240,232,.4);border-radius:2px;cursor:pointer;">2</button>
+        <button onclick="mTeeSheetSetRound(3)" id="m-ts-r3" style="padding:4px 10px;font-size:.68rem;background:transparent;border:1px solid rgba(255,255,255,.1);color:rgba(245,240,232,.4);border-radius:2px;cursor:pointer;">3</button>
+        <button onclick="mTeeSheetSetRound(4)" id="m-ts-r4" style="padding:4px 10px;font-size:.68rem;background:transparent;border:1px solid rgba(255,255,255,.1);color:rgba(245,240,232,.4);border-radius:2px;cursor:pointer;">4</button>
+        <span id="m-ts-saved" style="font-size:.6rem;color:rgba(245,240,232,.25);align-self:center;margin-left:4px;"></span>
+      </div>
+
+      <div id="m-ts-output"><div style="font-size:.8rem;color:rgba(245,240,232,.3);text-align:center;padding:40px 0;">Select an event to view the tee sheet</div></div>
+    </div>
+  </div>
+
   <!-- ACCOUNT -->
   <div class="tab-content" id="m-tab-account">
     <div class="page">
@@ -736,6 +780,10 @@
     <button class="tab-btn" id="m-btn-events" onclick="goTab('member','events')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
       <span>Events</span><div class="tab-dot"></div>
+    </button>
+    <button class="tab-btn" id="m-btn-teesheet" onclick="goTab('member','teesheet')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      <span>Tee Sheet</span><div class="tab-dot"></div>
     </button>
     <button class="tab-btn" id="m-btn-account" onclick="goTab('member','account')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -2207,10 +2255,126 @@ var WHCC_SYNC = {
     .then(function(r) { return r.json(); })
     .then(function(res) { if (cb) cb(res); })
     .catch(function() { if (cb) cb({ error: 'network' }); });
-  }
+  },
+  loadTeeSheets: function(event, cb) {
+    var url = WHCC_SCRIPT_URL + '?action=get-teesheets' + (event ? '&event=' + encodeURIComponent(event) : '');
+    fetch(url).then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+  saveScores: function(event, round, scores, cb) {
+    var body = JSON.stringify({ action: 'save-scores', event: event, round: round, scores: scores });
+    fetch(WHCC_SCRIPT_URL, { method: 'POST', headers: {'Content-Type':'text/plain'}, body: body })
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
 };
 
 document.addEventListener('DOMContentLoaded', function() { WHCC_SYNC.fetchCounts(); });
+
+// ── MOBILE TEE SHEET ──────────────────────────────────────────────────────────
+var mTeeSheetData = null;
+var mTeeSheetRound = 1;
+var mTeeSheetTimer = null;
+
+function mTeeSheetLoad() {
+  var event = document.getElementById('m-ts-event').value;
+  var out   = document.getElementById('m-ts-output');
+  if (!event) { if (out) out.innerHTML = '<div style="font-size:.8rem;color:rgba(245,240,232,.3);text-align:center;padding:40px 0;">Select an event to view the tee sheet</div>'; return; }
+  if (out) out.innerHTML = '<div style="font-size:.8rem;color:rgba(245,240,232,.3);text-align:center;padding:30px 0;">Loading…</div>';
+  WHCC_SYNC.loadTeeSheets(event, function(data, err) {
+    if (err || !data || !data.length) {
+      if (out) out.innerHTML = '<div style="font-size:.8rem;color:rgba(245,240,232,.3);text-align:center;padding:30px 0;">No tee sheet saved for this event yet.</div>';
+      return;
+    }
+    mTeeSheetData = data;
+    mTeeSheetRender();
+    var roundRow = document.getElementById('m-ts-round-row');
+    if (roundRow) roundRow.style.display = 'flex';
+  });
+  // Auto-refresh every 60 seconds
+  if (mTeeSheetTimer) clearInterval(mTeeSheetTimer);
+  mTeeSheetTimer = setInterval(function() {
+    if (document.getElementById('m-tab-teesheet').style.display !== 'none') mTeeSheetLoad();
+  }, 60000);
+}
+
+function mTeeSheetSetRound(r) {
+  mTeeSheetRound = r;
+  [1,2,3,4].forEach(function(n) {
+    var btn = document.getElementById('m-ts-r' + n);
+    if (!btn) return;
+    btn.style.background = n === r ? 'rgba(184,151,106,.2)' : 'transparent';
+    btn.style.color = n === r ? '#d4b483' : 'rgba(245,240,232,.4)';
+    btn.style.borderColor = n === r ? 'rgba(184,151,106,.4)' : 'rgba(255,255,255,.1)';
+  });
+  mTeeSheetRender();
+}
+
+function mTeeSheetRender() {
+  var out = document.getElementById('m-ts-output');
+  var saved = document.getElementById('m-ts-saved');
+  if (!out || !mTeeSheetData) return;
+
+  // Find matching round or latest
+  var sheet = null;
+  mTeeSheetData.forEach(function(d) { if (d.round === mTeeSheetRound) sheet = d; });
+  if (!sheet) sheet = mTeeSheetData[mTeeSheetData.length - 1];
+  if (!sheet || !sheet.groups || !sheet.groups.length) {
+    out.innerHTML = '<div style="font-size:.8rem;color:rgba(245,240,232,.3);text-align:center;padding:30px 0;">No groups for this round yet.</div>';
+    return;
+  }
+
+  if (saved && sheet.savedAt) saved.textContent = 'Updated ' + new Date(sheet.savedAt).toLocaleString();
+
+  var cfg = sheet.config || {};
+  var fmt = cfg.format || 'sequential';
+  var startTime = cfg.startTime || '08:00';
+  var interval  = parseInt(cfg.intervalMin) || 10;
+  var startHole = parseInt(cfg.startHole)   || 1;
+
+  var parts = startTime.split(':');
+  var baseMin = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+
+  var html = '';
+  sheet.groups.forEach(function(g, idx) {
+    var label, sub;
+    if (fmt === 'shotgun') {
+      var hole = ((startHole - 1 + idx) % 18) + 1;
+      label = 'Hole ' + hole;
+      sub   = 'Simultaneous start';
+    } else {
+      var totalMin = baseMin + idx * interval;
+      var h = Math.floor(totalMin / 60) % 24;
+      var m = totalMin % 60;
+      var ampm = h >= 12 ? 'PM' : 'AM';
+      h = h % 12 || 12;
+      label = h + ':' + (m < 10 ? '0' : '') + m + ' ' + ampm;
+      sub   = 'Hole ' + (((startHole - 1 + idx) % 18) + 1);
+    }
+
+    var score = g.scores && g.scores['r' + mTeeSheetRound];
+    html += '<div style="background:rgba(255,255,255,.04);border:1px solid rgba(184,151,106,.12);margin-bottom:8px;border-radius:2px;overflow:hidden;">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(184,151,106,.07);">';
+    html += '<div><div style="font-family:\'Cormorant Garamond\',serif;font-size:17px;color:#d4b483;">' + label + '</div>';
+    html += '<div style="font-size:.62rem;color:rgba(245,240,232,.35);">Group ' + g.id + ' · ' + sub + '</div></div>';
+    if (score !== null && score !== undefined) {
+      html += '<div style="font-size:13px;font-weight:700;color:#f5f0e8;background:rgba(184,151,106,.15);padding:3px 8px;border-radius:2px;">' + score + '</div>';
+    }
+    html += '</div>';
+    (g.players || []).forEach(function(tp) {
+      var p = tp.player || tp;
+      var hcp = p.hcap !== undefined ? p.hcap : (tp.hcap || '');
+      html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 12px;border-top:1px solid rgba(255,255,255,.04);">';
+      html += '<div style="font-size:.8rem;color:#f5f0e8;">' + (p.name || p) + '</div>';
+      if (hcp !== '') html += '<div style="font-size:.68rem;color:rgba(245,240,232,.35);">HCP ' + hcp + '</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  });
+  out.innerHTML = html;
+}
 
 function openAppReg(eventTitle, eventMeta, isTeam) {
   var info = typeof getEventInfo==='function' ? getEventInfo(eventTitle) : {type: isTeam?'twosome':'single', capacity:72};

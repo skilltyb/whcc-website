@@ -2409,6 +2409,12 @@ footer{background:var(--deep);padding:80px 80px 40px}
               <div id="ts-score-inputs"></div>
             </div>
             <!-- Tee sheet output -->
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
+              <button class="pair-btn" onclick="tsSaveToSheet()" id="ts-save-btn" style="background:rgba(26,71,38,.4);border-color:rgba(184,151,106,.4);">💾 Save to Sheet</button>
+              <button class="pair-btn" onclick="tsLoadFromSheet()" id="ts-load-btn">☁ Load from Sheet</button>
+              <button class="pair-btn" onclick="tsSyncScores()" id="ts-sync-btn" style="display:none;">↑ Sync Scores</button>
+              <span id="ts-sync-status" style="font-size:.65rem;color:rgba(245,240,232,.35);align-self:center;"></span>
+            </div>
             <div id="ts-sheet-output">
               <div style="color:rgba(245,240,232,.2);font-size:12px;padding:20px 0;">Configure settings above, then click 📋 Build Tee Sheet.</div>
             </div>
@@ -2633,7 +2639,29 @@ var WHCC_SYNC = {
     .then(function(r) { return r.json(); })
     .then(function(res) { if (cb) cb(res); })
     .catch(function() { if (cb) cb({ error: 'network' }); });
-  }
+  },
+
+  saveTeeSheet: function(event, round, date, config, groups, cb) {
+    var body = JSON.stringify({ action: 'save-teesheet', event: event, round: round,
+      date: date, config: config, groups: groups });
+    fetch(WHCC_SCRIPT_URL, { method: 'POST', headers: {'Content-Type':'text/plain'}, body: body })
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+  saveScores: function(event, round, scores, cb) {
+    var body = JSON.stringify({ action: 'save-scores', event: event, round: round, scores: scores });
+    fetch(WHCC_SCRIPT_URL, { method: 'POST', headers: {'Content-Type':'text/plain'}, body: body })
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+  loadTeeSheets: function(event, cb) {
+    var url = WHCC_SCRIPT_URL + '?action=get-teesheets' + (event ? '&event=' + encodeURIComponent(event) : '');
+    fetch(url).then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
 };
 
 // Auto-sync counts from Sheet in background on every page load
@@ -5702,6 +5730,11 @@ function pairSaveToHistory() {
   pairRenderHistory();
   var btn = document.getElementById('pair-save-week-btn');
   if (btn) { btn.textContent = '✓ Saved'; btn.disabled = true; }
+  // Also push pairings to Google Sheet as round 1 tee sheet
+  if (pairEventFilter && typeof WHCC_SYNC !== 'undefined') {
+    var date = new Date().toISOString().slice(0, 10);
+    WHCC_SYNC.saveTeeSheet(pairEventFilter, 1, date, teeConfig, pairTeams, function(){});
+  }
 }
 
 function pairDeleteHistoryEntry(idx) {
@@ -6015,6 +6048,75 @@ function tsPrint() {
 
 function pairEsc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── TEE SHEET SYNC ────────────────────────────────────────────────────────────
+function tsSaveToSheet() {
+  if (!teeSheet.length) { alert('Generate a tee sheet first.'); return; }
+  var btn = document.getElementById('ts-save-btn');
+  var status = document.getElementById('ts-sync-status');
+  if (btn) { btn.textContent = '⏳ Saving…'; btn.disabled = true; }
+  var event = pairEventFilter || 'General';
+  var date  = new Date().toISOString().slice(0, 10);
+  WHCC_SYNC.saveTeeSheet(event, teeRound, date, teeConfig, teeSheet, function(res, err) {
+    if (btn) { btn.textContent = '💾 Save to Sheet'; btn.disabled = false; }
+    if (err || (res && res.error)) {
+      if (status) status.textContent = '✗ Save failed';
+      return;
+    }
+    if (status) status.textContent = '✓ Saved ' + new Date().toLocaleTimeString();
+    var syncBtn = document.getElementById('ts-sync-btn');
+    if (syncBtn) syncBtn.style.display = 'inline-block';
+  });
+}
+
+function tsLoadFromSheet() {
+  var btn = document.getElementById('ts-load-btn');
+  var status = document.getElementById('ts-sync-status');
+  if (btn) { btn.textContent = '⏳ Loading…'; btn.disabled = true; }
+  var event = pairEventFilter || '';
+  WHCC_SYNC.loadTeeSheets(event, function(data, err) {
+    if (btn) { btn.textContent = '☁ Load from Sheet'; btn.disabled = false; }
+    if (err || !data || !data.length) {
+      if (status) status.textContent = err ? '✗ Load failed' : 'No saved tee sheet found';
+      return;
+    }
+    // Find matching round or latest
+    var match = null;
+    data.forEach(function(d) { if (d.round === teeRound) match = d; });
+    if (!match) match = data[data.length - 1];
+    // Restore tee sheet
+    teeConfig = Object.assign(teeConfig, match.config || {});
+    teeSheet  = match.groups || [];
+    teeRound  = match.round  || 1;
+    tsApplyFormat();
+    tsApplySort();
+    tsApplyRound();
+    tsRenderSheet();
+    var saved = match.savedAt ? new Date(match.savedAt).toLocaleString() : 'unknown';
+    if (status) status.textContent = '✓ Loaded — saved ' + saved;
+    var syncBtn = document.getElementById('ts-sync-btn');
+    if (syncBtn) syncBtn.style.display = 'inline-block';
+  });
+}
+
+function tsSyncScores() {
+  if (!teeSheet.length) return;
+  var btn = document.getElementById('ts-sync-btn');
+  var status = document.getElementById('ts-sync-status');
+  if (btn) { btn.textContent = '⏳ Syncing…'; btn.disabled = true; }
+  var scores = teeSheet.map(function(g) {
+    return { groupId: g.id, score: (g.scores && g.scores['r' + teeRound]) || null };
+  }).filter(function(s){ return s.score !== null; });
+  if (!scores.length) {
+    if (btn) { btn.textContent = '↑ Sync Scores'; btn.disabled = false; }
+    if (status) status.textContent = 'No scores to sync yet';
+    return;
+  }
+  WHCC_SYNC.saveScores(pairEventFilter || 'General', teeRound, scores, function(res, err) {
+    if (btn) { btn.textContent = '↑ Sync Scores'; btn.disabled = false; }
+    if (status) status.textContent = err ? '✗ Sync failed' : '✓ Scores synced ' + new Date().toLocaleTimeString();
+  });
 }
 
 // ── REGISTRATION DEBUG ──
