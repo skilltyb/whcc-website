@@ -2562,22 +2562,26 @@ var WHCC_SYNC = {
         })
         .then(function(rows) {
           if (!Array.isArray(rows)) { if (cb) cb(null, 'bad data'); return; }
+          // Capture actual column names from first row for debugging
+          if (rows.length) window._lastSheetColumns = Object.keys(rows[0]);
+
           var regs = rows.map(function(row) {
             return {
-              id:        row['ID']              || '',
-              event:     row['Event']           || '',
-              eventMeta: row['Event Date/Time'] || '',
-              firstName: row['First Name']      || '',
-              lastName:  row['Last Name']       || '',
-              email:     row['Email']           || '',
-              phone:     row['Phone']           || '',
-              partner:   row['Partner/Team']    || '',
-              players:   row['Players']         || '1',
-              memberNum: row['Member #']        || '',
-              ghin:      row['GHIN']            || '',
-              notes:     row['Notes']           || '',
-              timestamp: row['Registered At']   || '',
-              source:    row['Source']          || ''
+              id:          row['ID']                                                  || '',
+              event:       row['Event']                                               || '',
+              eventMeta:   row['Event Date/Time']                                    || '',
+              firstName:   row['First Name']                                         || '',
+              lastName:    row['Last Name']                                          || '',
+              email:       row['Email']                                              || '',
+              phone:       row['Phone']                                              || '',
+              partner:     row['Partner/Team'] || row['Partner'] || row['partner']   || '',
+              players:     row['Players']                                            || '1',
+              memberNum:   row['Member #']                                           || '',
+              ghin:        row['GHIN']                                               || '',
+              partnerGhin: row['Partner GHIN'] || row['partnerGhin'] || row['PartnerGhin'] || '',
+              notes:       row['Notes']                                              || '',
+              timestamp:   row['Registered At']                                      || '',
+              source:      row['Source']                                             || ''
             };
           }).filter(function(r) { return r.firstName || r.lastName; });
           localStorage.setItem('wh_registrations', JSON.stringify(regs));
@@ -5848,6 +5852,49 @@ function tsPrint() {
 
 function pairEsc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── REGISTRATION DEBUG ──
+// Call regDebug() from the browser console to inspect raw sync data.
+// Call regDebug('Couples Scramble') to filter to one event.
+function regDebug(eventFilter) {
+  var GOLD = 'color:#b8976a;font-weight:bold';
+  var OK   = 'color:#4caf50';
+  var ERR  = 'color:#e07070;font-weight:bold';
+  var DIM  = 'color:#888';
+
+  console.log('%c── Registration Debug ────────────────────', GOLD);
+
+  // Show raw sheet column names captured on last sync
+  if (window._lastSheetColumns) {
+    console.log('%cSheet columns returned by Apps Script:', GOLD);
+    console.log(' ', window._lastSheetColumns.join(' | '));
+  } else {
+    console.log('%c(No column names captured yet — sync the sheet first)', ERR);
+  }
+
+  var regs = getAllRegs();
+  var filtered = eventFilter ? regs.filter(function(r){ return r.event === eventFilter; }) : regs;
+  console.log('%c\nLocal registrations' + (eventFilter ? ' for "' + eventFilter + '"' : '') + ': ' + filtered.length, GOLD);
+
+  if (!filtered.length) {
+    console.log('%c  None found.', ERR);
+    return;
+  }
+
+  // Show partner + partnerGhin for each
+  console.log('%c  #   Name                          partner              partnerGhin  ghin', DIM);
+  filtered.forEach(function(r, i) {
+    var name = (r.firstName + ' ' + r.lastName).trim().padEnd(30, ' ');
+    var partner = (r.partner || '(empty)').padEnd(20, ' ');
+    var pghin   = (r.partnerGhin || '(empty)').padEnd(12, ' ');
+    var style   = r.partner ? OK : ERR;
+    console.log('%c  ' + (i+1) + '   ' + name + ' ' + partner + ' ' + pghin + ' ' + (r.ghin || ''), style);
+  });
+
+  // Summary
+  var withPartner = filtered.filter(function(r){ return r.partner; }).length;
+  console.log('%c\n  ' + withPartner + '/' + filtered.length + ' have a partner field populated', withPartner === filtered.length ? OK : ERR);
 }
 
 // ── PAIRING TEST SUITE ──
