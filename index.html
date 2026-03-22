@@ -2140,7 +2140,7 @@ footer{background:var(--deep);padding:80px 80px 40px}
   </div>
   <!-- Event filter -->
   <div style="margin-bottom:10px;">
-    <select id="reg-event-filter" onchange="renderStaffRegs()" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(184,151,106,.2);color:#f5f0e8;padding:8px 12px;font-size:12px;border-radius:2px;">
+    <select id="reg-event-filter" onchange="currentRegFilter=this.value;renderStaffRegs()" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(184,151,106,.2);color:#f5f0e8;padding:8px 12px;font-size:12px;border-radius:2px;">
       <option value="">— All Events —</option>
     </select>
   </div>
@@ -3657,10 +3657,11 @@ var WHCC_EVENT_ORDER = [
   "Halloween Costume Scramble"
 ];
 
+var currentRegFilter = '';
+
 function buildRegDropdown(regs) {
   var sel = document.getElementById('reg-event-filter');
   if (!sel) return;
-  var prevVal = sel.value;
 
   // Build count map
   var counts = {};
@@ -3670,7 +3671,7 @@ function buildRegDropdown(regs) {
     });
   } catch(e) {}
 
-  // Always rebuild from the known event list — never depends on regs being non-empty
+  // Rebuild from known event list — use currentRegFilter to restore selection
   sel.innerHTML = '<option value="">— All Events —</option>';
   WHCC_EVENT_ORDER.forEach(function(ev) {
     var count = counts[ev] || 0;
@@ -3679,11 +3680,9 @@ function buildRegDropdown(regs) {
     var opt   = document.createElement('option');
     opt.value       = ev;
     opt.textContent = ev + '  (' + count + '/' + cap + ' · ' + pct + '%)';
+    if (ev === currentRegFilter) opt.selected = true;
     sel.appendChild(opt);
   });
-
-  // Restore previous selection if it still exists
-  if (prevVal) sel.value = prevVal;
 }
 
 function staffViewRegistrations() {
@@ -3706,7 +3705,7 @@ function staffViewRegistrations() {
 }
 
 function renderStaffRegs() {
-  var filter = (document.getElementById('reg-event-filter')||{}).value || '';
+  var filter = currentRegFilter || '';
   var regs = getAllRegs().filter(function(r){ return !filter || r.event === filter; });
   regs.sort(function(a,b){ return new Date(a.timestamp) - new Date(b.timestamp); });
 
@@ -3838,7 +3837,7 @@ function deleteReg(id) {
 }
 
 function regExportCSV() {
-  var filter = (document.getElementById('reg-event-filter')||{}).value || '';
+  var filter = currentRegFilter || '';
   var regs = getAllRegs().filter(function(r){ return !filter || r.event === filter; });
   if (!regs.length) { alert('No registrations to export.'); return; }
   var headers = ['Event','Date/Time','First Name','Last Name','Email','Phone','Partner','Players','Member #','GHIN #','Notes','Registered'];
@@ -3856,7 +3855,7 @@ function regExportCSV() {
 }
 
 function regPrintList() {
-  var filter = (document.getElementById('reg-event-filter')||{}).value || '';
+  var filter = currentRegFilter || '';
   var regs = getAllRegs().filter(function(r){ return !filter || r.event === filter; });
   if (!regs.length) { alert('No registrations to print.'); return; }
   var html = '<html><head><title>Registration List</title><style>body{font-family:Arial,sans-serif;font-size:12px;color:#111}h1{font-size:16px;margin-bottom:4px}h2{font-size:13px;color:#555;font-weight:normal;margin-bottom:16px}table{width:100%;border-collapse:collapse}th{background:#1a2b1f;color:#f5f0e8;padding:6px 10px;text-align:left;font-size:11px}td{padding:5px 10px;border-bottom:1px solid #e8e0d0}tr:nth-child(even){background:#f9f6f0}.footer{margin-top:20px;font-size:10px;color:#999}</style></head><body>';
@@ -3874,7 +3873,7 @@ function regPrintList() {
 }
 
 function regPrintSignupSheet() {
-  var filter = (document.getElementById('reg-event-filter')||{}).value || '';
+  var filter = currentRegFilter || '';
   var regs = getAllRegs().filter(function(r){ return !filter || r.event === filter; });
   var info = filter && typeof getEventInfo==='function' ? getEventInfo(filter) : {type:'single',capacity:72,fee:'Member Event'};
   var evType = info.type || 'single';
@@ -3965,7 +3964,7 @@ function regPrintSignupSheet() {
 }
 
 function regEmailList() {
-  var filter = (document.getElementById('reg-event-filter')||{}).value || '';
+  var filter = currentRegFilter || '';
   var regs = getAllRegs().filter(function(r){ return !filter || r.event === filter; });
   if (!regs.length) { alert('No registrations to email.'); return; }
   var body = 'Registration List: ' + (filter || 'All Events') + '\n\n';
