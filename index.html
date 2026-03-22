@@ -5451,50 +5451,62 @@ function pairCountRepeats(groups) {
 
 // Build one candidate set of team-mode groups
 function pairBuildTeamGroups(lockedUnits, singles) {
-  var shuffled = lockedUnits.slice();
-  fishYates(shuffled);                           // fully random — no handicap sorting
   var tierLabels  = ['A','B','C','D'];
   var tierClasses = ['tier-a','tier-b','tier-c','tier-d'];
-  var groups  = [];
-  var teamId  = 1;
 
-  // Pair locked units sequentially after shuffle (unit[0]+unit[1], unit[2]+unit[3], …)
-  for (var i = 0; i + 1 < shuffled.length; i += 2) {
+  // Step 1: Pair singles by handicap balance (snake draft: lowest + highest, etc.)
+  // This gives fairly matched partners for people who signed up without one.
+  var pairedSingles = [];
+  var oddSingle = null;
+  if (singles.length > 0) {
+    var sorted = singles.slice().sort(function(a, b) { return a.hcap - b.hcap; });
+    var lo = 0, hi = sorted.length - 1;
+    while (lo < hi) {
+      var s1 = sorted[lo++], s2 = sorted[hi--];
+      pairedSingles.push({
+        id: s1.id, isCouple: true, _generatedPair: true,
+        name: s1.name + ' & ' + s2.name,
+        hcap: s1.hcap + s2.hcap,
+        name1: s1.name, hcap1: s1.hcap,
+        name2: s2.name, hcap2: s2.hcap
+      });
+    }
+    if (lo === hi) { oddSingle = sorted[lo]; }
+  }
+
+  // Step 2: Shuffle locked units and paired singles separately, then combine
+  var shuffledLocked = lockedUnits.slice();
+  fishYates(shuffledLocked);
+  fishYates(pairedSingles);
+  var allUnits = shuffledLocked.concat(pairedSingles);
+  fishYates(allUnits);   // final shuffle so locked/singles interleave randomly
+
+  // Step 3: Pair units into groups of 4 (2 units per group)
+  var groups = [];
+  var teamId = 1;
+  for (var i = 0; i + 1 < allUnits.length; i += 2) {
     var g = { id: teamId++, players: [] };
-    pairAddUnitToGroup(g, shuffled[i],   'A', 'tier-a');
-    pairAddUnitToGroup(g, shuffled[i+1], 'B', 'tier-b');
+    pairAddUnitToGroup(g, allUnits[i],   'A', 'tier-a');
+    pairAddUnitToGroup(g, allUnits[i+1], 'B', 'tier-b');
     groups.push(g);
   }
-  // Odd locked unit gets its own partial group
-  if (shuffled.length % 2 === 1) {
+  // Odd unit gets its own partial group
+  if (allUnits.length % 2 === 1) {
     var g = { id: teamId++, players: [] };
-    pairAddUnitToGroup(g, shuffled[shuffled.length - 1], 'A', 'tier-a');
+    pairAddUnitToGroup(g, allUnits[allUnits.length - 1], 'A', 'tier-a');
     groups.push(g);
   }
 
-  // Singles: fill incomplete groups (< 4 players) first, then form their own groups
-  var sArr = singles.slice();
-  fishYates(sArr);
-  sArr.forEach(function(s) {
-    var target = null;
-    for (var i = 0; i < groups.length; i++) {
-      if (groups[i].players.length < 4) { target = groups[i]; break; }
-    }
-    if (target) {
-      var ti = target.players.length;
-      target.players.push({ player: { id: s.id, name: s.name, hcap: s.hcap }, tier: tierLabels[ti] || 'D', tierClass: tierClasses[ti] || 'tier-d', unitName: s.name });
-    } else {
-      // Start a new group of singles
-      var last = groups[groups.length - 1];
-      if (last && !last._singleGroup) { last = null; }  // need fresh group
-      if (!last || last.players.length >= 4) {
-        last = { id: teamId++, players: [], _singleGroup: true };
-        groups.push(last);
-      }
-      var ti = last.players.length;
-      last.players.push({ player: { id: s.id, name: s.name, hcap: s.hcap }, tier: tierLabels[ti] || 'D', tierClass: tierClasses[ti] || 'tier-d', unitName: s.name });
-    }
-  });
+  // Step 4: Place any odd single into the smallest group
+  if (oddSingle) {
+    var target = groups.length ? groups.reduce(function(best, g) {
+      return g.players.length < best.players.length ? g : best;
+    }, groups[0]) : { id: teamId++, players: [] };
+    if (!target.players.length) groups.push(target);
+    var ti = target.players.length;
+    target.players.push({ player: { id: oddSingle.id, name: oddSingle.name, hcap: oddSingle.hcap },
+      tier: tierLabels[ti] || 'D', tierClass: tierClasses[ti] || 'tier-d' });
+  }
 
   return groups;
 }
