@@ -3631,34 +3631,83 @@ function refreshRegsFromSheet() {
   if (btn) { btn.textContent = '↻ Syncing…'; btn.disabled = true; }
   WHCC_SYNC.fetchAll(function(regs, err) {
     if (btn) { btn.textContent = '↻ Sync Sheet'; btn.disabled = false; }
-    if (err) { alert('Could not reach Google Sheet. Showing cached data.'); return; }
-    staffViewRegistrations();
+    if (err || !regs) { alert('Could not reach Google Sheet. Showing cached data.'); return; }
+    buildRegDropdown(regs);
+    renderStaffRegs();
     var lbl = document.getElementById('reg-count-label');
     if (lbl) {
-      var base = lbl.textContent.replace(/ · synced.*/,'');
+      var base = (lbl.textContent || '').replace(/ · synced.*/,'');
       lbl.textContent = base + ' · synced ' + new Date().toLocaleTimeString();
     }
   });
 }
 
-function staffViewRegistrations() {
-  var regs = getAllRegs();
-  var events = [];
-  var seen = {};
-  regs.forEach(function(r){ if(r.event && !seen[r.event]){ seen[r.event]=true; events.push(r.event); }});
-  events.sort();
+// Season order for dropdown sorting (matches calendar year)
+var WHCC_EVENT_ORDER = [
+  "St. Patty's Shootout","Ladies Opening Day","Masters Dinner",
+  "Mules Invitational","Spring 2-Man Scramble","Ladies Sweet Treat",
+  "MGA Draft Day","Men's Opening Day","Ozark Invitational",
+  "Couples Scramble","Ladies Invitational","4th of July Scramble",
+  "Member-Guest","Club Championship","Ladies Club Championship",
+  "Fall 2-Man Scramble","Senior Scramble","Closing Day Scramble",
+  "Halloween Costume Scramble"
+];
+
+function buildRegDropdown(regs) {
   var sel = document.getElementById('reg-event-filter');
   if (!sel) return;
+  var prevVal = sel.value; // preserve current selection
+  // Collect events that actually have registrations
+  var seen = {};
+  regs.forEach(function(r){ if (r.event) seen[r.event] = true; });
+  // Sort by season order first, then alphabetically for any extras
+  var ordered = WHCC_EVENT_ORDER.filter(function(e){ return seen[e]; });
+  var extras  = Object.keys(seen).filter(function(e){ return ordered.indexOf(e) === -1; }).sort();
+  var events  = ordered.concat(extras);
+
   sel.innerHTML = '<option value="">— All Events —</option>';
-  events.forEach(function(ev){
-    var count = regs.filter(function(r){return r.event===ev;}).length;
-    var info = getEventInfo ? getEventInfo(ev) : {capacity:72};
-    var opt = document.createElement('option');
+  events.forEach(function(ev) {
+    var count = regs.filter(function(r){ return r.event === ev; }).length;
+    var info  = getEventInfo ? getEventInfo(ev) : { capacity: 72 };
+    var pct   = Math.round(count / info.capacity * 100);
+    var opt   = document.createElement('option');
     opt.value = ev;
-    opt.textContent = ev + ' (' + count + '/' + info.capacity + ')';
+    opt.textContent = ev + '  (' + count + '/' + info.capacity + ' · ' + pct + '%)';
     sel.appendChild(opt);
   });
-  renderStaffRegs();
+  if (prevVal) sel.value = prevVal; // restore selection if still valid
+}
+
+function staffViewRegistrations() {
+  var sel = document.getElementById('reg-event-filter');
+  if (!sel) return;
+
+  var cached = getAllRegs();
+  if (cached.length > 0) {
+    // Show cached data immediately, then silently refresh in background
+    buildRegDropdown(cached);
+    renderStaffRegs();
+  } else {
+    // No local data — fetch from Sheet first
+    sel.innerHTML = '<option value="">⟳ Loading from Sheet…</option>';
+  }
+
+  // Always refresh from Sheet when tab opens
+  WHCC_SYNC.fetchAll(function(regs, err) {
+    if (err || !regs) {
+      if (cached.length === 0) {
+        sel.innerHTML = '<option value="">⚠ Could not load — check connection</option>';
+      }
+      return;
+    }
+    buildRegDropdown(regs);
+    renderStaffRegs();
+    var lbl = document.getElementById('reg-count-label');
+    if (lbl) {
+      var base = (lbl.textContent || '').replace(/ · synced.*/,'');
+      lbl.textContent = base + ' · synced ' + new Date().toLocaleTimeString();
+    }
+  });
 }
 
 function renderStaffRegs() {
