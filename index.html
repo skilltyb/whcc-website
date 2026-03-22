@@ -4874,6 +4874,14 @@ function staffConfirmClose() {
 // TEAM PAIRING BUILDER
 // ═══════════════════════════════════════
 var pairRoster = [];
+
+// Parse a handicap string from the sheet; reject values > 54 (those are GHIN IDs, not handicaps)
+function parseHcp(val, fallback) {
+  if (fallback === undefined) fallback = 18;
+  var n = parseFloat(val);
+  if (isNaN(n) || n < 0 || n > 54) return fallback;
+  return Math.round(n * 10) / 10;
+}
 var pairTeams  = [];
 var pairSwapSource = null;
 var pairConfig = { groupSize: 4, mode: 'league', teamSize: 2 };
@@ -5278,8 +5286,7 @@ function pairImportFromRegs() {
     list.forEach(function(r) {
       var name1 = ((r.firstName || '') + ' ' + (r.lastName || '')).trim();
       if (!name1) return;
-      var hcap1 = parseFloat(r.ghin); if (isNaN(hcap1)) hcap1 = 18;
-      hcap1 = Math.round(hcap1 * 10) / 10;
+      var hcap1 = parseHcp(r.ghin);
 
       // ── FOURSOME path ──────────────────────────────────────────
       if (isF) {
@@ -5330,9 +5337,7 @@ function pairImportFromRegs() {
       });
       if (already) return;
 
-      var hcap2 = parseFloat(r.partnerGhin);
-      if (isNaN(hcap2)) hcap2 = hcap1;
-      hcap2 = Math.round(hcap2 * 10) / 10;
+      var hcap2 = parseHcp(r.partnerGhin, hcap1);
       var cid = Date.now() + Math.floor(Math.random() * 10000);
       pairRoster.push({
         id: cid, isCouple: true,
@@ -5356,8 +5361,7 @@ function pairImportFromRegs() {
     var name = ((r.firstName || '') + ' ' + (r.lastName || '')).trim();
     if (!name) return;
     if (pairRoster.some(function(p){ return p.name.toLowerCase() === name.toLowerCase(); })) return;
-    var hcap = parseFloat(r.ghin);
-    if (isNaN(hcap) || r.ghin === '') hcap = 18;
+    var hcap = parseHcp(r.ghin);
     pairRoster.push({ name: name, hcap: hcap, id: Date.now() + Math.floor(Math.random() * 10000) });
     added++;
   });
