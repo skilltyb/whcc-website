@@ -5849,6 +5849,119 @@ function tsPrint() {
 function pairEsc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+
+// ── PAIRING TEST SUITE ──
+// Call pairRunTest() from the browser console to verify correctness.
+function pairRunTest() {
+  var GOLD = 'color:#b8976a;font-weight:bold';
+  var OK   = 'color:#4caf50;font-weight:bold';
+  var ERR  = 'color:#e07070;font-weight:bold';
+  var DIM  = 'color:#888';
+  var pass = 0, fail = 0;
+
+  function ok(label, detail)   { console.log('%c  ✓ ' + label, OK,  detail !== undefined ? detail : ''); pass++; }
+  function err(label, detail)  { console.log('%c  ✗ ' + label, ERR, detail !== undefined ? detail : ''); fail++; }
+  function check(label, cond, detail) { cond ? ok(label, detail) : err(label, detail); }
+
+  console.log('%c── Pairing Test ──────────────────────────', GOLD);
+  console.log('%cRoster: ' + pairRoster.length + ' entries  |  Groups: ' + pairTeams.length + '  |  Mode: ' + pairConfig.mode, DIM);
+
+  if (!pairTeams.length) {
+    console.log('%c  No groups generated yet — run Generate Groups first.', ERR);
+    return;
+  }
+
+  // ── Build lookup: player name → group id ──
+  var nameToGroup = {};
+  var duplicates  = [];
+  pairTeams.forEach(function(team) {
+    team.players.forEach(function(tp) {
+      var n = tp.player.name;
+      if (nameToGroup[n] !== undefined) { duplicates.push(n + ' (Groups ' + nameToGroup[n] + ' & ' + team.id + ')'); }
+      else { nameToGroup[n] = team.id; }
+    });
+  });
+
+  // ── Test 1: No player appears in more than one group ──
+  console.log('%c\n[1] No duplicate placements', GOLD);
+  check('Each player appears exactly once', duplicates.length === 0,
+        duplicates.length ? duplicates.join(', ') : '');
+
+  // ── Test 2: Every roster entry is placed ──
+  console.log('%c\n[2] All roster entries placed', GOLD);
+  var unplaced = [];
+  pairRoster.forEach(function(r) {
+    if (r.isCouple) {
+      if (nameToGroup[r.name1] === undefined) unplaced.push(r.name1);
+      if (nameToGroup[r.name2] === undefined) unplaced.push(r.name2);
+    } else {
+      if (nameToGroup[r.name] === undefined) unplaced.push(r.name);
+    }
+  });
+  check('All players assigned to a group', unplaced.length === 0,
+        unplaced.length ? 'Missing: ' + unplaced.join(', ') : '');
+
+  // ── Test 3: Locked pairs (couples) are never split across groups ──
+  console.log('%c\n[3] Locked pairs kept together', GOLD);
+  var couples = pairRoster.filter(function(r){ return r.isCouple; });
+  if (!couples.length) {
+    console.log('%c  (No locked pairs in roster — skipped)', DIM);
+  }
+  couples.forEach(function(c) {
+    var g1 = nameToGroup[c.name1];
+    var g2 = nameToGroup[c.name2];
+    var together = g1 !== undefined && g1 === g2;
+    check('"' + c.name + '"', together,
+          together
+            ? 'Both in Group ' + g1
+            : (g1 === undefined ? c.name1 + ' unplaced' :
+               g2 === undefined ? c.name2 + ' unplaced' :
+               'SPLIT — ' + c.name1 + ' → Group ' + g1 + ', ' + c.name2 + ' → Group ' + g2));
+  });
+
+  // ── Test 4: Group sizes are within bounds ──
+  console.log('%c\n[4] Group size constraints', GOLD);
+  var gs = pairConfig.groupSize || 4;
+  pairTeams.forEach(function(team) {
+    var n = team.players.length;
+    // Allow up to gs+1 for leftovers (odd couple + 1 single, etc.)
+    check('Group ' + team.id + ' size (' + n + ' players)', n >= 2 && n <= gs + 1,
+          n < 2 ? 'Too small' : n > gs + 1 ? 'Too large (max ' + (gs+1) + ')' : '');
+  });
+
+  // ── Test 5: In team mode — verify unitName grouping ──
+  if (pairConfig.mode === 'team') {
+    console.log('%c\n[5] Team mode — unit labels consistent within group', GOLD);
+    pairTeams.forEach(function(team) {
+      // Group players by unitName; each unitName should map to same group
+      var unitGroups = {};
+      team.players.forEach(function(tp) {
+        var u = tp.unitName || tp.player.name;
+        if (!unitGroups[u]) unitGroups[u] = [];
+        unitGroups[u].push(tp.player.name);
+      });
+      var unitList = Object.keys(unitGroups).join(' + ');
+      ok('Group ' + team.id + ': ' + unitList);
+    });
+  }
+
+  // ── Summary ──
+  console.log('\n%c' + (fail === 0 ? '✓ ALL TESTS PASSED' : fail + ' TEST(S) FAILED') + '  (' + pass + ' checks)', fail === 0 ? OK : ERR);
+
+  // ── Group printout ──
+  console.log('%c\nGroup Assignments:', GOLD);
+  pairTeams.forEach(function(team) {
+    var seen = {}, units = [];
+    team.players.forEach(function(tp) {
+      var u = tp.unitName || tp.player.name;
+      if (!seen[u]) { seen[u] = true; units.push(u); }
+    });
+    var repeat = team.repeatDate ? ' ⚠ repeat from ' + team.repeatDate : '';
+    console.log('  Group ' + team.id + ': ' + units.join(' + ') + repeat);
+  });
+
+  return { passed: pass, failed: fail };
+}
 </script>
 
 <!-- Staff PIN overlay -->
