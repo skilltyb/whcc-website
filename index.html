@@ -6067,24 +6067,37 @@ function ghinParseCSV(text) {
     var last  = (cols[colLast]  || '').toLowerCase();
     var hcp   = parseFloat(cols[colHcp]);
     if (!first && !last) return;
-    var key = first + ' ' + last;
-    data[key] = {
+    var key   = first + ' ' + last;
+    var ghinId = colId >= 0 ? cols[colId].trim() : '';
+    var entry = {
       hcp:   isNaN(hcp) ? null : hcp,
-      ghinId: colId  >= 0 ? cols[colId]  : '',
+      ghinId: ghinId,
       club:   colClub >= 0 ? cols[colClub] : ''
     };
+    data[key] = entry;
+    // Also index by GHIN ID for ID-based lookup
+    if (ghinId) data['__id__' + ghinId] = entry;
   });
   return data;
 }
 
 function ghinGetStatus(r) {
   if (!_ghinData) return null;
-  var name = ((r.firstName || '') + ' ' + (r.lastName || '')).toLowerCase().trim();
-  var entry = _ghinData[name];
+  // Try matching by GHIN ID first (extracted from notes or a dedicated field),
+  // then fall back to full name match
+  var entry = null;
+  var ghinIdMatch = (r.notes || '').match(/GHIN\s*#\s*(\d{5,8})/i);
+  if (ghinIdMatch && _ghinData['__id__' + ghinIdMatch[1]]) {
+    entry = _ghinData['__id__' + ghinIdMatch[1]];
+  }
+  if (!entry) {
+    var name = ((r.firstName || '') + ' ' + (r.lastName || '')).toLowerCase().trim();
+    entry = _ghinData[name];
+  }
   var regHcp = parseHcp(r.ghin, null);
   if (!entry) return { status: 'unknown' };
   if (entry.hcp === null) return { status: 'unknown' };
-  if (regHcp === null) return { status: 'no-hcp' };   // registered with no handicap
+  if (regHcp === null) return { status: 'no-hcp' };
   var diff = Math.abs(regHcp - entry.hcp);
   return {
     status:     diff > 3 ? 'flag' : 'ok',

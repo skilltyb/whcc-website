@@ -15,7 +15,7 @@ EMAIL       = 'sborkgren@trcc.edu'
 PHONE       = '(573) 300-0000'
 MEMBER_NUM  = '001'
 FAKE_HCP    = '4.2'     # intentionally wrong — real is ~16
-GHIN_NUM    = ''        # fill in Scott's actual 7-digit GHIN # here
+GHIN_NUM    = '11409297'  # Scott's actual GHIN membership number
 
 def post(data):
     body = json.dumps(data).encode('utf-8')
@@ -39,7 +39,7 @@ def reg(event, meta, players='1', partner=''):
         'players':   players,
         'memberNum': MEMBER_NUM,
         'ghin':      FAKE_HCP,
-        'notes':     'TEST — handicap intentionally wrong for GHIN verification demo',
+        'notes':     f'TEST — GHIN #{GHIN_NUM} — handicap intentionally wrong for GHIN verification demo',
         'timestamp': '2026-03-15T09:00:00.000Z',
         'source':    'website'
     }
