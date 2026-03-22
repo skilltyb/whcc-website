@@ -364,7 +364,7 @@ footer{background:var(--deep);padding:80px 80px 40px}
 
 /* ── STAFF DASHBOARD ── */
 .staff-header{border-bottom:1px solid rgba(184,151,106,.2);padding:20px 28px;display:flex;flex-direction:column;align-items:flex-start;gap:14px}
-#reg-event-filter option{background:#1e3a20;color:#f5f0e8;}
+#reg-event-filter option,#pair-event-filter option{background:#1e3a20;color:#f5f0e8;}
 /* ── PAIRING BUILDER ── */
 .pair-section{display:flex;gap:16px;min-height:400px;}
 @media(max-width:700px){.pair-section{flex-direction:column;}}
@@ -2232,6 +2232,32 @@ footer{background:var(--deep);padding:80px 80px 40px}
 
           <!-- ── GROUPS TAB ── -->
           <div id="pair-tab-groups">
+            <!-- Event selector -->
+            <div style="margin-bottom:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <select id="pair-event-filter" onchange="pairEventFilter=this.value;pairUpdateEventBadge()" style="flex:1;max-width:360px;background:#1e3a20;border:1px solid rgba(184,151,106,.4);color:#f5f0e8;padding:7px 10px;font-size:12px;border-radius:2px;">
+                <option value="">— Select Event to Import —</option>
+                <option value="St. Patty's Shootout">St. Patty's Shootout</option>
+                <option value="Ladies Opening Day">Ladies Opening Day</option>
+                <option value="Masters Dinner">Masters Dinner</option>
+                <option value="Mules Invitational">Mules Invitational</option>
+                <option value="Spring 2-Man Scramble">Spring 2-Man Scramble</option>
+                <option value="Ladies Sweet Treat">Ladies Sweet Treat</option>
+                <option value="MGA Draft Day">MGA Draft Day</option>
+                <option value="Men's Opening Day">Men's Opening Day</option>
+                <option value="Ozark Invitational">Ozark Invitational</option>
+                <option value="Couples Scramble">Couples Scramble</option>
+                <option value="Ladies Invitational">Ladies Invitational</option>
+                <option value="4th of July Scramble">4th of July Scramble</option>
+                <option value="Member-Guest">Member-Guest</option>
+                <option value="Club Championship">Club Championship</option>
+                <option value="Ladies Club Championship">Ladies Club Championship</option>
+                <option value="Fall 2-Man Scramble">Fall 2-Man Scramble</option>
+                <option value="Senior Scramble">Senior Scramble</option>
+                <option value="Closing Day Scramble">Closing Day Scramble</option>
+                <option value="Halloween Costume Scramble">Halloween Costume Scramble</option>
+              </select>
+              <span id="pair-event-badge" style="font-size:11px;color:rgba(245,240,232,.4);white-space:nowrap;"></span>
+            </div>
             <div class="pair-ctrl">
               <button class="pair-btn primary" onclick="pairGenerate()">⚡ Generate Groups</button>
               <button class="pair-btn" onclick="pairReshuffle()">🔀 Reshuffle</button>
@@ -4826,6 +4852,7 @@ var pairRoster = [];
 var pairTeams  = [];
 var pairSwapSource = null;
 var pairConfig = { groupSize: 4, mode: 'league' };
+var pairEventFilter = '';
 
 function pairViewLoad() {
   var saved = localStorage.getItem('whcc-pairings-roster');
@@ -5119,12 +5146,24 @@ function pairTeamClick(playerId, teamId) {
   pairRenderTeams();
 }
 
+function pairUpdateEventBadge() {
+  var badge = document.getElementById('pair-event-badge');
+  if (!badge) return;
+  if (!pairEventFilter) { badge.textContent = ''; return; }
+  var regs = (typeof getAllRegs === 'function') ? getAllRegs() : [];
+  var count = regs.filter(function(r){ return r.event === pairEventFilter; }).length;
+  badge.textContent = count + ' registrant' + (count !== 1 ? 's' : '');
+}
+
 function pairImportFromRegs() {
-  var regs   = (typeof getAllRegs === 'function') ? getAllRegs() : [];
-  var filter = (typeof currentRegFilter !== 'undefined') ? currentRegFilter : '';
-  var list   = filter ? regs.filter(function(r){ return r.event === filter; }) : regs;
+  if (!pairEventFilter) {
+    alert('Select an event from the dropdown first.');
+    return;
+  }
+  var regs = (typeof getAllRegs === 'function') ? getAllRegs() : [];
+  var list = regs.filter(function(r){ return r.event === pairEventFilter; });
   if (!list.length) {
-    alert('No registrations found' + (filter ? ' for "' + filter + '"' : '') + '.\nGo to Registrations tab, select an event filter, then come back and import.');
+    alert('No registrations found for "' + pairEventFilter + '".\nSync the sheet on the Registrations tab first.');
     return;
   }
   var added = 0;
@@ -5139,7 +5178,7 @@ function pairImportFromRegs() {
   });
   pairSave();
   pairRenderRoster();
-  alert('Imported ' + added + ' player' + (added !== 1 ? 's' : '') + (filter ? ' from "' + filter + '"' : '') + '.');
+  alert('Imported ' + added + ' player' + (added !== 1 ? 's' : '') + ' from "' + pairEventFilter + '".');
 }
 
 function pairPrint() {
