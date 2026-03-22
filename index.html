@@ -3656,26 +3656,36 @@ var WHCC_EVENT_ORDER = [
 function buildRegDropdown(regs) {
   var sel = document.getElementById('reg-event-filter');
   if (!sel) return;
-  var prevVal = sel.value; // preserve current selection
-  // Collect events that actually have registrations
-  var seen = {};
-  regs.forEach(function(r){ if (r.event) seen[r.event] = true; });
-  // Sort by season order first, then alphabetically for any extras
-  var ordered = WHCC_EVENT_ORDER.filter(function(e){ return seen[e]; });
-  var extras  = Object.keys(seen).filter(function(e){ return ordered.indexOf(e) === -1; }).sort();
-  var events  = ordered.concat(extras);
+  var prevVal = sel.value;
+
+  // Count registrations per event from whatever data we have
+  var counts = {};
+  (regs || []).forEach(function(r){ if (r.event) counts[r.event] = (counts[r.event] || 0) + 1; });
 
   sel.innerHTML = '<option value="">— All Events —</option>';
-  events.forEach(function(ev) {
-    var count = regs.filter(function(r){ return r.event === ev; }).length;
+
+  // Always show all 19 known events in season order — never depends on regs being populated
+  WHCC_EVENT_ORDER.forEach(function(ev) {
+    var count = counts[ev] || 0;
     var info  = getEventInfo ? getEventInfo(ev) : { capacity: 72 };
-    var pct   = Math.round(count / info.capacity * 100);
+    var pct   = info.capacity > 0 ? Math.round(count / info.capacity * 100) : 0;
     var opt   = document.createElement('option');
     opt.value = ev;
     opt.textContent = ev + '  (' + count + '/' + info.capacity + ' · ' + pct + '%)';
     sel.appendChild(opt);
   });
-  if (prevVal) sel.value = prevVal; // restore selection if still valid
+
+  // Also append any extra events found in the data that aren't in the known list
+  Object.keys(counts).forEach(function(ev) {
+    if (WHCC_EVENT_ORDER.indexOf(ev) === -1) {
+      var opt = document.createElement('option');
+      opt.value = ev;
+      opt.textContent = ev + '  (' + counts[ev] + ')';
+      sel.appendChild(opt);
+    }
+  });
+
+  if (prevVal) sel.value = prevVal;
 }
 
 function staffViewRegistrations() {
