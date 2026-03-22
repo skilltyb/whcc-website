@@ -404,6 +404,15 @@ footer{background:var(--deep);padding:80px 80px 40px}
 .ts-score-input{background:rgba(255,255,255,.06);border:1px solid rgba(184,151,106,.2);color:var(--cream);padding:3px 6px;font-size:12px;width:70px;font-family:'Raleway',sans-serif;text-align:center;border-radius:1px;}
 .ts-score-input:focus{outline:none;border-color:var(--gold);}
 .pair-couple-card{padding:6px 8px;background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);border-radius:2px;margin-bottom:5px;}
+.pair-repeat-warn{font-size:10px;color:#e07070;background:rgba(224,112,112,.08);border-bottom:1px solid rgba(224,112,112,.15);padding:3px 10px;letter-spacing:.05em;}
+.pair-history-entry{background:rgba(255,255,255,.02);border:1px solid rgba(184,151,106,.1);border-radius:2px;margin-bottom:6px;overflow:hidden;}
+.pair-history-head{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;cursor:pointer;user-select:none;}
+.pair-history-head:hover{background:rgba(255,255,255,.03);}
+.pair-history-date{font-size:11px;color:var(--gold-lt);}
+.pair-history-meta{font-size:10px;color:rgba(245,240,232,.35);}
+.pair-history-body{padding:6px 10px 8px;border-top:1px solid rgba(184,151,106,.08);display:none;}
+.pair-history-body.open{display:block;}
+.pair-history-group{font-size:11px;color:rgba(245,240,232,.55);padding:2px 0;}
 .staff-tag{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
 .staff-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;color:var(--cream);letter-spacing:.02em}
 .staff-title em{font-style:italic;color:var(--gold-lt);font-weight:300}
@@ -2264,6 +2273,7 @@ footer{background:var(--deep);padding:80px 80px 40px}
               <button class="pair-btn" onclick="pairImportFromRegs()">⬆ Import Registrations</button>
               <button class="pair-btn" onclick="pairPrint()">🖨 Print</button>
               <button class="pair-btn" onclick="pairClearTeams()">✕ Clear Groups</button>
+              <button class="pair-btn" id="pair-save-week-btn" onclick="pairSaveToHistory()" style="display:none;border-color:rgba(100,180,100,.4);color:rgba(150,220,150,.8);">💾 Save Week</button>
             </div>
             <!-- Config row -->
             <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;">
@@ -2275,7 +2285,7 @@ footer{background:var(--deep);padding:80px 80px 40px}
               <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.4);">Mode</div>
               <button class="pair-btn active" id="pair-mode-league" onclick="pairSetMode('league')">League</button>
               <button class="pair-btn" id="pair-mode-tournament" onclick="pairSetMode('tournament')">Tournament</button>
-              <button class="pair-btn" id="pair-mode-couples" onclick="pairSetMode('couples')">Couples</button>
+              <button class="pair-btn" id="pair-mode-team" onclick="pairSetMode('team')">Team</button>
               <div style="width:1px;background:rgba(184,151,106,.2);height:20px;margin:0 4px;"></div>
               <span id="pair-balance-label" class="pair-balance"></span>
               <span id="pair-swap-hint" class="pair-swap-hint">Click another player to swap — or same player to cancel</span>
@@ -2294,7 +2304,7 @@ footer{background:var(--deep);padding:80px 80px 40px}
                   <input class="pair-input" id="pair-add-hcap" placeholder="HCP" style="width:54px;" type="number" min="-10" max="54" step="0.1" onkeydown="if(event.key==='Enter')pairAddPlayer()" />
                   <button class="pair-btn primary" style="padding:5px 10px;font-size:13px;letter-spacing:0;" onclick="pairAddPlayer()">+</button>
                 </div>
-                <!-- Couples add form (shown in Couples mode) -->
+                <!-- Team add form (shown in Team mode) -->
                 <div id="pair-add-couple" style="display:none;margin-bottom:10px;">
                   <div style="display:flex;gap:5px;margin-bottom:4px;">
                     <input class="pair-input" id="pair-c-name1" placeholder="Player 1" style="flex:1;" />
@@ -2316,6 +2326,17 @@ footer{background:var(--deep);padding:80px 80px 40px}
                 <div id="pair-teams-list">
                   <div style="color:rgba(245,240,232,.2);font-size:12px;padding:20px 0;">Add players to the roster, then click ⚡ Generate Groups.</div>
                 </div>
+              </div>
+            </div>
+            <!-- History section -->
+            <div id="pair-history-wrap" style="margin-top:20px;border-top:1px solid rgba(184,151,106,.1);padding-top:14px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                <div style="font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:rgba(245,240,232,.4);">Pairing History</div>
+                <span id="pair-history-count" style="font-size:10px;color:rgba(245,240,232,.3);"></span>
+                <button class="pair-btn" style="padding:3px 8px;font-size:9px;margin-left:auto;" onclick="pairClearHistory()">Clear All</button>
+              </div>
+              <div id="pair-history-list">
+                <div style="font-size:11px;color:rgba(245,240,232,.2);">No history yet. Generate groups and click 💾 Save Week to start tracking.</div>
               </div>
             </div>
           </div><!-- end pair-tab-groups -->
@@ -4853,20 +4874,33 @@ var pairTeams  = [];
 var pairSwapSource = null;
 var pairConfig = { groupSize: 4, mode: 'league' };
 var pairEventFilter = '';
+var pairHistory = [];
 
 function pairViewLoad() {
   var saved = localStorage.getItem('whcc-pairings-roster');
   if (saved) { try { pairRoster = JSON.parse(saved); } catch(e){} }
   var cfg = localStorage.getItem('whcc-pairings-config');
-  if (cfg) { try { Object.assign(pairConfig, JSON.parse(cfg)); } catch(e){} }
+  if (cfg) {
+    try {
+      Object.assign(pairConfig, JSON.parse(cfg));
+      // Migrate old 'couples' mode name to 'team'
+      if (pairConfig.mode === 'couples') pairConfig.mode = 'team';
+    } catch(e){}
+  }
+  var hist = localStorage.getItem('whcc-pairings-history');
+  if (hist) { try { pairHistory = JSON.parse(hist); } catch(e){} }
   pairApplyConfig();
   pairRenderRoster();
   pairRenderTeams();
+  pairRenderHistory();
 }
 
 function pairSave() {
   localStorage.setItem('whcc-pairings-roster', JSON.stringify(pairRoster));
   localStorage.setItem('whcc-pairings-config', JSON.stringify(pairConfig));
+}
+function pairSaveHistory() {
+  localStorage.setItem('whcc-pairings-history', JSON.stringify(pairHistory));
 }
 
 function pairApplyConfig() {
@@ -4874,11 +4908,11 @@ function pairApplyConfig() {
     var b = document.getElementById('pair-sz-' + n);
     if (b) b.classList.toggle('active', n === pairConfig.groupSize);
   });
-  ['league','tournament','couples'].forEach(function(m) {
+  ['league','tournament','team'].forEach(function(m) {
     var b = document.getElementById('pair-mode-' + m);
     if (b) b.classList.toggle('active', m === pairConfig.mode);
   });
-  var isCouples = pairConfig.mode === 'couples';
+  var isCouples = pairConfig.mode === 'team';
   var indiv = document.getElementById('pair-add-individual');
   var coupl = document.getElementById('pair-add-couple');
   if (indiv) indiv.style.display = isCouples ? 'none' : 'flex';
@@ -4936,6 +4970,8 @@ function pairClearTeams() {
   pairSwapSource = null;
   var hint = document.getElementById('pair-swap-hint');
   if (hint) hint.classList.remove('show');
+  var saveBtn = document.getElementById('pair-save-week-btn');
+  if (saveBtn) saveBtn.style.display = 'none';
   pairRenderTeams();
 }
 
@@ -4993,7 +5029,7 @@ function pairBuildTeams(tiers, gs) {
 }
 
 function pairGenerate() {
-  if (pairConfig.mode === 'couples') { pairGenerateCouples(); return; }
+  if (pairConfig.mode === 'team') { pairGenerateTeamMode(); return; }
   var gs = pairConfig.groupSize;
   if (pairRoster.length < gs) {
     alert('Need at least ' + gs + ' players to generate groups.');
@@ -5094,15 +5130,25 @@ function pairRenderTeams() {
   if (!list) return;
 
   if (!pairTeams.length) {
-    list.innerHTML = '<div style="color:rgba(245,240,232,.2);font-size:12px;padding:20px 0;">Add players to the roster, then click ⚡ Generate Teams.</div>';
+    list.innerHTML = '<div style="color:rgba(245,240,232,.2);font-size:12px;padding:20px 0;">Add players to the roster, then click ⚡ Generate Groups.</div>';
     if (countEl)  countEl.textContent = '';
-    if (balLabel) balLabel.textContent = '';
+    if (balLabel) { balLabel.textContent = ''; balLabel.style.color = ''; }
     return;
   }
 
   if (countEl) countEl.textContent = '(' + pairTeams.length + ')';
-  var bal = pairCalcBalance();
-  if (balLabel && bal) balLabel.textContent = 'Balance spread: ' + bal.spread + ' strokes';
+  var isTeamMode = pairConfig.mode === 'team';
+  if (balLabel) {
+    if (isTeamMode) {
+      var repeats = pairTeams.filter(function(t){ return t.repeatDate; }).length;
+      balLabel.textContent = repeats ? '⚠ ' + repeats + ' repeat group' + (repeats > 1 ? 's' : '') + ' this month' : '✓ No repeat pairings';
+      balLabel.style.color = repeats ? '#e07070' : 'rgba(100,200,100,.7)';
+    } else {
+      var bal = pairCalcBalance();
+      balLabel.textContent = bal ? 'Balance spread: ' + bal.spread + ' strokes' : '';
+      balLabel.style.color = '';
+    }
+  }
 
   list.innerHTML = pairTeams.map(function(team) {
     var total = Math.round(team.players.reduce(function(s, tp){ return s + tp.player.hcap; }, 0) * 10) / 10;
@@ -5115,8 +5161,12 @@ function pairRenderTeams() {
         '<div class="pair-hcap">' + hcapStr + '</div>' +
       '</div>';
     }).join('');
+    var repeatBanner = team.repeatDate
+      ? '<div class="pair-repeat-warn">⚠ Same grouping as ' + team.repeatDate + '</div>'
+      : '';
     return '<div class="pair-team-card">' +
-      '<div class="pair-team-head"><span class="pair-team-num">Team ' + team.id + '</span><span class="pair-team-total">Combined HCP: ' + total + '</span></div>' +
+      '<div class="pair-team-head"><span class="pair-team-num">Group ' + team.id + '</span><span class="pair-team-total">HCP: ' + total + '</span></div>' +
+      repeatBanner +
       '<div class="pair-team-body">' + playersHtml + '</div>' +
     '</div>';
   }).join('');
@@ -5182,8 +5232,8 @@ function pairImportFromRegs() {
 
   var added = 0;
 
-  if (pairConfig.mode === 'couples') {
-    // In couples mode: detect partner field and build locked pairs
+  if (pairConfig.mode === 'team') {
+    // In team mode: detect partner field and build locked pairs
     list.forEach(function(r) {
       var name1   = ((r.firstName || '') + ' ' + (r.lastName || '')).trim();
       var name2   = (r.partner || '').trim();
@@ -5303,7 +5353,7 @@ function pairSubtab(tab) {
   if (tab === 'teesheet') tsInit();
 }
 
-// ── COUPLES MODE ──
+// ── TEAM MODE ──
 function pairAddCouple() {
   var n1 = (document.getElementById('pair-c-name1').value || '').trim();
   var n2 = (document.getElementById('pair-c-name2').value || '').trim();
@@ -5315,7 +5365,6 @@ function pairAddCouple() {
   h1 = Math.round(h1 * 10) / 10;
   h2 = Math.round(h2 * 10) / 10;
   var cid = Date.now() + Math.floor(Math.random() * 10000);
-  // Store as a single roster entry with isCouple flag
   pairRoster.push({
     id: cid, isCouple: true,
     name: n1 + ' & ' + n2,
@@ -5329,46 +5378,218 @@ function pairAddCouple() {
   document.getElementById('pair-c-name1').focus();
 }
 
-function pairGenerateCouples() {
-  var couples = pairRoster.filter(function(p){ return p.isCouple; });
-  if (couples.length < 2) { alert('Need at least 2 couples to generate groups.'); return; }
-  // Sort by combined HCP ascending
-  var sorted = couples.slice().sort(function(a,b){ return a.hcap - b.hcap; });
-  var n = sorted.length;
-  var used = new Array(n).fill(false);
-  var teamId = 1;
-  pairTeams = [];
-  var lo = 0, hi = n - 1;
-  while (lo < hi) {
-    while (lo < n && used[lo]) lo++;
-    while (hi >= 0 && used[hi]) hi--;
-    if (lo >= hi) break;
-    var ca = sorted[lo], cb = sorted[hi];
-    var team = { id: teamId++, players: [
-      { player: { id: ca.id,       name: ca.name1, hcap: ca.hcap1 }, tier: 'A', tierClass: 'tier-a' },
-      { player: { id: ca.id + 0.5, name: ca.name2, hcap: ca.hcap2 }, tier: 'A', tierClass: 'tier-a' },
-      { player: { id: cb.id,       name: cb.name1, hcap: cb.hcap1 }, tier: 'B', tierClass: 'tier-b' },
-      { player: { id: cb.id + 0.5, name: cb.name2, hcap: cb.hcap2 }, tier: 'B', tierClass: 'tier-b' }
-    ]};
-    pairTeams.push(team);
-    used[lo] = true; used[hi] = true;
-    lo++; hi--;
+// Shuffle array in place (Fisher-Yates)
+function fishYates(arr) {
+  for (var i = arr.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
   }
-  // Leftover odd couple gets its own group
-  for (var i = 0; i < n; i++) {
-    if (!used[i]) {
-      var ca = sorted[i];
-      pairTeams.push({ id: teamId++, players: [
-        { player: { id: ca.id,       name: ca.name1, hcap: ca.hcap1 }, tier: 'A', tierClass: 'tier-a' },
-        { player: { id: ca.id + 0.5, name: ca.name2, hcap: ca.hcap2 }, tier: 'A', tierClass: 'tier-a' }
-      ]});
+  return arr;
+}
+
+// Add a locked pair (couple/team) into a group as players
+function pairAddUnitToGroup(group, unit, tier, tierClass) {
+  if (unit.isCouple) {
+    group.players.push({ player: { id: unit.id,       name: unit.name1, hcap: unit.hcap1 }, tier: tier, tierClass: tierClass, unitName: unit.name });
+    group.players.push({ player: { id: unit.id + 0.5, name: unit.name2, hcap: unit.hcap2 }, tier: tier, tierClass: tierClass, unitName: unit.name });
+  } else {
+    group.players.push({ player: { id: unit.id, name: unit.name, hcap: unit.hcap }, tier: tier, tierClass: tierClass, unitName: unit.name });
+  }
+}
+
+// Return unique unit names for a generated group (for history matching)
+function pairGetGroupUnits(team) {
+  var seen = {}, units = [];
+  team.players.forEach(function(tp) {
+    var key = tp.unitName || tp.player.name;
+    if (!seen[key]) { seen[key] = true; units.push(key); }
+  });
+  return units.sort();
+}
+
+// Count how many proposed groups match a recent history entry (within 28 days, same event)
+function pairCountRepeats(groups) {
+  var cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - 28);
+  var cutoffStr = cutoff.toISOString().slice(0, 10);
+  var recent = {};
+  pairHistory.forEach(function(week) {
+    if (week.date < cutoffStr) return;
+    if (pairEventFilter && week.event && week.event !== pairEventFilter) return;
+    week.groups.forEach(function(g) { recent[g.units.join('|')] = week.date; });
+  });
+  var count = 0;
+  groups.forEach(function(group) {
+    if (recent[pairGetGroupUnits(group).join('|')]) count++;
+  });
+  return count;
+}
+
+// Build one candidate set of team-mode groups
+function pairBuildTeamGroups(lockedUnits, singles) {
+  var shuffled = lockedUnits.slice();
+  fishYates(shuffled);                           // fully random — no handicap sorting
+  var tierLabels  = ['A','B','C','D'];
+  var tierClasses = ['tier-a','tier-b','tier-c','tier-d'];
+  var groups  = [];
+  var teamId  = 1;
+
+  // Pair locked units sequentially after shuffle (unit[0]+unit[1], unit[2]+unit[3], …)
+  for (var i = 0; i + 1 < shuffled.length; i += 2) {
+    var g = { id: teamId++, players: [] };
+    pairAddUnitToGroup(g, shuffled[i],   'A', 'tier-a');
+    pairAddUnitToGroup(g, shuffled[i+1], 'B', 'tier-b');
+    groups.push(g);
+  }
+  // Odd locked unit gets its own partial group
+  if (shuffled.length % 2 === 1) {
+    var g = { id: teamId++, players: [] };
+    pairAddUnitToGroup(g, shuffled[shuffled.length - 1], 'A', 'tier-a');
+    groups.push(g);
+  }
+
+  // Singles: fill incomplete groups (< 4 players) first, then form their own groups
+  var sArr = singles.slice();
+  fishYates(sArr);
+  sArr.forEach(function(s) {
+    var target = null;
+    for (var i = 0; i < groups.length; i++) {
+      if (groups[i].players.length < 4) { target = groups[i]; break; }
     }
+    if (target) {
+      var ti = target.players.length;
+      target.players.push({ player: { id: s.id, name: s.name, hcap: s.hcap }, tier: tierLabels[ti] || 'D', tierClass: tierClasses[ti] || 'tier-d', unitName: s.name });
+    } else {
+      // Start a new group of singles
+      var last = groups[groups.length - 1];
+      if (last && !last._singleGroup) { last = null; }  // need fresh group
+      if (!last || last.players.length >= 4) {
+        last = { id: teamId++, players: [], _singleGroup: true };
+        groups.push(last);
+      }
+      var ti = last.players.length;
+      last.players.push({ player: { id: s.id, name: s.name, hcap: s.hcap }, tier: tierLabels[ti] || 'D', tierClass: tierClasses[ti] || 'tier-d', unitName: s.name });
+    }
+  });
+
+  return groups;
+}
+
+function pairGenerateTeamMode() {
+  var locked  = pairRoster.filter(function(p){ return p.isCouple; });
+  var singles = pairRoster.filter(function(p){ return !p.isCouple; });
+  if (locked.length + singles.length < 2) {
+    alert('Need at least 2 entries to generate groups.');
+    return;
   }
+
+  // Try up to 40 random arrangements, keep the one with fewest repeat pairings
+  var ATTEMPTS = 40;
+  var bestGroups = null, bestScore = Infinity;
+  for (var a = 0; a < ATTEMPTS; a++) {
+    var g = pairBuildTeamGroups(locked, singles);
+    var s = pairCountRepeats(g);
+    if (s < bestScore) { bestScore = s; bestGroups = g; }
+    if (s === 0) break;
+  }
+
+  // Stamp each group with its repeat date (if any) for display
+  var cutoff = new Date(); cutoff.setDate(cutoff.getDate() - 28);
+  var cutoffStr = cutoff.toISOString().slice(0, 10);
+  var recent = {};
+  pairHistory.forEach(function(week) {
+    if (week.date < cutoffStr) return;
+    if (pairEventFilter && week.event && week.event !== pairEventFilter) return;
+    week.groups.forEach(function(g) { recent[g.units.join('|')] = week.date; });
+  });
+  bestGroups.forEach(function(team) {
+    team.repeatDate = recent[pairGetGroupUnits(team).join('|')] || null;
+  });
+
+  pairTeams = bestGroups;
   pairSwapSource = null;
   var hint = document.getElementById('pair-swap-hint');
   if (hint) hint.classList.remove('show');
+
+  // Show Save Week button
+  var saveBtn = document.getElementById('pair-save-week-btn');
+  if (saveBtn) { saveBtn.style.display = 'inline-block'; saveBtn.disabled = false; saveBtn.textContent = '💾 Save Week'; }
+
   pairRenderRoster();
   pairRenderTeams();
+}
+
+// ── HISTORY ──
+function pairSaveToHistory() {
+  if (!pairTeams.length) return;
+  var entry = {
+    date:  new Date().toISOString().slice(0, 10),
+    event: pairEventFilter || '',
+    groups: pairTeams.map(function(team) {
+      return { units: pairGetGroupUnits(team) };
+    })
+  };
+  pairHistory.unshift(entry);
+  if (pairHistory.length > 30) pairHistory = pairHistory.slice(0, 30);  // ~6 months
+  pairSaveHistory();
+  pairRenderHistory();
+  var btn = document.getElementById('pair-save-week-btn');
+  if (btn) { btn.textContent = '✓ Saved'; btn.disabled = true; }
+}
+
+function pairDeleteHistoryEntry(idx) {
+  pairHistory.splice(idx, 1);
+  pairSaveHistory();
+  pairRenderHistory();
+}
+
+function pairClearHistory() {
+  if (!pairHistory.length) return;
+  if (!confirm('Clear all pairing history? This cannot be undone.')) return;
+  pairHistory = [];
+  pairSaveHistory();
+  pairRenderHistory();
+}
+
+function pairRenderHistory() {
+  var wrap  = document.getElementById('pair-history-wrap');
+  var list  = document.getElementById('pair-history-list');
+  var count = document.getElementById('pair-history-count');
+  if (!list) return;
+
+  // Filter to current event if one is selected
+  var relevant = pairEventFilter
+    ? pairHistory.filter(function(e){ return !e.event || e.event === pairEventFilter; })
+    : pairHistory;
+
+  if (count) count.textContent = relevant.length ? '(' + relevant.length + ' week' + (relevant.length !== 1 ? 's' : '') + ')' : '';
+
+  if (!relevant.length) {
+    list.innerHTML = '<div style="font-size:11px;color:rgba(245,240,232,.2);">No history yet. Generate groups and click 💾 Save Week to start tracking.</div>';
+    return;
+  }
+
+  list.innerHTML = relevant.map(function(entry, i) {
+    // Find real index in pairHistory
+    var realIdx = pairHistory.indexOf(entry);
+    var dateStr = entry.date.replace(/(\d{4})-(\d{2})-(\d{2})/, function(_,y,m,d){
+      var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return months[parseInt(m)-1] + ' ' + parseInt(d) + ', ' + y;
+    });
+    var groupSummary = entry.groups.map(function(g) {
+      return '<div class="pair-history-group">· ' + pairEsc(g.units.join(' + ')) + '</div>';
+    }).join('');
+    return '<div class="pair-history-entry">' +
+      '<div class="pair-history-head" onclick="this.nextElementSibling.classList.toggle(\'open\')">' +
+        '<span><span class="pair-history-date">' + dateStr + '</span>' +
+          (entry.event ? ' <span class="pair-history-meta">— ' + pairEsc(entry.event) + '</span>' : '') +
+          ' <span class="pair-history-meta">· ' + entry.groups.length + ' groups</span>' +
+        '</span>' +
+        '<button onclick="event.stopPropagation();pairDeleteHistoryEntry(' + realIdx + ')" style="background:none;border:none;color:rgba(245,240,232,.25);cursor:pointer;font-size:13px;padding:0 2px;" title="Remove">×</button>' +
+      '</div>' +
+      '<div class="pair-history-body">' + groupSummary + '</div>' +
+    '</div>';
+  }).join('');
 }
 
 // ── TEE SHEET ENGINE ──
