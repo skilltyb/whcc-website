@@ -405,6 +405,9 @@ footer{background:var(--deep);padding:80px 80px 40px}
 .ts-score-input:focus{outline:none;border-color:var(--gold);}
 .pair-couple-card{padding:6px 8px;background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);border-radius:2px;margin-bottom:5px;}
 .pair-repeat-warn{font-size:10px;color:#e07070;background:rgba(224,112,112,.08);border-bottom:1px solid rgba(224,112,112,.15);padding:3px 10px;letter-spacing:.05em;}
+.ghin-ok{font-size:.6rem;color:#4ade80;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.25);border-radius:2px;padding:1px 5px;margin-left:5px;white-space:nowrap;}
+.ghin-flag{font-size:.6rem;color:#f87171;background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.35);border-radius:2px;padding:1px 5px;margin-left:5px;white-space:nowrap;cursor:pointer;font-weight:700;}
+.ghin-unknown{font-size:.6rem;color:rgba(245,240,232,.25);border:1px solid rgba(245,240,232,.1);border-radius:2px;padding:1px 5px;margin-left:5px;white-space:nowrap;}
 .pair-history-entry{background:rgba(255,255,255,.02);border:1px solid rgba(184,151,106,.1);border-radius:2px;margin-bottom:6px;overflow:hidden;}
 .pair-history-head{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;cursor:pointer;user-select:none;}
 .pair-history-head:hover{background:rgba(255,255,255,.03);}
@@ -2186,6 +2189,7 @@ footer{background:var(--deep);padding:80px 80px 40px}
       <button class="staff-add-btn" onclick="regPrintSignupSheet()">🖨 Print Sheet</button>
       <button class="staff-add-btn" onclick="regEmailList()">✉ Email</button>
       <button class="staff-add-btn" id="reg-refresh-btn" onclick="refreshRegsFromSheet()" style="background:rgba(26,71,38,.5);border-color:rgba(184,151,106,.4);">↻ Sync Sheet</button>
+      <button class="staff-add-btn" id="ghin-verify-btn" onclick="ghinTogglePanel()" style="border-color:rgba(248,113,113,.4);color:#fca5a5;">🔍 GHIN Verify</button>
     </div>
   </div>
   <!-- Event filter -->
@@ -2224,6 +2228,20 @@ footer{background:var(--deep);padding:80px 80px 40px}
     </div>
   </div>
   <div style="font-size:.72rem;color:rgba(245,240,232,.35);margin-bottom:10px;" id="reg-count-label"></div>
+
+  <!-- GHIN Verification Panel -->
+  <div id="ghin-verify-panel" style="display:none;margin-bottom:14px;background:rgba(248,113,113,.04);border:1px solid rgba(248,113,113,.2);padding:12px 14px;border-radius:2px;">
+    <div style="font-size:.7rem;font-weight:700;color:#fca5a5;letter-spacing:.1em;margin-bottom:6px;">🔍 GHIN HANDICAP VERIFICATION</div>
+    <div style="font-size:.68rem;color:rgba(245,240,232,.45);margin-bottom:10px;">Upload a GHIN export CSV from your USGA GHIN admin portal. The system will cross-reference each registrant's declared handicap against their official GHIN index and flag discrepancies larger than 3 strokes.</div>
+    <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;background:rgba(26,71,38,.5);border:1px solid rgba(184,151,106,.35);color:#f5f0e8;padding:6px 12px;font-size:.68rem;border-radius:2px;">
+      📂 Choose GHIN Export CSV
+      <input type="file" accept=".csv,.txt" onchange="ghinLoadCSV(this.files[0])" style="display:none;">
+    </label>
+    <span id="ghin-file-name" style="font-size:.65rem;color:rgba(245,240,232,.35);margin-left:8px;"></span>
+    <div id="ghin-summary" style="margin-top:10px;font-size:.7rem;"></div>
+    <div id="ghin-flag-list" style="margin-top:8px;"></div>
+  </div>
+
   <!-- Signup sheet -->
   <div id="sv-reg-list"></div>
         </div>
@@ -4061,8 +4079,8 @@ function renderRegRow(r, num, showDelete) {
     + '<div style="display:flex;align-items:center;gap:8px;">'
     + '<div style="font-size:.7rem;color:rgba(184,151,106,.6);font-weight:700;min-width:18px;">' + num + '</div>'
     + '<div>'
-    + '<div style="font-size:.84rem;font-weight:700;color:#f5f0e8;">' + (r.firstName||'') + ' ' + (r.lastName||'') + '</div>'
-    + '<div style="font-size:.72rem;color:rgba(245,240,232,.5);margin-top:1px;">' + (r.email||'') + (r.phone?' · '+r.phone:'') + (r.memberNum?' · Member #'+r.memberNum:'') + '</div>'
+    + '<div style="font-size:.84rem;font-weight:700;color:#f5f0e8;">' + (r.firstName||'') + ' ' + (r.lastName||'') + ghinBadge(r) + '</div>'
+    + '<div style="font-size:.72rem;color:rgba(245,240,232,.5);margin-top:1px;">' + (r.email||'') + (r.phone?' · '+r.phone:'') + (r.memberNum?' · Member #'+r.memberNum:'') + (r.ghin?' · HCP '+r.ghin:'') + '</div>'
     + (r.partner?'<div style="font-size:.72rem;color:rgba(184,151,106,.7);margin-top:2px;">Partner: '+r.partner+'</div>':'')
     + (r.notes?'<div style="font-size:.7rem;color:rgba(245,240,232,.4);font-style:italic;margin-top:2px;">'+r.notes+'</div>':'')
     + '</div></div>'
@@ -6000,6 +6018,144 @@ function pairEsc(s) {
 }
 
 // ── REGISTRATION DEBUG ──
+// ── GHIN VERIFICATION ────────────────────────────────────────────────────────
+var _ghinData = null;   // { 'firstname lastname': { hcp, ghinId, club } }
+
+function ghinTogglePanel() {
+  var panel = document.getElementById('ghin-verify-panel');
+  if (!panel) return;
+  var open = panel.style.display !== 'none';
+  panel.style.display = open ? 'none' : 'block';
+  var btn = document.getElementById('ghin-verify-btn');
+  if (btn) btn.style.background = open ? '' : 'rgba(248,113,113,.12)';
+}
+
+function ghinLoadCSV(file) {
+  if (!file) return;
+  document.getElementById('ghin-file-name').textContent = file.name;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var text = e.target.result;
+    _ghinData = ghinParseCSV(text);
+    ghinRenderResults();
+    renderStaffRegs();   // refresh registration list to show badges
+  };
+  reader.readAsText(file);
+}
+
+function ghinParseCSV(text) {
+  var lines = text.split(/\r?\n/).filter(function(l){ return l.trim(); });
+  if (lines.length < 2) return {};
+  // Find header row
+  var header = lines[0].split(',').map(function(h){ return h.replace(/"/g,'').trim().toLowerCase(); });
+  var colFirst = -1, colLast = -1, colHcp = -1, colId = -1, colClub = -1;
+  header.forEach(function(h, i) {
+    if (/first/i.test(h))                          colFirst = i;
+    if (/last/i.test(h))                           colLast  = i;
+    if (/handicap.*index|^hi$|^index$/i.test(h))   colHcp   = i;
+    if (/golfer.*id|ghin.*id|ghin.*num|^id$/i.test(h)) colId = i;
+    if (/club/i.test(h))                           colClub  = i;
+  });
+  if (colFirst < 0 || colLast < 0 || colHcp < 0) {
+    alert('Could not find required columns (First Name, Last Name, Handicap Index) in the CSV.\nMake sure you\'re uploading a GHIN export file.');
+    return null;
+  }
+  var data = {};
+  lines.slice(1).forEach(function(line) {
+    var cols = line.split(',').map(function(c){ return c.replace(/"/g,'').trim(); });
+    var first = (cols[colFirst] || '').toLowerCase();
+    var last  = (cols[colLast]  || '').toLowerCase();
+    var hcp   = parseFloat(cols[colHcp]);
+    if (!first && !last) return;
+    var key = first + ' ' + last;
+    data[key] = {
+      hcp:   isNaN(hcp) ? null : hcp,
+      ghinId: colId  >= 0 ? cols[colId]  : '',
+      club:   colClub >= 0 ? cols[colClub] : ''
+    };
+  });
+  return data;
+}
+
+function ghinGetStatus(r) {
+  if (!_ghinData) return null;
+  var name = ((r.firstName || '') + ' ' + (r.lastName || '')).toLowerCase().trim();
+  var entry = _ghinData[name];
+  var regHcp = parseHcp(r.ghin, null);
+  if (!entry) return { status: 'unknown' };
+  if (entry.hcp === null) return { status: 'unknown' };
+  if (regHcp === null) return { status: 'no-hcp' };   // registered with no handicap
+  var diff = Math.abs(regHcp - entry.hcp);
+  return {
+    status:     diff > 3 ? 'flag' : 'ok',
+    registered: regHcp,
+    official:   entry.hcp,
+    diff:       Math.round(diff * 10) / 10,
+    ghinId:     entry.ghinId,
+    club:       entry.club
+  };
+}
+
+function ghinRenderResults() {
+  var regs = (typeof getAllRegs === 'function') ? getAllRegs() : [];
+  var summary = document.getElementById('ghin-summary');
+  var flagList = document.getElementById('ghin-flag-list');
+  if (!summary || !flagList || !_ghinData) return;
+
+  var ok = 0, flags = [], unknown = 0;
+  regs.forEach(function(r) {
+    var s = ghinGetStatus(r);
+    if (!s) return;
+    if (s.status === 'ok')      ok++;
+    else if (s.status === 'flag') flags.push({ r: r, s: s });
+    else                          unknown++;
+  });
+
+  summary.innerHTML =
+    '<span style="color:#4ade80;">✓ ' + ok + ' verified</span>  ' +
+    '<span style="color:#f87171;font-weight:700;">⚠ ' + flags.length + ' flagged</span>  ' +
+    '<span style="color:rgba(245,240,232,.3);">? ' + unknown + ' not found</span>';
+
+  if (!flags.length) {
+    flagList.innerHTML = '<div style="font-size:.68rem;color:#4ade80;margin-top:6px;">✓ No handicap discrepancies found.</div>';
+    return;
+  }
+  var html = '<div style="font-size:.68rem;font-weight:700;color:#fca5a5;margin-bottom:6px;">FLAGGED — HANDICAP DISCREPANCY &gt; 3 STROKES</div>';
+  html += '<table style="width:100%;border-collapse:collapse;font-size:.67rem;">';
+  html += '<tr style="color:rgba(245,240,232,.35);"><th style="text-align:left;padding:3px 6px;">Name</th><th style="padding:3px 6px;">Registered HCP</th><th style="padding:3px 6px;">Official GHIN HCP</th><th style="padding:3px 6px;">Difference</th><th style="text-align:left;padding:3px 6px;">Events</th></tr>';
+  // Group flags by player name
+  var byName = {};
+  flags.forEach(function(f) {
+    var k = f.r.firstName + ' ' + f.r.lastName;
+    if (!byName[k]) byName[k] = { s: f.s, events: [] };
+    byName[k].events.push(f.r.event);
+  });
+  Object.keys(byName).sort().forEach(function(name) {
+    var f = byName[name];
+    var diff = f.s.diff;
+    var bg = diff > 5 ? 'rgba(248,113,113,.1)' : 'rgba(251,191,36,.06)';
+    html += '<tr style="background:' + bg + ';border-bottom:1px solid rgba(255,255,255,.05);">';
+    html += '<td style="padding:4px 6px;font-weight:600;color:#f5f0e8;">' + name + '</td>';
+    html += '<td style="padding:4px 6px;text-align:center;color:#fca5a5;">' + f.s.registered + '</td>';
+    html += '<td style="padding:4px 6px;text-align:center;color:#4ade80;">' + f.s.official + '</td>';
+    html += '<td style="padding:4px 6px;text-align:center;color:#f87171;font-weight:700;">+' + diff + '</td>';
+    html += '<td style="padding:4px 6px;color:rgba(245,240,232,.5);">' + f.s.events.slice(0,3).join(', ') + (f.s.events.length > 3 ? ' +' + (f.s.events.length-3) + ' more' : '') + '</td>';
+    html += '</tr>';
+  });
+  html += '</table>';
+  flagList.innerHTML = html;
+}
+
+// Badge HTML for a single registrant
+function ghinBadge(r) {
+  var s = ghinGetStatus(r);
+  if (!s) return '';
+  if (s.status === 'ok')      return '<span class="ghin-ok" title="GHIN verified: HCP ' + s.official + '">✓ GHIN</span>';
+  if (s.status === 'flag')    return '<span class="ghin-flag" title="Registered HCP ' + s.registered + ' vs official GHIN HCP ' + s.official + ' — difference: ' + s.diff + '">⚠ GHIN ' + s.official + '</span>';
+  if (s.status === 'no-hcp')  return '<span class="ghin-unknown" title="No handicap declared">— HCP</span>';
+  return '<span class="ghin-unknown" title="Not found in GHIN export">? GHIN</span>';
+}
+
 // Call regDebug() from the browser console to inspect raw sync data.
 // Call regDebug('Couples Scramble') to filter to one event.
 function regDebug(eventFilter) {
