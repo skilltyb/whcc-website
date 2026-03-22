@@ -5064,12 +5064,25 @@ function pairRenderRoster() {
 
   list.innerHTML = pairRoster.map(function(p) {
     var t = tierMap[p.id] || { tier: '?', tierClass: '' };
+    var removeBtn = '<button onclick="pairRemovePlayer(' + p.id + ')" style="background:none;border:none;color:rgba(245,240,232,.3);cursor:pointer;font-size:14px;padding:0 2px;line-height:1;flex-shrink:0;" title="Remove">×</button>';
+    if (p.isCouple) {
+      // Show both players stacked, with the couple tier badge
+      return '<div class="pair-player-row" style="cursor:default;align-items:flex-start;padding:6px 8px;">' +
+        '<div class="pair-tier ' + t.tierClass + '" style="margin-top:2px;">' + t.tier + '</div>' +
+        '<div class="pair-name" style="display:flex;flex-direction:column;gap:2px;">' +
+          '<span>' + pairEsc(p.name1) + ' <span style="color:rgba(245,240,232,.35);font-size:10px;">HCP ' + p.hcap1 + '</span></span>' +
+          '<span>' + pairEsc(p.name2) + ' <span style="color:rgba(245,240,232,.35);font-size:10px;">HCP ' + p.hcap2 + '</span></span>' +
+        '</div>' +
+        '<div class="pair-hcap" style="margin-top:2px;">' + p.hcap + '</div>' +
+        removeBtn +
+      '</div>';
+    }
     var hcapStr = (p.hcap > 0 ? '+' : '') + p.hcap;
     return '<div class="pair-player-row" style="cursor:default;">' +
       '<div class="pair-tier ' + t.tierClass + '">' + t.tier + '</div>' +
       '<div class="pair-name">' + pairEsc(p.name) + '</div>' +
       '<div class="pair-hcap">' + hcapStr + '</div>' +
-      '<button onclick="pairRemovePlayer(' + p.id + ')" style="background:none;border:none;color:rgba(245,240,232,.3);cursor:pointer;font-size:14px;padding:0 2px;line-height:1;" title="Remove">×</button>' +
+      removeBtn +
     '</div>';
   }).join('');
 }
@@ -5166,7 +5179,61 @@ function pairImportFromRegs() {
     alert('No registrations found for "' + pairEventFilter + '".\nSync the sheet on the Registrations tab first.');
     return;
   }
+
   var added = 0;
+
+  if (pairConfig.mode === 'couples') {
+    // In couples mode: detect partner field and build locked pairs
+    list.forEach(function(r) {
+      var name1   = ((r.firstName || '') + ' ' + (r.lastName || '')).trim();
+      var name2   = (r.partner || '').trim();
+      if (!name1) return;
+
+      // If no partner listed, fall back to individual import
+      if (!name2) {
+        if (pairRoster.some(function(p){ return !p.isCouple && p.name.toLowerCase() === name1.toLowerCase(); })) return;
+        var h = parseFloat(r.ghin); if (isNaN(h)) h = 18;
+        pairRoster.push({ name: name1, hcap: h, id: Date.now() + Math.floor(Math.random() * 10000) });
+        added++;
+        return;
+      }
+
+      // Skip if either name already appears in a couple in the roster
+      var already = pairRoster.some(function(p) {
+        if (!p.isCouple) return p.name.toLowerCase() === name1.toLowerCase();
+        return p.name1.toLowerCase() === name1.toLowerCase() ||
+               p.name2.toLowerCase() === name1.toLowerCase() ||
+               p.name1.toLowerCase() === name2.toLowerCase() ||
+               p.name2.toLowerCase() === name2.toLowerCase();
+      });
+      if (already) return;
+
+      var hcap1 = parseFloat(r.ghin);
+      if (isNaN(hcap1)) hcap1 = 18;
+
+      // Partner handicap: try partnerGhin field first, then fall back to same as primary
+      var hcap2 = parseFloat(r.partnerGhin);
+      if (isNaN(hcap2)) hcap2 = hcap1;
+
+      hcap1 = Math.round(hcap1 * 10) / 10;
+      hcap2 = Math.round(hcap2 * 10) / 10;
+      var cid = Date.now() + Math.floor(Math.random() * 10000);
+      pairRoster.push({
+        id: cid, isCouple: true,
+        name: name1 + ' & ' + name2,
+        hcap: Math.round((hcap1 + hcap2) * 10) / 10,
+        name1: name1, hcap1: hcap1,
+        name2: name2, hcap2: hcap2
+      });
+      added++;
+    });
+    pairSave();
+    pairRenderRoster();
+    alert('Imported ' + added + ' couple' + (added !== 1 ? 's' : '') + ' from "' + pairEventFilter + '".');
+    return;
+  }
+
+  // Individual mode import
   list.forEach(function(r) {
     var name = ((r.firstName || '') + ' ' + (r.lastName || '')).trim();
     if (!name) return;
