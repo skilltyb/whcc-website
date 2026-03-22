@@ -2131,6 +2131,7 @@ footer{background:var(--deep);padding:80px 80px 40px}
       <button class="staff-add-btn" onclick="regExportCSV()">⬇ CSV</button>
       <button class="staff-add-btn" onclick="regPrintSignupSheet()">🖨 Print Sheet</button>
       <button class="staff-add-btn" onclick="regEmailList()">✉ Email</button>
+      <button class="staff-add-btn" id="reg-refresh-btn" onclick="refreshRegsFromSheet()" style="background:rgba(26,71,38,.5);border-color:rgba(184,151,106,.4);">↻ Sync Sheet</button>
     </div>
   </div>
   <!-- Event filter -->
@@ -2272,6 +2273,96 @@ function getEventInfo(title) {
 var WHCC_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxLIwXQMtgijncf-a6nnP4EsCliKGEM-yTsfja9hYFzLueQujBhevo-n8ICUHFRAEp1/exec';
 var currentRegEvent = null;
 
+// ════════════════════════════════════════════════════════
+// WHCC SYNC ENGINE  —  Sheet ↔ Website ↔ Mobile App
+// Any registration on website, app, or direct Sheet edit
+// propagates to all three via Google Apps Script backend.
+// ════════════════════════════════════════════════════════
+var WHCC_SYNC = {
+  TTL: 90000, // 90-second count cache before re-fetching
+
+  // Read cached count for one event
+  getCount: function(ev) {
+    try { return (JSON.parse(localStorage.getItem('wh_counts') || '{}'))[ev] || 0; }
+    catch(e) { return 0; }
+  },
+
+  // Fetch live event counts from Sheet (lightweight — just counts per event)
+  fetchCounts: function(cb) {
+    var ts = +localStorage.getItem('wh_counts_ts') || 0;
+    var stale = (Date.now() - ts) > this.TTL;
+    if (!stale && !cb) return; // fresh cache, no callback needed
+    fetch(WHCC_SCRIPT_URL + '?action=counts')
+      .then(function(r) { return r.json(); })
+      .then(function(c) {
+        localStorage.setItem('wh_counts', JSON.stringify(c));
+        localStorage.setItem('wh_counts_ts', Date.now());
+        if (cb) cb(c, null);
+      })
+      .catch(function(err) { if (cb) cb(null, err); });
+  },
+
+  // Fetch ALL registrations from Sheet → rebuild localStorage + counts cache
+  fetchAll: function(cb) {
+    fetch(WHCC_SCRIPT_URL + '?action=all')
+      .then(function(r) { return r.json(); })
+      .then(function(rows) {
+        if (!Array.isArray(rows)) { if (cb) cb(null, 'bad data'); return; }
+        var regs = rows.map(function(row) {
+          return {
+            id:        row['ID']              || '',
+            event:     row['Event']           || '',
+            eventMeta: row['Event Date/Time'] || '',
+            firstName: row['First Name']      || '',
+            lastName:  row['Last Name']       || '',
+            email:     row['Email']           || '',
+            phone:     row['Phone']           || '',
+            partner:   row['Partner/Team']    || '',
+            players:   row['Players']         || '1',
+            memberNum: row['Member #']        || '',
+            ghin:      row['GHIN']            || '',
+            notes:     row['Notes']           || '',
+            timestamp: row['Registered At']   || '',
+            source:    row['Source']          || ''
+          };
+        }).filter(function(r) { return r.firstName || r.lastName; });
+        localStorage.setItem('wh_registrations', JSON.stringify(regs));
+        // Rebuild count cache from full data
+        var c = {};
+        regs.forEach(function(r) { if (r.event) c[r.event] = (c[r.event] || 0) + 1; });
+        localStorage.setItem('wh_counts', JSON.stringify(c));
+        localStorage.setItem('wh_counts_ts', Date.now());
+        if (cb) cb(regs, null);
+      })
+      .catch(function(err) { if (cb) cb(null, err); });
+  },
+
+  // Delete from Sheet + localStorage simultaneously (optimistic local update)
+  deleteReg: function(id, cb) {
+    // Update localStorage immediately so UI feels instant
+    try {
+      var all = JSON.parse(localStorage.getItem('wh_registrations') || '[]');
+      var kept = all.filter(function(r) { return r.id !== id; });
+      localStorage.setItem('wh_registrations', JSON.stringify(kept));
+      var c = {};
+      kept.forEach(function(r) { if (r.event) c[r.event] = (c[r.event] || 0) + 1; });
+      localStorage.setItem('wh_counts', JSON.stringify(c));
+    } catch(e) {}
+    // Propagate delete to Google Sheet
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'delete', id: id })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(res) { if (cb) cb(res); })
+    .catch(function() { if (cb) cb({ error: 'network' }); });
+  }
+};
+
+// Auto-sync counts from Sheet in background on every page load
+document.addEventListener('DOMContentLoaded', function() { WHCC_SYNC.fetchCounts(); });
+
 function openRegModal(eventTitle, eventMeta, isTeam) {
   var info = getEventInfo(eventTitle);
   var evType = info.type;
@@ -2302,15 +2393,18 @@ function openRegModal(eventTitle, eventMeta, isTeam) {
     playersSelect.innerHTML = '<option value="1">1 (others TBD)</option><option value="2">2 Players</option><option value="3">3 Players</option><option value="4" selected>Full Group of 4</option>';
   }
 
-  // Show spots remaining
-  var regs = getRegsForEvent(eventTitle);
+  // Show spots remaining — cached count first (instant), then live-refresh from Sheet
   var spotsEl = document.getElementById('reg-spots-remaining');
-  if (spotsEl) {
-    var taken = regs.length;
-    var remaining = info.capacity - taken;
-    spotsEl.textContent = remaining > 0 ? remaining + ' spots remaining of ' + info.capacity : 'FULL — join waitlist';
+  function _updateSpots(count) {
+    if (!spotsEl) return;
+    var remaining = info.capacity - count;
+    spotsEl.textContent = remaining > 0
+      ? remaining + ' spots remaining of ' + info.capacity
+      : 'FULL — join waitlist';
     spotsEl.style.color = remaining <= 5 ? '#c0392b' : 'var(--muted)';
   }
+  _updateSpots(WHCC_SYNC.getCount(eventTitle));
+  WHCC_SYNC.fetchCounts(function(c) { if (c) _updateSpots(c[eventTitle] || 0); });
 
   document.getElementById('reg-form-wrap').style.display = 'block';
   document.getElementById('reg-success').style.display = 'none';
@@ -3521,6 +3615,21 @@ function staffView(view, btn, useSecondary) {
 // ═══════════════════════════════════════
 // STAFF REGISTRATION PORTAL
 // ═══════════════════════════════════════
+function refreshRegsFromSheet() {
+  var btn = document.getElementById('reg-refresh-btn');
+  if (btn) { btn.textContent = '↻ Syncing…'; btn.disabled = true; }
+  WHCC_SYNC.fetchAll(function(regs, err) {
+    if (btn) { btn.textContent = '↻ Sync Sheet'; btn.disabled = false; }
+    if (err) { alert('Could not reach Google Sheet. Showing cached data.'); return; }
+    staffViewRegistrations();
+    var lbl = document.getElementById('reg-count-label');
+    if (lbl) {
+      var base = lbl.textContent.replace(/ · synced.*/,'');
+      lbl.textContent = base + ' · synced ' + new Date().toLocaleTimeString();
+    }
+  });
+}
+
 function staffViewRegistrations() {
   var regs = getAllRegs();
   var events = [];
@@ -3666,13 +3775,11 @@ function renderRegRow(r, num, showDelete) {
 
 function deleteReg(id) {
   if (!confirm('Remove this registration?')) return;
-  try {
-    var all = JSON.parse(localStorage.getItem('wh_registrations') || '[]');
-    all = all.filter(function(r){ return r.id !== id; });
-    localStorage.setItem('wh_registrations', JSON.stringify(all));
+  // Deletes from Google Sheet AND localStorage simultaneously
+  WHCC_SYNC.deleteReg(id, function() {
     renderStaffRegs();
     staffViewRegistrations();
-  } catch(e) {}
+  });
 }
 
 function regExportCSV() {
