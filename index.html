@@ -1877,9 +1877,6 @@ nav.staff-mode .nav-site-back{display:flex!important;}
           <div class="sv-drop-menu" id="sv-menu-reservations">
             <button class="active-view" id="svb-calendar" onclick="staffView('calendar');svCloseDrop()">Calendar</button>
             <button id="svb-upcoming" onclick="staffView('upcoming');svCloseDrop()">Upcoming</button>
-            <button id="svb-daily" onclick="staffView('daily');svCloseDrop()">Daily Sheet</button>
-            <button id="svb-scoring" onclick="staffView('scoring');svCloseDrop()">Scoring</button>
-            <button id="svb-search" onclick="staffView('search');svCloseDrop()">Search</button>
             <button id="svb-guests" onclick="staffView('guests');svCloseDrop()">Guest Notes</button>
           </div>
         </div>
@@ -1889,8 +1886,12 @@ nav.staff-mode .nav-site-back{display:flex!important;}
           <div class="sv-drop-menu" id="sv-menu-golf">
             <button id="svb-registrations" onclick="staffView('registrations');svCloseDrop()">Registrations</button>
             <button id="svb-pairings" onclick="staffView('pairings');svCloseDrop()">Pairings</button>
+            <button id="svb-daily" onclick="staffView('daily');svCloseDrop()">Daily Sheet</button>
+            <button id="svb-scoring" onclick="staffView('scoring');svCloseDrop()">Scoring</button>
           </div>
         </div>
+        <!-- Search standalone -->
+        <button class="sv-drop-btn" id="svb-search" onclick="staffView('search')">Search</button>
         <!-- Admin dropdown -->
         <div class="sv-dropdown">
           <button class="sv-drop-btn" id="sv-drop-admin" onclick="svToggleDrop('admin')">Admin ▾</button>
@@ -3912,8 +3913,8 @@ function staffSwitchVenue(venue, btn) {
 // ── DROPDOWN NAV ──
 var _svDropOpen = null;
 var _svViewGroups = {
-  reservations: ['calendar','upcoming','daily','scoring','search','guests'],
-  golf:         ['registrations','pairings'],
+  reservations: ['calendar','upcoming','guests'],
+  golf:         ['registrations','pairings','daily','scoring'],
   admin:        ['menus','settings']
 };
 function svToggleDrop(name) {
