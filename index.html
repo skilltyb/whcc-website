@@ -5944,7 +5944,6 @@ function tsRenderSheet() {
       var playersHtml = entry.team.players.map(function(tp) {
         var hcapStr = (tp.player.hcap > 0 ? '+' : '') + tp.player.hcap;
         return '<div style="display:flex;align-items:center;gap:4px;padding:1px 0;">' +
-          '<span class="pair-tier ' + tp.tierClass + '" style="width:14px;height:14px;font-size:8px;">' + tp.tier + '</span>' +
           '<span style="font-size:12px;">' + pairEsc(tp.player.name) + '</span>' +
           '<span style="font-size:10px;color:rgba(245,240,232,.3);">(' + hcapStr + ')</span>' +
         '</div>';
