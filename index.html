@@ -396,7 +396,7 @@ footer{background:var(--deep);padding:80px 80px 40px}
 /* ── TEE SHEET TABLE ── */
 .ts-table{width:100%;border-collapse:collapse;}
 .ts-table th{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.35);padding:6px 8px;border-bottom:1px solid rgba(184,151,106,.15);text-align:left;white-space:nowrap;}
-.ts-table td{padding:7px 8px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle;}
+.ts-table td{padding:9px 8px;border-bottom:1px solid rgba(255,255,255,.06);vertical-align:middle;color:var(--cream);}
 .ts-table tr:hover td{background:rgba(255,255,255,.02);}
 .ts-time{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--gold-lt);white-space:nowrap;}
 .ts-hole{font-size:11px;color:rgba(245,240,232,.45);white-space:nowrap;}
@@ -5943,9 +5943,9 @@ function tsRenderSheet() {
     teeSheet.map(function(entry) {
       var playersHtml = entry.team.players.map(function(tp) {
         var hcapStr = (tp.player.hcap > 0 ? '+' : '') + tp.player.hcap;
-        return '<div style="display:flex;align-items:center;gap:4px;padding:1px 0;">' +
-          '<span style="font-size:12px;">' + pairEsc(tp.player.name) + '</span>' +
-          '<span style="font-size:10px;color:rgba(245,240,232,.3);">(' + hcapStr + ')</span>' +
+        return '<div style="display:flex;align-items:center;gap:6px;padding:2px 0;">' +
+          '<span style="font-size:14px;color:var(--cream);font-weight:500;">' + pairEsc(tp.player.name) + '</span>' +
+          '<span style="font-size:11px;color:rgba(245,240,232,.4);">(' + hcapStr + ')</span>' +
         '</div>';
       }).join('');
       var scoreCells = '';
