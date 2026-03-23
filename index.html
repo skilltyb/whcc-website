@@ -419,13 +419,29 @@ footer{background:var(--deep);padding:80px 80px 40px}
 .staff-tag{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
 .staff-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;color:var(--cream);letter-spacing:.02em}
 .staff-title em{font-style:italic;color:var(--gold-lt);font-weight:300}
-.staff-views{display:flex;gap:6px;flex-wrap:wrap;width:100%;}
+.staff-views{display:flex;gap:6px;flex-wrap:wrap;width:100%;align-items:center;}
 .staff-view-btn{padding:7px 14px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;background:transparent;color:rgba(245,240,232,.5);border:1px solid rgba(184,151,106,.25);cursor:pointer;font-family:'Raleway',sans-serif;transition:all .2s;white-space:nowrap;}
 .staff-view-btn.active{background:var(--gold);color:var(--deep)}
 .staff-view-btn.active-view{background:rgba(184,151,106,.15);border-color:var(--gold);color:var(--gold-lt)}
+/* Staff dropdown nav */
+.sv-dropdown{position:relative;}
+.sv-drop-btn{padding:7px 14px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;background:transparent;color:rgba(245,240,232,.6);border:1px solid rgba(184,151,106,.25);cursor:pointer;font-family:'Raleway',sans-serif;transition:all .2s;white-space:nowrap;}
+.sv-drop-btn.has-active{background:rgba(184,151,106,.15);border-color:var(--gold);color:var(--gold-lt);}
+.sv-drop-menu{display:none;position:absolute;top:calc(100% + 4px);left:0;background:#1c2e21;border:1px solid rgba(184,151,106,.3);z-index:200;min-width:170px;box-shadow:0 8px 24px rgba(0,0,0,.4);}
+.sv-drop-menu.open{display:block;}
+.sv-drop-menu button{display:block;width:100%;padding:9px 16px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;background:none;border:none;border-bottom:1px solid rgba(184,151,106,.1);color:rgba(245,240,232,.6);cursor:pointer;font-family:'Raleway',sans-serif;text-align:left;transition:background .15s;}
+.sv-drop-menu button:last-child{border-bottom:none;}
+.sv-drop-menu button:hover{background:rgba(184,151,106,.12);color:var(--gold-lt);}
+.sv-drop-menu button.active-view{background:rgba(184,151,106,.18);color:var(--gold-lt);}
+/* Hide public nav links in staff mode */
+nav.staff-mode .nav-links,nav.staff-mode .nav-cta,nav.staff-mode .nav-hamburger{display:none!important;}
+nav.staff-mode .nav-site-back{display:flex!important;}
+.nav-site-back{display:none;align-items:center;gap:6px;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(245,240,232,.5);cursor:pointer;background:none;border:1px solid rgba(184,151,106,.2);padding:7px 14px;font-family:'Raleway',sans-serif;transition:all .2s;}
+.nav-site-back:hover{color:var(--gold-lt);border-color:var(--gold);}
 @media(max-width:600px){
   .staff-header{padding:14px 16px}
   .staff-view-btn{padding:5px 10px;font-size:9px;letter-spacing:.08em}
+  .sv-drop-btn{padding:5px 10px;font-size:9px;letter-spacing:.08em}
 }
 .staff-layout{display:flex;min-height:calc(100vh - 160px)}
 .staff-left{flex:1 1 420px;padding:24px;border-right:1px solid rgba(184,151,106,.12);overflow:auto}
@@ -889,6 +905,7 @@ footer{background:var(--deep);padding:80px 80px 40px}
   </ul>
   <button class="nav-cta" onclick="window.open('https://cerulean-klepon-c373b2.netlify.app','_blank')">Member Login</button>
   <button class="nav-hamburger" onclick="toggleMobileNav()"><span></span><span></span><span></span></button>
+  <button class="nav-site-back" onclick="navigate('home')">← Back to Site</button>
 </nav>
 <div class="nav-mobile" id="mobile-nav">
   <ul>
@@ -1854,20 +1871,38 @@ footer{background:var(--deep);padding:80px 80px 40px}
         <div class="staff-title">Hoover's <em>Reservations</em></div>
       </div>
       <div class="staff-views">
-        <button class="staff-view-btn active-view" onclick="staffView('calendar',this)">Calendar</button>
-        <button class="staff-view-btn" onclick="staffView('upcoming',this)">Upcoming</button>
-        <button class="staff-view-btn" onclick="staffView('search',this)">Search</button>
-        <button class="staff-view-btn" onclick="staffView('guests',this)">Guest Notes</button>
-        <button class="staff-view-btn" onclick="staffView('settings',this)">Settings</button>
-        <button class="staff-view-btn" onclick="staffView('scoring',this)">📊 Scoring</button>
-        <button class="staff-view-btn" onclick="staffView('daily',this)">📋 Daily</button>
-        <button class="staff-view-btn" onclick="staffView('menus',this)">🍽 Menus</button>
-        <button class="staff-view-btn" onclick="staffView('registrations',this)">📋 Registrations</button>
-        <button class="staff-view-btn" onclick="staffView('pairings',this)">⛳ Pairings</button>
-        <span style="width:1px;background:rgba(184,151,106,.2);margin:0 4px;"></span>
+        <!-- Reservations dropdown -->
+        <div class="sv-dropdown">
+          <button class="sv-drop-btn has-active" id="sv-drop-reservations" onclick="svToggleDrop('reservations')">Reservations ▾</button>
+          <div class="sv-drop-menu" id="sv-menu-reservations">
+            <button class="active-view" id="svb-calendar" onclick="staffView('calendar');svCloseDrop()">Calendar</button>
+            <button id="svb-upcoming" onclick="staffView('upcoming');svCloseDrop()">Upcoming</button>
+            <button id="svb-daily" onclick="staffView('daily');svCloseDrop()">Daily Sheet</button>
+            <button id="svb-scoring" onclick="staffView('scoring');svCloseDrop()">Scoring</button>
+            <button id="svb-search" onclick="staffView('search');svCloseDrop()">Search</button>
+            <button id="svb-guests" onclick="staffView('guests');svCloseDrop()">Guest Notes</button>
+          </div>
+        </div>
+        <!-- Golf dropdown -->
+        <div class="sv-dropdown">
+          <button class="sv-drop-btn" id="sv-drop-golf" onclick="svToggleDrop('golf')">Golf ▾</button>
+          <div class="sv-drop-menu" id="sv-menu-golf">
+            <button id="svb-registrations" onclick="staffView('registrations');svCloseDrop()">Registrations</button>
+            <button id="svb-pairings" onclick="staffView('pairings');svCloseDrop()">Pairings</button>
+          </div>
+        </div>
+        <!-- Admin dropdown -->
+        <div class="sv-dropdown">
+          <button class="sv-drop-btn" id="sv-drop-admin" onclick="svToggleDrop('admin')">Admin ▾</button>
+          <div class="sv-drop-menu" id="sv-menu-admin">
+            <button id="svb-menus" onclick="staffView('menus');svCloseDrop()">Menus</button>
+            <button id="svb-settings" onclick="staffView('settings');svCloseDrop()">Settings</button>
+          </div>
+        </div>
+        <span style="width:1px;background:rgba(184,151,106,.2);margin:0 4px;align-self:stretch;"></span>
         <button class="staff-view-btn active" id="sv-venue-hoovers" onclick="staffSwitchVenue('hoovers',this)" style="font-size:9px;">Hoover's</button>
         <button class="staff-view-btn" id="sv-venue-grille" onclick="staffSwitchVenue('grille',this)" style="font-size:9px;">Westwood Grill</button>
-        <span style="width:1px;background:rgba(184,151,106,.2);margin:0 4px;"></span>
+        <span style="width:1px;background:rgba(184,151,106,.2);margin:0 4px;align-self:stretch;"></span>
         <button class="staff-view-btn" onclick="staffLockDashboard()" style="font-size:9px;border-color:rgba(224,112,112,.3);color:rgba(224,112,112,.6);" title="Lock dashboard">🔒 Lock</button>
       </div>
     </div>
@@ -2806,6 +2841,9 @@ function navigate(page) {
   target.classList.add('page-enter');
   // Scroll to top
   window.scrollTo({ top: 0, behavior: 'instant' });
+  // Toggle staff mode on nav (hides public links, shows ← Back)
+  var nav = document.getElementById('main-nav');
+  if (nav) nav.classList.toggle('staff-mode', page === 'staff');
   // Update nav active state
   document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
   document.querySelectorAll('.nav-links a').forEach(a => {
@@ -3871,22 +3909,46 @@ function staffSwitchVenue(venue, btn) {
   staffView('calendar', null, true);
 }
 
+// ── DROPDOWN NAV ──
+var _svDropOpen = null;
+var _svViewGroups = {
+  reservations: ['calendar','upcoming','daily','scoring','search','guests'],
+  golf:         ['registrations','pairings'],
+  admin:        ['menus','settings']
+};
+function svToggleDrop(name) {
+  if (_svDropOpen && _svDropOpen !== name) svCloseDrop();
+  var menu = document.getElementById('sv-menu-' + name);
+  if (!menu) return;
+  var isOpen = menu.classList.contains('open');
+  menu.classList.toggle('open', !isOpen);
+  _svDropOpen = isOpen ? null : name;
+}
+function svCloseDrop() {
+  if (_svDropOpen) {
+    var m = document.getElementById('sv-menu-' + _svDropOpen);
+    if (m) m.classList.remove('open');
+    _svDropOpen = null;
+  }
+}
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.sv-dropdown')) svCloseDrop();
+});
+
 // ── VIEW SWITCHING ──
 function staffView(view, btn, useSecondary) {
-  var navClass = useSecondary ? 'active-view' : 'active';
-  document.querySelectorAll('.staff-views .staff-view-btn').forEach(b => {
-    if (b.id !== 'sv-venue-hoovers' && b.id !== 'sv-venue-grille') {
-      b.classList.remove('active');
-      b.classList.remove('active-view');
-    }
+  svCloseDrop();
+  // Highlight the correct dropdown button
+  Object.keys(_svViewGroups).forEach(function(grp) {
+    var dropBtn = document.getElementById('sv-drop-' + grp);
+    if (!dropBtn) return;
+    dropBtn.classList.toggle('has-active', _svViewGroups[grp].indexOf(view) !== -1);
   });
-  if (btn) {
-    btn.classList.add(navClass);
-  } else {
-    var found = Array.from(document.querySelectorAll('.staff-views .staff-view-btn'))
-      .find(b => (b.getAttribute('onclick') || '').includes("'" + view + "'"));
-    if (found) found.classList.add(navClass);
-  }
+  // Highlight the correct menu item
+  document.querySelectorAll('.sv-drop-menu button').forEach(function(b) { b.classList.remove('active-view'); });
+  var menuItem = document.getElementById('svb-' + view);
+  if (menuItem) menuItem.classList.add('active-view');
+
   ['calendar','upcoming','search','guests','settings','scoring','daily','menus','registrations','pairings'].forEach(v => {
     const el = document.getElementById('sv-' + v);
     if (el) el.style.display = v === view ? 'block' : 'none';
