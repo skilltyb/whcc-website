@@ -2254,25 +2254,6 @@ nav.staff-mode .nav-site-back{display:flex!important;}
   <div style="margin-bottom:10px;">
     <select id="reg-event-filter" onchange="currentRegFilter=this.value;renderStaffRegs()" style="width:100%;background:#1e3a20;border:1px solid rgba(184,151,106,.4);color:#f5f0e8;padding:8px 12px;font-size:12px;border-radius:2px;">
       <option value="">— All Events —</option>
-      <option value="St. Patty's Shootout">St. Patty's Shootout</option>
-      <option value="Ladies Opening Day">Ladies Opening Day</option>
-      <option value="Masters Dinner">Masters Dinner</option>
-      <option value="Mules Invitational">Mules Invitational</option>
-      <option value="Spring 2-Man Scramble">Spring 2-Man Scramble</option>
-      <option value="Ladies Sweet Treat">Ladies Sweet Treat</option>
-      <option value="MGA Draft Day">MGA Draft Day</option>
-      <option value="Men's Opening Day">Men's Opening Day</option>
-      <option value="Ozark Invitational">Ozark Invitational</option>
-      <option value="Couples Scramble">Couples Scramble</option>
-      <option value="Ladies Invitational">Ladies Invitational</option>
-      <option value="4th of July Scramble">4th of July Scramble</option>
-      <option value="Member-Guest">Member-Guest</option>
-      <option value="Club Championship">Club Championship</option>
-      <option value="Ladies Club Championship">Ladies Club Championship</option>
-      <option value="Fall 2-Man Scramble">Fall 2-Man Scramble</option>
-      <option value="Senior Scramble">Senior Scramble</option>
-      <option value="Closing Day Scramble">Closing Day Scramble</option>
-      <option value="Halloween Costume Scramble">Halloween Costume Scramble</option>
     </select>
   </div>
   <!-- Capacity bar -->
@@ -3905,17 +3886,28 @@ function lsSwitchTab(key) {
 function lsShowUpcoming() {
   var container = document.getElementById('ls-upcoming');
   if (!container) return;
-  var upcoming = [
-    { name: "St. Patty's Shootout", date: "Mar 14" },
-    { name: "Ozark Invitational", date: "Apr 25–26" },
-    { name: "Spring 2-Man Scramble", date: "May 16–17" },
-    { name: "SEMO Cup Qualifier", date: "Jun 18" }
-  ];
+  // Build from registration data: find upcoming events with meta dates
+  var regs = getAllRegs();
+  var metaMap = {};
+  regs.forEach(function(r) {
+    if (r && r.event && r.eventMeta && !metaMap[r.event]) metaMap[r.event] = r.eventMeta;
+  });
+  var today = new Date(); today.setHours(0,0,0,0);
+  var upcoming = Object.keys(metaMap).filter(function(ev) {
+    var d = typeof parseMetaDate === 'function' ? parseMetaDate(metaMap[ev]) : null;
+    return d && d >= today;
+  });
+  upcoming.sort(function(a, b) {
+    var da = parseMetaDate(metaMap[a]), db = parseMetaDate(metaMap[b]);
+    return da - db;
+  });
   container.innerHTML = '';
-  upcoming.forEach(function(ev) {
+  upcoming.slice(0, 5).forEach(function(ev) {
+    var meta = metaMap[ev];
+    var dateStr = (meta + '').split('·')[0].trim();
     var chip = document.createElement('div');
     chip.className = 'ls-upcoming-chip';
-    chip.textContent = ev.name + ' · ' + ev.date;
+    chip.textContent = ev + ' · ' + dateStr;
     chip.onclick = function() { navigate('events'); };
     container.appendChild(chip);
   });
