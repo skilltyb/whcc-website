@@ -2944,7 +2944,7 @@ window.addEventListener('scroll', () => {
 function initFades() {
   const obs = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.08, rootMargin: '0px 0px -28px 0px' });
+  }, { threshold: 0.08, rootMargin: '0px 0px 200px 0px' });
   document.querySelectorAll('#page-' + currentPage() + ' .fade-up:not(.visible)').forEach(el => obs.observe(el));
 }
 function currentPage() {
