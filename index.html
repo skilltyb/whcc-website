@@ -2321,25 +2321,6 @@ nav.staff-mode .nav-site-back{display:flex!important;}
             <div style="margin-bottom:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
               <select id="pair-event-filter" onchange="pairEventFilter=this.value;pairUpdateEventBadge();pairAutoMode();pairClearRosterAndGroups()" style="flex:1;max-width:360px;background:#1e3a20;border:1px solid rgba(184,151,106,.4);color:#f5f0e8;padding:7px 10px;font-size:12px;border-radius:2px;">
                 <option value="">— Select Event to Import —</option>
-                <option value="St. Patty's Shootout">St. Patty's Shootout</option>
-                <option value="Ladies Opening Day">Ladies Opening Day</option>
-                <option value="Masters Dinner">Masters Dinner</option>
-                <option value="Mules Invitational">Mules Invitational</option>
-                <option value="Spring 2-Man Scramble">Spring 2-Man Scramble</option>
-                <option value="Ladies Sweet Treat">Ladies Sweet Treat</option>
-                <option value="MGA Draft Day">MGA Draft Day</option>
-                <option value="Men's Opening Day">Men's Opening Day</option>
-                <option value="Ozark Invitational">Ozark Invitational</option>
-                <option value="Couples Scramble">Couples Scramble</option>
-                <option value="Ladies Invitational">Ladies Invitational</option>
-                <option value="4th of July Scramble">4th of July Scramble</option>
-                <option value="Member-Guest">Member-Guest</option>
-                <option value="Club Championship">Club Championship</option>
-                <option value="Ladies Club Championship">Ladies Club Championship</option>
-                <option value="Fall 2-Man Scramble">Fall 2-Man Scramble</option>
-                <option value="Senior Scramble">Senior Scramble</option>
-                <option value="Closing Day Scramble">Closing Day Scramble</option>
-                <option value="Halloween Costume Scramble">Halloween Costume Scramble</option>
               </select>
               <span id="pair-event-badge" style="font-size:11px;color:rgba(245,240,232,.4);white-space:nowrap;"></span>
             </div>
@@ -5135,6 +5116,42 @@ var pairConfig = { groupSize: 4, mode: 'league', teamSize: 2 };
 var pairEventFilter = '';
 var pairHistory = [];
 
+function buildPairDropdown() {
+  var sel = document.getElementById('pair-event-filter');
+  if (!sel) return;
+  var regs = getAllRegs();
+  var metaMap = {};
+  regs.forEach(function(r) {
+    if (r && r.event && r.eventMeta && !metaMap[r.event]) metaMap[r.event] = r.eventMeta;
+  });
+  var allEvents = Object.keys(metaMap);
+  allEvents.sort(function(a, b) {
+    var ai = WHCC_EVENT_ORDER.indexOf(a), bi = WHCC_EVENT_ORDER.indexOf(b);
+    if (ai === -1) ai = 9999; if (bi === -1) bi = 9999;
+    return ai - bi;
+  });
+  var today = new Date(); today.setHours(0,0,0,0);
+  var upcoming = [], past = [];
+  allEvents.forEach(function(ev) {
+    var d = typeof parseMetaDate === 'function' ? parseMetaDate(metaMap[ev]) : null;
+    if (d && d < today) past.push(ev); else upcoming.push(ev);
+  });
+  var first = sel.options[0];
+  sel.innerHTML = ''; sel.appendChild(first);
+  upcoming.forEach(function(ev) {
+    var o = document.createElement('option'); o.value = ev; o.text = ev;
+    o.selected = (ev === pairEventFilter); sel.appendChild(o);
+  });
+  if (past.length) {
+    var grp = document.createElement('optgroup'); grp.label = '── Archived ──';
+    past.forEach(function(ev) {
+      var o = document.createElement('option'); o.value = ev; o.text = ev;
+      o.selected = (ev === pairEventFilter); grp.appendChild(o);
+    });
+    sel.appendChild(grp);
+  }
+}
+
 function pairViewLoad() {
   var saved = localStorage.getItem('whcc-pairings-roster');
   if (saved) { try { pairRoster = JSON.parse(saved); } catch(e){} }
@@ -5148,6 +5165,7 @@ function pairViewLoad() {
   }
   var hist = localStorage.getItem('whcc-pairings-history');
   if (hist) { try { pairHistory = JSON.parse(hist); } catch(e){} }
+  buildPairDropdown();
   pairApplyConfig();
   pairRenderRoster();
   pairRenderTeams();
