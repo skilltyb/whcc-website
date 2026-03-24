@@ -5118,22 +5118,44 @@ function buildPairDropdown(regs) {
   var sel = document.getElementById('pair-event-filter');
   if (!sel) return;
   if (!regs) regs = getAllRegs();
-  var metaMap = {};
+
+  // Collect all distinct event names — no eventMeta required
+  var seen = {}, metaMap = {};
   regs.forEach(function(r) {
-    if (r && r.event && r.eventMeta && !metaMap[r.event]) metaMap[r.event] = r.eventMeta;
+    if (r && r.event) {
+      seen[r.event] = true;
+      if (r.eventMeta && !metaMap[r.event]) metaMap[r.event] = r.eventMeta;
+    }
   });
-  var allEvents = Object.keys(metaMap);
+  var allEvents = Object.keys(seen);
   allEvents.sort(function(a, b) {
     var ai = WHCC_EVENT_ORDER.indexOf(a), bi = WHCC_EVENT_ORDER.indexOf(b);
     if (ai === -1) ai = 9999; if (bi === -1) bi = 9999;
     return ai - bi;
   });
+
+  // Date lookup: use eventMeta first, then try parsing the event name itself
+  function getEvDate(ev) {
+    if (metaMap[ev] && typeof parseMetaDate === 'function') {
+      var d = parseMetaDate(metaMap[ev]);
+      if (d) return d;
+    }
+    // Fallback: "Men's League — May 9" → parse "May 9"
+    var m = ev.match(/([A-Za-z]+)\s+(\d+)\s*$/);
+    if (m && typeof _MO !== 'undefined') {
+      var mo = _MO[m[1].toLowerCase().slice(0,3)];
+      if (mo !== undefined) return new Date(new Date().getFullYear(), mo, parseInt(m[2]));
+    }
+    return null;
+  }
+
   var today = new Date(); today.setHours(0,0,0,0);
   var upcoming = [], past = [];
   allEvents.forEach(function(ev) {
-    var d = typeof parseMetaDate === 'function' ? parseMetaDate(metaMap[ev]) : null;
+    var d = getEvDate(ev);
     if (d && d < today) past.push(ev); else upcoming.push(ev);
   });
+
   var first = sel.options[0];
   sel.innerHTML = ''; sel.appendChild(first);
   upcoming.forEach(function(ev) {
@@ -5168,9 +5190,12 @@ function pairViewLoad() {
   pairRenderRoster();
   pairRenderTeams();
   pairRenderHistory();
-  // Fetch live data so dropdown is populated even in incognito / empty cache
+  // Fetch live data so dropdown and badge are populated even in incognito / empty cache
   WHCC_SYNC.fetchAll(function(regs, err) {
-    if (!err && regs) buildPairDropdown(regs);
+    if (!err && regs) {
+      buildPairDropdown(regs);
+      pairUpdateEventBadge(regs);
+    }
   });
 }
 
@@ -5497,13 +5522,12 @@ function pairTeamClick(playerId, teamId) {
   pairRenderTeams();
 }
 
-function pairUpdateEventBadge() {
+function pairUpdateEventBadge(regs) {
   var badge = document.getElementById('pair-event-badge');
   if (!badge) return;
   if (!pairEventFilter) { badge.textContent = ''; return; }
-  var regs = (typeof getAllRegs === 'function') ? getAllRegs() : [];
-  var count = regs.filter(function(r){ return r.event === pairEventFilter; }).length;
-  badge.textContent = count + ' registrant' + (count !== 1 ? 's' : '');
+  var list = (regs || getAllRegs()).filter(function(r){ return r.event === pairEventFilter; });
+  badge.textContent = list.length + ' registrant' + (list.length !== 1 ? 's' : '');
 }
 
 // Auto-switch pairing mode and team size based on event type
@@ -5540,10 +5564,26 @@ function pairImportFromRegs() {
   var regs = (typeof getAllRegs === 'function') ? getAllRegs() : [];
   var list = regs.filter(function(r){ return r.event === pairEventFilter; });
   if (!list.length) {
-    alert('No registrations found for "' + pairEventFilter + '".\nSync the sheet on the Registrations tab first.');
+    // Nothing in cache — fetch live from sheet, then retry
+    WHCC_SYNC.fetchAll(function(freshRegs, err) {
+      if (err || !freshRegs) {
+        alert('Could not reach the sheet. Check your connection and try again.');
+        return;
+      }
+      list = freshRegs.filter(function(r){ return r.event === pairEventFilter; });
+      if (!list.length) {
+        alert('No registrations found for "' + pairEventFilter + '".');
+        return;
+      }
+      _pairDoImport(list);
+    });
     return;
   }
 
+  _pairDoImport(list);
+}
+
+function _pairDoImport(list) {
   var added = 0;
 
   if (pairConfig.mode === 'team') {
