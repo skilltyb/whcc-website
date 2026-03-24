@@ -5116,8 +5116,10 @@ var pairHistory = [];
 
 function buildPairDropdown(regs) {
   var sel = document.getElementById('pair-event-filter');
+  console.log('[PairDrop] sel found:', !!sel, '| regs passed:', regs ? regs.length : 'none (will use cache)');
   if (!sel) return;
   if (!regs) regs = getAllRegs();
+  console.log('[PairDrop] total regs:', regs.length, '| sample event:', regs[0] && regs[0].event);
 
   // Collect all distinct event names — no eventMeta required
   var seen = {}, metaMap = {};
@@ -5127,6 +5129,7 @@ function buildPairDropdown(regs) {
       if (r.eventMeta && !metaMap[r.event]) metaMap[r.event] = r.eventMeta;
     }
   });
+  console.log('[PairDrop] distinct events:', Object.keys(seen));
   var allEvents = Object.keys(seen);
   allEvents.sort(function(a, b) {
     var ai = WHCC_EVENT_ORDER.indexOf(a), bi = WHCC_EVENT_ORDER.indexOf(b);
@@ -5191,11 +5194,15 @@ function pairViewLoad() {
   pairRenderTeams();
   pairRenderHistory();
   // Fetch live data so dropdown and badge are populated even in incognito / empty cache
+  console.log('[PairLoad] starting fetchAll...');
   WHCC_SYNC.fetchAll(function(regs, err) {
-    if (!err && regs) {
-      buildPairDropdown(regs);
-      pairUpdateEventBadge(regs);
-    }
+    console.log('[PairLoad] fetchAll done | err:', err, '| regs:', regs ? regs.length : 'null');
+    if (err) { console.error('[PairLoad] fetchAll error:', err); return; }
+    if (!regs) { console.warn('[PairLoad] fetchAll returned null regs'); return; }
+    var mlRegs = regs.filter(function(r){ return r.event && r.event.indexOf("Men's League") !== -1; });
+    console.log('[PairLoad] Men\'s League regs:', mlRegs.length, '| sample:', mlRegs[0]);
+    buildPairDropdown(regs);
+    pairUpdateEventBadge(regs);
   });
 }
 
