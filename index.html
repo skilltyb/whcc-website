@@ -2622,7 +2622,10 @@ var WHCC_SYNC = {
               partner:     row['Partners'] || row['Partner/Team'] || row['Partner'] || row['partner'] || '',
               players:     row['Players']                                            || '1',
               memberNum:   row['Member #']                                           || '',
-              ghin:        row['GHIN Handicap'] || row['GHIN #'] || row['GHIN'] || row['ghin'] || '',
+              ghin:        row['GHIN Handicap'] || row['GHIN #'] || row['GHIN'] || row['ghin'] ||
+                           // Fallback: if 'Notes' column contains a number it's actually the GHIN
+                           // (old sheet layout had no GHIN header so ghin was stored under Notes)
+                           (function(){ var n=parseFloat(row['Notes']||''); return (!isNaN(n)&&n>=0&&n<=54) ? String(n) : ''; })() || '',
               partnerGhin: row['Partner GHIN'] || row['partnerGhin'] || row['PartnerGhin'] || '',
               notes:       row['Notes']                                              || '',
               timestamp:   row['Registered At']                                      || '',
@@ -5111,10 +5114,10 @@ var pairConfig = { groupSize: 4, mode: 'league', teamSize: 2 };
 var pairEventFilter = '';
 var pairHistory = [];
 
-function buildPairDropdown() {
+function buildPairDropdown(regs) {
   var sel = document.getElementById('pair-event-filter');
   if (!sel) return;
-  var regs = getAllRegs();
+  if (!regs) regs = getAllRegs();
   var metaMap = {};
   regs.forEach(function(r) {
     if (r && r.event && r.eventMeta && !metaMap[r.event]) metaMap[r.event] = r.eventMeta;
@@ -5167,7 +5170,7 @@ function pairViewLoad() {
   pairRenderHistory();
   // Fetch live data so dropdown is populated even in incognito / empty cache
   WHCC_SYNC.fetchAll(function(regs, err) {
-    if (!err && regs) buildPairDropdown();
+    if (!err && regs) buildPairDropdown(regs);
   });
 }
 

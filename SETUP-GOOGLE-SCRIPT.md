@@ -4,7 +4,7 @@
 1. Go to sheets.google.com
 2. Create a new spreadsheet named "WHCC Event Registrations"
 3. Add headers in Row 1:
-   ID | Event | Event Date/Time | First Name | Last Name | Email | Phone | Partner | Players | Member # | Notes | Registered At | Source
+   ID | Event | Event Date/Time | First Name | Last Name | Email | Phone | Partner | Players | Member # | GHIN Handicap | Notes | Registered At | Source
 
 ## Step 2: Create the Apps Script
 1. In the spreadsheet, go to Extensions → Apps Script
