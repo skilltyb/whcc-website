@@ -2305,6 +2305,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
               </select>
               <span id="pair-event-badge" style="font-size:11px;color:rgba(245,240,232,.4);white-space:nowrap;"></span>
             </div>
+            <div id="pair-debug" style="font-size:10px;color:#aaa;margin-bottom:6px;font-family:monospace;"></div>
             <div class="pair-ctrl">
               <button class="pair-btn primary" onclick="pairGenerate()">⚡ Generate Groups</button>
               <button class="pair-btn" onclick="pairReshuffle()">🔀 Reshuffle</button>
@@ -5194,11 +5195,23 @@ function pairViewLoad() {
   pairRenderTeams();
   pairRenderHistory();
   // Fetch live data so dropdown and badge are populated even in incognito / empty cache
-  console.log('[PairLoad] starting fetchAll...');
+  var dbg = document.getElementById('pair-debug');
+  if (dbg) dbg.textContent = 'Fetching sheet data…';
   WHCC_SYNC.fetchAll(function(regs, err) {
+    if (dbg) {
+      if (err) {
+        dbg.textContent = 'ERROR: ' + err;
+      } else if (!regs) {
+        dbg.textContent = 'ERROR: no data returned';
+      } else {
+        var mlCount = regs.filter(function(r){ return r.event && r.event.indexOf("Men's League") !== -1; }).length;
+        var evNames = [];
+        regs.forEach(function(r){ if (r.event && evNames.indexOf(r.event) === -1) evNames.push(r.event); });
+        dbg.textContent = 'Sheet: ' + regs.length + ' rows | ' + evNames.length + ' events | Men\'s League rows: ' + mlCount + ' | Events: ' + evNames.join(', ');
+      }
+    }
     console.log('[PairLoad] fetchAll done | err:', err, '| regs:', regs ? regs.length : 'null');
-    if (err) { console.error('[PairLoad] fetchAll error:', err); return; }
-    if (!regs) { console.warn('[PairLoad] fetchAll returned null regs'); return; }
+    if (err || !regs) return;
     var mlRegs = regs.filter(function(r){ return r.event && r.event.indexOf("Men's League") !== -1; });
     console.log('[PairLoad] Men\'s League regs:', mlRegs.length, '| sample:', mlRegs[0]);
     buildPairDropdown(regs);
