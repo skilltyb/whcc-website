@@ -5551,6 +5551,12 @@ function pairClearRosterAndGroups() {
   pairRoster = [];
   pairTeams  = [];
   pairSwapSource = null;
+  // Also reset tee sheet state so a previously built sheet doesn't persist
+  teeSheet  = [];
+  teeScores = {};
+  teeRound  = 1;
+  var tsOut = document.getElementById('ts-sheet-output');
+  if (tsOut) tsOut.innerHTML = '';
   pairSave();
   pairRenderRoster();
   pairRenderTeams();
