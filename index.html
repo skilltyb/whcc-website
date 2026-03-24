@@ -3883,11 +3883,9 @@ function lsSwitchTab(key) {
   });
 }
 
-function lsShowUpcoming() {
+function lsRenderUpcomingChips(regs) {
   var container = document.getElementById('ls-upcoming');
   if (!container) return;
-  // Build from registration data: find upcoming events with meta dates
-  var regs = getAllRegs();
   var metaMap = {};
   regs.forEach(function(r) {
     if (r && r.event && r.eventMeta && !metaMap[r.event]) metaMap[r.event] = r.eventMeta;
@@ -3898,18 +3896,23 @@ function lsShowUpcoming() {
     return d && d >= today;
   });
   upcoming.sort(function(a, b) {
-    var da = parseMetaDate(metaMap[a]), db = parseMetaDate(metaMap[b]);
-    return da - db;
+    return parseMetaDate(metaMap[a]) - parseMetaDate(metaMap[b]);
   });
   container.innerHTML = '';
   upcoming.slice(0, 5).forEach(function(ev) {
-    var meta = metaMap[ev];
-    var dateStr = (meta + '').split('·')[0].trim();
+    var dateStr = (metaMap[ev] + '').split('·')[0].trim();
     var chip = document.createElement('div');
     chip.className = 'ls-upcoming-chip';
     chip.textContent = ev + ' · ' + dateStr;
     chip.onclick = function() { navigate('events'); };
     container.appendChild(chip);
+  });
+}
+
+function lsShowUpcoming() {
+  lsRenderUpcomingChips(getAllRegs());
+  WHCC_SYNC.fetchAll(function(regs, err) {
+    if (!err && regs) lsRenderUpcomingChips(regs);
   });
 }
 
@@ -5162,6 +5165,10 @@ function pairViewLoad() {
   pairRenderRoster();
   pairRenderTeams();
   pairRenderHistory();
+  // Fetch live data so dropdown is populated even in incognito / empty cache
+  WHCC_SYNC.fetchAll(function(regs, err) {
+    if (!err && regs) buildPairDropdown();
+  });
 }
 
 function pairSave() {
