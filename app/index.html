@@ -1693,7 +1693,20 @@ var MENU_SECTION_LABELS = {
   postRound:'Sides', quickBites:'Kids Menu'
 };
 
-var appEvents   = JSON.parse(localStorage.getItem('wh_app_events') || 'null') || JSON.parse(JSON.stringify(DEFAULT_EVENTS));
+var appEvents = JSON.parse(localStorage.getItem('wh_app_events') || 'null') || JSON.parse(JSON.stringify(DEFAULT_EVENTS));
+// Merge any DEFAULT_EVENTS entries that aren't in the stored list (e.g. new season events added to the app)
+(function() {
+  var storedTitles = {};
+  appEvents.forEach(function(e) { storedTitles[e.title] = true; });
+  var added = false;
+  DEFAULT_EVENTS.forEach(function(e) {
+    if (!storedTitles[e.title]) { appEvents.push(JSON.parse(JSON.stringify(e))); added = true; }
+  });
+  if (added) {
+    appEvents.sort(function(a, b) { return a.date.localeCompare(b.date); });
+    localStorage.setItem('wh_app_events', JSON.stringify(appEvents));
+  }
+})();
 var currentUser = null;
 
 // ════════════════════════════════════
