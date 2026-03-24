@@ -4046,12 +4046,34 @@ function buildRegDropdown(regs) {
     });
   }
 
-  // Update text of each option with live counts (options already exist in HTML)
+  // Collect events already in the dropdown
+  var existing = {};
+  for (var i = 1; i < sel.options.length; i++) existing[sel.options[i].value] = true;
+
+  // Add any events from the sheet not yet in the dropdown, sorted by season order
+  var allEvents = Object.keys(counts);
+  allEvents.sort(function(a, b) {
+    var ai = WHCC_EVENT_ORDER.indexOf(a);
+    var bi = WHCC_EVENT_ORDER.indexOf(b);
+    if (ai === -1) ai = 9999;
+    if (bi === -1) bi = 9999;
+    return ai - bi;
+  });
+  allEvents.forEach(function(ev) {
+    if (!existing[ev]) {
+      var opt = document.createElement('option');
+      opt.value = ev;
+      sel.appendChild(opt);
+    }
+  });
+
+  // Update all option labels with live counts
   for (var i = 1; i < sel.options.length; i++) {
     var opt = sel.options[i];
     var ev  = opt.value;
     var cnt = counts[ev] || 0;
-    var cap = (WHCC_EVENTS && WHCC_EVENTS[ev]) ? WHCC_EVENTS[ev].capacity : 72;
+    var info = typeof getEventInfo === 'function' ? getEventInfo(ev) : { capacity: 72 };
+    var cap = info.capacity || 72;
     var pct = cap > 0 ? Math.round(cnt / cap * 100) : 0;
     opt.text = ev + '  (' + cnt + '/' + cap + '  ' + pct + '%)';
     opt.selected = (ev === currentRegFilter);
