@@ -13,7 +13,23 @@
 ```javascript
 // ── HELPERS ──────────────────────────────────────────────────────────────────
 function getRegSheet() {
-  return SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheets = ss.getSheets();
+  // Find the sheet that has registration headers (Event, First Name, etc.)
+  for (var i = 0; i < sheets.length; i++) {
+    var name = sheets[i].getName();
+    if (name === 'Tee Sheets') continue;
+    if (sheets[i].getLastRow() < 1) continue;
+    var headers = sheets[i].getRange(1, 1, 1, Math.max(1, sheets[i].getLastColumn())).getValues()[0];
+    for (var j = 0; j < headers.length; j++) {
+      if (headers[j] === 'Event' || headers[j] === 'First Name') return sheets[i];
+    }
+  }
+  // Fallback: first sheet that isn't Tee Sheets
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].getName() !== 'Tee Sheets') return sheets[i];
+  }
+  return ss.getActiveSheet();
 }
 
 function getTeeSheet() {
