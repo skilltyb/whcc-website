@@ -2305,7 +2305,6 @@ nav.staff-mode .nav-site-back{display:flex!important;}
               </select>
               <span id="pair-event-badge" style="font-size:11px;color:rgba(245,240,232,.4);white-space:nowrap;"></span>
             </div>
-            <div id="pair-debug" style="font-size:10px;color:#aaa;margin-bottom:6px;font-family:monospace;">v2-loaded</div>
             <div class="pair-ctrl">
               <button class="pair-btn primary" onclick="pairGenerate()">⚡ Generate Groups</button>
               <button class="pair-btn" onclick="pairReshuffle()">🔀 Reshuffle</button>
@@ -5117,10 +5116,8 @@ var pairHistory = [];
 
 function buildPairDropdown(regs) {
   var sel = document.getElementById('pair-event-filter');
-  console.log('[PairDrop] sel found:', !!sel, '| regs passed:', regs ? regs.length : 'none (will use cache)');
   if (!sel) return;
   if (!regs) regs = getAllRegs();
-  console.log('[PairDrop] total regs:', regs.length, '| sample event:', regs[0] && regs[0].event);
 
   // Collect all distinct event names — no eventMeta required
   var seen = {}, metaMap = {};
@@ -5130,7 +5127,6 @@ function buildPairDropdown(regs) {
       if (r.eventMeta && !metaMap[r.event]) metaMap[r.event] = r.eventMeta;
     }
   });
-  console.log('[PairDrop] distinct events:', Object.keys(seen));
   var allEvents = Object.keys(seen);
   allEvents.sort(function(a, b) {
     var ai = WHCC_EVENT_ORDER.indexOf(a), bi = WHCC_EVENT_ORDER.indexOf(b);
@@ -5195,25 +5191,9 @@ function pairViewLoad() {
   pairRenderTeams();
   pairRenderHistory();
   // Fetch live data so dropdown and badge are populated even in incognito / empty cache
-  var dbg = document.getElementById('pair-debug');
-  if (dbg) dbg.textContent = 'Fetching sheet data…';
+  // Fetch live data so dropdown and badge are populated even in incognito / empty cache
   WHCC_SYNC.fetchAll(function(regs, err) {
-    if (dbg) {
-      if (err) {
-        dbg.textContent = 'ERROR: ' + err;
-      } else if (!regs) {
-        dbg.textContent = 'ERROR: no data returned';
-      } else {
-        var mlCount = regs.filter(function(r){ return r.event && r.event.indexOf("Men's League") !== -1; }).length;
-        var evNames = [];
-        regs.forEach(function(r){ if (r.event && evNames.indexOf(r.event) === -1) evNames.push(r.event); });
-        dbg.textContent = 'Sheet: ' + regs.length + ' rows | ' + evNames.length + ' events | Men\'s League rows: ' + mlCount + ' | Events: ' + evNames.join(', ');
-      }
-    }
-    console.log('[PairLoad] fetchAll done | err:', err, '| regs:', regs ? regs.length : 'null');
     if (err || !regs) return;
-    var mlRegs = regs.filter(function(r){ return r.event && r.event.indexOf("Men's League") !== -1; });
-    console.log('[PairLoad] Men\'s League regs:', mlRegs.length, '| sample:', mlRegs[0]);
     buildPairDropdown(regs);
     pairUpdateEventBadge(regs);
   });
