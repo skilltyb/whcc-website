@@ -170,6 +170,37 @@ function doGet(e) {
 }
 ```
 
+## One-Time Header Fix (existing sheets only)
+
+If your sheet was set up before GHIN Handicap was added to the column list,
+run this once from the Apps Script editor to correct the headers:
+
+```javascript
+function fixSheetHeaders() {
+  var sh = getRegSheet();
+  // Current (wrong) header order has only 13 cols; correct order needs 14
+  var correct = [
+    'ID', 'Event', 'Event Date/Time', 'First Name', 'Last Name',
+    'Email', 'Phone', 'Partner', 'Players', 'Member #',
+    'GHIN Handicap', 'Notes', 'Registered At', 'Source'
+  ];
+  // Extend the header row if needed
+  if (sh.getLastColumn() < correct.length) {
+    sh.getRange(1, sh.getLastColumn() + 1, 1, correct.length - sh.getLastColumn())
+      .setValues([correct.slice(sh.getLastColumn())]);
+  }
+  sh.getRange(1, 1, 1, correct.length).setValues([correct]);
+  Logger.log('Headers fixed: ' + correct.join(' | '));
+}
+```
+
+To run it:
+1. Open Extensions → Apps Script in your spreadsheet
+2. Paste the function above anywhere in the editor (after the existing code)
+3. Select `fixSheetHeaders` in the function dropdown at the top
+4. Click ▶ Run
+5. You can delete the function afterwards — it only needs to run once
+
 3. Click Deploy → New Deployment
 4. Type: Web App
 5. Execute as: Me
