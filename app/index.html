@@ -3893,8 +3893,8 @@ document.getElementById('li-pin').addEventListener('keydown',   function(e){ if 
 // ════════════════════════════════════
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('sw.js')
-      .then(function(r){ console.log('SW:', r.scope); })
+    navigator.serviceWorker.register('sw.js?v=4', { updateViaCache: 'none' })
+      .then(function(r){ r.update(); console.log('SW:', r.scope); })
       .catch(function(e){ console.log('SW failed:', e); });
   });
 }
