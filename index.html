@@ -2929,7 +2929,7 @@ function closeRegModal() {
   if (dateSel) { dateSel.selectedIndex = 0; dateSel.required = false; }
   var dateRow = document.getElementById('reg-date-row');
   if (dateRow) dateRow.style.display = 'none';
-  ['reg-fname','reg-lname','reg-email','reg-phone','reg-partner','reg-notes','reg-membernum','reg-ghin'].forEach(function(id){
+  ['reg-fname','reg-lname','reg-email','reg-phone','reg-partner','reg-partner-ghin','reg-notes','reg-membernum','reg-ghin'].forEach(function(id){
     var el = document.getElementById(id); if(el) el.value = '';
   });
   currentRegEvent = null;
@@ -2963,6 +2963,7 @@ function submitRegForm(e) {
     email: document.getElementById('reg-email').value.trim(),
     phone: document.getElementById('reg-phone').value.trim(),
     partner: document.getElementById('reg-partner').value.trim(),
+    partnerGhin: document.getElementById('reg-partner-ghin') ? document.getElementById('reg-partner-ghin').value.trim() : '',
     players: document.getElementById('reg-players').value,
     memberNum: document.getElementById('reg-membernum').value.trim(),
     ghin: document.getElementById('reg-ghin') ? document.getElementById('reg-ghin').value.trim() : '',
@@ -4437,9 +4438,9 @@ function regExportCSV() {
   var filter = currentRegFilter || '';
   var regs = getAllRegs().filter(function(r){ return !filter || r.event === filter; });
   if (!regs.length) { alert('No registrations to export.'); return; }
-  var headers = ['Event','Date/Time','First Name','Last Name','Email','Phone','Partner','Players','Member #','GHIN #','Notes','Registered'];
+  var headers = ['Event','Date/Time','First Name','Last Name','Email','Phone','Partner','Partner GHIN','Players','Member #','GHIN #','Notes','Registered'];
   var rows = regs.map(function(r){
-    return [r.event,r.eventMeta,r.firstName,r.lastName,r.email,r.phone,r.partner,r.players,r.memberNum,r.ghin||"",r.notes,r.timestamp].map(function(v){
+    return [r.event,r.eventMeta,r.firstName,r.lastName,r.email,r.phone,r.partner,r.partnerGhin||"",r.players,r.memberNum,r.ghin||"",r.notes,r.timestamp].map(function(v){
       return '"'+(v||'').replace(/"/g,'""')+'"';
     }).join(',');
   });
@@ -6927,6 +6928,7 @@ function submitContactForm() {
         </div>
         <div class="reg-row" id="reg-team-row" style="display:none">
           <div class="reg-field"><label>Team / Partner Name</label><input type="text" id="reg-partner" placeholder="e.g. John Doe"/></div>
+          <div class="reg-field"><label>Partner GHIN #</label><input type="text" id="reg-partner-ghin" placeholder="Optional"/></div>
           <div class="reg-field"><label>Players in Group</label><select id="reg-players"><option value="1">1 Player</option><option value="2" selected>2 Players</option><option value="3">3 Players</option><option value="4">4 Players</option></select></div>
         </div>
         <div class="reg-row"><div class="reg-field"><label>Member #</label><input type="text" id="reg-membernum" placeholder="Optional"/></div><div class="reg-field"><label>GHIN #</label><input type="text" id="reg-ghin" placeholder="Optional — handicap index"/></div></div>
