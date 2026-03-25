@@ -4435,7 +4435,7 @@ function renderRegRow(r, num, showDelete) {
     + '<div>'
     + '<div style="font-size:.84rem;font-weight:700;color:#f5f0e8;">' + (r.firstName||'') + ' ' + (r.lastName||'') + ghinBadge(r) + '</div>'
     + '<div style="font-size:.72rem;color:rgba(245,240,232,.5);margin-top:1px;">' + (r.email||'') + (r.phone?' · '+r.phone:'') + (r.memberNum?' · Member #'+r.memberNum:'') + (r.ghin?' · HCP '+r.ghin:'') + '</div>'
-    + (r.partner?'<div style="font-size:.72rem;color:rgba(184,151,106,.7);margin-top:2px;">Partner: '+r.partner+'</div>':'')
+    + (r.partner?'<div style="font-size:.72rem;color:rgba(184,151,106,.7);margin-top:2px;">Partner: '+r.partner+(r.partnerGhin?' <span style="opacity:.65;">· GHIN '+r.partnerGhin+'</span>':'')+'</div>':'')
     + (r.notes?'<div style="font-size:.7rem;color:rgba(245,240,232,.4);font-style:italic;margin-top:2px;">'+r.notes+'</div>':'')
     + '</div></div>'
     + '<div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">'
@@ -6603,18 +6603,27 @@ function ghinParseCSV(text) {
 
 function ghinGetStatus(r) {
   if (!_ghinData) return null;
-  // Try matching by GHIN ID first (extracted from notes or a dedicated field),
-  // then fall back to full name match
+  // Try matching by GHIN ID — check dedicated ghin field first (if it looks like an ID,
+  // i.e. 5-8 digits), then fall back to scanning notes, then full name match
   var entry = null;
-  var ghinIdMatch = (r.notes || '').match(/GHIN\s*#\s*(\d{5,8})/i);
-  if (ghinIdMatch && _ghinData['__id__' + ghinIdMatch[1]]) {
-    entry = _ghinData['__id__' + ghinIdMatch[1]];
+  var ghinField = (r.ghin || '').trim();
+  if (/^\d{5,8}$/.test(ghinField) && _ghinData['__id__' + ghinField]) {
+    entry = _ghinData['__id__' + ghinField];
+  }
+  if (!entry) {
+    var ghinIdMatch = (r.notes || '').match(/GHIN\s*#\s*(\d{5,8})/i);
+    if (ghinIdMatch && _ghinData['__id__' + ghinIdMatch[1]]) {
+      entry = _ghinData['__id__' + ghinIdMatch[1]];
+    }
   }
   if (!entry) {
     var name = ((r.firstName || '') + ' ' + (r.lastName || '')).toLowerCase().trim();
     entry = _ghinData[name];
   }
-  var regHcp = parseHcp(r.ghin, null);
+  // When ghin field is a GHIN ID (5-8 digits) and we found the entry, treat official hcp
+  // as both registered and official (ID lookup counts as full verification)
+  var isGhinIdEntry = /^\d{5,8}$/.test(ghinField);
+  var regHcp = isGhinIdEntry ? (entry ? entry.hcp : null) : parseHcp(r.ghin, null);
   if (!entry) return { status: 'unknown' };
   if (entry.hcp === null) return { status: 'unknown' };
   if (regHcp === null) return { status: 'no-hcp' };
