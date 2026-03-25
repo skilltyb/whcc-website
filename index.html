@@ -2894,12 +2894,14 @@ function openRegModal(eventTitle, eventMeta, isTeam) {
 
   if (evType === 'single') {
     teamRow.style.display = 'none';
+    playersSelect.value = '1'; // prevent hidden stale value from leaking into submission
   } else if (evType === 'twosome') {
     teamRow.style.display = 'grid';
     partnerInput.placeholder = 'Partner\'s full name';
     partnerInput.previousElementSibling.textContent = 'Partner Name';
     // For twosome, hide the players count — it's always 2
     playersSelect.parentElement.style.display = 'none';
+    playersSelect.value = '2';
   } else if (evType === 'foursome') {
     teamRow.style.display = 'grid';
     partnerInput.placeholder = 'Partner 1 (others can be added in notes)';
