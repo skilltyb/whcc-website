@@ -2781,7 +2781,14 @@ function parseMetaDate(meta) {
   if (!m) return null;
   var mo = _MO[m[1].toLowerCase().slice(0,3)];
   if (mo === undefined) return null;
-  return new Date(2026, mo, parseInt(m[2]));
+  var day = parseInt(m[2]);
+  // Infer year: use current year if the date hasn't passed yet, otherwise next year
+  var now = new Date();
+  var yr = now.getFullYear();
+  var candidate = new Date(yr, mo, day);
+  // If the candidate date is more than 60 days in the past, assume next year
+  if (candidate < new Date(now - 60 * 864e5)) yr++;
+  return new Date(yr, mo, day);
 }
 
 function archiveEventCards() {
@@ -5134,7 +5141,19 @@ function pinUpdateDots() {
 }
 
 function pinSubmit() {
-  var stored = localStorage.getItem('staff-pin') || '1936';
+  var stored = localStorage.getItem('staff-pin');
+  // First-time setup: no PIN has been set yet — treat entered PIN as the new PIN
+  if (!stored) {
+    if (_pinBuffer.length === 4) {
+      localStorage.setItem('staff-pin', _pinBuffer);
+      staffAuthed = true;
+      staffPinHide();
+      _origNavigate(_pinTarget || 'staff');
+      initStaffDashboard();
+      showToast('Staff PIN set to ' + _pinBuffer + '. Remember it — you can change it in Staff Settings.');
+    }
+    return;
+  }
   if (_pinBuffer === stored) {
     staffAuthed = true;
     staffPinHide();
