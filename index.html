@@ -4112,13 +4112,24 @@ function buildRegDropdown(regs) {
     });
   }
 
-  // Sort events by season order
+  // Sort events by date when available, fall back to WHCC_EVENT_ORDER for undated events
+  function getRegEvDate(ev) {
+    var d = typeof parseMetaDate === 'function' ? parseMetaDate(metaMap[ev]) : null;
+    if (d) return d;
+    var m = ev.match(/([A-Za-z]+)\s+(\d+)\s*$/);
+    if (m && typeof _MO !== 'undefined') {
+      var mo = _MO[m[1].toLowerCase().slice(0,3)];
+      if (mo !== undefined) return new Date(new Date().getFullYear(), mo, parseInt(m[2]));
+    }
+    return null;
+  }
   var allEvents = Object.keys(counts);
   allEvents.sort(function(a, b) {
-    var ai = WHCC_EVENT_ORDER.indexOf(a);
-    var bi = WHCC_EVENT_ORDER.indexOf(b);
-    if (ai === -1) ai = 9999;
-    if (bi === -1) bi = 9999;
+    var da = getRegEvDate(a), db = getRegEvDate(b);
+    if (da && db) return da - db;
+    if (da) return -1; if (db) return 1;
+    var ai = WHCC_EVENT_ORDER.indexOf(a), bi = WHCC_EVENT_ORDER.indexOf(b);
+    if (ai === -1) ai = 9999; if (bi === -1) bi = 9999;
     return ai - bi;
   });
 
@@ -5129,13 +5140,6 @@ function buildPairDropdown(regs) {
       if (r.eventMeta && !metaMap[r.event]) metaMap[r.event] = r.eventMeta;
     }
   });
-  var allEvents = Object.keys(seen);
-  allEvents.sort(function(a, b) {
-    var ai = WHCC_EVENT_ORDER.indexOf(a), bi = WHCC_EVENT_ORDER.indexOf(b);
-    if (ai === -1) ai = 9999; if (bi === -1) bi = 9999;
-    return ai - bi;
-  });
-
   // Date lookup: use eventMeta first, then try parsing the event name itself
   function getEvDate(ev) {
     if (metaMap[ev] && typeof parseMetaDate === 'function') {
@@ -5150,6 +5154,17 @@ function buildPairDropdown(regs) {
     }
     return null;
   }
+
+  var allEvents = Object.keys(seen);
+  allEvents.sort(function(a, b) {
+    // Sort by date when available, fall back to WHCC_EVENT_ORDER for undated events
+    var da = getEvDate(a), db = getEvDate(b);
+    if (da && db) return da - db;
+    if (da) return -1; if (db) return 1;
+    var ai = WHCC_EVENT_ORDER.indexOf(a), bi = WHCC_EVENT_ORDER.indexOf(b);
+    if (ai === -1) ai = 9999; if (bi === -1) bi = 9999;
+    return ai - bi;
+  });
 
   var today = new Date(); today.setHours(0,0,0,0);
   var upcoming = [], past = [];
