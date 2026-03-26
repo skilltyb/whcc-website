@@ -4472,7 +4472,8 @@ function deleteReg(id) {
   if (!confirm('Remove this registration?')) return;
   // Deletes from Google Sheet AND localStorage simultaneously
   WHCC_SYNC.deleteReg(id, function() {
-    renderStaffRegs();
+    // staffViewRegistrations() already calls renderStaffRegs() immediately
+    // and again after the server fetch — no need for a separate call here.
     staffViewRegistrations();
   });
 }
@@ -5287,7 +5288,7 @@ var pairRoster = [];
 function parseHcp(val, fallback) {
   if (fallback === undefined) fallback = 18;
   var n = parseFloat(val);
-  if (isNaN(n) || n < 0 || n > 54) return fallback;
+  if (isNaN(n) || n < -10 || n > 54) return fallback; // allow plus handicaps (stored negative)
   return Math.round(n * 10) / 10;
 }
 var pairTeams  = [];
