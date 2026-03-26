@@ -2772,6 +2772,20 @@ var WHCC_SYNC = {
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
   },
+  saveSpecials: function(weeklySpecial, fridayNight, cb) {
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST', headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'save-specials', weeklySpecial: weeklySpecial, fridayNight: fridayNight })
+    }).then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+  fetchSpecials: function(cb) {
+    fetch(WHCC_SCRIPT_URL + '?action=get-specials')
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
 };
 
 // ── EVENT ARCHIVING ──────────────────────────────────────────────────────────
@@ -3695,6 +3709,16 @@ function menuRenderAll(data){
 }
 // Initialize menus on page load
 menuRenderAll();
+// Fetch live specials from server so any device always sees what staff set
+(function(){
+  WHCC_SYNC.fetchSpecials(function(sp, err) {
+    if (err || !sp || (!sp.weeklySpecial && !sp.fridayNight)) return;
+    var data = menuLoad();
+    if (sp.weeklySpecial) data.weeklySpecial = sp.weeklySpecial;
+    if (sp.fridayNight)   data.fridayNight   = sp.fridayNight;
+    menuSave(data);  // re-renders specials on the dining page
+  });
+})();
 
 // ── STAFF MENU PANEL ──
 function smLoad(){
@@ -3741,6 +3765,7 @@ function smSaveSpecials(){
     price:document.getElementById('sm-ws-price').value.trim(),
     wine:document.getElementById('sm-ws-wine').value.trim()};
   menuSave(data);
+  WHCC_SYNC.saveSpecials(data.weeklySpecial, data.fridayNight, function(){});
   var st=document.getElementById('sm-ws-status');
   if(st){st.textContent='Saved — dining page updated!';st.style.display='block';setTimeout(function(){st.style.display='none';},2500);}
 }
@@ -3752,6 +3777,7 @@ function smSaveFriday(){
     price:document.getElementById('sm-fn-price').value.trim(),
     wine:document.getElementById('sm-fn-wine').value.trim()};
   menuSave(data);
+  WHCC_SYNC.saveSpecials(data.weeklySpecial, data.fridayNight, function(){});
   var st=document.getElementById('sm-fn-status');
   if(st){st.textContent='Saved — dining page updated!';st.style.display='block';setTimeout(function(){st.style.display='none';},2500);}
 }
