@@ -2697,6 +2697,9 @@ var WHCC_SYNC = {
           if (rows.length) window._lastSheetColumns = Object.keys(rows[0]);
 
           var regs = rows.map(function(row) {
+            // Detect old sheet layout where Notes held a numeric handicap (no dedicated GHIN column)
+            var rawNotes  = row['Notes'] || '';
+            var notesAsHcp = (function(){ var n=parseFloat(rawNotes); return (!isNaN(n)&&n>=0&&n<=54&&String(n)===rawNotes.trim()) ? String(n) : ''; })();
             return {
               id:          row['ID']                                                  || '',
               event:       row['Event']                                               || '',
@@ -2708,12 +2711,9 @@ var WHCC_SYNC = {
               partner:     row['Partners'] || row['Partner/Team'] || row['Partner'] || row['partner'] || '',
               players:     row['Players']                                            || '1',
               memberNum:   row['Member #']                                           || '',
-              ghin:        row['GHIN Handicap'] || row['GHIN #'] || row['GHIN'] || row['ghin'] ||
-                           // Fallback: if 'Notes' column contains a number it's actually the GHIN
-                           // (old sheet layout had no GHIN header so ghin was stored under Notes)
-                           (function(){ var n=parseFloat(row['Notes']||''); return (!isNaN(n)&&n>=0&&n<=54) ? String(n) : ''; })() || '',
+              ghin:        row['GHIN Handicap'] || row['GHIN #'] || row['GHIN'] || row['ghin'] || notesAsHcp || '',
               partnerGhin: row['Partner GHIN'] || row['partnerGhin'] || row['PartnerGhin'] || '',
-              notes:       row['Notes']                                              || '',
+              notes:       notesAsHcp ? '' : rawNotes,   // don't echo numeric-handicap back as a note
               timestamp:   row['Registered At']                                      || '',
               source:      row['Source']                                             || ''
             };
