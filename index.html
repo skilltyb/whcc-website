@@ -2859,6 +2859,13 @@ function openRegModal(eventTitle, eventMeta, isTeam) {
   var evType = info.type;
   currentRegEvent = { title: eventTitle, meta: eventMeta, type: evType, capacity: info.capacity, fee: info.fee };
 
+  // Clear non-prefilled fields before showing form (guards against stale values on re-open)
+  ['reg-phone','reg-partner','reg-partner-ghin','reg-notes','reg-ghin'].forEach(function(id){
+    var el = document.getElementById(id); if (el) el.value = '';
+  });
+  var errEl = document.getElementById('reg-error');
+  if (errEl) errEl.style.display = 'none';
+
   document.getElementById('reg-event-title').textContent = eventTitle;
   document.getElementById('reg-event-meta').textContent = (eventMeta||'') + (info.fee && info.fee !== 'Member Event' ? ' · ' + info.fee : '');
 
@@ -2977,6 +2984,7 @@ function submitRegForm(e) {
     regMeta  = selOpt;
   }
   var reg = {
+    id: Date.now().toString(),  // generate before POST so Google Sheets receives it for deduplication/deletion
     event: regTitle,
     eventMeta: regMeta,
     firstName: document.getElementById('reg-fname').value.trim(),
@@ -3017,7 +3025,7 @@ function submitRegForm(e) {
 function saveRegLocal(reg) {
   try {
     var all = JSON.parse(localStorage.getItem('wh_registrations') || '[]');
-    reg.id = Date.now().toString();
+    if (!reg.id) reg.id = Date.now().toString();  // id already set upstream; only fallback here
     all.push(reg);
     localStorage.setItem('wh_registrations', JSON.stringify(all));
   } catch(e) {}
@@ -4420,7 +4428,12 @@ function renderStaffRegs() {
       // Group by event when showing all
       var byEvent = {};
       regs.forEach(function(r){ if(!byEvent[r.event]) byEvent[r.event]=[]; byEvent[r.event].push(r); });
-      Object.keys(byEvent).sort().forEach(function(ev) {
+      Object.keys(byEvent).sort(function(a,b){
+        var ai = WHCC_EVENT_ORDER.indexOf(a), bi = WHCC_EVENT_ORDER.indexOf(b);
+        if (ai === -1) ai = 9999; if (bi === -1) bi = 9999;
+        if (ai !== bi) return ai - bi;
+        return a.localeCompare(b);
+      }).forEach(function(ev) {
         var evRegs = byEvent[ev];
         var evInfo = getEventInfo ? getEventInfo(ev) : {capacity:72};
         html2 += '<div style="margin-bottom:20px;">';
@@ -4445,7 +4458,7 @@ function renderRegRow(r, num, showDelete) {
     + '<div style="font-size:.7rem;color:rgba(184,151,106,.6);font-weight:700;min-width:18px;">' + num + '</div>'
     + '<div>'
     + '<div style="font-size:.84rem;font-weight:700;color:#f5f0e8;">' + (r.firstName||'') + ' ' + (r.lastName||'') + ghinBadge(r) + '</div>'
-    + '<div style="font-size:.72rem;color:rgba(245,240,232,.5);margin-top:1px;">' + (r.email||'') + (r.phone?' · '+r.phone:'') + (r.memberNum?' · Member #'+r.memberNum:'') + (r.ghin?' · HCP '+r.ghin:'') + '</div>'
+    + '<div style="font-size:.72rem;color:rgba(245,240,232,.5);margin-top:1px;">' + (r.email||'') + (r.phone?' · '+r.phone:'') + (r.memberNum?' · Member #'+r.memberNum:'') + (r.ghin?' · '+(/^\d{5,8}$/.test((r.ghin||'').trim())?'GHIN #':'HCP ')+r.ghin:'') + '</div>'
     + (r.partner?'<div style="font-size:.72rem;color:rgba(184,151,106,.7);margin-top:2px;">Partner: '+r.partner+(r.partnerGhin?' <span style="opacity:.65;">· GHIN '+r.partnerGhin+'</span>':'')+'</div>':'')
     + (r.notes?'<div style="font-size:.7rem;color:rgba(245,240,232,.4);font-style:italic;margin-top:2px;">'+r.notes+'</div>':'')
     + '</div></div>'
