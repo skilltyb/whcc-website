@@ -1300,36 +1300,46 @@ nav.staff-mode .nav-site-back{display:flex!important;}
   </div>
 
   <!-- ── WEEKLY SPECIAL (shown when active) ── -->
-  <div id="dining-weekly-special" style="display:none;background:var(--cream);padding:72px 24px;text-align:center;">
-    <p class="eyebrow" style="letter-spacing:.18em;">This Week's Feature</p>
-    <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin:24px auto 0;max-width:360px;">
-      <div style="flex:1;height:1px;background:rgba(184,151,106,.4);"></div>
-      <span style="color:var(--gold);font-size:13px;">✦</span>
-      <div style="flex:1;height:1px;background:rgba(184,151,106,.4);"></div>
-    </div>
-    <div style="max-width:560px;margin:0 auto;">
-      <h3 class="sf-name" style="font-family:'Cormorant Garamond',serif;font-size:46px;font-weight:400;color:var(--deep);letter-spacing:.02em;margin:22px 0 0;line-height:1.15;"></h3>
-      <p class="sf-desc" style="font-size:14px;color:var(--muted);margin:16px auto 0;line-height:1.9;max-width:420px;"></p>
-      <p class="sf-wine" style="font-size:12px;font-style:italic;color:var(--gold);margin:14px 0 0;display:none;"></p>
-      <div style="width:40px;height:1px;background:rgba(184,151,106,.4);margin:24px auto;"></div>
-      <p class="sf-price" style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--gold);margin:0;letter-spacing:.04em;"></p>
+  <div id="dining-weekly-special" style="display:none;background:radial-gradient(ellipse at center,#faf7f0 0%,#ebe3d0 100%);padding:88px 24px;text-align:center;position:relative;">
+    <div style="position:absolute;inset:14px;border:1px solid rgba(184,151,106,.28);pointer-events:none;"></div>
+    <div style="position:relative;max-width:600px;margin:0 auto;">
+      <p class="eyebrow" style="letter-spacing:.22em;">This Week's Feature</p>
+      <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin:20px auto;max-width:320px;">
+        <div style="flex:1;height:1px;background:rgba(184,151,106,.5);"></div>
+        <span style="color:var(--gold);font-size:11px;letter-spacing:.15em;">✦</span>
+        <div style="flex:1;height:1px;background:rgba(184,151,106,.5);"></div>
+      </div>
+      <h3 class="sf-name" style="font-family:'Cormorant Garamond',serif;font-size:62px;font-weight:300;color:var(--deep);letter-spacing:.01em;margin:0 0 18px;line-height:1.1;"></h3>
+      <p class="sf-desc" style="font-size:14.5px;color:var(--muted);margin:0 auto 16px;line-height:2;max-width:400px;"></p>
+      <p class="sf-wine" style="font-size:12px;font-style:italic;color:var(--gold);margin:0 0 20px;display:none;"></p>
+      <div style="display:flex;align-items:center;justify-content:center;gap:12px;max-width:200px;margin:0 auto 20px;">
+        <div style="flex:1;height:1px;background:rgba(184,151,106,.4);"></div>
+        <span style="color:var(--gold);font-size:9px;">◆</span>
+        <div style="flex:1;height:1px;background:rgba(184,151,106,.4);"></div>
+      </div>
+      <p class="sf-price" style="font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;color:var(--gold);margin:0;letter-spacing:.06em;"></p>
     </div>
   </div>
 
   <!-- ── FRIDAY NIGHT SPECIAL (shown when active) ── -->
-  <div id="dining-friday-special" style="display:none;background:var(--forest);padding:72px 24px;text-align:center;">
-    <p class="eyebrow lt" style="letter-spacing:.18em;">Friday Night Special</p>
-    <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin:24px auto 0;max-width:360px;">
-      <div style="flex:1;height:1px;background:rgba(184,151,106,.3);"></div>
-      <span style="color:var(--gold-lt);font-size:13px;">✦</span>
-      <div style="flex:1;height:1px;background:rgba(184,151,106,.3);"></div>
-    </div>
-    <div style="max-width:560px;margin:0 auto;">
-      <h3 class="sf-name" style="font-family:'Cormorant Garamond',serif;font-size:46px;font-weight:400;color:var(--cream);letter-spacing:.02em;margin:22px 0 0;line-height:1.15;"></h3>
-      <p class="sf-desc" style="font-size:14px;color:rgba(245,240,232,.6);margin:16px auto 0;line-height:1.9;max-width:420px;"></p>
-      <p class="sf-wine" style="font-size:12px;font-style:italic;color:var(--gold-lt);margin:14px 0 0;display:none;"></p>
-      <div style="width:40px;height:1px;background:rgba(184,151,106,.3);margin:24px auto;"></div>
-      <p class="sf-price" style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--gold-lt);margin:0;letter-spacing:.04em;"></p>
+  <div id="dining-friday-special" style="display:none;background:radial-gradient(ellipse at center,#183d24 0%,#0c1f14 100%);padding:88px 24px;text-align:center;position:relative;">
+    <div style="position:absolute;inset:14px;border:1px solid rgba(184,151,106,.2);pointer-events:none;"></div>
+    <div style="position:relative;max-width:600px;margin:0 auto;">
+      <p class="eyebrow lt" style="letter-spacing:.22em;">Friday Night Special</p>
+      <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin:20px auto;max-width:320px;">
+        <div style="flex:1;height:1px;background:rgba(184,151,106,.35);"></div>
+        <span style="color:var(--gold-lt);font-size:11px;letter-spacing:.15em;">✦</span>
+        <div style="flex:1;height:1px;background:rgba(184,151,106,.35);"></div>
+      </div>
+      <h3 class="sf-name" style="font-family:'Cormorant Garamond',serif;font-size:62px;font-weight:300;color:var(--cream);letter-spacing:.01em;margin:0 0 18px;line-height:1.1;"></h3>
+      <p class="sf-desc" style="font-size:14.5px;color:rgba(245,240,232,.55);margin:0 auto 16px;line-height:2;max-width:400px;"></p>
+      <p class="sf-wine" style="font-size:12px;font-style:italic;color:var(--gold-lt);margin:0 0 20px;display:none;"></p>
+      <div style="display:flex;align-items:center;justify-content:center;gap:12px;max-width:200px;margin:0 auto 20px;">
+        <div style="flex:1;height:1px;background:rgba(184,151,106,.3);"></div>
+        <span style="color:var(--gold-lt);font-size:9px;">◆</span>
+        <div style="flex:1;height:1px;background:rgba(184,151,106,.3);"></div>
+      </div>
+      <p class="sf-price" style="font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;color:var(--gold-lt);margin:0;letter-spacing:.06em;"></p>
     </div>
   </div>
 
