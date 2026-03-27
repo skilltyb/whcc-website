@@ -287,14 +287,6 @@ footer{background:var(--deep);padding:80px 80px 40px}
 .hoovers-hour-divider{width:1px;height:36px;background:rgba(184,151,106,.25)}
 .hoovers-public-note{font-size:12px;color:rgba(245,240,232,.45);margin-top:28px;font-style:italic;letter-spacing:.03em}
 .hoovers-public-note sup{font-size:9px}
-/* ── CHEF'S SELECTIONS DIPTYCH ───────────────── */
-#dining-specials-row{display:none}
-#dip-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#070d09}
-.dsc-card{position:relative;min-height:480px;overflow:hidden;display:flex;align-items:center;justify-content:center}
-.dsc-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .9s ease}
-.dsc-card:hover .dsc-bg{transform:scale(1.05)}
-.dsc-cta{display:inline-block;padding:11px 34px;border:1px solid rgba(184,151,106,.5);color:var(--cream);font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;transition:background .25s,border-color .25s}
-.dsc-cta:hover{background:rgba(184,151,106,.15);border-color:rgba(184,151,106,.85)}
 
 .hoovers-menu-header{text-align:center;margin-bottom:48px}
 .hoovers-menu-header .eyebrow{justify-content:center}
@@ -769,14 +761,6 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 .cf-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .map-ph{background:var(--forest);height:260px;display:flex;align-items:center;justify-content:center;color:rgba(184,151,106,.3);font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;margin-top:44px}
 
-/* ── TOAST NOTIFICATIONS ── */
-#whcc-toast-container{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
-.whcc-toast{padding:11px 18px;border-radius:4px;font-size:13px;font-family:inherit;max-width:360px;opacity:0;transform:translateY(8px);transition:opacity .25s,transform .25s;pointer-events:auto;line-height:1.4;}
-.whcc-toast.show{opacity:1;transform:translateY(0);}
-.whcc-toast.error{background:#2d1a1a;color:#f4a0a0;border:1px solid rgba(220,80,80,.3);}
-.whcc-toast.success{background:#1a2d1e;color:#8fcc8f;border:1px solid rgba(80,180,80,.3);}
-.whcc-toast.info{background:#1a2028;color:#a0c4f4;border:1px solid rgba(80,140,220,.3);}
-
 /* ── RESPONSIVE ── */
 @media(max-width:1024px){
   nav{padding:0 24px}
@@ -806,8 +790,6 @@ nav.staff-mode .nav-site-back{display:flex!important;}
   .hours-grid{grid-template-columns:1fr}
   .hoovers-intro{padding:64px 32px}
   .hoovers-menu-grid{grid-template-columns:1fr}
-  #dip-grid{grid-template-columns:1fr!important;}
-  .dsc-card{min-height:360px!important;}
   .hoovers-specialty{margin-top:48px;padding:44px 28px}
   .hoovers-res-section{padding:64px 32px}
   .hoovers-res-inner{grid-template-columns:1fr;gap:48px}
@@ -1133,7 +1115,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
         <h2 class="sec-title">Built for every <em>player</em></h2>
         <p class="sec-body full">Nestled in the rolling terrain of Southwest Poplar Bluff, our 18-hole championship layout is equal parts entertaining and challenging. Don't let the scorecard yardages fool you — Westwood Hills is well protected with strategic bunkering, ample trees, and what many say are the best greens west of the Mississippi. Five par 3s that rank among the toughest holes on the course keep every round honest.</p>
         <p class="sec-body full">Practice facilities offer a full-length driving range, short game pitching and chipping area up to 50 yards, and a putting green that mimics course conditions daily. Tee times available seven days a week. Members enjoy preferred access and priority booking.</p>
-        <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:4px;"><button class="btn-p" onclick="window.location.href='tel:+15737858211'">Contact the Pro Shop</button><a href="images/scorecard.jpg" download="WHCC-Scorecard.jpg" class="btn-g" style="text-decoration:none;display:inline-flex;align-items:center;">Download Scorecard</a><a href="images/pinsheet.jpg" download="WHCC-PinSheet.jpg" class="btn-g" style="text-decoration:none;display:inline-flex;align-items:center;">Download Pin Sheet</a></div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:4px;"><button class="btn-p">Contact the Pro Shop</button><a href="images/scorecard.jpg" download="WHCC-Scorecard.jpg" class="btn-g" style="text-decoration:none;display:inline-flex;align-items:center;">Download Scorecard</a><a href="images/pinsheet.jpg" download="WHCC-PinSheet.jpg" class="btn-g" style="text-decoration:none;display:inline-flex;align-items:center;">Download Pin Sheet</a></div>
       </div>
       <div class="tee-box fade-up d2">
         <p class="tee-title">Tee Options</p>
@@ -1282,53 +1264,6 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     </div>
   </div>
 
-  <!-- ── CHEF'S SELECTIONS DIPTYCH ── -->
-  <div id="dining-specials-row">
-    <div id="dip-grid">
-
-      <!-- Weekly Special card -->
-      <div id="dining-weekly-special" class="dsc-card">
-        <div id="ws-bg" class="dsc-bg" data-placeholder="images/food-fish.jpg" style="background-image:url('images/food-fish.jpg');"></div>
-        <div style="position:absolute;inset:0;background:linear-gradient(160deg,rgba(5,12,7,.25) 0%,rgba(5,12,7,.68) 100%);"></div>
-        <div style="position:absolute;inset:18px;border:1px solid rgba(184,151,106,.2);pointer-events:none;z-index:2;"></div>
-        <div style="position:relative;z-index:3;text-align:center;padding:64px 48px;width:100%;max-width:460px;">
-          <p style="font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:rgba(245,240,232,.5);margin:0 0 22px;font-family:'Cormorant Garamond',serif;font-style:normal;">This Week&rsquo;s Feature</p>
-          <div style="display:flex;align-items:center;gap:14px;margin:0 auto 26px;max-width:220px;">
-            <div style="flex:1;height:1px;background:rgba(184,151,106,.4);"></div>
-            <span style="color:var(--gold-lt);font-size:9px;">✦</span>
-            <div style="flex:1;height:1px;background:rgba(184,151,106,.4);"></div>
-          </div>
-          <h3 class="sf-name" style="font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:300;color:var(--cream);letter-spacing:.01em;margin:0 0 18px;line-height:1.05;text-shadow:0 2px 28px rgba(0,0,0,.6);"></h3>
-          <p class="sf-desc" style="font-size:13.5px;color:rgba(245,240,232,.58);line-height:2;max-width:300px;margin:0 auto 16px;"></p>
-          <p class="sf-wine" style="font-size:11px;font-style:italic;color:var(--gold-lt);margin:0 0 24px;display:none;"></p>
-          <p class="sf-price" style="font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;color:var(--gold-lt);letter-spacing:.07em;margin:0 0 32px;"></p>
-          <a class="dsc-cta" href="#" onclick="event.preventDefault();document.querySelector('.hoovers-res-section').scrollIntoView({behavior:'smooth'});">Reserve Tonight</a>
-        </div>
-      </div>
-
-      <!-- Friday Night card -->
-      <div id="dining-friday-special" class="dsc-card">
-        <div id="fn-bg" class="dsc-bg" data-placeholder="images/food-pasta.jpg" style="background-image:url('images/food-pasta.jpg');"></div>
-        <div style="position:absolute;inset:0;background:linear-gradient(160deg,rgba(5,12,7,.25) 0%,rgba(5,12,7,.68) 100%);"></div>
-        <div style="position:absolute;inset:18px;border:1px solid rgba(184,151,106,.2);pointer-events:none;z-index:2;"></div>
-        <div style="position:relative;z-index:3;text-align:center;padding:64px 48px;width:100%;max-width:460px;">
-          <p style="font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:rgba(245,240,232,.5);margin:0 0 22px;font-family:'Cormorant Garamond',serif;font-style:normal;">Friday Night Special</p>
-          <div style="display:flex;align-items:center;gap:14px;margin:0 auto 26px;max-width:220px;">
-            <div style="flex:1;height:1px;background:rgba(184,151,106,.35);"></div>
-            <span style="color:var(--gold-lt);font-size:9px;">✦</span>
-            <div style="flex:1;height:1px;background:rgba(184,151,106,.35);"></div>
-          </div>
-          <h3 class="sf-name" style="font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:300;color:var(--cream);letter-spacing:.01em;margin:0 0 18px;line-height:1.05;text-shadow:0 2px 28px rgba(0,0,0,.6);"></h3>
-          <p class="sf-desc" style="font-size:13.5px;color:rgba(245,240,232,.58);line-height:2;max-width:300px;margin:0 auto 16px;"></p>
-          <p class="sf-wine" style="font-size:11px;font-style:italic;color:var(--gold-lt);margin:0 0 24px;display:none;"></p>
-          <p class="sf-price" style="font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;color:var(--gold-lt);letter-spacing:.07em;margin:0 0 32px;"></p>
-          <a class="dsc-cta" href="#" onclick="event.preventDefault();document.querySelector('.hoovers-res-section').scrollIntoView({behavior:'smooth'});">Reserve Tonight</a>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
   <!-- ── HOOVER'S MENU ── -->
   <div class="section" style="background:var(--cream);">
     <div class="hoovers-menu-header fade-up">
@@ -1364,6 +1299,27 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     </div>
   </div>
 
+  <!-- ── WEEKLY SPECIAL (shown when active) ── -->
+  <div id="dining-weekly-special" style="display:none;background:var(--cream);padding:56px 80px;text-align:center;">
+    <p class="eyebrow">This Week's Feature</p>
+    <div style="max-width:600px;margin:20px auto 0;border:1px solid rgba(184,151,106,.35);padding:40px;">
+      <h3 class="sf-name" style="font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:400;color:var(--deep);letter-spacing:.02em;"></h3>
+      <p class="sf-desc" style="font-size:14px;color:var(--muted);margin:14px 0 8px;line-height:1.85;max-width:460px;margin-left:auto;margin-right:auto;"></p>
+      <p class="sf-wine" style="font-size:12px;font-style:italic;color:var(--gold);margin-bottom:8px;display:none;"></p>
+      <p class="sf-price" style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--gold);margin-top:4px;"></p>
+    </div>
+  </div>
+
+  <!-- ── FRIDAY NIGHT SPECIAL (shown when active) ── -->
+  <div id="dining-friday-special" style="display:none;background:var(--forest);padding:56px 80px;text-align:center;">
+    <p class="eyebrow lt">Friday Night Special</p>
+    <div style="max-width:600px;margin:20px auto 0;border:1px solid rgba(184,151,106,.25);padding:40px;">
+      <h3 class="sf-name" style="font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:400;color:var(--cream);letter-spacing:.02em;"></h3>
+      <p class="sf-desc" style="font-size:14px;color:rgba(245,240,232,.6);margin:14px 0 8px;line-height:1.85;max-width:460px;margin-left:auto;margin-right:auto;"></p>
+      <p class="sf-wine" style="font-size:12px;font-style:italic;color:var(--gold-lt);margin-bottom:8px;display:none;"></p>
+      <p class="sf-price" style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--gold-lt);margin-top:4px;"></p>
+    </div>
+  </div>
 
   <!-- ── HOOVER'S RESERVATION ── -->
   <div class="hoovers-res-section">
@@ -1611,7 +1567,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 
   <div style="background:linear-gradient(135deg,#083050,#0d4a7a);padding:80px;display:flex;align-items:center;gap:64px;flex-wrap:wrap;">
     <div class="fade-up"><p class="eyebrow" style="color:rgba(100,180,240,.8)">Westwood Wahoos</p><h2 class="sec-title light">Join the <em>swim team</em></h2><p class="sec-body full" style="color:rgba(245,240,232,.55)">The Westwood Wahoos compete in the Southeast Missouri Swim League, bringing home championships each summer. Registration opens each April.</p></div>
-    <div class="fade-up d2" style="flex-shrink:0;display:flex;flex-direction:column;gap:12px;"><button class="btn-p" onclick="navigate('about');setTimeout(function(){var s=document.getElementById('cf-subject');if(s)s.value='Swim Team Registration';document.getElementById('contact').scrollIntoView({behavior:'smooth'});},600)">Register for Swim Team</button><button class="btn-g lt" onclick="navigate('about');setTimeout(function(){var s=document.getElementById('cf-subject');if(s)s.value='General Inquiry';document.getElementById('contact').scrollIntoView({behavior:'smooth'});},600)">View Swim Schedule</button></div>
+    <div class="fade-up d2" style="flex-shrink:0;display:flex;flex-direction:column;gap:12px;"><button class="btn-p">Register for Swim Team</button><button class="btn-g lt">View Swim Schedule</button></div>
   </div>
 
   <footer><div class="footer-top"><div><div class="footer-brand-logo"><div class="nav-emblem">WH</div><div class="footer-brand-text">Westwood Hills<br>Country Club<small>Est. 1936 · Poplar Bluff, MO</small></div></div><p class="footer-tagline">Southeast Missouri's premier private country club.</p></div><div><p class="fcol-title">Aquatics</p><ul class="flinks"><li><a onclick="navigate('aquatics')">Pool Complex</a></li><li><a onclick="navigate('aquatics')">Swim Programs</a></li><li><a onclick="navigate('aquatics')">Swim Team</a></li><li><a onclick="navigate('aquatics')">Hours</a></li></ul></div><div><p class="fcol-title">The Club</p><ul class="flinks"><li><a onclick="navigate('golf')">Golf</a></li><li><a onclick="navigate('dining')">Dining</a></li><li><a onclick="navigate('membership')">Membership</a></li></ul></div><div><p class="fcol-title">Contact</p><div class="fci"><strong>Clubhouse</strong>(573) 785-5253</div></div></div><div class="footer-bottom"><p class="fcopy">© 2026 Westwood Hills Country Club.</p><p class="fcopy">Poplar Bluff, Missouri · Est. 1936</p><p class="fcopy" style="margin-top:4px;"><a onclick="navigate('staff')" style="color:rgba(245,240,232,.35);cursor:pointer;text-decoration:none;font-size:10px;letter-spacing:.1em;">Staff Portal</a></p></div></footer>
@@ -1645,9 +1601,8 @@ nav.staff-mode .nav-site-back{display:flex!important;}
       <div class="ev-card fade-up d2"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Apr</span><span class="ecd-d">17</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">MGA Draft Day</div><div class="ev-card-detail">6:00 – 10:00 PM · Men's Golf Association season draft night</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('MGA Draft Day','Apr 17 · 6:00 – 10:00 PM',false)" style="cursor:pointer">Sign Up →</a></div></div>
       <div class="ev-card fade-up d3"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Apr</span><span class="ecd-d">18</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Men's Opening Day</div><div class="ev-card-detail">9:30 AM – 2:00 PM · Registration deadline April 16 at 5:00 PM</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Men\'s Opening Day','Apr 18 · 9:30 AM – 2:00 PM',false)" style="cursor:pointer">Sign Up →</a></div></div>
       <div class="ev-card fade-up d1"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Apr</span><span class="ecd-d">25</span><span class="ecd-y">2026</span></div><span class="ev-type tournament">Tournament</span></div><div class="ev-card-body"><div class="ev-card-name">Ozark Invitational</div><div class="ev-card-detail">2-day tournament · Apr 25–26 · Westwood Hills' signature invitational event</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Ozark Invitational','Apr 25–26 · 2-Day Tournament',true)" style="cursor:pointer">Register →</a></div></div>
-      <div class="ev-card fade-up d2"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">1</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Friday Night Fights</div><div class="ev-card-detail">Every Friday · 6:00 PM · May – September · Weekly competitive 9-hole series</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Friday Night Fights','',false)" style="cursor:pointer">Sign Up →</a></div></div>
-      <div class="ev-card fade-up d3"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">5</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Tuesday Ladies Night</div><div class="ev-card-detail">Every Tuesday · 5:30 PM · May – September · Ladies weekly golf series</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Tuesday Ladies Night','',false)" style="cursor:pointer">Sign Up →</a></div></div>
-      <div class="ev-card fade-up d1"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">6</span><span class="ecd-y">2026</span></div><span class="ev-type social">Social</span></div><div class="ev-card-body"><div class="ev-card-name">Hit &amp; Giggle</div><div class="ev-card-detail">Monthly · Wednesdays · 7:00 PM · Social golf series open to all members</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Hit &amp; Giggle','',false)" style="cursor:pointer">Sign Up →</a></div></div>
+      <div class="ev-card fade-up d2"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">1</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Friday Night Fights Begins</div><div class="ev-card-detail">6:00 – 10:00 PM · Weekly competitive series kicks off · Runs through the season</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Friday Night Fights','May 1 · 6:00 – 10:00 PM',false)" style="cursor:pointer">Sign Up →</a></div></div>
+      <div class="ev-card fade-up d3"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">6</span><span class="ecd-y">2026</span></div><span class="ev-type social">Social</span></div><div class="ev-card-body"><div class="ev-card-name">Hit &amp; Giggle</div><div class="ev-card-detail">7:00 – 11:00 PM · Recurring social golf series · A great way to socialize on and off the course</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Hit &amp; Giggle','May 6 · 7:00 – 11:00 PM',false)" style="cursor:pointer">Sign Up →</a></div></div>
       <div class="ev-card fade-up d1"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">7</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Men's League Opening Night</div><div class="ev-card-detail">5:00 – 9:00 PM · Weekly men's league begins · Every Thursday through the season</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Men\'s League Opening Night','May 7 · 5:00 – 9:00 PM',false)" style="cursor:pointer">Sign Up →</a></div></div>
       <div class="ev-card fade-up d2"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">16</span><span class="ecd-y">2026</span></div><span class="ev-type tournament">Tournament</span></div><div class="ev-card-body"><div class="ev-card-name">Spring 2-Man Scramble</div><div class="ev-card-detail">2-day event · May 16–17 · 8:00 AM shotgun start</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Spring 2-Man Scramble','May 16–17 · 8:00 AM Shotgun',true)" style="cursor:pointer">Register →</a></div></div>
       <div class="ev-card fade-up d3"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">23</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">MGA 2-Man Best Ball</div><div class="ev-card-detail">8:00 AM – 12:00 PM · Men's Golf Association event</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('MGA 2-Man Best Ball','May 23 · 8:00 AM – 12:00 PM',true)" style="cursor:pointer">Sign Up →</a></div></div>
@@ -1665,29 +1620,29 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <!-- Men's League Schedule -->
     <div style="margin-top:40px;background:rgba(26,43,31,.5);border:1px solid rgba(184,151,106,.2);padding:24px 28px;" class="fade-up">
       <p class="eyebrow" style="margin-bottom:12px;">Men's League 2026</p>
-      <p style="font-size:13px;color:rgba(245,240,232,.6);margin-bottom:18px;">Every Thursday · 5:00 PM shotgun · May 14 – August 27 &nbsp;·&nbsp; 16 weeks</p>
+      <p style="font-size:13px;color:rgba(245,240,232,.6);margin-bottom:18px;">Every Saturday · 5:00 PM shotgun · May 9 – August 22 &nbsp;·&nbsp; 16 weeks</p>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;">
-        <a class="ml-week-link" data-date="2026-05-14" onclick="openRegModal('Men\'s League — May 14','May 14 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 14</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 1</div></a>
-        <a class="ml-week-link" data-date="2026-05-21" onclick="openRegModal('Men\'s League — May 21','May 21 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 21</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 2</div></a>
-        <a class="ml-week-link" data-date="2026-05-28" onclick="openRegModal('Men\'s League — May 28','May 28 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 28</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 3</div></a>
-        <a class="ml-week-link" data-date="2026-06-04" onclick="openRegModal('Men\'s League — Jun 4','Jun 4 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 4</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 4</div></a>
-        <a class="ml-week-link" data-date="2026-06-11" onclick="openRegModal('Men\'s League — Jun 11','Jun 11 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 11</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 5</div></a>
-        <a class="ml-week-link" data-date="2026-06-18" onclick="openRegModal('Men\'s League — Jun 18','Jun 18 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 18</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 6</div></a>
-        <a class="ml-week-link" data-date="2026-06-25" onclick="openRegModal('Men\'s League — Jun 25','Jun 25 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 25</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 7</div></a>
-        <a class="ml-week-link" data-date="2026-07-02" onclick="openRegModal('Men\'s League — Jul 2','Jul 2 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 2</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 8</div></a>
-        <a class="ml-week-link" data-date="2026-07-09" onclick="openRegModal('Men\'s League — Jul 9','Jul 9 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 9</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 9</div></a>
-        <a class="ml-week-link" data-date="2026-07-16" onclick="openRegModal('Men\'s League — Jul 16','Jul 16 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 16</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 10</div></a>
-        <a class="ml-week-link" data-date="2026-07-23" onclick="openRegModal('Men\'s League — Jul 23','Jul 23 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 23</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 11</div></a>
-        <a class="ml-week-link" data-date="2026-07-30" onclick="openRegModal('Men\'s League — Jul 30','Jul 30 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 30</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 12</div></a>
-        <a class="ml-week-link" data-date="2026-08-06" onclick="openRegModal('Men\'s League — Aug 6','Aug 6 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 6</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 13</div></a>
-        <a class="ml-week-link" data-date="2026-08-13" onclick="openRegModal('Men\'s League — Aug 13','Aug 13 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 13</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 14</div></a>
-        <a class="ml-week-link" data-date="2026-08-20" onclick="openRegModal('Men\'s League — Aug 20','Aug 20 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 20</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 15</div></a>
-        <a class="ml-week-link" data-date="2026-08-27" onclick="openRegModal('Men\'s League — Aug 27','Aug 27 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 27</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 16 — Final</div></a>
+        <a class="ml-week-link" data-date="2026-05-09" onclick="openRegModal('Men\'s League — May 9','May 9 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 9</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 1</div></a>
+        <a class="ml-week-link" data-date="2026-05-16" onclick="openRegModal('Men\'s League — May 16','May 16 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 16</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 2</div></a>
+        <a class="ml-week-link" data-date="2026-05-23" onclick="openRegModal('Men\'s League — May 23','May 23 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 23</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 3</div></a>
+        <a class="ml-week-link" data-date="2026-05-30" onclick="openRegModal('Men\'s League — May 30','May 30 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 30</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 4</div></a>
+        <a class="ml-week-link" data-date="2026-06-06" onclick="openRegModal('Men\'s League — Jun 6','Jun 6 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 6</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 5</div></a>
+        <a class="ml-week-link" data-date="2026-06-13" onclick="openRegModal('Men\'s League — Jun 13','Jun 13 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 13</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 6</div></a>
+        <a class="ml-week-link" data-date="2026-06-20" onclick="openRegModal('Men\'s League — Jun 20','Jun 20 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 20</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 7</div></a>
+        <a class="ml-week-link" data-date="2026-06-27" onclick="openRegModal('Men\'s League — Jun 27','Jun 27 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 27</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 8</div></a>
+        <a class="ml-week-link" data-date="2026-07-04" onclick="openRegModal('Men\'s League — Jul 4','Jul 4 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 4</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 9</div></a>
+        <a class="ml-week-link" data-date="2026-07-11" onclick="openRegModal('Men\'s League — Jul 11','Jul 11 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 11</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 10</div></a>
+        <a class="ml-week-link" data-date="2026-07-18" onclick="openRegModal('Men\'s League — Jul 18','Jul 18 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 18</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 11</div></a>
+        <a class="ml-week-link" data-date="2026-07-25" onclick="openRegModal('Men\'s League — Jul 25','Jul 25 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 25</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 12</div></a>
+        <a class="ml-week-link" data-date="2026-08-01" onclick="openRegModal('Men\'s League — Aug 1','Aug 1 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 1</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 13</div></a>
+        <a class="ml-week-link" data-date="2026-08-08" onclick="openRegModal('Men\'s League — Aug 8','Aug 8 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 8</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 14</div></a>
+        <a class="ml-week-link" data-date="2026-08-15" onclick="openRegModal('Men\'s League — Aug 15','Aug 15 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 15</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 15</div></a>
+        <a class="ml-week-link" data-date="2026-08-22" onclick="openRegModal('Men\'s League — Aug 22','Aug 22 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 22</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 16 — Final</div></a>
       </div>
     </div>
 
     <div style="text-align:center;margin-top:32px;" class="fade-up">
-      <p style="font-size:12px;color:var(--muted);">Recurring events: <strong>Super Saturday Shootout</strong> (1st &amp; 3rd Saturdays) · <strong>Men's League</strong> (Thursdays) · <strong>Women's Events</strong> (Tuesdays at 5:30) · <strong>Hit &amp; Giggle</strong> (monthly) · <strong>Friday Night Fights</strong> (weekly, May–Sep)</p>
+      <p style="font-size:12px;color:var(--muted);">Recurring events: <strong>Super Saturday Shootout</strong> (1st &amp; 3rd Saturdays) · <strong>Men's League</strong> (Saturdays) · <strong>Women's Events</strong> (Tuesdays at 5:30) · <strong>Hit &amp; Giggle</strong> (monthly) · <strong>Friday Night Fights</strong> (weekly, May–Sep)</p>
       <p style="font-size:12px;color:var(--muted);margin-top:8px;"><a href="https://docs.google.com/spreadsheets/d/1ClR_iOZMuIKySrMSozBBO9JvI30j3E0oSND4kHOzXFQ/edit?usp=sharing" style="color:var(--gold);text-decoration:none;" target="_blank">View SEMO Cup Points Standings →</a></p>
     </div>
   </div>
@@ -1707,15 +1662,13 @@ nav.staff-mode .nav-site-back{display:flex!important;}
       </div>
       <div class="inq-form fade-up d3">
         <p class="inq-title">Request Event Information</p>
-        <div class="frow"><div class="fg"><label class="fl">First Name</label><input class="fi" id="inq-first" type="text" placeholder="Jane" /></div><div class="fg"><label class="fl">Last Name</label><input class="fi" id="inq-last" type="text" placeholder="Smith" /></div></div>
-        <div class="fg"><label class="fl">Email</label><input class="fi" id="inq-email" type="email" placeholder="jane@example.com" /></div>
-        <div class="fg"><label class="fl">Phone</label><input class="fi" id="inq-phone" type="tel" placeholder="(573) 555-0000" /></div>
-        <div class="frow"><div class="fg"><label class="fl">Event Type</label><select class="fs" id="inq-type"><option>Wedding / Reception</option><option>Rehearsal Dinner</option><option>Corporate Event</option><option>Birthday Party</option><option>Other</option></select></div><div class="fg"><label class="fl">Est. Guests</label><input class="fi" id="inq-guests" type="text" placeholder="e.g. 80" /></div></div>
-        <div class="fg"><label class="fl">Preferred Date</label><input class="fi" id="inq-date" type="date" /></div>
-        <div class="fg"><label class="fl">Notes</label><textarea class="ft" id="inq-notes" placeholder="Tell us about your event…"></textarea></div>
-        <div id="inq-error" style="display:none;color:#c0392b;font-size:12px;margin-top:6px;"></div>
-        <div id="inq-confirm" style="display:none;color:#2e7d32;font-size:13px;margin-top:8px;">Thank you! We'll be in touch shortly.</div>
-        <button class="btn-p" id="inq-btn" style="width:100%;margin-top:6px;" onclick="submitEventInquiry()">Submit Inquiry</button>
+        <div class="frow"><div class="fg"><label class="fl">First Name</label><input class="fi" type="text" placeholder="Jane" /></div><div class="fg"><label class="fl">Last Name</label><input class="fi" type="text" placeholder="Smith" /></div></div>
+        <div class="fg"><label class="fl">Email</label><input class="fi" type="email" placeholder="jane@example.com" /></div>
+        <div class="fg"><label class="fl">Phone</label><input class="fi" type="tel" placeholder="(573) 555-0000" /></div>
+        <div class="frow"><div class="fg"><label class="fl">Event Type</label><select class="fs"><option>Wedding / Reception</option><option>Rehearsal Dinner</option><option>Corporate Event</option><option>Birthday Party</option><option>Other</option></select></div><div class="fg"><label class="fl">Est. Guests</label><input class="fi" type="text" placeholder="e.g. 80" /></div></div>
+        <div class="fg"><label class="fl">Preferred Date</label><input class="fi" type="date" /></div>
+        <div class="fg"><label class="fl">Notes</label><textarea class="ft" placeholder="Tell us about your event…"></textarea></div>
+        <button class="btn-p" style="width:100%;margin-top:6px;">Submit Inquiry</button>
       </div>
     </div>
   </div>
@@ -1776,8 +1729,8 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <div class="wj-cta-text">Still on the fence? <strong>Come see it for yourself.</strong></div>
     <p class="wj-cta-sub">Schedule a personal tour and play a complimentary round — no strings attached. If you don't see the value, you'll know. But most people who walk the property end up asking for an application before they leave.</p>
     <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:20px;">
-      <button class="btn-p" onclick="navigate('about');setTimeout(function(){var s=document.getElementById('cf-subject');if(s)s.value='Schedule a Tour';document.getElementById('contact').scrollIntoView({behavior:'smooth'});},600)">Schedule a Tour</button>
-      <button class="btn-g" onclick="window.location.href='tel:+13092369683'">Call (573) 785-5253</button>
+      <button class="btn-p" onclick="navigate('about')">Schedule a Tour</button>
+      <button class="btn-g">Call (573) 785-5253</button>
     </div>
   </div>
 
@@ -1786,11 +1739,11 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <h2 class="sec-title fade-up d1">Find your <em>perfect fit</em></h2>
     <p class="sec-body fade-up d2">All memberships subject to availability. For current initiation fees and monthly dues, please contact our membership director.</p>
     <div class="mem-cards fade-up d2">
-      <div class="mcard featured"><div class="feat-bdg">Most Popular</div><div class="mcard-type">Golf &amp; Club</div><div class="mcard-name">Full Family</div><p class="mcard-desc">The complete Westwood Hills experience for your entire family — unlimited golf, aquatics, dining, and every club amenity and event.</p><ul class="mcard-feats"><li class="mcard-feat">Unlimited golf, 7 days/week</li><li class="mcard-feat">Full practice facility access</li><li class="mcard-feat">Pool &amp; aquatics complex</li><li class="mcard-feat">Dining &amp; full-service bar</li><li class="mcard-feat">All social events &amp; tournaments</li><li class="mcard-feat">GHIN handicap service</li><li class="mcard-feat">Spouse &amp; dependents included</li></ul><button class="btn-p" style="width:100%" onclick="navigate('about');setTimeout(function(){var s=document.getElementById('cf-subject');if(s)s.value='Membership Information';document.getElementById('contact').scrollIntoView({behavior:'smooth'});},600)">Request Information</button></div>
-      <div class="mcard"><div class="mcard-type">Under 35</div><div class="mcard-name">Junior Executive</div><p class="mcard-desc">All the privileges of full membership at a reduced rate, designed for the next generation of members building their careers and families.</p><ul class="mcard-feats"><li class="mcard-feat">All full membership privileges</li><li class="mcard-feat">Reduced initiation &amp; dues</li><li class="mcard-feat">Ages 18–34</li><li class="mcard-feat">Transitions to Full Family at 35</li></ul><button class="btn-g" style="width:100%" onclick="navigate('about');setTimeout(function(){var s=document.getElementById('cf-subject');if(s)s.value='Membership Information';document.getElementById('contact').scrollIntoView({behavior:'smooth'});},600)">Request Information</button></div>
-      <div class="mcard"><div class="mcard-type">Ages 14–18</div><div class="mcard-name">Youth</div><p class="mcard-desc">A focused introduction to the club experience. Youth members develop their game with course access, practice facilities, and junior programming.</p><ul class="mcard-feats"><li class="mcard-feat">Course &amp; practice facility access</li><li class="mcard-feat">Junior golf programming</li><li class="mcard-feat">Pool &amp; aquatics complex</li><li class="mcard-feat">Supervised participation</li></ul><button class="btn-g" style="width:100%" onclick="navigate('about');setTimeout(function(){var s=document.getElementById('cf-subject');if(s)s.value='Membership Information';document.getElementById('contact').scrollIntoView({behavior:'smooth'});},600)">Request Information</button></div>
-      <div class="mcard"><div class="mcard-type">Social &amp; Recreation</div><div class="mcard-name">Social</div><p class="mcard-desc">Enjoy everything the club offers outside of golf. Dining, aquatics, bar privileges, and the full social event calendar throughout the year.</p><ul class="mcard-feats"><li class="mcard-feat">Dining &amp; bar privileges</li><li class="mcard-feat">Pool &amp; patio access</li><li class="mcard-feat">Full social event calendar</li><li class="mcard-feat">Golf at preferred guest rates</li></ul><button class="btn-g" style="width:100%" onclick="navigate('about');setTimeout(function(){var s=document.getElementById('cf-subject');if(s)s.value='Membership Information';document.getElementById('contact').scrollIntoView({behavior:'smooth'});},600)">Request Information</button></div>
-      <div class="mcard"><div class="mcard-type">Non-Local</div><div class="mcard-name">Out of Town</div><p class="mcard-desc">For members residing more than 50 miles away. Full club privileges during your visits at reduced monthly dues reflecting part-time use.</p><ul class="mcard-feats"><li class="mcard-feat">Full club access during visits</li><li class="mcard-feat">Reduced monthly dues</li><li class="mcard-feat">Dining &amp; bar privileges</li><li class="mcard-feat">Pool &amp; aquatics complex</li><li class="mcard-feat">All social events &amp; tournaments</li><li class="mcard-feat">GHIN handicap service</li></ul><button class="btn-g" style="width:100%" onclick="navigate('about');setTimeout(function(){var s=document.getElementById('cf-subject');if(s)s.value='Membership Information';document.getElementById('contact').scrollIntoView({behavior:'smooth'});},600)">Request Information</button></div>
+      <div class="mcard featured"><div class="feat-bdg">Most Popular</div><div class="mcard-type">Golf &amp; Club</div><div class="mcard-name">Full Family</div><p class="mcard-desc">The complete Westwood Hills experience for your entire family — unlimited golf, aquatics, dining, and every club amenity and event.</p><ul class="mcard-feats"><li class="mcard-feat">Unlimited golf, 7 days/week</li><li class="mcard-feat">Full practice facility access</li><li class="mcard-feat">Pool &amp; aquatics complex</li><li class="mcard-feat">Dining &amp; full-service bar</li><li class="mcard-feat">All social events &amp; tournaments</li><li class="mcard-feat">GHIN handicap service</li><li class="mcard-feat">Spouse &amp; dependents included</li></ul><button class="btn-p" style="width:100%">Request Information</button></div>
+      <div class="mcard"><div class="mcard-type">Under 35</div><div class="mcard-name">Junior Executive</div><p class="mcard-desc">All the privileges of full membership at a reduced rate, designed for the next generation of members building their careers and families.</p><ul class="mcard-feats"><li class="mcard-feat">All full membership privileges</li><li class="mcard-feat">Reduced initiation &amp; dues</li><li class="mcard-feat">Ages 18–34</li><li class="mcard-feat">Transitions to Full Family at 35</li></ul><button class="btn-g" style="width:100%">Request Information</button></div>
+      <div class="mcard"><div class="mcard-type">Ages 14–18</div><div class="mcard-name">Youth</div><p class="mcard-desc">A focused introduction to the club experience. Youth members develop their game with course access, practice facilities, and junior programming.</p><ul class="mcard-feats"><li class="mcard-feat">Course &amp; practice facility access</li><li class="mcard-feat">Junior golf programming</li><li class="mcard-feat">Pool &amp; aquatics complex</li><li class="mcard-feat">Supervised participation</li></ul><button class="btn-g" style="width:100%">Request Information</button></div>
+      <div class="mcard"><div class="mcard-type">Social &amp; Recreation</div><div class="mcard-name">Social</div><p class="mcard-desc">Enjoy everything the club offers outside of golf. Dining, aquatics, bar privileges, and the full social event calendar throughout the year.</p><ul class="mcard-feats"><li class="mcard-feat">Dining &amp; bar privileges</li><li class="mcard-feat">Pool &amp; patio access</li><li class="mcard-feat">Full social event calendar</li><li class="mcard-feat">Golf at preferred guest rates</li></ul><button class="btn-g" style="width:100%">Request Information</button></div>
+      <div class="mcard"><div class="mcard-type">Non-Local</div><div class="mcard-name">Out of Town</div><p class="mcard-desc">For members residing more than 50 miles away. Full club privileges during your visits at reduced monthly dues reflecting part-time use.</p><ul class="mcard-feats"><li class="mcard-feat">Full club access during visits</li><li class="mcard-feat">Reduced monthly dues</li><li class="mcard-feat">Dining &amp; bar privileges</li><li class="mcard-feat">Pool &amp; aquatics complex</li><li class="mcard-feat">All social events &amp; tournaments</li><li class="mcard-feat">GHIN handicap service</li></ul><button class="btn-g" style="width:100%">Request Information</button></div>
     </div>
   </div>
 
@@ -1915,18 +1868,16 @@ nav.staff-mode .nav-site-back{display:flex!important;}
         <div class="cb"><div class="cb-lbl">Office Hours</div><div class="cb-sub" style="font-size:14px;color:var(--text);">Mon – Fri: 8:00 AM – 5:00 PM<br>Saturday: 8:00 AM – 2:00 PM<br>Sunday: Closed (Golf Shop open)</div></div>
       </div>
       <div class="fade-up d2">
-        <div class="cf-g"><label class="cf-l">Full Name</label><input class="cf-i" id="cf-name" type="text" placeholder="Your name" /></div>
-        <div class="cf-row"><div class="cf-g"><label class="cf-l">Email</label><input class="cf-i" id="cf-email" type="email" placeholder="you@email.com" /></div><div class="cf-g"><label class="cf-l">Phone</label><input class="cf-i" id="cf-phone" type="tel" placeholder="(573) 555-0000" /></div></div>
-        <div class="cf-g"><label class="cf-l">Subject</label><select class="cf-s" id="cf-subject"><option>General Inquiry</option><option>Membership Information</option><option>Schedule a Tour</option><option>Golf Tee Times</option><option>Dining Reservations</option><option>Private Event Inquiry</option><option>Swim Team Registration</option><option>Employment</option></select></div>
-        <div class="cf-g"><label class="cf-l">Message</label><textarea class="cf-t" id="cf-message" placeholder="How can we help?"></textarea></div>
-        <div id="cf-error" style="font-size:12px;color:#c0392b;margin-bottom:10px;display:none;"></div>
-        <div id="cf-confirm" style="font-size:13px;color:#5aab62;background:rgba(90,171,98,.08);border:1px solid rgba(90,171,98,.25);padding:12px 16px;margin-bottom:10px;display:none;">&#10003; Your message has been sent! We'll be in touch within one business day.</div>
-        <button class="btn-p" id="cf-btn" style="width:100%" onclick="submitContactForm()">Send Message</button>
+        <div class="cf-g"><label class="cf-l">Full Name</label><input class="cf-i" type="text" placeholder="Your name" /></div>
+        <div class="cf-row"><div class="cf-g"><label class="cf-l">Email</label><input class="cf-i" type="email" placeholder="you@email.com" /></div><div class="cf-g"><label class="cf-l">Phone</label><input class="cf-i" type="tel" placeholder="(573) 555-0000" /></div></div>
+        <div class="cf-g"><label class="cf-l">Subject</label><select class="cf-s"><option>General Inquiry</option><option>Membership Information</option><option>Golf Tee Times</option><option>Dining Reservations</option><option>Private Event Inquiry</option><option>Employment</option></select></div>
+        <div class="cf-g"><label class="cf-l">Message</label><textarea class="cf-t" placeholder="How can we help?"></textarea></div>
+        <button class="btn-p" style="width:100%">Send Message</button>
       </div>
     </div>
     <div class="map-ph fade-up d2" style="padding:0;overflow:hidden;border-radius:2px;">
   <iframe
-    src="https://maps.google.com/maps?q=Westwood+Hills+Country+Club,+1+Birdie+Ln,+Poplar+Bluff,+MO+63901&hl=en&z=16&output=embed"
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3172.0!2d-90.4289!3d36.7573!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x87d8b3c1234abcde%3A0xabcdef1234567890!2sWestwood%20Hills%20Country%20Club%2C%20Poplar%20Bluff%2C%20MO!5e0!3m2!1sen!2sus!4v1234567890"
     width="100%"
     height="100%"
     style="border:0;display:block;min-height:320px;"
@@ -2223,17 +2174,6 @@ nav.staff-mode .nav-site-back{display:flex!important;}
                 <div class="hrf-group"><label class="hrf-label">Price (optional)</label><input class="hrf-input" id="sm-ws-price" placeholder="e.g. $36" /></div>
                 <div class="hrf-group"><label class="hrf-label">Wine Pairing (optional)</label><input class="hrf-input" id="sm-ws-wine" placeholder="e.g. Pinot Noir or Chardonnay" /></div>
               </div>
-              <div style="margin-top:10px;">
-                <label class="hrf-label">Photo</label>
-                <div id="sm-ws-img-preview" style="display:none;position:relative;margin-bottom:8px;border-radius:2px;overflow:hidden;">
-                  <img id="sm-ws-img-thumb" style="width:100%;height:110px;object-fit:cover;display:block;">
-                  <button onclick="smRemoveImage('ws')" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,.65);color:#fff;border:none;border-radius:2px;padding:3px 10px;cursor:pointer;font-size:11px;letter-spacing:.05em;">✕ Remove</button>
-                </div>
-                <label style="display:flex;align-items:center;justify-content:center;gap:8px;padding:8px;border:1px dashed rgba(184,151,106,.3);cursor:pointer;font-size:11px;color:rgba(245,240,232,.5);letter-spacing:.08em;border-radius:2px;">
-                  📷 Upload Photo
-                  <input type="file" id="sm-ws-img-input" accept="image/*" style="display:none;" onchange="smLoadImage('ws',this)">
-                </label>
-              </div>
               <button class="btn-p" style="width:100%;margin-top:12px;" onclick="smSaveSpecials()">Save Weekly Special</button>
               <div id="sm-ws-status" style="font-size:11px;color:#8fcc8f;margin-top:6px;display:none;"></div>
             </div>
@@ -2250,17 +2190,6 @@ nav.staff-mode .nav-site-back{display:flex!important;}
               <div class="hrf-row" style="margin-top:8px;">
                 <div class="hrf-group"><label class="hrf-label">Price (optional)</label><input class="hrf-input" id="sm-fn-price" placeholder="e.g. $42" /></div>
                 <div class="hrf-group"><label class="hrf-label">Wine Pairing (optional)</label><input class="hrf-input" id="sm-fn-wine" placeholder="e.g. Cabernet or Bordeaux" /></div>
-              </div>
-              <div style="margin-top:10px;">
-                <label class="hrf-label">Photo</label>
-                <div id="sm-fn-img-preview" style="display:none;position:relative;margin-bottom:8px;border-radius:2px;overflow:hidden;">
-                  <img id="sm-fn-img-thumb" style="width:100%;height:110px;object-fit:cover;display:block;">
-                  <button onclick="smRemoveImage('fn')" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,.65);color:#fff;border:none;border-radius:2px;padding:3px 10px;cursor:pointer;font-size:11px;letter-spacing:.05em;">✕ Remove</button>
-                </div>
-                <label style="display:flex;align-items:center;justify-content:center;gap:8px;padding:8px;border:1px dashed rgba(184,151,106,.3);cursor:pointer;font-size:11px;color:rgba(245,240,232,.5);letter-spacing:.08em;border-radius:2px;">
-                  📷 Upload Photo
-                  <input type="file" id="sm-fn-img-input" accept="image/*" style="display:none;" onchange="smLoadImage('fn',this)">
-                </label>
               </div>
               <button class="btn-p" style="width:100%;margin-top:12px;" onclick="smSaveFriday()">Save Friday Night Special</button>
               <div id="sm-fn-status" style="font-size:11px;color:#8fcc8f;margin-top:6px;display:none;"></div>
@@ -2600,113 +2529,30 @@ window.storage = {
 // EVENT REGISTRY — types: 'single', 'twosome', 'foursome'
 // ═══════════════════════════════════════
 var WHCC_EVENTS = {
-  "St. Patty's Shootout":          { type:'single',   capacity:60,  fee:'Member Event' },
-  "Ladies Opening Day":             { type:'single',   capacity:40,  fee:'Member Event' },
-  "Masters Dinner":                 { type:'single',   capacity:50,  fee:'$45/person' },
-  "Mules Invitational":             { type:'foursome', capacity:18,  fee:'$80/team' },
-  "MGA Draft Day":                  { type:'single',   capacity:64,  fee:'Member Event' },
-  "Men's Opening Day":              { type:'single',   capacity:72,  fee:'Member Event' },
-  "Ozark Invitational":             { type:'twosome',  capacity:48,  fee:'$150/team' },
-  "Men's League Opening Night":     { type:'single',   capacity:80,  fee:'League Fee' },
-  "Spring 2-Man Scramble":          { type:'twosome',  capacity:40,  fee:'$120/team' },
-  "MGA 2-Man Best Ball":            { type:'twosome',  capacity:32,  fee:'Member Event' },
-  "Memorial Day Wing Ding":         { type:'single',   capacity:120, fee:'$20/person' },
-  "UCAN Golf Outing":               { type:'foursome', capacity:18,  fee:'$80/player' },
-  "Ladies Cup Challenge Matches":   { type:'single',   capacity:32,  fee:'Member Event' },
-  "Ladies Powder Puff":             { type:'twosome',  capacity:20,  fee:'Member Event' },
-  "Three Rivers College Outing":    { type:'foursome', capacity:18,  fee:'$75/player' },
-  "Steak Stag — SEMO Qualifier":    { type:'single',   capacity:48,  fee:'$60/player' },
-  "Ladies Sweet Treat":             { type:'foursome', capacity:12,  fee:'Member Event' },
-  "Couples Scramble":               { type:'twosome',  capacity:32,  fee:'Member Event' },
-  "Ladies Invitational":            { type:'single',   capacity:48,  fee:'Member Event' },
-  "4th of July Scramble":           { type:'twosome',  capacity:40,  fee:'Member Event' },
-  "Member-Guest":                   { type:'twosome',  capacity:60,  fee:'$150/team' },
-  "Club Championship":              { type:'single',   capacity:64,  fee:'Member Event' },
-  "Ladies Club Championship":       { type:'single',   capacity:32,  fee:'Member Event' },
-  "Fall 2-Man Scramble":            { type:'twosome',  capacity:40,  fee:'$120/team' },
-  "Senior Scramble":                { type:'twosome',  capacity:24,  fee:'Member Event' },
-  "Closing Day Scramble":           { type:'foursome', capacity:16,  fee:'Member Event' },
-  "Halloween Costume Scramble":     { type:'twosome',  capacity:32,  fee:'Member Event' }
-};
-
-// Recurring event weekly/monthly schedules — used to populate date picker in registration modal
-var RECURRING_SCHEDULES = {
-  'Friday Night Fights': {
-    label: 'Every Friday · 6:00 PM · May – September',
-    dates: [
-      {date:'2026-05-01',label:'Fri, May 1 · 6:00 PM'},
-      {date:'2026-05-08',label:'Fri, May 8 · 6:00 PM'},
-      {date:'2026-05-15',label:'Fri, May 15 · 6:00 PM'},
-      {date:'2026-05-22',label:'Fri, May 22 · 6:00 PM'},
-      {date:'2026-05-29',label:'Fri, May 29 · 6:00 PM'},
-      {date:'2026-06-05',label:'Fri, Jun 5 · 6:00 PM'},
-      {date:'2026-06-12',label:'Fri, Jun 12 · 6:00 PM'},
-      {date:'2026-06-19',label:'Fri, Jun 19 · 6:00 PM'},
-      {date:'2026-06-26',label:'Fri, Jun 26 · 6:00 PM'},
-      {date:'2026-07-03',label:'Fri, Jul 3 · 6:00 PM'},
-      {date:'2026-07-10',label:'Fri, Jul 10 · 6:00 PM'},
-      {date:'2026-07-17',label:'Fri, Jul 17 · 6:00 PM'},
-      {date:'2026-07-24',label:'Fri, Jul 24 · 6:00 PM'},
-      {date:'2026-07-31',label:'Fri, Jul 31 · 6:00 PM'},
-      {date:'2026-08-07',label:'Fri, Aug 7 · 6:00 PM'},
-      {date:'2026-08-14',label:'Fri, Aug 14 · 6:00 PM'},
-      {date:'2026-08-21',label:'Fri, Aug 21 · 6:00 PM'},
-      {date:'2026-08-28',label:'Fri, Aug 28 · 6:00 PM'},
-      {date:'2026-09-04',label:'Fri, Sep 4 · 6:00 PM'},
-      {date:'2026-09-11',label:'Fri, Sep 11 · 6:00 PM'},
-      {date:'2026-09-18',label:'Fri, Sep 18 · 6:00 PM'},
-      {date:'2026-09-25',label:'Fri, Sep 25 · 6:00 PM (Final)'}
-    ]
-  },
-  'Tuesday Ladies Night': {
-    label: 'Every Tuesday · 5:30 PM · May – September',
-    dates: [
-      {date:'2026-05-05',label:'Tue, May 5 · 5:30 PM'},
-      {date:'2026-05-12',label:'Tue, May 12 · 5:30 PM'},
-      {date:'2026-05-19',label:'Tue, May 19 · 5:30 PM'},
-      {date:'2026-05-26',label:'Tue, May 26 · 5:30 PM'},
-      {date:'2026-06-02',label:'Tue, Jun 2 · 5:30 PM'},
-      {date:'2026-06-09',label:'Tue, Jun 9 · 5:30 PM'},
-      {date:'2026-06-16',label:'Tue, Jun 16 · 5:30 PM'},
-      {date:'2026-06-23',label:'Tue, Jun 23 · 5:30 PM'},
-      {date:'2026-06-30',label:'Tue, Jun 30 · 5:30 PM'},
-      {date:'2026-07-07',label:'Tue, Jul 7 · 5:30 PM'},
-      {date:'2026-07-14',label:'Tue, Jul 14 · 5:30 PM'},
-      {date:'2026-07-21',label:'Tue, Jul 21 · 5:30 PM'},
-      {date:'2026-07-28',label:'Tue, Jul 28 · 5:30 PM'},
-      {date:'2026-08-04',label:'Tue, Aug 4 · 5:30 PM'},
-      {date:'2026-08-11',label:'Tue, Aug 11 · 5:30 PM'},
-      {date:'2026-08-18',label:'Tue, Aug 18 · 5:30 PM'},
-      {date:'2026-08-25',label:'Tue, Aug 25 · 5:30 PM'},
-      {date:'2026-09-01',label:'Tue, Sep 1 · 5:30 PM'},
-      {date:'2026-09-08',label:'Tue, Sep 8 · 5:30 PM'},
-      {date:'2026-09-15',label:'Tue, Sep 15 · 5:30 PM'},
-      {date:'2026-09-22',label:'Tue, Sep 22 · 5:30 PM'},
-      {date:'2026-09-29',label:'Tue, Sep 29 · 5:30 PM (Final)'}
-    ]
-  },
-  'Hit & Giggle': {
-    label: 'Monthly · Wednesdays · 7:00 PM',
-    dates: [
-      {date:'2026-05-06',label:'Wed, May 6 · 7:00 PM'},
-      {date:'2026-06-03',label:'Wed, Jun 3 · 7:00 PM'},
-      {date:'2026-07-01',label:'Wed, Jul 1 · 7:00 PM'},
-      {date:'2026-08-05',label:'Wed, Aug 5 · 7:00 PM'},
-      {date:'2026-09-02',label:'Wed, Sep 2 · 7:00 PM (Final)'}
-    ]
-  }
+  "St. Patty's Shootout":       { type:'single',   capacity:60,  fee:'Member Event' },
+  "Ladies Opening Day":          { type:'single',   capacity:40,  fee:'Member Event' },
+  "Masters Dinner":              { type:'single',   capacity:80,  fee:'$45/person' },
+  "Mules Invitational":          { type:'foursome', capacity:20,  fee:'$80/team' },
+  "Spring 2-Man Scramble":       { type:'twosome',  capacity:40,  fee:'$120/team' },
+  "Ladies Sweet Treat":          { type:'foursome', capacity:12,  fee:'Member Event' },
+  "MGA Draft Day":               { type:'single',   capacity:72,  fee:'Member Event' },
+  "Men's Opening Day":           { type:'single',   capacity:72,  fee:'Member Event' },
+  "Ozark Invitational":          { type:'twosome',  capacity:48,  fee:'$150/team' },
+  "Couples Scramble":            { type:'twosome',  capacity:32,  fee:'Member Event' },
+  "Ladies Invitational":         { type:'single',   capacity:48,  fee:'Member Event' },
+  "4th of July Scramble":        { type:'twosome',  capacity:40,  fee:'Member Event' },
+  "Member-Guest":                { type:'twosome',  capacity:60,  fee:'$150/team' },
+  "Club Championship":           { type:'single',   capacity:64,  fee:'Member Event' },
+  "Ladies Club Championship":    { type:'single',   capacity:32,  fee:'Member Event' },
+  "Fall 2-Man Scramble":         { type:'twosome',  capacity:40,  fee:'$120/team' },
+  "Senior Scramble":             { type:'twosome',  capacity:24,  fee:'Member Event' },
+  "Closing Day Scramble":        { type:'foursome', capacity:16,  fee:'Member Event' },
+  "Halloween Costume Scramble":  { type:'twosome',  capacity:32,  fee:'Member Event' }
 };
 
 function getEventInfo(title) {
-  // Exact dictionary match takes priority (prevents "Men's League Opening Night"
-  // from matching the generic Men's League prefix below)
-  if (title && WHCC_EVENTS[title]) return WHCC_EVENTS[title];
-  // Prefix fallbacks for recurring weekly/monthly events
   if (title && title.startsWith("Men's League")) return { type:'single', capacity:24, fee:'Member Event' };
-  if (title && title.startsWith("Friday Night Fights")) return { type:'single', capacity:48, fee:'$10/round' };
-  if (title && title.startsWith("Tuesday Ladies Night")) return { type:'single', capacity:36, fee:'Member Event' };
-  if (title && title.startsWith("Hit & Giggle")) return { type:'single', capacity:40, fee:'Member Event' };
-  return { type:'single', capacity:72, fee:'Member Event' };
+  return WHCC_EVENTS[title] || { type:'single', capacity:72, fee:'Member Event' };
 }
 
 // ═══════════════════════════════════════
@@ -2765,9 +2611,6 @@ var WHCC_SYNC = {
           if (rows.length) window._lastSheetColumns = Object.keys(rows[0]);
 
           var regs = rows.map(function(row) {
-            // Detect old sheet layout where Notes held a numeric handicap (no dedicated GHIN column)
-            var rawNotes  = row['Notes'] || '';
-            var notesAsHcp = (function(){ var n=parseFloat(rawNotes); return (!isNaN(n)&&n>=0&&n<=54&&String(n)===rawNotes.trim()) ? String(n) : ''; })();
             return {
               id:          row['ID']                                                  || '',
               event:       row['Event']                                               || '',
@@ -2779,9 +2622,12 @@ var WHCC_SYNC = {
               partner:     row['Partners'] || row['Partner/Team'] || row['Partner'] || row['partner'] || '',
               players:     row['Players']                                            || '1',
               memberNum:   row['Member #']                                           || '',
-              ghin:        row['GHIN Handicap'] || row['GHIN #'] || row['GHIN'] || row['ghin'] || notesAsHcp || '',
+              ghin:        row['GHIN Handicap'] || row['GHIN #'] || row['GHIN'] || row['ghin'] ||
+                           // Fallback: if 'Notes' column contains a number it's actually the GHIN
+                           // (old sheet layout had no GHIN header so ghin was stored under Notes)
+                           (function(){ var n=parseFloat(row['Notes']||''); return (!isNaN(n)&&n>=0&&n<=54) ? String(n) : ''; })() || '',
               partnerGhin: row['Partner GHIN'] || row['partnerGhin'] || row['PartnerGhin'] || '',
-              notes:       notesAsHcp ? '' : rawNotes,   // don't echo numeric-handicap back as a note
+              notes:       row['Notes']                                              || '',
               timestamp:   row['Registered At']                                      || '',
               source:      row['Source']                                             || ''
             };
@@ -2840,16 +2686,146 @@ var WHCC_SYNC = {
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
   },
-  saveSpecials: function(weeklySpecial, fridayNight, cb) {
+
+  // ── CONDITIONS / DAILY UPDATE SYNC ──
+  saveConditions: function(data, cb) {
     fetch(WHCC_SCRIPT_URL, {
-      method: 'POST', headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'save-specials', weeklySpecial: weeklySpecial, fridayNight: fridayNight })
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'save-conditions', data: data })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
   },
-  fetchSpecials: function(cb) {
-    fetch(WHCC_SCRIPT_URL + '?action=get-specials')
+  fetchConditions: function(cb) {
+    fetch(WHCC_SCRIPT_URL + '?action=get-conditions')
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+
+  // ── MENU SYNC ──
+  saveMenus: function(data, cb) {
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'save-menus', data: data })
+    }).then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+  fetchMenus: function(cb) {
+    fetch(WHCC_SCRIPT_URL + '?action=get-menus')
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+
+  // ── DINING RESERVATION SYNC ──
+  saveDiningReservation: function(res, cb) {
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(Object.assign({ action: 'dining-reservation' }, res))
+    }).then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+  fetchDining: function(cb) {
+    fetch(WHCC_SCRIPT_URL + '?action=get-dining')
+      .then(function(r){ return r.json(); })
+      .then(function(rows){ if (cb) cb(rows, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+  updateDiningStatus: function(id, status, cb) {
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'update-dining', id: id, status: status })
+    }).then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+  updateDiningFull: function(res, cb) {
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(Object.assign({ action: 'update-dining-full' }, res))
+    }).then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+  deleteDining: function(id, cb) {
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'delete-dining', id: id })
+    }).then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+  saveLiveScoring: function(data, cb) {
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'save-live-scoring', data: data })
+    }).then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+  fetchLiveScoring: function(cb) {
+    fetch(WHCC_SCRIPT_URL + '?action=get-live-scoring')
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+
+  // ── WAITLIST SYNC ──
+  saveWaitlist: function(data, cb) {
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'save-waitlist', data: data })
+    }).then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+  fetchWaitlist: function(cb) {
+    fetch(WHCC_SCRIPT_URL + '?action=get-waitlist')
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+
+  // ── GUEST NOTES SYNC ──
+  saveGuestNotes: function(data, cb) {
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'save-guest-notes', data: data })
+    }).then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+  fetchGuestNotes: function(cb) {
+    fetch(WHCC_SCRIPT_URL + '?action=get-guest-notes')
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+
+  // ── PAIRINGS SYNC ──
+  savePairings: function(data, cb) {
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'save-pairings', data: data })
+    }).then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+  fetchPairings: function(cb) {
+    fetch(WHCC_SCRIPT_URL + '?action=get-pairings')
       .then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -2875,14 +2851,7 @@ function parseMetaDate(meta) {
   if (!m) return null;
   var mo = _MO[m[1].toLowerCase().slice(0,3)];
   if (mo === undefined) return null;
-  var day = parseInt(m[2]);
-  // Infer year: use current year if the date hasn't passed yet, otherwise next year
-  var now = new Date();
-  var yr = now.getFullYear();
-  var candidate = new Date(yr, mo, day);
-  // If the candidate date is more than 60 days in the past, assume next year
-  if (candidate < new Date(now - 60 * 864e5)) yr++;
-  return new Date(yr, mo, day);
+  return new Date(2026, mo, parseInt(m[2]));
 }
 
 function archiveEventCards() {
@@ -2941,40 +2910,8 @@ function openRegModal(eventTitle, eventMeta, isTeam) {
   var evType = info.type;
   currentRegEvent = { title: eventTitle, meta: eventMeta, type: evType, capacity: info.capacity, fee: info.fee };
 
-  // Clear non-prefilled fields before showing form (guards against stale values on re-open)
-  ['reg-phone','reg-partner','reg-partner-ghin','reg-notes','reg-ghin'].forEach(function(id){
-    var el = document.getElementById(id); if (el) el.value = '';
-  });
-  var errEl = document.getElementById('reg-error');
-  if (errEl) errEl.style.display = 'none';
-
   document.getElementById('reg-event-title').textContent = eventTitle;
   document.getElementById('reg-event-meta').textContent = (eventMeta||'') + (info.fee && info.fee !== 'Member Event' ? ' · ' + info.fee : '');
-
-  // Date picker for recurring events
-  var recurSched = RECURRING_SCHEDULES[eventTitle];
-  var dateRow = document.getElementById('reg-date-row');
-  var dateSel = document.getElementById('reg-date-select');
-  if (recurSched) {
-    var today = new Date(); today.setHours(0,0,0,0);
-    dateSel.innerHTML = '<option value="">— Select a date —</option>';
-    recurSched.dates.forEach(function(d) {
-      if (new Date(d.date) >= today) {
-        var opt = document.createElement('option');
-        opt.value = d.date;
-        opt.text = d.label;
-        dateSel.appendChild(opt);
-      }
-    });
-    if (dateSel.options.length > 1) dateSel.selectedIndex = 1;
-    dateRow.style.display = 'grid';
-    dateSel.required = true;
-    // Update displayed meta to show the series schedule
-    document.getElementById('reg-event-meta').textContent = recurSched.label + (info.fee && info.fee !== 'Member Event' ? ' · ' + info.fee : '');
-  } else {
-    dateRow.style.display = 'none';
-    dateSel.required = false;
-  }
 
   // Show/hide and label team fields based on event type
   var teamRow = document.getElementById('reg-team-row');
@@ -2983,21 +2920,19 @@ function openRegModal(eventTitle, eventMeta, isTeam) {
 
   if (evType === 'single') {
     teamRow.style.display = 'none';
-    playersSelect.value = '1'; // prevent hidden stale value from leaking into submission
   } else if (evType === 'twosome') {
     teamRow.style.display = 'grid';
     partnerInput.placeholder = 'Partner\'s full name';
     partnerInput.previousElementSibling.textContent = 'Partner Name';
     // For twosome, hide the players count — it's always 2
     playersSelect.parentElement.style.display = 'none';
-    playersSelect.value = '2';
   } else if (evType === 'foursome') {
     teamRow.style.display = 'grid';
     partnerInput.placeholder = 'Partner 1 (others can be added in notes)';
     partnerInput.previousElementSibling.textContent = 'Partner Names';
     playersSelect.parentElement.style.display = 'block';
     // Update player options for foursome
-    playersSelect.innerHTML = '<option value="1">Just Me (others TBD)</option><option value="2">2 Players</option><option value="3">3 Players</option><option value="4" selected>Full Group of 4</option>';
+    playersSelect.innerHTML = '<option value="1">1 (others TBD)</option><option value="2">2 Players</option><option value="3">3 Players</option><option value="4" selected>Full Group of 4</option>';
   }
 
   // Show spots remaining — cached count first (instant), then live-refresh from Sheet
@@ -3035,11 +2970,7 @@ function closeRegModal() {
   document.getElementById('reg-overlay').style.display = 'none';
   document.body.style.overflow = '';
   // Reset form
-  var dateSel = document.getElementById('reg-date-select');
-  if (dateSel) { dateSel.selectedIndex = 0; dateSel.required = false; }
-  var dateRow = document.getElementById('reg-date-row');
-  if (dateRow) dateRow.style.display = 'none';
-  ['reg-fname','reg-lname','reg-email','reg-phone','reg-partner','reg-partner-ghin','reg-notes','reg-membernum','reg-ghin'].forEach(function(id){
+  ['reg-fname','reg-lname','reg-email','reg-phone','reg-partner','reg-notes','reg-membernum','reg-ghin'].forEach(function(id){
     var el = document.getElementById(id); if(el) el.value = '';
   });
   currentRegEvent = null;
@@ -3053,28 +2984,14 @@ function submitRegForm(e) {
   btn.textContent = 'Registering…';
   btn.disabled = true;
 
-  // For recurring events, append the specific date to the event name
-  var regTitle = currentRegEvent ? currentRegEvent.title : '';
-  var regMeta  = currentRegEvent ? currentRegEvent.meta : '';
-  var dateSel = document.getElementById('reg-date-select');
-  if (dateSel && dateSel.required && dateSel.value) {
-    var selOpt = dateSel.options[dateSel.selectedIndex].text; // e.g. "Fri, May 8 · 6:00 PM"
-    var datePart = selOpt.replace(/^[A-Za-z]+,\s*/, '').replace(/\s*·.*$/, '').trim(); // "May 8"
-    var mo = datePart.split(' ')[0].slice(0,3); // "May"
-    var dy = datePart.split(' ')[1]; // "8"
-    regTitle = regTitle + ' — ' + mo + ' ' + dy;
-    regMeta  = selOpt;
-  }
   var reg = {
-    id: Date.now().toString(),  // generate before POST so Google Sheets receives it for deduplication/deletion
-    event: regTitle,
-    eventMeta: regMeta,
+    event: currentRegEvent ? currentRegEvent.title : '',
+    eventMeta: currentRegEvent ? currentRegEvent.meta : '',
     firstName: document.getElementById('reg-fname').value.trim(),
     lastName: document.getElementById('reg-lname').value.trim(),
     email: document.getElementById('reg-email').value.trim(),
     phone: document.getElementById('reg-phone').value.trim(),
     partner: document.getElementById('reg-partner').value.trim(),
-    partnerGhin: document.getElementById('reg-partner-ghin') ? document.getElementById('reg-partner-ghin').value.trim() : '',
     players: document.getElementById('reg-players').value,
     memberNum: document.getElementById('reg-membernum').value.trim(),
     ghin: document.getElementById('reg-ghin') ? document.getElementById('reg-ghin').value.trim() : '',
@@ -3107,7 +3024,7 @@ function submitRegForm(e) {
 function saveRegLocal(reg) {
   try {
     var all = JSON.parse(localStorage.getItem('wh_registrations') || '[]');
-    if (!reg.id) reg.id = Date.now().toString();  // id already set upstream; only fallback here
+    reg.id = Date.now().toString();
     all.push(reg);
     localStorage.setItem('wh_registrations', JSON.stringify(all));
   } catch(e) {}
@@ -3171,7 +3088,7 @@ window.addEventListener('scroll', () => {
 function initFades() {
   const obs = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.08, rootMargin: '0px 0px 200px 0px' });
+  }, { threshold: 0.08, rootMargin: '0px 0px -28px 0px' });
   document.querySelectorAll('#page-' + currentPage() + ' .fade-up:not(.visible)').forEach(el => obs.observe(el));
 }
 function currentPage() {
@@ -3491,6 +3408,26 @@ async function submitReservation() {
     console.log('Storage unavailable, reservation noted client-side only');
   }
 
+  // Sync to Google Sheets so staff portal and mobile app can see it
+  try {
+    WHCC_SYNC.saveDiningReservation({
+      id: reservation.id,
+      date: dateVal,
+      time24: time,
+      timeDisplay: time,
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      phone: phone,
+      party: reservation.partySize,
+      member: member,
+      venue: venue,
+      note: notes,
+      submitted: reservation.createdAt,
+      source: 'website'
+    }, function() {});
+  } catch(e) {}
+
   // Show confirmation
   const venueName = venue === 'grille' ? 'The Westwood Grill' : "Hoover's";
   const dateText = document.getElementById('res-date-text').textContent;
@@ -3547,6 +3484,26 @@ async function loadDailyUpdate() {
     var r = await window.storage.get('daily-update');
     if (r && r.value) data = JSON.parse(r.value);
   } catch(e) {}
+  // Fetch latest from Apps Script (overwrites localStorage if newer)
+  WHCC_SYNC.fetchConditions(function(remote, err) {
+    if (!remote || err || typeof remote !== 'object') return;
+    try { window.storage.set('daily-update', JSON.stringify(remote)); } catch(e2) {}
+    var now = new Date();
+    var days   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    document.getElementById('du-date').textContent = days[now.getDay()] + ', ' + months[now.getMonth()] + ' ' + now.getDate();
+    document.getElementById('du-course-opens').textContent = remote.courseOpens || '—';
+    document.getElementById('du-cart-rules').textContent   = remote.cartRules   || '—';
+    var rangeEl = document.getElementById('du-range-status');
+    rangeEl.textContent = remote.rangeStatus || '—';
+    rangeEl.className = 'du-value' + (remote.rangeStatus && remote.rangeStatus.toLowerCase().indexOf('closed') >= 0 ? ' closed' : ' open');
+    document.getElementById('du-range-hours').textContent   = remote.rangeHours   || '—';
+    document.getElementById('du-putting-green').textContent = remote.puttingGreen || '—';
+    document.getElementById('du-pro-shop').textContent      = remote.proShop      || '—';
+    var noticeEl = document.getElementById('du-notice');
+    if (remote.notice && remote.notice.trim()) { noticeEl.textContent = remote.notice; noticeEl.style.display = 'block'; }
+    else { noticeEl.style.display = 'none'; }
+  });
 
   // Set date
   var now = new Date();
@@ -3713,7 +3670,8 @@ function menuLoad(){
   }
   catch(e){return JSON.parse(JSON.stringify(WH_MENU_DEFAULTS));}
 }
-function menuSave(data){data._version=WH_MENU_VERSION;localStorage.setItem('wh_menus',JSON.stringify(data));menuRenderAll(data);}
+function menuSave(data){data._version=WH_MENU_VERSION;localStorage.setItem('wh_menus',JSON.stringify(data));menuRenderAll(data);WHCC_SYNC.saveMenus(data,function(){});}
+function menuFetch(){WHCC_SYNC.fetchMenus(function(remote,err){if(!remote||err||typeof remote!=='object')return;remote._version=WH_MENU_VERSION;localStorage.setItem('wh_menus',JSON.stringify(remote));menuRenderAll(remote);smRenderEditorLists(remote);});}
 function menuEsc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 function menuItemHTML(item,hasPrice){
@@ -3751,35 +3709,23 @@ function menuRenderGrill(g){
   });
 }
 function menuRenderSpecials(data){
-  var ws=data.weeklySpecial||{};
-  var fn=data.fridayNight||{};
-  var wsActive=!!(ws.active&&ws.name);
-  var fnActive=!!(fn.active&&fn.name);
-  var row=document.getElementById('dining-specials-row');
-  var grid=document.getElementById('dip-grid');
   var wsEl=document.getElementById('dining-weekly-special');
   var fnEl=document.getElementById('dining-friday-special');
-  // Show/hide the whole row
-  if(row) row.style.display=(wsActive||fnActive)?'block':'none';
-  // Single active: expand to full width; both active: side-by-side
-  if(grid) grid.style.gridTemplateColumns=(wsActive&&fnActive)?'':'1fr';
-  function fillCard(el, bgId, spec){
+  var ws=data.weeklySpecial||{};
+  var fn=data.fridayNight||{};
+  function fillSpecial(el,spec){
     if(!el) return;
-    el.style.display=(spec.active&&spec.name)?'flex':'none';
-    if(!spec.active||!spec.name) return;
-    el.querySelector('.sf-name').textContent=spec.name;
-    el.querySelector('.sf-desc').textContent=spec.desc||'';
-    el.querySelector('.sf-price').textContent=spec.price||'';
-    var wEl=el.querySelector('.sf-wine');
-    if(wEl){wEl.textContent=spec.wine?'Pairs with '+spec.wine:'';wEl.style.display=spec.wine?'block':'none';}
-    var bg=document.getElementById(bgId);
-    if(bg){
-      var img=spec.image||bg.dataset.placeholder||'';
-      if(img) bg.style.backgroundImage='url('+img+')';
-    }
+    if(spec.active&&spec.name){
+      el.querySelector('.sf-name').textContent=spec.name;
+      el.querySelector('.sf-desc').textContent=spec.desc||'';
+      el.querySelector('.sf-price').textContent=spec.price||'';
+      var wEl=el.querySelector('.sf-wine');
+      if(wEl){wEl.textContent=spec.wine?'Pairs with '+spec.wine:'';wEl.style.display=spec.wine?'':'none';}
+      el.style.display='block';
+    } else el.style.display='none';
   }
-  fillCard(wsEl,'ws-bg',ws);
-  fillCard(fnEl,'fn-bg',fn);
+  fillSpecial(wsEl,ws);
+  fillSpecial(fnEl,fn);
 }
 function menuRenderAll(data){
   data=data||menuLoad();
@@ -3789,69 +3735,8 @@ function menuRenderAll(data){
 }
 // Initialize menus on page load
 menuRenderAll();
-// Fetch live specials from server so any device always sees what staff set
-(function(){
-  WHCC_SYNC.fetchSpecials(function(sp, err) {
-    if (err || !sp || (!sp.weeklySpecial && !sp.fridayNight)) return;
-    var data = menuLoad();
-    if (sp.weeklySpecial) data.weeklySpecial = sp.weeklySpecial;
-    if (sp.fridayNight)   data.fridayNight   = sp.fridayNight;
-    menuSave(data);  // re-renders specials on the dining page
-  });
-})();
 
 // ── STAFF MENU PANEL ──
-// ── Image helpers for specials photo upload ──────────────────────────────────
-window._smImg = { ws: null, fn: null };
-
-function smLoadImage(which, input) {
-  var file = input.files && input.files[0];
-  if (!file) return;
-  var reader = new FileReader();
-  reader.onload = function(ev) {
-    var img = new Image();
-    img.onload = function() {
-      var MAX = 480;
-      var w = img.width, h = img.height;
-      if (w > MAX || h > MAX) {
-        var ratio = Math.min(MAX / w, MAX / h);
-        w = Math.round(w * ratio);
-        h = Math.round(h * ratio);
-      }
-      var canvas = document.createElement('canvas');
-      canvas.width = w; canvas.height = h;
-      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-      var dataUrl = canvas.toDataURL('image/jpeg', 0.45);
-      window._smImg[which] = dataUrl;
-      var thumb = document.getElementById('sm-' + which + '-img-thumb');
-      var preview = document.getElementById('sm-' + which + '-img-preview');
-      if (thumb) thumb.src = dataUrl;
-      if (preview) preview.style.display = 'block';
-      // reset file input so same file can be re-selected after remove
-      input.value = '';
-    };
-    img.src = ev.target.result;
-  };
-  reader.readAsDataURL(file);
-}
-
-function smRemoveImage(which) {
-  window._smImg[which] = null;
-  var thumb = document.getElementById('sm-' + which + '-img-thumb');
-  var preview = document.getElementById('sm-' + which + '-img-preview');
-  if (thumb) thumb.src = '';
-  if (preview) preview.style.display = 'none';
-}
-
-function smRestoreImagePreview(which, dataUrl) {
-  if (!dataUrl) return;
-  window._smImg[which] = dataUrl;
-  var thumb = document.getElementById('sm-' + which + '-img-thumb');
-  var preview = document.getElementById('sm-' + which + '-img-preview');
-  if (thumb) thumb.src = dataUrl;
-  if (preview) preview.style.display = 'block';
-}
-
 function smLoad(){
   var data=menuLoad();
   var ws=data.weeklySpecial||{};var fn=data.fridayNight||{};
@@ -3861,14 +3746,11 @@ function smLoad(){
   setVal('sm-ws-price',ws.price);setVal('sm-ws-wine',ws.wine);
   setChk('sm-fn-active',fn.active);setVal('sm-fn-name',fn.name);setVal('sm-fn-desc',fn.desc);
   setVal('sm-fn-price',fn.price);setVal('sm-fn-wine',fn.wine);
-  // Restore image previews if photos were previously saved
-  window._smImg.ws = ws.image || null;
-  window._smImg.fn = fn.image || null;
-  smRestoreImagePreview('ws', ws.image);
-  smRestoreImagePreview('fn', fn.image);
   smRenderEditorLists(data);
   // Reset to specials tab
   smTab('specials',document.getElementById('sm-tab-specials'));
+  // Sync latest menus from Apps Script
+  menuFetch();
 }
 function smTab(tab,btn){
   ['specials','hoovers','grill'].forEach(function(t){
@@ -3899,11 +3781,8 @@ function smSaveSpecials(){
     name:document.getElementById('sm-ws-name').value.trim(),
     desc:document.getElementById('sm-ws-desc').value.trim(),
     price:document.getElementById('sm-ws-price').value.trim(),
-    wine:document.getElementById('sm-ws-wine').value.trim(),
-    image:window._smImg.ws||data.weeklySpecial&&data.weeklySpecial.image||''};
+    wine:document.getElementById('sm-ws-wine').value.trim()};
   menuSave(data);
-  WHCC_SYNC.saveSpecials(data.weeklySpecial, data.fridayNight, function(){});
-  menuRenderAll();
   var st=document.getElementById('sm-ws-status');
   if(st){st.textContent='Saved — dining page updated!';st.style.display='block';setTimeout(function(){st.style.display='none';},2500);}
 }
@@ -3913,11 +3792,8 @@ function smSaveFriday(){
     name:document.getElementById('sm-fn-name').value.trim(),
     desc:document.getElementById('sm-fn-desc').value.trim(),
     price:document.getElementById('sm-fn-price').value.trim(),
-    wine:document.getElementById('sm-fn-wine').value.trim(),
-    image:window._smImg.fn||data.fridayNight&&data.fridayNight.image||''};
+    wine:document.getElementById('sm-fn-wine').value.trim()};
   menuSave(data);
-  WHCC_SYNC.saveSpecials(data.weeklySpecial, data.fridayNight, function(){});
-  menuRenderAll();
   var st=document.getElementById('sm-fn-status');
   if(st){st.textContent='Saved — dining page updated!';st.style.display='block';setTimeout(function(){st.style.display='none';},2500);}
 }
@@ -4036,6 +3912,18 @@ async function duAdminLoad() {
   document.getElementById('du-ed-proshop').value = data.proShop || '';
   document.getElementById('du-ed-notice').value = data.notice || '';
   document.getElementById('du-admin-status').style.display = 'none';
+  // Fetch latest from Apps Script and refresh fields if newer
+  WHCC_SYNC.fetchConditions(function(remote, err) {
+    if (!remote || err || typeof remote !== 'object') return;
+    try { window.storage.set('daily-update', JSON.stringify(remote)); } catch(e2) {}
+    document.getElementById('du-ed-opens').value        = remote.courseOpens || '';
+    document.getElementById('du-ed-cart').value         = remote.cartRules   || 'Off Path';
+    document.getElementById('du-ed-range-status').value = remote.rangeStatus || 'Open — Mats Only';
+    document.getElementById('du-ed-range-hours').value  = remote.rangeHours  || '';
+    document.getElementById('du-ed-putting').value      = remote.puttingGreen || '';
+    document.getElementById('du-ed-proshop').value      = remote.proShop     || '';
+    document.getElementById('du-ed-notice').value       = remote.notice      || '';
+  });
 }
 
 async function duAdminSave() {
@@ -4056,6 +3944,7 @@ async function duAdminSave() {
     status.textContent = '✓ Home page updated. Changes are live now.';
     setTimeout(function() { status.style.display = 'none'; }, 4000);
   } catch(e) {}
+  WHCC_SYNC.saveConditions(data, function() {});
 }
 
 function duPreset(type) {
@@ -4270,10 +4159,59 @@ async function staffLoadData() {
   try { var r3 = await window.storage.get("hoovers-waitlist"); if (r3 && r3.value) staffWaitlist = JSON.parse(r3.value); } catch(e) {}
   try { var r4 = await window.storage.get("hoovers-guest-notes"); if (r4 && r4.value) staffGuestNotes = JSON.parse(r4.value); } catch(e) {}
   try { var r5 = await window.storage.get("hoovers-settings"); if (r5 && r5.value) { staffSettings = JSON.parse(r5.value); document.getElementById("setting-max-covers").value = staffSettings.maxCovers; document.getElementById("setting-max-covers-grille").value = staffSettings.maxCoversGrille || 60; document.getElementById("setting-waitlist").value = staffSettings.waitlistEnabled ? "yes" : "no"; } } catch(e) {}
+  // Fetch from Google Sheets — source of truth across all devices
+  WHCC_SYNC.fetchDining(function(rows, err) {
+    if (!rows || err) return;
+    var hoovers = {}, grille = {};
+    rows.forEach(function(row) {
+      var dateKey = String(row['Date'] || '').slice(0, 10);
+      if (!dateKey || dateKey.length < 10) return;
+      var v = String(row['Venue'] || '').toLowerCase();
+      var res = {
+        id:        row['ID']           || String(Date.now()),
+        firstName: row['First Name']   || '',
+        lastName:  row['Last Name']    || '',
+        email:     row['Email']        || '',
+        phone:     row['Phone']        || '',
+        partySize: row['Party Size']   || '2',
+        member:    row['Member']       || 'member',
+        venue:     v                   || 'hoovers',
+        time:      row['Time Display'] || row['Time'] || '',
+        notes:     row['Notes']        || '',
+        status:    (row['Status'] || 'pending').toLowerCase(),
+        createdAt: row['Submitted']    || ''
+      };
+      if (v === 'grille') {
+        if (!grille[dateKey]) grille[dateKey] = [];
+        grille[dateKey].push(res);
+      } else {
+        if (!hoovers[dateKey]) hoovers[dateKey] = [];
+        hoovers[dateKey].push(res);
+      }
+    });
+    staffDataHoovers = hoovers;
+    staffDataGrille  = grille;
+    staffData = staffVenue === "hoovers" ? staffDataHoovers : staffDataGrille;
+    try { window.storage.set("hoovers-reservations", JSON.stringify(hoovers)); } catch(e) {}
+    try { window.storage.set("grille-reservations",  JSON.stringify(grille));  } catch(e) {}
+    staffRenderCal();
+  });
+  // Fetch waitlist from Sheets
+  WHCC_SYNC.fetchWaitlist(function(remote, err) {
+    if (!remote || err || typeof remote !== 'object') return;
+    staffWaitlist = remote;
+    try { window.storage.set("hoovers-waitlist", JSON.stringify(remote)); } catch(e) {}
+  });
+  // Fetch guest notes from Sheets
+  WHCC_SYNC.fetchGuestNotes(function(remote, err) {
+    if (!remote || err || typeof remote !== 'object') return;
+    staffGuestNotes = remote;
+    try { window.storage.set("hoovers-guest-notes", JSON.stringify(remote)); } catch(e) {}
+  });
 }
 async function staffSaveData() { var key = staffVenue === "hoovers" ? "hoovers-reservations" : "grille-reservations"; try { await window.storage.set(key, JSON.stringify(staffData)); } catch(e) { staffToast('Save failed — reservation data may not have been stored.', 'error'); } }
-async function staffSaveWL() { try { await window.storage.set("hoovers-waitlist", JSON.stringify(staffWaitlist)); } catch(e) { staffToast('Save failed — waitlist data may not have been stored.', 'error'); } }
-async function staffSaveGN() { try { await window.storage.set("hoovers-guest-notes", JSON.stringify(staffGuestNotes)); } catch(e) { staffToast('Save failed — guest notes may not have been stored.', 'error'); } }
+async function staffSaveWL() { try { await window.storage.set("hoovers-waitlist", JSON.stringify(staffWaitlist)); } catch(e) { staffToast('Save failed — waitlist data may not have been stored.', 'error'); } WHCC_SYNC.saveWaitlist(staffWaitlist, function() {}); }
+async function staffSaveGN() { try { await window.storage.set("hoovers-guest-notes", JSON.stringify(staffGuestNotes)); } catch(e) { staffToast('Save failed — guest notes may not have been stored.', 'error'); } WHCC_SYNC.saveGuestNotes(staffGuestNotes, function() {}); }
 async function saveSettings() { staffSettings.maxCovers = parseInt(document.getElementById("setting-max-covers").value) || 40; staffSettings.maxCoversGrille = parseInt(document.getElementById("setting-max-covers-grille").value) || 60; staffSettings.waitlistEnabled = document.getElementById("setting-waitlist").value === "yes"; try { await window.storage.set("hoovers-settings", JSON.stringify(staffSettings)); staffToast('Settings saved.', 'success'); } catch(e) { staffToast('Save failed — settings may not have been stored.', 'error'); } staffRenderCal(); }
 
 
@@ -4376,7 +4314,7 @@ function refreshRegsFromSheet() {
   if (btn) { btn.textContent = '↻ Syncing…'; btn.disabled = true; }
   WHCC_SYNC.fetchAll(function(regs, err) {
     if (btn) { btn.textContent = '↻ Sync Sheet'; btn.disabled = false; }
-    if (err || !regs) { showToast('Could not reach Google Sheet. Showing cached data.', 'error'); return; }
+    if (err || !regs) { alert('Could not reach Google Sheet. Showing cached data.'); return; }
     buildRegDropdown(regs);
     renderStaffRegs();
     var lbl = document.getElementById('reg-count-label');
@@ -4389,27 +4327,18 @@ function refreshRegsFromSheet() {
 
 // Season order for dropdown sorting (matches calendar year)
 var WHCC_EVENT_ORDER = [
-  // Spring season
   "St. Patty's Shootout","Ladies Opening Day","Masters Dinner",
-  "Mules Invitational","MGA Draft Day","Men's Opening Day","Ozark Invitational",
-  // Recurring series (season openers)
-  "Friday Night Fights","Tuesday Ladies Night","Hit & Giggle",
-  "Men's League Opening Night",
-  // Single events through the season
-  "Spring 2-Man Scramble","MGA 2-Man Best Ball","Memorial Day Wing Ding",
-  "UCAN Golf Outing","Ladies Cup Challenge Matches","Ladies Powder Puff",
-  "Three Rivers College Outing","Steak Stag — SEMO Qualifier",
-  "Ladies Sweet Treat",
-  // Fall / recurring annual
+  "Mules Invitational","Spring 2-Man Scramble","Ladies Sweet Treat",
+  "MGA Draft Day","Men's Opening Day","Ozark Invitational",
   "Couples Scramble","Ladies Invitational","4th of July Scramble",
   "Member-Guest","Club Championship","Ladies Club Championship",
   "Fall 2-Man Scramble","Senior Scramble","Closing Day Scramble",
   "Halloween Costume Scramble",
-  // Men's League — 16 weeks (Thursdays)
-  "Men's League — May 14","Men's League — May 21","Men's League — May 28",
-  "Men's League — Jun 4","Men's League — Jun 11","Men's League — Jun 18","Men's League — Jun 25",
-  "Men's League — Jul 2","Men's League — Jul 9","Men's League — Jul 16","Men's League — Jul 23","Men's League — Jul 30",
-  "Men's League — Aug 6","Men's League — Aug 13","Men's League — Aug 20","Men's League — Aug 27"
+  // Men's League — 16 weeks
+  "Men's League — May 9","Men's League — May 16","Men's League — May 23","Men's League — May 30",
+  "Men's League — Jun 6","Men's League — Jun 13","Men's League — Jun 20","Men's League — Jun 27",
+  "Men's League — Jul 4","Men's League — Jul 11","Men's League — Jul 18","Men's League — Jul 25",
+  "Men's League — Aug 1","Men's League — Aug 8","Men's League — Aug 15","Men's League — Aug 22"
 ];
 
 var currentRegFilter = '';
@@ -4430,24 +4359,13 @@ function buildRegDropdown(regs) {
     });
   }
 
-  // Sort events by date when available, fall back to WHCC_EVENT_ORDER for undated events
-  function getRegEvDate(ev) {
-    var d = typeof parseMetaDate === 'function' ? parseMetaDate(metaMap[ev]) : null;
-    if (d) return d;
-    var m = ev.match(/([A-Za-z]+)\s+(\d+)\s*$/);
-    if (m && typeof _MO !== 'undefined') {
-      var mo = _MO[m[1].toLowerCase().slice(0,3)];
-      if (mo !== undefined) return new Date(new Date().getFullYear(), mo, parseInt(m[2]));
-    }
-    return null;
-  }
+  // Sort events by season order
   var allEvents = Object.keys(counts);
   allEvents.sort(function(a, b) {
-    var da = getRegEvDate(a), db = getRegEvDate(b);
-    if (da && db) return da - db;
-    if (da) return -1; if (db) return 1;
-    var ai = WHCC_EVENT_ORDER.indexOf(a), bi = WHCC_EVENT_ORDER.indexOf(b);
-    if (ai === -1) ai = 9999; if (bi === -1) bi = 9999;
+    var ai = WHCC_EVENT_ORDER.indexOf(a);
+    var bi = WHCC_EVENT_ORDER.indexOf(b);
+    if (ai === -1) ai = 9999;
+    if (bi === -1) bi = 9999;
     return ai - bi;
   });
 
@@ -4594,12 +4512,7 @@ function renderStaffRegs() {
       // Group by event when showing all
       var byEvent = {};
       regs.forEach(function(r){ if(!byEvent[r.event]) byEvent[r.event]=[]; byEvent[r.event].push(r); });
-      Object.keys(byEvent).sort(function(a,b){
-        var ai = WHCC_EVENT_ORDER.indexOf(a), bi = WHCC_EVENT_ORDER.indexOf(b);
-        if (ai === -1) ai = 9999; if (bi === -1) bi = 9999;
-        if (ai !== bi) return ai - bi;
-        return a.localeCompare(b);
-      }).forEach(function(ev) {
+      Object.keys(byEvent).sort().forEach(function(ev) {
         var evRegs = byEvent[ev];
         var evInfo = getEventInfo ? getEventInfo(ev) : {capacity:72};
         html2 += '<div style="margin-bottom:20px;">';
@@ -4624,8 +4537,8 @@ function renderRegRow(r, num, showDelete) {
     + '<div style="font-size:.7rem;color:rgba(184,151,106,.6);font-weight:700;min-width:18px;">' + num + '</div>'
     + '<div>'
     + '<div style="font-size:.84rem;font-weight:700;color:#f5f0e8;">' + (r.firstName||'') + ' ' + (r.lastName||'') + ghinBadge(r) + '</div>'
-    + '<div style="font-size:.72rem;color:rgba(245,240,232,.5);margin-top:1px;">' + (r.email||'') + (r.phone?' · '+r.phone:'') + (r.memberNum?' · Member #'+r.memberNum:'') + (r.ghin?' · '+(/^\d{5,8}$/.test((r.ghin||'').trim())?'GHIN #':'HCP ')+r.ghin:'') + '</div>'
-    + (r.partner?'<div style="font-size:.72rem;color:rgba(184,151,106,.7);margin-top:2px;">Partner: '+r.partner+(r.partnerGhin?' <span style="opacity:.65;">· GHIN '+r.partnerGhin+'</span>':'')+'</div>':'')
+    + '<div style="font-size:.72rem;color:rgba(245,240,232,.5);margin-top:1px;">' + (r.email||'') + (r.phone?' · '+r.phone:'') + (r.memberNum?' · Member #'+r.memberNum:'') + (r.ghin?' · HCP '+r.ghin:'') + '</div>'
+    + (r.partner?'<div style="font-size:.72rem;color:rgba(184,151,106,.7);margin-top:2px;">Partner: '+r.partner+'</div>':'')
     + (r.notes?'<div style="font-size:.7rem;color:rgba(245,240,232,.4);font-style:italic;margin-top:2px;">'+r.notes+'</div>':'')
     + '</div></div>'
     + '<div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">'
@@ -4638,8 +4551,7 @@ function deleteReg(id) {
   if (!confirm('Remove this registration?')) return;
   // Deletes from Google Sheet AND localStorage simultaneously
   WHCC_SYNC.deleteReg(id, function() {
-    // staffViewRegistrations() already calls renderStaffRegs() immediately
-    // and again after the server fetch — no need for a separate call here.
+    renderStaffRegs();
     staffViewRegistrations();
   });
 }
@@ -4647,10 +4559,10 @@ function deleteReg(id) {
 function regExportCSV() {
   var filter = currentRegFilter || '';
   var regs = getAllRegs().filter(function(r){ return !filter || r.event === filter; });
-  if (!regs.length) { showToast('No registrations to export.', 'error'); return; }
-  var headers = ['Event','Date/Time','First Name','Last Name','Email','Phone','Partner','Partner GHIN','Players','Member #','GHIN #','Notes','Registered'];
+  if (!regs.length) { alert('No registrations to export.'); return; }
+  var headers = ['Event','Date/Time','First Name','Last Name','Email','Phone','Partner','Players','Member #','GHIN #','Notes','Registered'];
   var rows = regs.map(function(r){
-    return [r.event,r.eventMeta,r.firstName,r.lastName,r.email,r.phone,r.partner,r.partnerGhin||"",r.players,r.memberNum,r.ghin||"",r.notes,r.timestamp].map(function(v){
+    return [r.event,r.eventMeta,r.firstName,r.lastName,r.email,r.phone,r.partner,r.players,r.memberNum,r.ghin||"",r.notes,r.timestamp].map(function(v){
       return '"'+(v||'').replace(/"/g,'""')+'"';
     }).join(',');
   });
@@ -4665,7 +4577,7 @@ function regExportCSV() {
 function regPrintList() {
   var filter = currentRegFilter || '';
   var regs = getAllRegs().filter(function(r){ return !filter || r.event === filter; });
-  if (!regs.length) { showToast('No registrations to print.', 'error'); return; }
+  if (!regs.length) { alert('No registrations to print.'); return; }
   var html = '<html><head><title>Registration List</title><style>body{font-family:Arial,sans-serif;font-size:12px;color:#111}h1{font-size:16px;margin-bottom:4px}h2{font-size:13px;color:#555;font-weight:normal;margin-bottom:16px}table{width:100%;border-collapse:collapse}th{background:#1a2b1f;color:#f5f0e8;padding:6px 10px;text-align:left;font-size:11px}td{padding:5px 10px;border-bottom:1px solid #e8e0d0}tr:nth-child(even){background:#f9f6f0}.footer{margin-top:20px;font-size:10px;color:#999}</style></head><body>';
   html += '<h1>Westwood Hills Country Club — Event Registration List</h1>';
   html += '<h2>' + (filter || 'All Events') + ' · Printed ' + new Date().toLocaleDateString() + '</h2>';
@@ -4774,7 +4686,7 @@ function regPrintSignupSheet() {
 function regEmailList() {
   var filter = currentRegFilter || '';
   var regs = getAllRegs().filter(function(r){ return !filter || r.event === filter; });
-  if (!regs.length) { showToast('No registrations to email.', 'error'); return; }
+  if (!regs.length) { alert('No registrations to email.'); return; }
   var body = 'Registration List: ' + (filter || 'All Events') + '\n\n';
   regs.forEach(function(r,i){
     body += (i+1) + '. ' + (r.firstName||'') + ' ' + (r.lastName||'');
@@ -4909,8 +4821,14 @@ function staffResCard(r, idx, showDate) {
   return card;
 }
 
-function staffUpdateStatus(dk, i, status) { staffData[dk][i].status = status; staffSaveData(); staffSelectDate(dk); }
-function staffDeleteRes(dk, i) { staffData[dk].splice(i, 1); if (staffData[dk].length === 0) delete staffData[dk]; staffSaveData(); staffSelectDate(dk); }
+function staffUpdateStatus(dk, i, status) {
+  var id = staffData[dk][i].id;
+  staffData[dk][i].status = status;
+  staffSaveData();
+  if (id) WHCC_SYNC.updateDiningStatus(id, status, function() {});
+  staffSelectDate(dk);
+}
+function staffDeleteRes(dk, i) { var id = staffData[dk][i] && staffData[dk][i].id; staffData[dk].splice(i, 1); if (staffData[dk].length === 0) delete staffData[dk]; staffSaveData(); if (id) WHCC_SYNC.deleteDining(id, function() {}); staffSelectDate(dk); }
 
 // ── ADD/EDIT FORM ──
 function staffShowForm() {
@@ -4966,6 +4884,12 @@ function staffSaveRes() {
     newRes.id = staffData[staffSelDate][staffEditIdx].id;
     newRes.createdAt = staffData[staffSelDate][staffEditIdx].createdAt;
     staffData[staffSelDate][staffEditIdx] = newRes;
+    WHCC_SYNC.updateDiningFull({
+      id: newRes.id, date: staffSelDate, time24: newRes.time, timeDisplay: newRes.time,
+      firstName: newRes.firstName, lastName: newRes.lastName, email: newRes.email,
+      phone: newRes.phone, party: newRes.partySize, member: newRes.member,
+      venue: staffVenue, note: newRes.notes, status: newRes.status
+    }, function() {});
   } else {
     // Duplicate check: same name + time already booked on this date
     var fnLc = newRes.firstName.toLowerCase(), lnLc = newRes.lastName.toLowerCase();
@@ -4976,6 +4900,13 @@ function staffSaveRes() {
     newRes.id = Date.now().toString();
     newRes.createdAt = new Date().toISOString();
     staffData[staffSelDate].push(newRes);
+    // Sync new reservation to Google Sheets
+    WHCC_SYNC.saveDiningReservation({
+      id: newRes.id, date: staffSelDate, time24: newRes.time, timeDisplay: newRes.time,
+      firstName: newRes.firstName, lastName: newRes.lastName, email: newRes.email,
+      phone: newRes.phone, party: newRes.partySize, member: newRes.member,
+      venue: staffVenue, note: newRes.notes, submitted: newRes.createdAt, source: 'staff-portal'
+    }, function() {});
   }
   staffSaveData(); staffEditIdx = null; document.getElementById('staff-form').style.display = 'none'; staffSelectDate(staffSelDate);
 }
@@ -5216,6 +5147,18 @@ function staffRenderStats() {
 // ── LIVE SCORING ADMIN ──
 var lsConfig = { active: false, pages: {}, eventName: '', eventDate: '', pastResults: [] };
 
+function lsAdminPopulateFields() {
+  document.getElementById('ls-admin-active').value = lsConfig.active ? 'yes' : 'no';
+  document.getElementById('ls-admin-name').value = lsConfig.eventName || '';
+  document.getElementById('ls-admin-date').value = lsConfig.eventDate || '';
+  document.getElementById('ls-admin-url-teesheet').value = (lsConfig.pages && lsConfig.pages.teesheet) || '';
+  document.getElementById('ls-admin-url-pairings').value = (lsConfig.pages && lsConfig.pages.pairings) || '';
+  document.getElementById('ls-admin-url-leaderboard').value = (lsConfig.pages && lsConfig.pages.leaderboard) || '';
+  document.getElementById('ls-admin-url-results').value = (lsConfig.pages && lsConfig.pages.results) || '';
+  document.getElementById('ls-admin-fields').style.display = lsConfig.active ? 'block' : 'none';
+  lsAdminRenderPast();
+}
+
 async function lsAdminLoad() {
   try {
     var r = await window.storage.get('live-scoring-config');
@@ -5226,16 +5169,16 @@ async function lsAdminLoad() {
     }
     if (!lsConfig.pages) lsConfig.pages = {};
   } catch(e) {}
-  document.getElementById('ls-admin-active').value = lsConfig.active ? 'yes' : 'no';
-  document.getElementById('ls-admin-name').value = lsConfig.eventName || '';
-  document.getElementById('ls-admin-date').value = lsConfig.eventDate || '';
-  document.getElementById('ls-admin-url-teesheet').value = (lsConfig.pages && lsConfig.pages.teesheet) || '';
-  document.getElementById('ls-admin-url-pairings').value = (lsConfig.pages && lsConfig.pages.pairings) || '';
-  document.getElementById('ls-admin-url-leaderboard').value = (lsConfig.pages && lsConfig.pages.leaderboard) || '';
-  document.getElementById('ls-admin-url-results').value = (lsConfig.pages && lsConfig.pages.results) || '';
-  document.getElementById('ls-admin-fields').style.display = lsConfig.active ? 'block' : 'none';
   document.getElementById('ls-admin-status').style.display = 'none';
-  lsAdminRenderPast();
+  lsAdminPopulateFields();
+  // Fetch latest from Apps Script and refresh if available
+  WHCC_SYNC.fetchLiveScoring(function(remote, err) {
+    if (!remote || err || typeof remote !== 'object' || Object.keys(remote).length === 0) return;
+    if (!remote.pages) remote.pages = {};
+    lsConfig = remote;
+    try { window.storage.set('live-scoring-config', JSON.stringify(lsConfig)); } catch(e2) {}
+    lsAdminPopulateFields();
+  });
 }
 
 function lsAdminToggle() {
@@ -5270,6 +5213,7 @@ async function lsAdminSave() {
     }
     setTimeout(function() { status.style.display = 'none'; status.style.color = '#8fcc8f'; }, 5000);
   } catch(e) {}
+  WHCC_SYNC.saveLiveScoring(lsConfig, function() {});
 }
 
 function lsAdminRenderPast() {
@@ -5304,6 +5248,7 @@ async function lsAdminAddPast() {
 
 async function lsAdminSavePast() {
   try { await window.storage.set('live-scoring-config', JSON.stringify(lsConfig)); } catch(e) {}
+  WHCC_SYNC.saveLiveScoring(lsConfig, function() {});
   lsAdminRenderPast();
 }
 
@@ -5344,19 +5289,7 @@ function pinUpdateDots() {
 }
 
 function pinSubmit() {
-  var stored = localStorage.getItem('staff-pin');
-  // First-time setup: no PIN has been set yet — treat entered PIN as the new PIN
-  if (!stored) {
-    if (_pinBuffer.length === 4) {
-      localStorage.setItem('staff-pin', _pinBuffer);
-      staffAuthed = true;
-      staffPinHide();
-      _origNavigate(_pinTarget || 'staff');
-      initStaffDashboard();
-      showToast('Staff PIN set to ' + _pinBuffer + '. Remember it — you can change it in Staff Settings.');
-    }
-    return;
-  }
+  var stored = localStorage.getItem('staff-pin') || '1936';
   if (_pinBuffer === stored) {
     staffAuthed = true;
     staffPinHide();
@@ -5454,7 +5387,7 @@ var pairRoster = [];
 function parseHcp(val, fallback) {
   if (fallback === undefined) fallback = 18;
   var n = parseFloat(val);
-  if (isNaN(n) || n < -10 || n > 54) return fallback; // allow plus handicaps (stored negative)
+  if (isNaN(n) || n < 0 || n > 54) return fallback;
   return Math.round(n * 10) / 10;
 }
 var pairTeams  = [];
@@ -5476,6 +5409,13 @@ function buildPairDropdown(regs) {
       if (r.eventMeta && !metaMap[r.event]) metaMap[r.event] = r.eventMeta;
     }
   });
+  var allEvents = Object.keys(seen);
+  allEvents.sort(function(a, b) {
+    var ai = WHCC_EVENT_ORDER.indexOf(a), bi = WHCC_EVENT_ORDER.indexOf(b);
+    if (ai === -1) ai = 9999; if (bi === -1) bi = 9999;
+    return ai - bi;
+  });
+
   // Date lookup: use eventMeta first, then try parsing the event name itself
   function getEvDate(ev) {
     if (metaMap[ev] && typeof parseMetaDate === 'function') {
@@ -5490,17 +5430,6 @@ function buildPairDropdown(regs) {
     }
     return null;
   }
-
-  var allEvents = Object.keys(seen);
-  allEvents.sort(function(a, b) {
-    // Sort by date when available, fall back to WHCC_EVENT_ORDER for undated events
-    var da = getEvDate(a), db = getEvDate(b);
-    if (da && db) return da - db;
-    if (da) return -1; if (db) return 1;
-    var ai = WHCC_EVENT_ORDER.indexOf(a), bi = WHCC_EVENT_ORDER.indexOf(b);
-    if (ai === -1) ai = 9999; if (bi === -1) bi = 9999;
-    return ai - bi;
-  });
 
   var today = new Date(); today.setHours(0,0,0,0);
   var upcoming = [], past = [];
@@ -5543,21 +5472,33 @@ function pairViewLoad() {
   pairRenderRoster();
   pairRenderTeams();
   pairRenderHistory();
-  // Fetch live data so dropdown and badge are populated even in incognito / empty cache
-  // Fetch live data so dropdown and badge are populated even in incognito / empty cache
+  // Fetch live event data so dropdown and badge are populated even in incognito / empty cache
   WHCC_SYNC.fetchAll(function(regs, err) {
     if (err || !regs) return;
     buildPairDropdown(regs);
     pairUpdateEventBadge(regs);
+  });
+  // Fetch pairings state from Sheets so all devices stay in sync
+  WHCC_SYNC.fetchPairings(function(remote, err) {
+    if (!remote || err || typeof remote !== 'object') return;
+    if (remote.roster)  { pairRoster  = remote.roster;  localStorage.setItem('whcc-pairings-roster',  JSON.stringify(pairRoster));  }
+    if (remote.config)  { Object.assign(pairConfig, remote.config); if (pairConfig.mode === 'couples') pairConfig.mode = 'team'; localStorage.setItem('whcc-pairings-config', JSON.stringify(pairConfig)); }
+    if (remote.history) { pairHistory = remote.history; localStorage.setItem('whcc-pairings-history', JSON.stringify(pairHistory)); }
+    pairApplyConfig();
+    pairRenderRoster();
+    pairRenderTeams();
+    pairRenderHistory();
   });
 }
 
 function pairSave() {
   localStorage.setItem('whcc-pairings-roster', JSON.stringify(pairRoster));
   localStorage.setItem('whcc-pairings-config', JSON.stringify(pairConfig));
+  WHCC_SYNC.savePairings({ roster: pairRoster, config: pairConfig, history: pairHistory }, function() {});
 }
 function pairSaveHistory() {
   localStorage.setItem('whcc-pairings-history', JSON.stringify(pairHistory));
+  WHCC_SYNC.savePairings({ roster: pairRoster, config: pairConfig, history: pairHistory }, function() {});
 }
 
 function pairApplyConfig() {
@@ -5697,7 +5638,7 @@ function pairGenerate() {
   if (pairConfig.mode === 'team') { pairGenerateTeamMode(); return; }
   var gs = pairConfig.groupSize;
   if (pairRoster.length < gs) {
-    showToast('Need at least ' + gs + ' players to generate groups.', 'error');
+    alert('Need at least ' + gs + ' players to generate groups.');
     return;
   }
   var sorted = pairRoster.slice().sort(function(a,b){ return a.hcap - b.hcap; });
@@ -5917,7 +5858,7 @@ function pairClearRosterAndGroups() {
 
 function pairImportFromRegs() {
   if (!pairEventFilter) {
-    showToast('Select an event from the dropdown first.', 'error');
+    alert('Select an event from the dropdown first.');
     return;
   }
   var regs = (typeof getAllRegs === 'function') ? getAllRegs() : [];
@@ -5926,12 +5867,12 @@ function pairImportFromRegs() {
     // Nothing in cache — fetch live from sheet, then retry
     WHCC_SYNC.fetchAll(function(freshRegs, err) {
       if (err || !freshRegs) {
-        showToast('Could not reach the sheet. Check your connection and try again.', 'error');
+        alert('Could not reach the sheet. Check your connection and try again.');
         return;
       }
       list = freshRegs.filter(function(r){ return r.event === pairEventFilter; });
       if (!list.length) {
-        showToast('No registrations found for "' + pairEventFilter + '".', 'error');
+        alert('No registrations found for "' + pairEventFilter + '".');
         return;
       }
       _pairDoImport(list);
@@ -6018,7 +5959,7 @@ function _pairDoImport(list) {
     pairSave();
     pairRenderRoster();
     var label = isF ? 'group' : 'couple';
-    showToast('Imported ' + added + ' ' + label + (added !== 1 ? 's' : '') + ' from "' + pairEventFilter + '".', 'success');
+    alert('Imported ' + added + ' ' + label + (added !== 1 ? 's' : '') + ' from "' + pairEventFilter + '".');
     return;
   }
 
@@ -6033,11 +5974,11 @@ function _pairDoImport(list) {
   });
   pairSave();
   pairRenderRoster();
-  showToast('Imported ' + added + ' player' + (added !== 1 ? 's' : '') + ' from "' + pairEventFilter + '".', 'success');
+  alert('Imported ' + added + ' player' + (added !== 1 ? 's' : '') + ' from "' + pairEventFilter + '".');
 }
 
 function pairPrint() {
-  if (!pairTeams.length) { showToast('Generate teams first.', 'error'); return; }
+  if (!pairTeams.length) { alert('Generate teams first.'); return; }
   var bal = pairCalcBalance();
   var html = '<!DOCTYPE html><html><head><title>Team Pairings</title><style>' +
     'body{font-family:Arial,sans-serif;padding:24px;color:#111;max-width:900px;margin:0 auto;}' +
@@ -6070,7 +6011,7 @@ function pairPrint() {
     }).join('') +
     '</div></body></html>';
   var w = window.open('', '_blank');
-  if (!w) { showToast('Pop-up blocked — please allow pop-ups for this page.', 'error'); return; }
+  if (!w) { alert('Pop-up blocked — please allow pop-ups for this page.'); return; }
   w.document.write(html);
   w.document.close();
   w.focus();
@@ -6094,7 +6035,7 @@ function pairAddCouple() {
   var n2 = (document.getElementById('pair-c-name2').value || '').trim();
   var h1 = parseFloat(document.getElementById('pair-c-hcap1').value);
   var h2 = parseFloat(document.getElementById('pair-c-hcap2').value);
-  if (!n1 || !n2) { showToast('Enter both player names.', 'error'); document.getElementById('pair-c-name1').focus(); return; }
+  if (!n1 || !n2) { alert('Enter both player names.'); document.getElementById('pair-c-name1').focus(); return; }
   if (isNaN(h1)) h1 = 18;
   if (isNaN(h2)) h2 = 18;
   h1 = Math.round(h1 * 10) / 10;
@@ -6276,7 +6217,7 @@ function pairBuildFoursomeGroups() {
 function pairGenerateTeamMode() {
   // Route to foursome builder if needed
   if (pairConfig.teamSize === 4) {
-    if (pairRoster.length < 4) { showToast('Need at least 4 players to generate groups.', 'error'); return; }
+    if (pairRoster.length < 4) { alert('Need at least 4 players to generate groups.'); return; }
     pairTeams = pairBuildFoursomeGroups();
     pairSwapSource = null;
     var hint = document.getElementById('pair-swap-hint');
@@ -6291,7 +6232,7 @@ function pairGenerateTeamMode() {
   var locked  = pairRoster.filter(function(p){ return p.isCouple; });
   var singles = pairRoster.filter(function(p){ return !p.isCouple; });
   if (locked.length + singles.length < 2) {
-    showToast('Need at least 2 entries to generate groups.', 'error');
+    alert('Need at least 2 entries to generate groups.');
     return;
   }
 
@@ -6597,7 +6538,7 @@ function tsRenderSheet() {
 
 function tsPrint() {
   if (!teeSheet.length) { tsBuild(); }
-  if (!teeSheet.length) { showToast('Build the tee sheet first.', 'error'); return; }
+  if (!teeSheet.length) { alert('Build the tee sheet first.'); return; }
   var showScore = teeRound > 1;
   var rHeaders  = '';
   if (showScore) {
@@ -6648,7 +6589,7 @@ function tsPrint() {
     }).join('') +
     '</tbody></table></body></html>';
   var w = window.open('', '_blank');
-  if (!w) { showToast('Pop-up blocked — please allow pop-ups for this page.', 'error'); return; }
+  if (!w) { alert('Pop-up blocked — please allow pop-ups for this page.'); return; }
   w.document.write(html);
   w.document.close();
   w.focus();
@@ -6661,7 +6602,7 @@ function pairEsc(s) {
 
 // ── TEE SHEET SYNC ────────────────────────────────────────────────────────────
 function tsSaveToSheet() {
-  if (!teeSheet.length) { showToast('Generate a tee sheet first.', 'error'); return; }
+  if (!teeSheet.length) { alert('Generate a tee sheet first.'); return; }
   var btn = document.getElementById('ts-save-btn');
   var status = document.getElementById('ts-sync-status');
   if (btn) { btn.textContent = '⏳ Saving…'; btn.disabled = true; }
@@ -6768,7 +6709,7 @@ function ghinParseCSV(text) {
     if (/club/i.test(h))                           colClub  = i;
   });
   if (colFirst < 0 || colLast < 0 || colHcp < 0) {
-    showToast('Could not find required columns in the CSV. Make sure you\'re uploading a GHIN export file.', 'error');
+    alert('Could not find required columns (First Name, Last Name, Handicap Index) in the CSV.\nMake sure you\'re uploading a GHIN export file.');
     return null;
   }
   var data = {};
@@ -6794,27 +6735,18 @@ function ghinParseCSV(text) {
 
 function ghinGetStatus(r) {
   if (!_ghinData) return null;
-  // Try matching by GHIN ID — check dedicated ghin field first (if it looks like an ID,
-  // i.e. 5-8 digits), then fall back to scanning notes, then full name match
+  // Try matching by GHIN ID first (extracted from notes or a dedicated field),
+  // then fall back to full name match
   var entry = null;
-  var ghinField = (r.ghin || '').trim();
-  if (/^\d{5,8}$/.test(ghinField) && _ghinData['__id__' + ghinField]) {
-    entry = _ghinData['__id__' + ghinField];
-  }
-  if (!entry) {
-    var ghinIdMatch = (r.notes || '').match(/GHIN\s*#\s*(\d{5,8})/i);
-    if (ghinIdMatch && _ghinData['__id__' + ghinIdMatch[1]]) {
-      entry = _ghinData['__id__' + ghinIdMatch[1]];
-    }
+  var ghinIdMatch = (r.notes || '').match(/GHIN\s*#\s*(\d{5,8})/i);
+  if (ghinIdMatch && _ghinData['__id__' + ghinIdMatch[1]]) {
+    entry = _ghinData['__id__' + ghinIdMatch[1]];
   }
   if (!entry) {
     var name = ((r.firstName || '') + ' ' + (r.lastName || '')).toLowerCase().trim();
     entry = _ghinData[name];
   }
-  // When ghin field is a GHIN ID (5-8 digits) and we found the entry, treat official hcp
-  // as both registered and official (ID lookup counts as full verification)
-  var isGhinIdEntry = /^\d{5,8}$/.test(ghinField);
-  var regHcp = isGhinIdEntry ? (entry ? entry.hcp : null) : parseHcp(r.ghin, null);
+  var regHcp = parseHcp(r.ghin, null);
   if (!entry) return { status: 'unknown' };
   if (entry.hcp === null) return { status: 'unknown' };
   if (regHcp === null) return { status: 'no-hcp' };
@@ -7043,96 +6975,6 @@ function pairRunTest() {
 
   return { passed: pass, failed: fail };
 }
-
-function showToast(msg, type) {
-  var container = document.getElementById('whcc-toast-container');
-  if (!container) { container = document.createElement('div'); container.id = 'whcc-toast-container'; document.body.appendChild(container); }
-  var toast = document.createElement('div');
-  toast.className = 'whcc-toast ' + (type || 'info');
-  toast.textContent = msg;
-  container.appendChild(toast);
-  requestAnimationFrame(function(){ requestAnimationFrame(function(){ toast.classList.add('show'); }); });
-  setTimeout(function(){ toast.classList.remove('show'); setTimeout(function(){ toast.parentNode && toast.parentNode.removeChild(toast); }, 300); }, 3500);
-}
-
-function submitEventInquiry() {
-  var first   = document.getElementById('inq-first').value.trim();
-  var last    = document.getElementById('inq-last').value.trim();
-  var email   = document.getElementById('inq-email').value.trim();
-  var phone   = document.getElementById('inq-phone').value.trim();
-  var type    = document.getElementById('inq-type').value;
-  var guests  = document.getElementById('inq-guests').value.trim();
-  var date    = document.getElementById('inq-date').value;
-  var notes   = document.getElementById('inq-notes').value.trim();
-  var errEl   = document.getElementById('inq-error');
-  var btn     = document.getElementById('inq-btn');
-  errEl.style.display = 'none';
-  if (!first && !last)  { errEl.textContent = 'Please enter your name.'; errEl.style.display = 'block'; return; }
-  if (!email && !phone) { errEl.textContent = 'Please provide an email or phone number.'; errEl.style.display = 'block'; return; }
-  var message = 'Event Type: ' + type + '\nEstimated Guests: ' + (guests || 'Not specified') +
-                '\nPreferred Date: ' + (date || 'Not specified') + '\nNotes: ' + (notes || 'None');
-  btn.disabled = true; btn.textContent = 'Sending…';
-  fetch(WHCC_SCRIPT_URL, {
-    method: 'POST', headers: { 'Content-Type': 'text/plain' },
-    body: JSON.stringify({
-      action: 'addContact', name: (first + ' ' + last).trim(),
-      email: email, phone: phone, subject: 'Private Event Inquiry',
-      message: message, timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Chicago' })
-    })
-  }).then(function() {
-    document.getElementById('inq-confirm').style.display = 'block';
-    btn.style.display = 'none';
-    ['inq-first','inq-last','inq-email','inq-phone','inq-guests','inq-date','inq-notes'].forEach(function(id){
-      document.getElementById(id).value = '';
-    });
-  }).catch(function() {
-    errEl.textContent = 'Unable to send — please call (573) 785-5253.';
-    errEl.style.display = 'block';
-    btn.disabled = false; btn.textContent = 'Submit Inquiry';
-  });
-}
-
-function submitContactForm() {
-  var name    = document.getElementById('cf-name').value.trim();
-  var email   = document.getElementById('cf-email').value.trim();
-  var phone   = document.getElementById('cf-phone').value.trim();
-  var subject = document.getElementById('cf-subject').value;
-  var message = document.getElementById('cf-message').value.trim();
-  var errEl   = document.getElementById('cf-error');
-  var btn     = document.getElementById('cf-btn');
-  errEl.style.display = 'none';
-  if (!name)            { errEl.textContent = 'Please enter your name.'; errEl.style.display = 'block'; return; }
-  if (!email && !phone) { errEl.textContent = 'Please provide an email or phone number so we can reach you.'; errEl.style.display = 'block'; return; }
-  if (!message)         { errEl.textContent = 'Please enter a message.'; errEl.style.display = 'block'; return; }
-  btn.disabled = true;
-  btn.textContent = 'Sending...';
-  fetch(WHCC_SCRIPT_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain' },
-    body: JSON.stringify({
-      action:    'addContact',
-      name:      name,
-      email:     email,
-      phone:     phone,
-      subject:   subject,
-      message:   message,
-      timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Chicago' })
-    })
-  })
-  .then(function() {
-    document.getElementById('cf-confirm').style.display = 'block';
-    btn.style.display = 'none';
-    ['cf-name','cf-email','cf-phone','cf-message'].forEach(function(id) {
-      document.getElementById(id).value = '';
-    });
-  })
-  .catch(function() {
-    errEl.textContent = 'Unable to send -- please email info@westwoodhillscountryclub.com directly or call (573) 785-5253.';
-    errEl.style.display = 'block';
-    btn.disabled = false;
-    btn.textContent = 'Send Message';
-  });
-}
 </script>
 
 <!-- Staff PIN overlay -->
@@ -7189,14 +7031,6 @@ function submitContactForm() {
       <p class="reg-modal-meta" id="reg-event-meta"></p>
       <p style="font-size:11px;margin-bottom:20px;" id="reg-spots-remaining"></p>
       <form onsubmit="submitRegForm(event)">
-        <div class="reg-row" id="reg-date-row" style="display:none">
-          <div class="reg-field" style="grid-column:1/-1">
-            <label>Select Date *</label>
-            <select id="reg-date-select" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:.95rem;background:var(--white);color:var(--dark);font-family:'Inter',sans-serif;">
-              <option value="">— Select a date —</option>
-            </select>
-          </div>
-        </div>
         <div class="reg-row">
           <div class="reg-field"><label>First Name *</label><input type="text" id="reg-fname" required placeholder="Jane"/></div>
           <div class="reg-field"><label>Last Name *</label><input type="text" id="reg-lname" required placeholder="Smith"/></div>
@@ -7207,7 +7041,6 @@ function submitContactForm() {
         </div>
         <div class="reg-row" id="reg-team-row" style="display:none">
           <div class="reg-field"><label>Team / Partner Name</label><input type="text" id="reg-partner" placeholder="e.g. John Doe"/></div>
-          <div class="reg-field"><label>Partner GHIN #</label><input type="text" id="reg-partner-ghin" placeholder="Optional"/></div>
           <div class="reg-field"><label>Players in Group</label><select id="reg-players"><option value="1">1 Player</option><option value="2" selected>2 Players</option><option value="3">3 Players</option><option value="4">4 Players</option></select></div>
         </div>
         <div class="reg-row"><div class="reg-field"><label>Member #</label><input type="text" id="reg-membernum" placeholder="Optional"/></div><div class="reg-field"><label>GHIN #</label><input type="text" id="reg-ghin" placeholder="Optional — handicap index"/></div></div>
