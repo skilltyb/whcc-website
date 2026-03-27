@@ -930,6 +930,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
      HOME PAGE
 ════════════════════════════════════════ -->
 <div class="page active" id="page-home">
+  <div id="wh-announce-bar" style="display:none;"></div>
   <section class="hero">
     <div class="hero-bg"></div>
     <div class="hero-year">1936</div>
@@ -1041,12 +1042,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
         <p class="sec-body">From weekly Men's League on Thursdays to the prestigious Ozark Invitational, Friday Night Fights, and Hit &amp; Giggle socials, Westwood Hills keeps a full calendar of events for golfers, families, and social members throughout the season.</p>
         <button class="btn-p" onclick="navigate('events')">Full Calendar</button>
       </div>
-      <div class="fade-up d3">
-        <div class="event-item"><div class="ev-date-box"><div class="ev-mo">Apr</div><div class="ev-d">18</div></div><div><div class="ev-name">Men's Opening Day</div><div class="ev-sub">9:30 AM – 2:00 PM · All Members Welcome</div></div><span class="ev-tag">Golf</span></div>
-        <div class="event-item"><div class="ev-date-box"><div class="ev-mo">Apr</div><div class="ev-d">25</div></div><div><div class="ev-name">Ozark Invitational</div><div class="ev-sub">Signature Annual Tournament · 2-Day Event</div></div><span class="ev-tag">Tournament</span></div>
-        <div class="event-item"><div class="ev-date-box"><div class="ev-mo">May</div><div class="ev-d">16</div></div><div><div class="ev-name">Spring 2-Man Scramble</div><div class="ev-sub">2-Day Event · 8:00 AM Shotgun Start</div></div><span class="ev-tag">Tournament</span></div>
-        <div class="event-item"><div class="ev-date-box"><div class="ev-mo">Jun</div><div class="ev-d">5</div></div><div><div class="ev-name">UCAN Golf Outing</div><div class="ev-sub">Charity Tournament · Supporting Local Cancer Patients</div></div><span class="ev-tag">Tournament</span></div>
-        <div class="event-item"><div class="ev-date-box"><div class="ev-mo">Thu</div><div class="ev-d">Wkly</div></div><div><div class="ev-name">Men's League</div><div class="ev-sub">Every Thursday · 5:00 PM · May–September</div></div><span class="ev-tag">Weekly</span></div>
+      <div class="fade-up d3" id="home-events-list">
       </div>
     </div>
   </div>
@@ -1095,7 +1091,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <div><div class="footer-brand-logo"><div class="nav-emblem">WH</div><div class="footer-brand-text">Westwood Hills<br>Country Club<small>Est. 1936 · Poplar Bluff, MO</small></div></div><p class="footer-tagline">Where Southeast Missouri's finest traditions of sport, dining, and fellowship come together.</p></div>
     <div><p class="fcol-title">Explore</p><ul class="flinks"><li><a onclick="navigate('golf')">Golf &amp; Course</a></li><li><a onclick="navigate('dining')">Dining</a></li><li><a onclick="navigate('aquatics')">Aquatics</a></li><li><a onclick="navigate('events')">Events &amp; Tournaments</a></li></ul></div>
     <div><p class="fcol-title">Membership</p><ul class="flinks"><li><a onclick="navigate('membership')">Full Family</a></li><li><a onclick="navigate('membership')">Junior Executive</a></li><li><a onclick="navigate('membership')">Youth</a></li><li><a onclick="navigate('membership')">Social</a></li><li><a onclick="navigate('membership')">Out of Town</a></li></ul></div>
-    <div><p class="fcol-title">Contact</p><div class="fci"><strong>Golf Shop</strong>(573) 785-8211</div><div class="fci"><strong>Clubhouse</strong>(573) 785-5253</div><div class="fci"><strong>Email</strong>info@westwoodhillscountryclub.com</div><div class="fci"><strong>Address</strong>1 Birdie Ln, Poplar Bluff, MO 63901</div></div>
+    <div><p class="fcol-title">Contact</p><div class="fci"><strong>Golf Shop</strong><span data-wh-contact="phone_golf">(573) 785-8211</span></div><div class="fci"><strong>Clubhouse</strong><span data-wh-contact="phone_main">(573) 785-5253</span></div><div class="fci"><strong>Email</strong><span data-wh-contact="email">info@westwoodhillscountryclub.com</span></div><div class="fci"><strong>Address</strong>1 Birdie Ln, Poplar Bluff, MO 63901</div></div>
   </div><div class="footer-bottom"><p class="fcopy">© 2026 Westwood Hills Country Club. All rights reserved.</p><p class="fcopy">Poplar Bluff, Missouri · Est. 1936</p><p class="fcopy" style="margin-top:4px;"><a onclick="navigate('staff')" style="color:rgba(245,240,232,.35);cursor:pointer;text-decoration:none;font-size:10px;letter-spacing:.1em;">Staff Portal</a></p></div></footer>
 </div>
 
@@ -1593,27 +1589,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
   <div class="section">
     <p class="eyebrow fade-up">2026 Calendar</p>
     <h2 class="sec-title fade-up d1">Upcoming <em>events</em></h2>
-    <div class="cal-grid">
-      <div class="ev-card fade-up d1"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Mar</span><span class="ecd-d">14</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">St. Patty's Shootout</div><div class="ev-card-detail">10:30 AM – 2:30 PM · Fun format to kick off the season · All members welcome</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('St. Patty\'s Shootout','Mar 14 · 10:30 AM – 2:30 PM',false)" style="cursor:pointer">Sign Up →</a></div></div>
-      <div class="ev-card fade-up d2"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Apr</span><span class="ecd-d">7</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Ladies Opening Day</div><div class="ev-card-detail">9:00 AM – 1:00 PM · Kick off the season with our ladies opening day event</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Ladies Opening Day','Apr 7 · 9:00 AM – 1:00 PM',false)" style="cursor:pointer">Sign Up →</a></div></div>
-      <div class="ev-card fade-up d3"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Apr</span><span class="ecd-d">8</span><span class="ecd-y">2026</span></div><span class="ev-type social">Social</span></div><div class="ev-card-body"><div class="ev-card-name">Masters Dinner</div><div class="ev-card-detail">6:30 – 9:30 PM · Annual Masters watch party &amp; dinner · Great food, great company</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Masters Dinner','Apr 8 · 6:30 – 9:30 PM',false)" style="cursor:pointer">RSVP →</a></div></div>
-      <div class="ev-card fade-up d1"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Apr</span><span class="ecd-d">13</span><span class="ecd-y">2026</span></div><span class="ev-type tournament">Tournament</span></div><div class="ev-card-body"><div class="ev-card-name">Mules Invitational</div><div class="ev-card-detail">9:00 AM – 2:00 PM · Supporting Poplar Bluff athletics</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Mules Invitational','Apr 13 · 9:00 AM – 2:00 PM',true)" style="cursor:pointer">Register →</a></div></div>
-      <div class="ev-card fade-up d2"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Apr</span><span class="ecd-d">17</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">MGA Draft Day</div><div class="ev-card-detail">6:00 – 10:00 PM · Men's Golf Association season draft night</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('MGA Draft Day','Apr 17 · 6:00 – 10:00 PM',false)" style="cursor:pointer">Sign Up →</a></div></div>
-      <div class="ev-card fade-up d3"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Apr</span><span class="ecd-d">18</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Men's Opening Day</div><div class="ev-card-detail">9:30 AM – 2:00 PM · Registration deadline April 16 at 5:00 PM</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Men\'s Opening Day','Apr 18 · 9:30 AM – 2:00 PM',false)" style="cursor:pointer">Sign Up →</a></div></div>
-      <div class="ev-card fade-up d1"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Apr</span><span class="ecd-d">25</span><span class="ecd-y">2026</span></div><span class="ev-type tournament">Tournament</span></div><div class="ev-card-body"><div class="ev-card-name">Ozark Invitational</div><div class="ev-card-detail">2-day tournament · Apr 25–26 · Westwood Hills' signature invitational event</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Ozark Invitational','Apr 25–26 · 2-Day Tournament',true)" style="cursor:pointer">Register →</a></div></div>
-      <div class="ev-card fade-up d2"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">1</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Friday Night Fights Begins</div><div class="ev-card-detail">6:00 – 10:00 PM · Weekly competitive series kicks off · Runs through the season</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Friday Night Fights','May 1 · 6:00 – 10:00 PM',false)" style="cursor:pointer">Sign Up →</a></div></div>
-      <div class="ev-card fade-up d3"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">6</span><span class="ecd-y">2026</span></div><span class="ev-type social">Social</span></div><div class="ev-card-body"><div class="ev-card-name">Hit &amp; Giggle</div><div class="ev-card-detail">7:00 – 11:00 PM · Recurring social golf series · A great way to socialize on and off the course</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Hit &amp; Giggle','May 6 · 7:00 – 11:00 PM',false)" style="cursor:pointer">Sign Up →</a></div></div>
-      <div class="ev-card fade-up d1"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">7</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Men's League Opening Night</div><div class="ev-card-detail">5:00 – 9:00 PM · Weekly men's league begins · Every Thursday through the season</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Men\'s League Opening Night','May 7 · 5:00 – 9:00 PM',false)" style="cursor:pointer">Sign Up →</a></div></div>
-      <div class="ev-card fade-up d2"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">16</span><span class="ecd-y">2026</span></div><span class="ev-type tournament">Tournament</span></div><div class="ev-card-body"><div class="ev-card-name">Spring 2-Man Scramble</div><div class="ev-card-detail">2-day event · May 16–17 · 8:00 AM shotgun start</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Spring 2-Man Scramble','May 16–17 · 8:00 AM Shotgun',true)" style="cursor:pointer">Register →</a></div></div>
-      <div class="ev-card fade-up d3"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">23</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">MGA 2-Man Best Ball</div><div class="ev-card-detail">8:00 AM – 12:00 PM · Men's Golf Association event</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('MGA 2-Man Best Ball','May 23 · 8:00 AM – 12:00 PM',true)" style="cursor:pointer">Sign Up →</a></div></div>
-      <div class="ev-card fade-up d1"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">May</span><span class="ecd-d">25</span><span class="ecd-y">2026</span></div><span class="ev-type social">Social</span></div><div class="ev-card-body"><div class="ev-card-name">Memorial Day Wing Ding</div><div class="ev-card-detail">10:00 AM – 2:00 PM · Annual Memorial Day celebration · Food, fun, &amp; fellowship</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Memorial Day Wing Ding','May 25 · 10:00 AM – 2:00 PM',false)" style="cursor:pointer">RSVP →</a></div></div>
-      <div class="ev-card fade-up d2"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Jun</span><span class="ecd-d">5</span><span class="ecd-y">2026</span></div><span class="ev-type tournament">Tournament</span></div><div class="ev-card-body"><div class="ev-card-name">UCAN Golf Outing</div><div class="ev-card-detail">9:30 AM – 1:30 PM · Charity tournament raising money for local cancer patients</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('UCAN Golf Outing','Jun 5 · 9:30 AM – 1:30 PM',true)" style="cursor:pointer">Register →</a></div></div>
-      <div class="ev-card fade-up d3"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Jun</span><span class="ecd-d">6</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Ladies Cup Challenge Matches</div><div class="ev-card-detail">9:00 AM – 1:00 PM · Annual ladies match play competition</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Ladies Cup Challenge Matches','Jun 6 · 9:00 AM – 1:00 PM',false)" style="cursor:pointer">Sign Up →</a></div></div>
-      <div class="ev-card fade-up d1"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Jun</span><span class="ecd-d">9</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Ladies Powder Puff</div><div class="ev-card-detail">9:00 AM – 1:00 PM · Ladies 2-player scramble</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Ladies Powder Puff','Jun 9 · 9:00 AM – 1:00 PM',true)" style="cursor:pointer">Sign Up →</a></div></div>
-      <div class="ev-card fade-up d2"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Jun</span><span class="ecd-d">12</span><span class="ecd-y">2026</span></div><span class="ev-type tournament">Tournament</span></div><div class="ev-card-body"><div class="ev-card-name">Three Rivers College Outing</div><div class="ev-card-detail">9:30 AM – 2:00 PM · Supporting Three Rivers College</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Three Rivers College Outing','Jun 12 · 9:30 AM – 2:00 PM',true)" style="cursor:pointer">Register →</a></div></div>
-      <div class="ev-card fade-up d3"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Jun</span><span class="ecd-d">18</span><span class="ecd-y">2026</span></div><span class="ev-type tournament">Tournament</span></div><div class="ev-card-body"><div class="ev-card-name">Steak Stag — SEMO Qualifier</div><div class="ev-card-detail">6:00 – 10:00 PM · SEMO Cup qualifying event · Steak dinner included</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Steak Stag — SEMO Qualifier','Jun 18 · 6:00 – 10:00 PM',false)" style="cursor:pointer">Register →</a></div></div>
-      <div class="ev-card fade-up d1"><div class="ev-card-top"><div class="ev-card-date"><span class="ecd-mo">Aug</span><span class="ecd-d">11</span><span class="ecd-y">2026</span></div><span class="ev-type golf">Golf</span></div><div class="ev-card-body"><div class="ev-card-name">Ladies Sweet Treat</div><div class="ev-card-detail">4-player ladies scramble · Full day event</div></div><div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal('Ladies Sweet Treat','Aug 11 · Full Day Event',true)" style="cursor:pointer">Sign Up →</a></div></div>
-    </div>
+    <div class="cal-grid" id="ev-cal-grid"></div>
     <div class="ev-archive-bar">
       <button class="ev-archive-btn" id="ev-archive-toggle" style="display:none;" onclick="evToggleArchive()"></button>
     </div>
@@ -1862,9 +1838,9 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <div class="contact-grid">
       <div class="fade-up d1">
         <div class="cb"><div class="cb-lbl">Address</div><div class="cb-val">1 Birdie Ln</div><div class="cb-sub">Poplar Bluff, Missouri 63901</div></div>
-        <div class="cb"><div class="cb-lbl">Golf Shop</div><div class="cb-val">(573) 785-8211</div><div class="cb-sub">Tee times, lessons, green fees</div></div>
-        <div class="cb"><div class="cb-lbl">Clubhouse &amp; Events</div><div class="cb-val">(573) 785-5253</div><div class="cb-sub">Reservations, membership, events</div></div>
-        <div class="cb"><div class="cb-lbl">Email</div><div class="cb-val" style="font-size:17px;"><a href="mailto:info@westwoodhillscountryclub.com" style="color:inherit;text-decoration:none;">info@westwoodhillscountryclub.com</a></div></div>
+        <div class="cb"><div class="cb-lbl">Golf Shop</div><div class="cb-val" data-wh-contact="phone_golf">(573) 785-8211</div><div class="cb-sub">Tee times, lessons, green fees</div></div>
+        <div class="cb"><div class="cb-lbl">Clubhouse &amp; Events</div><div class="cb-val" data-wh-contact="phone_main">(573) 785-5253</div><div class="cb-sub">Reservations, membership, events</div></div>
+        <div class="cb"><div class="cb-lbl">Email</div><div class="cb-val" style="font-size:17px;" data-wh-contact="email"><a href="mailto:info@westwoodhillscountryclub.com" style="color:inherit;text-decoration:none;">info@westwoodhillscountryclub.com</a></div></div>
         <div class="cb"><div class="cb-lbl">Office Hours</div><div class="cb-sub" style="font-size:14px;color:var(--text);">Mon – Fri: 8:00 AM – 5:00 PM<br>Saturday: 8:00 AM – 2:00 PM<br>Sunday: Closed (Golf Shop open)</div></div>
       </div>
       <div class="fade-up d2">
@@ -1931,6 +1907,17 @@ nav.staff-mode .nav-site-back{display:flex!important;}
           <div class="sv-drop-menu" id="sv-menu-admin">
             <button id="svb-menus" onclick="staffView('menus');svCloseDrop()">Menus</button>
             <button id="svb-settings" onclick="staffView('settings');svCloseDrop()">Settings</button>
+          </div>
+        </div>
+        <!-- Website CMS dropdown -->
+        <div class="sv-dropdown">
+          <button class="staff-view-btn sv-drop-btn" id="sv-drop-website" onclick="svToggleDrop('website')">WEBSITE ▾</button>
+          <div class="sv-drop-menu" id="sv-menu-website">
+            <button id="svb-events"        onclick="staffView('events');svCloseDrop()">Events</button>
+            <button id="svb-announcements" onclick="staffView('announcements');svCloseDrop()">Announcements</button>
+            <button id="svb-heroes"        onclick="staffView('heroes');svCloseDrop()">Page Headers</button>
+            <button id="svb-contact"       onclick="staffView('contact');svCloseDrop()">Contact Info</button>
+            <button id="svb-photos"        onclick="staffView('photos');svCloseDrop()">Photos</button>
           </div>
         </div>
         <span style="width:1px;background:rgba(184,151,106,.2);margin:0 4px;align-self:stretch;"></span>
@@ -2442,6 +2429,72 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 
         </div><!-- end sv-pairings -->
 
+        <!-- ── WEBSITE CMS PANELS ── -->
+
+        <!-- EVENTS EDITOR -->
+        <div id="sv-events" style="display:none;">
+          <div class="staff-section-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+            <div><div class="staff-tag">Event Calendar</div><div style="font-size:11px;color:var(--muted);margin-top:4px;">Add, edit, or remove events from the public calendar.</div></div>
+            <button class="btn-p" style="padding:8px 16px;font-size:12px;" onclick="cmsEvNew()">+ Add Event</button>
+          </div>
+          <div id="cms-ev-form" style="display:none;background:rgba(26,43,31,.4);border:1px solid rgba(184,151,106,.15);padding:20px;margin-bottom:20px;"></div>
+          <div id="cms-ev-list"></div>
+        </div>
+
+        <!-- ANNOUNCEMENTS EDITOR -->
+        <div id="sv-announcements" style="display:none;">
+          <div class="staff-section-header" style="margin-bottom:16px;">
+            <div class="staff-tag">Site Announcements</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;">Post notices that appear at the top of the homepage for all visitors.</div>
+          </div>
+          <button class="btn-p" style="padding:8px 16px;font-size:12px;margin-bottom:16px;" onclick="cmsAnnNew()">+ New Announcement</button>
+          <div id="cms-ann-form" style="display:none;background:rgba(26,43,31,.4);border:1px solid rgba(184,151,106,.15);padding:20px;margin-bottom:20px;"></div>
+          <div id="cms-ann-list"></div>
+        </div>
+
+        <!-- HEROES / PAGE HEADERS EDITOR -->
+        <div id="sv-heroes" style="display:none;">
+          <div class="staff-section-header" style="margin-bottom:16px;">
+            <div class="staff-tag">Page Headers</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;">Edit the headline, tagline, and banner photo for each page.</div>
+          </div>
+          <div id="cms-heroes-list"></div>
+          <button class="btn-p" style="margin-top:16px;width:100%;" onclick="cmsHeroesSave()">Save All Page Headers</button>
+          <div id="cms-heroes-status" style="display:none;color:#8fcc8f;font-size:12px;margin-top:8px;"></div>
+        </div>
+
+        <!-- CONTACT INFO EDITOR -->
+        <div id="sv-contact" style="display:none;">
+          <div class="staff-section-header" style="margin-bottom:16px;">
+            <div class="staff-tag">Contact Information</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;">Phone numbers, address, and hours shown throughout the site.</div>
+          </div>
+          <div style="display:grid;gap:12px;max-width:520px;">
+            <div class="hrf-group"><label class="hrf-label">Main Phone (Clubhouse & Events)</label><input class="hrf-input" id="cms-ct-phone-main" /></div>
+            <div class="hrf-group"><label class="hrf-label">Golf Shop Phone</label><input class="hrf-input" id="cms-ct-phone-golf" /></div>
+            <div class="hrf-group"><label class="hrf-label">Email Address</label><input class="hrf-input" id="cms-ct-email" /></div>
+            <div class="hrf-group"><label class="hrf-label">Mailing Address</label><input class="hrf-input" id="cms-ct-address" /></div>
+            <div class="hrf-group"><label class="hrf-label">Office Hours — Weekdays</label><input class="hrf-input" id="cms-ct-hours-wd" /></div>
+            <div class="hrf-group"><label class="hrf-label">Office Hours — Saturday</label><input class="hrf-input" id="cms-ct-hours-sa" /></div>
+            <div class="hrf-group"><label class="hrf-label">Office Hours — Sunday</label><input class="hrf-input" id="cms-ct-hours-su" /></div>
+            <div class="hrf-group"><label class="hrf-label">Hoover's Dinner Hours</label><input class="hrf-input" id="cms-ct-hoovers-hours" /></div>
+            <div class="hrf-group"><label class="hrf-label">Hoover's Public Night</label><input class="hrf-input" id="cms-ct-hoovers-public" /></div>
+          </div>
+          <button class="btn-p" style="margin-top:20px;width:100%;max-width:520px;" onclick="cmsContactSave()">Save Contact Info</button>
+          <div id="cms-contact-status" style="display:none;color:#8fcc8f;font-size:12px;margin-top:8px;"></div>
+        </div>
+
+        <!-- PHOTOS EDITOR -->
+        <div id="sv-photos" style="display:none;">
+          <div class="staff-section-header" style="margin-bottom:16px;">
+            <div class="staff-tag">Photos</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;">Paste a URL for each photo. Tip: upload to Google Drive, right-click → Get link → change to "Anyone with the link" — then paste the direct image URL here.</div>
+          </div>
+          <div id="cms-photos-list" style="display:grid;gap:12px;max-width:600px;"></div>
+          <button class="btn-p" style="margin-top:20px;width:100%;max-width:600px;" onclick="cmsPhotosSave()">Save Photos</button>
+          <div id="cms-photos-status" style="display:none;color:#8fcc8f;font-size:12px;margin-top:8px;"></div>
+        </div>
+
       </div>
 
       <!-- Right panel: detail -->
@@ -2525,6 +2578,187 @@ window.storage = {
 };
 </script>
 <script>
+// ════════════════════════════════════════════════════════
+// SITE CONTENT — CMS DATA & RENDERING
+// ════════════════════════════════════════════════════════
+
+var WH_SITE_CONTENT = null; // loaded from Sheets on init
+
+var WH_SITE_DEFAULTS = {
+  events: [
+    { id:'ev1',  name:"St. Patty's Shootout",       month:'Mar', day:'14',   year:'2026', type:'golf',       detail:"10:30 AM \u2013 2:30 PM \u00b7 Fun format to kick off the season \u00b7 All members welcome",          cta:'Sign Up',  regMeta:"Mar 14 \u00b7 10:30 AM \u2013 2:30 PM",         active:true,  featured:false },
+    { id:'ev2',  name:"Ladies Opening Day",          month:'Apr', day:'7',    year:'2026', type:'golf',       detail:"9:00 AM \u2013 1:00 PM \u00b7 Kick off the season with our ladies opening day event",                  cta:'Sign Up',  regMeta:"Apr 7 \u00b7 9:00 AM \u2013 1:00 PM",           active:true,  featured:false },
+    { id:'ev3',  name:"Masters Dinner",              month:'Apr', day:'8',    year:'2026', type:'social',     detail:"6:30 \u2013 9:30 PM \u00b7 Annual Masters watch party & dinner \u00b7 Great food, great company",       cta:'RSVP',     regMeta:"Apr 8 \u00b7 6:30 \u2013 9:30 PM",              active:true,  featured:false },
+    { id:'ev4',  name:"Mules Invitational",          month:'Apr', day:'13',   year:'2026', type:'tournament', detail:"9:00 AM \u2013 2:00 PM \u00b7 Supporting Poplar Bluff athletics",                                       cta:'Register', regMeta:"Apr 13 \u00b7 9:00 AM \u2013 2:00 PM",          active:true,  featured:false },
+    { id:'ev5',  name:"MGA Draft Day",               month:'Apr', day:'17',   year:'2026', type:'golf',       detail:"6:00 \u2013 10:00 PM \u00b7 Men\u2019s Golf Association season draft night",                           cta:'Sign Up',  regMeta:"Apr 17 \u00b7 6:00 \u2013 10:00 PM",            active:true,  featured:false },
+    { id:'ev6',  name:"Men\u2019s Opening Day",      month:'Apr', day:'18',   year:'2026', type:'golf',       detail:"9:30 AM \u2013 2:00 PM \u00b7 Registration deadline April 16 at 5:00 PM",                              cta:'Sign Up',  regMeta:"Apr 18 \u00b7 9:30 AM \u2013 2:00 PM",          active:true,  featured:true  },
+    { id:'ev7',  name:"Ozark Invitational",          month:'Apr', day:'25',   year:'2026', type:'tournament', detail:"2-day tournament \u00b7 Apr 25\u201326 \u00b7 Westwood Hills\u2019 signature invitational event",        cta:'Register', regMeta:"Apr 25\u201326 \u00b7 2-Day Tournament",         active:true,  featured:true  },
+    { id:'ev8',  name:"Friday Night Fights Begins",  month:'May', day:'1',    year:'2026', type:'golf',       detail:"6:00 \u2013 10:00 PM \u00b7 Weekly competitive series kicks off \u00b7 Runs through the season",        cta:'Sign Up',  regMeta:"May 1 \u00b7 6:00 \u2013 10:00 PM",             active:true,  featured:false },
+    { id:'ev9',  name:"Hit & Giggle",                month:'May', day:'6',    year:'2026', type:'social',     detail:"7:00 \u2013 11:00 PM \u00b7 Recurring social golf series \u00b7 A great way to socialize on and off the course", cta:'Sign Up', regMeta:"May 6 \u00b7 7:00 \u2013 11:00 PM",      active:true,  featured:false },
+    { id:'ev10', name:"Men\u2019s League Opening Night", month:'May', day:'7', year:'2026', type:'golf',      detail:"5:00 \u2013 9:00 PM \u00b7 Weekly men\u2019s league begins \u00b7 Every Thursday through the season",   cta:'Sign Up',  regMeta:"May 7 \u00b7 5:00 \u2013 9:00 PM",              active:true,  featured:true  },
+    { id:'ev11', name:"Spring 2-Man Scramble",       month:'May', day:'16',   year:'2026', type:'tournament', detail:"2-day event \u00b7 May 16\u201317 \u00b7 8:00 AM shotgun start",                                        cta:'Register', regMeta:"May 16\u201317 \u00b7 8:00 AM Shotgun",         active:true,  featured:true  },
+    { id:'ev12', name:"MGA 2-Man Best Ball",         month:'May', day:'23',   year:'2026', type:'golf',       detail:"8:00 AM \u2013 12:00 PM \u00b7 Men\u2019s Golf Association event",                                      cta:'Sign Up',  regMeta:"May 23 \u00b7 8:00 AM \u2013 12:00 PM",         active:true,  featured:false },
+    { id:'ev13', name:"Memorial Day Wing Ding",      month:'May', day:'25',   year:'2026', type:'social',     detail:"10:00 AM \u2013 2:00 PM \u00b7 Annual Memorial Day celebration \u00b7 Food, fun, & fellowship",         cta:'RSVP',     regMeta:"May 25 \u00b7 10:00 AM \u2013 2:00 PM",         active:true,  featured:false },
+    { id:'ev14', name:"UCAN Golf Outing",            month:'Jun', day:'5',    year:'2026', type:'tournament', detail:"9:30 AM \u2013 1:30 PM \u00b7 Charity tournament raising money for local cancer patients",               cta:'Register', regMeta:"Jun 5 \u00b7 9:30 AM \u2013 1:30 PM",           active:true,  featured:true  },
+    { id:'ev15', name:"Ladies Cup Challenge Matches",month:'Jun', day:'6',    year:'2026', type:'golf',       detail:"9:00 AM \u2013 1:00 PM \u00b7 Annual ladies match play competition",                                    cta:'Sign Up',  regMeta:"Jun 6 \u00b7 9:00 AM \u2013 1:00 PM",           active:true,  featured:false },
+    { id:'ev16', name:"Ladies Powder Puff",          month:'Jun', day:'9',    year:'2026', type:'golf',       detail:"9:00 AM \u2013 1:00 PM \u00b7 Ladies 2-player scramble",                                                cta:'Sign Up',  regMeta:"Jun 9 \u00b7 9:00 AM \u2013 1:00 PM",           active:true,  featured:false },
+    { id:'ev17', name:"Three Rivers College Outing", month:'Jun', day:'12',   year:'2026', type:'tournament', detail:"9:30 AM \u2013 2:00 PM \u00b7 Supporting Three Rivers College",                                         cta:'Register', regMeta:"Jun 12 \u00b7 9:30 AM \u2013 2:00 PM",         active:true,  featured:false },
+    { id:'ev18', name:"Steak Stag \u2014 SEMO Qualifier", month:'Jun', day:'18', year:'2026', type:'tournament', detail:"6:00 \u2013 10:00 PM \u00b7 SEMO Cup qualifying event \u00b7 Steak dinner included",              cta:'Register', regMeta:"Jun 18 \u00b7 6:00 \u2013 10:00 PM",            active:true,  featured:false },
+    { id:'ev19', name:"Ladies Sweet Treat",          month:'Aug', day:'11',   year:'2026', type:'golf',       detail:"4-player ladies scramble \u00b7 Full day event",                                                        cta:'Sign Up',  regMeta:"Aug 11 \u00b7 Full Day Event",                   active:true,  featured:false }
+  ],
+  announcements: [],
+  heroes: {
+    home:       { tag:'Poplar Bluff, Missouri',  title:'Where <em>legends</em> are made',               subtitle:'Southeast Missouri\u2019s finest private country club \u2014 18 championship holes, exceptional dining, and a community built over nine decades.', image:'images/hero-clubhouse.jpg' },
+    golf:       { tag:'Championship Golf',       title:'18 Holes of <em>distinction</em>',              subtitle:'A classic parkland layout nestled in rolling terrain \u2014 challenging for low handicappers, enjoyable for every skill level.',                    image:'images/golf-hero.jpg' },
+    dining:     { tag:'Fine Dining & More',      title:'Flavors as refined <em>as the game</em>',       subtitle:'From casual post-round bites at the Westwood Grill to an elevated evening at Hoover\u2019s \u2014 exceptional food is always on the menu.',      image:'images/dining-hero.jpg' },
+    aquatics:   { tag:'Aquatics Complex',        title:'Summer\u2019s <em>best address</em>',           subtitle:'A premier aquatics facility for members of all ages \u2014 competition pool, zero-entry kids area, and programming for the whole family.',          image:'images/pool-hero.jpg' },
+    events:     { tag:'Events & Tournaments',    title:'Always something <em>to celebrate</em>',        subtitle:'From weekly golf socials to signature tournaments and private celebrations \u2014 Westwood Hills brings people together all year long.',             image:'images/events-hero.jpg' },
+    membership: { tag:'Membership',             title:'Join a tradition <em>nearly 90 years deep</em>', subtitle:'Westwood Hills is more than a club \u2014 it\u2019s where Poplar Bluff\u2019s finest families have gathered for generations.',                    image:'images/membership-hero.jpg' },
+    about:      { tag:'About Us',               title:'Nearly 90 years <em>of community</em>',          subtitle:'From a modest nine-hole layout in 1936 to the premier private club in Southeast Missouri \u2014 our story is one of growth, dedication, and community.', image:'images/about-hero.jpg' }
+  },
+  contact: {
+    phone_golf:       '(573) 785-8211',
+    phone_main:       '(573) 785-5253',
+    email:            'info@westwoodhillscountryclub.com',
+    address:          '1 Birdie Ln, Poplar Bluff, Missouri 63901',
+    hours_weekday:    'Mon\u2013Fri: 8:00 AM \u2013 5:00 PM',
+    hours_saturday:   'Saturday: 8:00 AM \u2013 2:00 PM',
+    hours_sunday:     'Sunday: Closed (Golf Shop open)',
+    hoovers_hours:    'Thursday\u2013Saturday, 5 PM \u2013 9 PM',
+    hoovers_public:   '3rd Saturday of each month'
+  },
+  photos: {
+    hero_home:        'images/hero-clubhouse.jpg',
+    hero_golf:        'images/golf-hero.jpg',
+    hero_dining:      'images/dining-hero.jpg',
+    hero_aquatics:    'images/pool-hero.jpg',
+    hero_events:      'images/events-hero.jpg',
+    hero_membership:  'images/membership-hero.jpg',
+    hero_about:       'images/about-hero.jpg',
+    course_strip:     'images/golf-carts-sunset.jpg',
+    hoovers_cta:      'images/hoovers-table.jpg'
+  }
+};
+
+function whSiteContent() { return WH_SITE_CONTENT || WH_SITE_DEFAULTS; }
+
+function applySiteContent(sc) {
+  if (!sc) return;
+  // Heroes
+  if (sc.heroes) {
+    var pages = ['home','golf','dining','aquatics','events','membership','about'];
+    var bgMap = { home:'hero-bg', golf:'golf-bg', dining:'dining-bg', aquatics:'aquatics-bg', events:'events-bg', membership:'membership-bg', about:'about-bg' };
+    pages.forEach(function(p) {
+      var h = sc.heroes[p]; if (!h) return;
+      // Background image
+      var bg = document.querySelector('.' + bgMap[p]);
+      if (bg && h.image) bg.style.backgroundImage = 'url(' + h.image + ')';
+      // Text content — find ph-content inside the page hero
+      var pageEl = document.getElementById('page-' + p);
+      if (!pageEl) return;
+      var tag   = pageEl.querySelector('.ph-tag');
+      var title = pageEl.querySelector('.ph-title');
+      var sub   = pageEl.querySelector('.ph-sub');
+      if (tag   && h.tag)      tag.textContent   = h.tag;
+      if (title && h.title)    title.innerHTML    = h.title;
+      if (sub   && h.subtitle) sub.textContent    = h.subtitle;
+    });
+  }
+  // Contact info — apply wherever data-wh-contact attributes exist
+  if (sc.contact) {
+    document.querySelectorAll('[data-wh-contact]').forEach(function(el) {
+      var key = el.getAttribute('data-wh-contact');
+      if (sc.contact[key]) el.textContent = sc.contact[key];
+    });
+  }
+  // Photos — non-hero images
+  if (sc.photos) {
+    Object.keys(sc.photos).forEach(function(key) {
+      document.querySelectorAll('[data-wh-photo="' + key + '"]').forEach(function(el) {
+        if (el.tagName === 'IMG') el.src = sc.photos[key];
+        else el.style.backgroundImage = 'url(' + sc.photos[key] + ')';
+      });
+    });
+  }
+  // Events
+  if (sc.events) {
+    renderEventsGrid(sc.events);
+    renderHomeEvents(sc.events);
+  }
+  // Announcements banner
+  if (sc.announcements && sc.announcements.length > 0) {
+    renderAnnouncements(sc.announcements);
+  }
+}
+
+function renderEventsGrid(events) {
+  var grid = document.getElementById('ev-cal-grid');
+  if (!grid) return;
+  var active = (events || []).filter(function(e) { return e.active !== false; });
+  var delays = ['d1','d2','d3'];
+  grid.innerHTML = active.map(function(ev, i) {
+    var typeClass = ev.type || 'golf';
+    var delay = delays[i % 3];
+    var nameEsc = (ev.name || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    var metaEsc = (ev.regMeta || '').replace(/'/g, "\\'");
+    return '<div class="ev-card fade-up ' + delay + '">' +
+      '<div class="ev-card-top">' +
+        '<div class="ev-card-date"><span class="ecd-mo">' + (ev.month||'') + '</span><span class="ecd-d">' + (ev.day||'') + '</span><span class="ecd-y">' + (ev.year||'2026') + '</span></div>' +
+        '<span class="ev-type ' + typeClass + '">' + typeClass.charAt(0).toUpperCase() + typeClass.slice(1) + '</span>' +
+      '</div>' +
+      '<div class="ev-card-body"><div class="ev-card-name">' + (ev.name||'') + '</div><div class="ev-card-detail">' + (ev.detail||'') + '</div></div>' +
+      '<div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal(\'' + nameEsc + '\',\'' + metaEsc + '\',' + (ev.type==='tournament'||ev.type==='golf'?'false':'false') + ')" style="cursor:pointer">' + (ev.cta||'Sign Up') + ' \u2192</a></div>' +
+    '</div>';
+  }).join('');
+}
+
+function renderHomeEvents(events) {
+  var list = document.getElementById('home-events-list');
+  if (!list) return;
+  var featured = (events || []).filter(function(e) { return e.featured && e.active !== false; }).slice(0, 5);
+  if (featured.length === 0) featured = (events || []).filter(function(e) { return e.active !== false; }).slice(0, 5);
+  var typeLabels = { golf:'Golf', tournament:'Tournament', social:'Social', aquatics:'Aquatics', weekly:'Weekly' };
+  list.innerHTML = featured.map(function(ev) {
+    return '<div class="event-item">' +
+      '<div class="ev-date-box"><div class="ev-mo">' + (ev.month||'') + '</div><div class="ev-d">' + (ev.day||'') + '</div></div>' +
+      '<div><div class="ev-name">' + (ev.name||'') + '</div><div class="ev-sub">' + (ev.detail||'') + '</div></div>' +
+      '<span class="ev-tag">' + (typeLabels[ev.type] || 'Golf') + '</span>' +
+    '</div>';
+  }).join('');
+}
+
+function renderAnnouncements(announcements) {
+  var bar = document.getElementById('wh-announce-bar');
+  if (!bar) return;
+  var active = announcements.filter(function(a) { return a.active !== false; });
+  if (active.length === 0) { bar.style.display = 'none'; return; }
+  bar.style.display = 'block';
+  bar.innerHTML = active.map(function(a) {
+    return '<div class="wh-announce-item" style="padding:10px 20px;background:' + (a.urgent ? 'rgba(180,60,60,.95)' : 'rgba(26,43,31,.97)') + ';border-bottom:1px solid rgba(184,151,106,.2);">' +
+      '<span style="color:#b8976a;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-right:10px;">' + (a.label||'Notice') + '</span>' +
+      '<span style="color:#f5f0e8;font-size:13px;">' + a.text + '</span>' +
+      (a.link ? '<a href="' + a.link + '" style="color:#b8976a;margin-left:12px;font-size:12px;">Learn more \u2192</a>' : '') +
+    '</div>';
+  }).join('');
+}
+
+function whInitSiteContent() {
+  // Apply defaults immediately for fast paint
+  applySiteContent(WH_SITE_DEFAULTS);
+  // Then fetch from Sheets and override
+  WHCC_SYNC.fetchSiteContent(function(remote, err) {
+    if (!remote || err || typeof remote !== 'object' || !remote.events) return;
+    WH_SITE_CONTENT = remote;
+    try { localStorage.setItem('wh_site_content', JSON.stringify(remote)); } catch(e) {}
+    applySiteContent(remote);
+  });
+  // Also try localStorage cache for faster load
+  try {
+    var cached = JSON.parse(localStorage.getItem('wh_site_content') || 'null');
+    if (cached && cached.events) { WH_SITE_CONTENT = cached; applySiteContent(cached); }
+  } catch(e) {}
+}
+
 // ═══════════════════════════════════════
 // EVENT REGISTRY — types: 'single', 'twosome', 'foursome'
 // ═══════════════════════════════════════
@@ -2830,6 +3064,23 @@ var WHCC_SYNC = {
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
   },
+
+  // ── SITE CONTENT CMS SYNC ──
+  saveSiteContent: function(data, cb) {
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'save-site-content', data: data })
+    }).then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+  fetchSiteContent: function(cb) {
+    fetch(WHCC_SCRIPT_URL + '?action=get-site-content')
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
 };
 
 // ── EVENT ARCHIVING ──────────────────────────────────────────────────────────
@@ -2903,7 +3154,7 @@ function evToggleArchive() {
 }
 
 // Auto-sync counts from Sheet in background on every page load
-document.addEventListener('DOMContentLoaded', function() { WHCC_SYNC.fetchCounts(); });
+document.addEventListener('DOMContentLoaded', function() { WHCC_SYNC.fetchCounts(); whInitSiteContent(); });
 
 function openRegModal(eventTitle, eventMeta, isTeam) {
   var info = getEventInfo(eventTitle);
@@ -4249,7 +4500,8 @@ var _svDropOpen = null;
 var _svViewGroups = {
   reservations: ['calendar','upcoming','guests'],
   golf:         ['registrations','pairings','daily','scoring'],
-  admin:        ['menus','settings']
+  admin:        ['menus','settings'],
+  website:      ['events','announcements','heroes','contact','photos']
 };
 function svToggleDrop(name) {
   if (_svDropOpen && _svDropOpen !== name) svCloseDrop();
@@ -4284,7 +4536,7 @@ function staffView(view, btn, useSecondary) {
   var menuItem = document.getElementById('svb-' + view);
   if (menuItem) menuItem.classList.add('active-view');
 
-  ['calendar','upcoming','search','guests','settings','scoring','daily','menus','registrations','pairings'].forEach(v => {
+  ['calendar','upcoming','search','guests','settings','scoring','daily','menus','registrations','pairings','events','announcements','heroes','contact','photos'].forEach(v => {
     const el = document.getElementById('sv-' + v);
     if (el) el.style.display = v === view ? 'block' : 'none';
   });
@@ -4301,6 +4553,11 @@ function staffView(view, btn, useSecondary) {
   if (view === 'menus') smLoad();
   if (view === 'registrations') staffViewRegistrations();
   if (view === 'pairings') pairViewLoad();
+  if (view === 'events')        { cmsEvLoad(); }
+  if (view === 'announcements') { cmsAnnLoad(); }
+  if (view === 'heroes')        { cmsHeroesLoad(); }
+  if (view === 'contact')       { cmsContactLoad(); }
+  if (view === 'photos')        { cmsPhotosLoad(); }
   // Hide right panel for full-width views
   var rightPanel = document.getElementById('staff-right');
   if (rightPanel) rightPanel.style.display = (view === 'registrations' || view === 'pairings') ? 'none' : '';
@@ -5250,6 +5507,329 @@ async function lsAdminSavePast() {
   try { await window.storage.set('live-scoring-config', JSON.stringify(lsConfig)); } catch(e) {}
   WHCC_SYNC.saveLiveScoring(lsConfig, function() {});
   lsAdminRenderPast();
+}
+
+// ════════════════════════════════════════════════════════
+// WEBSITE CMS
+// ════════════════════════════════════════════════════════
+
+function cmsGetContent() { return JSON.parse(JSON.stringify(WH_SITE_CONTENT || WH_SITE_DEFAULTS)); }
+
+function cmsSave(sc, statusElId) {
+  WH_SITE_CONTENT = sc;
+  try { localStorage.setItem('wh_site_content', JSON.stringify(sc)); } catch(e) {}
+  applySiteContent(sc);
+  WHCC_SYNC.saveSiteContent(sc, function(r, err) {
+    var el = document.getElementById(statusElId);
+    if (el) {
+      el.style.display = 'block';
+      el.textContent = err ? '⚠ Saved locally — could not reach server.' : '✓ Saved and live on the website.';
+      setTimeout(function() { el.style.display = 'none'; }, 4000);
+    }
+  });
+}
+
+// ── EVENTS ──────────────────────────────────────────────
+
+function cmsEvLoad() {
+  var sc = cmsGetContent();
+  cmsEvRenderList(sc.events || []);
+}
+
+function cmsEvRenderList(events) {
+  var list = document.getElementById('cms-ev-list');
+  if (!list) return;
+  if (!events.length) { list.innerHTML = '<div style="color:var(--muted);font-style:italic;">No events yet.</div>'; return; }
+  var typeColors = { golf:'#2a5030', tournament:'#4a2e10', social:'#1a3a4a', aquatics:'#0a2a3a' };
+  list.innerHTML = events.map(function(ev, i) {
+    var active = ev.active !== false;
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:rgba(26,43,31,.35);border:1px solid rgba(184,151,106,.12);margin-bottom:8px;">' +
+      '<div style="display:flex;align-items:center;gap:12px;">' +
+        '<div style="text-align:center;min-width:48px;background:rgba(184,151,106,.1);padding:4px 8px;">' +
+          '<div style="font-size:10px;color:var(--gold);letter-spacing:.08em;">' + (ev.month||'') + '</div>' +
+          '<div style="font-size:18px;color:#f5f0e8;font-weight:700;line-height:1;">' + (ev.day||'') + '</div>' +
+        '</div>' +
+        '<div>' +
+          '<div style="font-size:13px;color:#f5f0e8;font-weight:600;">' + (ev.name||'') + '</div>' +
+          '<div style="font-size:11px;color:var(--muted);margin-top:2px;">' + (ev.type||'golf') + (active ? '' : ' · <span style="color:#cc8888;">Hidden</span>') + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div style="display:flex;gap:6px;">' +
+        '<button class="staff-mini-btn" onclick="cmsEvEdit(' + i + ')">Edit</button>' +
+        '<button class="staff-mini-btn" onclick="cmsEvToggle(' + i + ')">' + (active ? 'Hide' : 'Show') + '</button>' +
+        '<button class="staff-mini-btn danger" onclick="cmsEvDelete(' + i + ')">Delete</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+var _cmsEvEditIdx = null;
+function cmsEvNew() { _cmsEvEditIdx = null; cmsEvShowForm({}); }
+function cmsEvEdit(i) { _cmsEvEditIdx = i; cmsEvShowForm((cmsGetContent().events || [])[i] || {}); }
+
+function cmsEvShowForm(ev) {
+  var form = document.getElementById('cms-ev-form');
+  if (!form) return;
+  form.style.display = 'block';
+  form.innerHTML =
+    '<div style="font-size:13px;color:var(--gold);margin-bottom:14px;font-weight:600;">' + (_cmsEvEditIdx === null ? 'New Event' : 'Edit Event') + '</div>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">' +
+      '<div><label class="hrf-label">Month</label><input class="hrf-input" id="cef-month" value="' + menuEsc(ev.month||'') + '" placeholder="Apr" /></div>' +
+      '<div><label class="hrf-label">Day</label><input class="hrf-input" id="cef-day" value="' + menuEsc(ev.day||'') + '" placeholder="18" /></div>' +
+      '<div><label class="hrf-label">Year</label><input class="hrf-input" id="cef-year" value="' + menuEsc(ev.year||'2026') + '" placeholder="2026" /></div>' +
+    '</div>' +
+    '<div style="margin-bottom:10px;"><label class="hrf-label">Event Name</label><input class="hrf-input" id="cef-name" value="' + menuEsc(ev.name||'') + '" placeholder="e.g. Spring Scramble" /></div>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">' +
+      '<div><label class="hrf-label">Type</label><select class="hrf-select" id="cef-type"><option value="golf"' + (ev.type==='golf'?' selected':'') + '>Golf</option><option value="tournament"' + (ev.type==='tournament'?' selected':'') + '>Tournament</option><option value="social"' + (ev.type==='social'?' selected':'') + '>Social</option><option value="aquatics"' + (ev.type==='aquatics'?' selected':'') + '>Aquatics</option></select></div>' +
+      '<div><label class="hrf-label">CTA Button Text</label><input class="hrf-input" id="cef-cta" value="' + menuEsc(ev.cta||'Sign Up') + '" /></div>' +
+    '</div>' +
+    '<div style="margin-bottom:10px;"><label class="hrf-label">Description (shown on card)</label><textarea class="hrf-textarea" id="cef-detail" rows="2">' + menuEsc(ev.detail||'') + '</textarea></div>' +
+    '<div style="margin-bottom:14px;display:flex;align-items:center;gap:10px;"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:rgba(245,240,232,.7);font-size:12px;"><input type="checkbox" id="cef-featured"' + (ev.featured?' checked':'') + '> Show on home page</label></div>' +
+    '<div style="display:flex;gap:8px;"><button class="btn-p" style="flex:1;padding:10px;" onclick="cmsEvSaveForm()">Save Event</button><button class="staff-cancel-btn" onclick="cmsEvCancelForm()">Cancel</button></div>';
+}
+
+function cmsEvCancelForm() {
+  var form = document.getElementById('cms-ev-form');
+  if (form) { form.style.display = 'none'; form.innerHTML = ''; }
+  _cmsEvEditIdx = null;
+}
+
+function cmsEvSaveForm() {
+  var name = document.getElementById('cef-name').value.trim();
+  if (!name) { staffToast('Event name is required.', 'error'); return; }
+  var ev = {
+    id:       _cmsEvEditIdx === null ? 'ev' + Date.now() : ((cmsGetContent().events||[])[_cmsEvEditIdx]||{}).id || 'ev' + Date.now(),
+    name:     name,
+    month:    document.getElementById('cef-month').value.trim(),
+    day:      document.getElementById('cef-day').value.trim(),
+    year:     document.getElementById('cef-year').value.trim() || '2026',
+    type:     document.getElementById('cef-type').value,
+    detail:   document.getElementById('cef-detail').value.trim(),
+    cta:      document.getElementById('cef-cta').value.trim() || 'Sign Up',
+    regMeta:  document.getElementById('cef-month').value.trim() + ' ' + document.getElementById('cef-day').value.trim() + ', ' + document.getElementById('cef-year').value.trim(),
+    featured: document.getElementById('cef-featured').checked,
+    active:   true
+  };
+  var sc = cmsGetContent();
+  if (!sc.events) sc.events = [];
+  if (_cmsEvEditIdx === null) sc.events.push(ev);
+  else sc.events[_cmsEvEditIdx] = ev;
+  cmsSave(sc, 'cms-ev-status');
+  cmsEvCancelForm();
+  cmsEvRenderList(sc.events);
+  staffToast('Event saved and live on the website.', 'success');
+}
+
+function cmsEvToggle(i) {
+  var sc = cmsGetContent();
+  sc.events[i].active = !(sc.events[i].active !== false);
+  cmsSave(sc, 'cms-ev-status');
+  cmsEvRenderList(sc.events);
+}
+
+function cmsEvDelete(i) {
+  if (!confirm('Remove this event from the calendar?')) return;
+  var sc = cmsGetContent();
+  sc.events.splice(i, 1);
+  cmsSave(sc, 'cms-ev-status');
+  cmsEvRenderList(sc.events);
+}
+
+// ── ANNOUNCEMENTS ────────────────────────────────────────
+
+function cmsAnnLoad() {
+  var sc = cmsGetContent();
+  cmsAnnRenderList(sc.announcements || []);
+}
+
+function cmsAnnRenderList(anns) {
+  var list = document.getElementById('cms-ann-list');
+  if (!list) return;
+  if (!anns.length) { list.innerHTML = '<div style="color:var(--muted);font-style:italic;">No announcements. Add one to display a notice on the homepage.</div>'; return; }
+  list.innerHTML = anns.map(function(a, i) {
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:' + (a.urgent ? 'rgba(100,20,20,.4)' : 'rgba(26,43,31,.35)') + ';border:1px solid rgba(184,151,106,.12);margin-bottom:8px;">' +
+      '<div>' +
+        '<div style="font-size:11px;color:var(--gold);letter-spacing:.06em;">' + (a.label||'Notice') + (a.urgent ? ' · URGENT' : '') + '</div>' +
+        '<div style="font-size:13px;color:#f5f0e8;margin-top:3px;">' + (a.text||'') + '</div>' +
+      '</div>' +
+      '<div style="display:flex;gap:6px;">' +
+        '<button class="staff-mini-btn" onclick="cmsAnnEdit(' + i + ')">Edit</button>' +
+        '<button class="staff-mini-btn danger" onclick="cmsAnnDelete(' + i + ')">Remove</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+var _cmsAnnEditIdx = null;
+function cmsAnnNew() { _cmsAnnEditIdx = null; cmsAnnShowForm({}); }
+function cmsAnnEdit(i) { _cmsAnnEditIdx = i; cmsAnnShowForm((cmsGetContent().announcements||[])[i]||{}); }
+
+function cmsAnnShowForm(a) {
+  var form = document.getElementById('cms-ann-form');
+  if (!form) return;
+  form.style.display = 'block';
+  form.innerHTML =
+    '<div style="font-size:13px;color:var(--gold);margin-bottom:14px;font-weight:600;">' + (_cmsAnnEditIdx === null ? 'New Announcement' : 'Edit Announcement') + '</div>' +
+    '<div style="margin-bottom:10px;"><label class="hrf-label">Label (e.g. Notice, Closed, Tournament)</label><input class="hrf-input" id="caf-label" value="' + menuEsc(a.label||'Notice') + '" /></div>' +
+    '<div style="margin-bottom:10px;"><label class="hrf-label">Message</label><textarea class="hrf-textarea" id="caf-text" rows="2">' + menuEsc(a.text||'') + '</textarea></div>' +
+    '<div style="margin-bottom:10px;"><label class="hrf-label">Link URL (optional — leave blank for no link)</label><input class="hrf-input" id="caf-link" value="' + menuEsc(a.link||'') + '" placeholder="https://..." /></div>' +
+    '<div style="margin-bottom:14px;"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:rgba(245,240,232,.7);font-size:12px;"><input type="checkbox" id="caf-urgent"' + (a.urgent?' checked':'') + '> Mark as urgent (red background)</label></div>' +
+    '<div style="display:flex;gap:8px;"><button class="btn-p" style="flex:1;padding:10px;" onclick="cmsAnnSaveForm()">Post Announcement</button><button class="staff-cancel-btn" onclick="cmsAnnCancelForm()">Cancel</button></div>';
+}
+
+function cmsAnnCancelForm() {
+  var form = document.getElementById('cms-ann-form');
+  if (form) { form.style.display = 'none'; form.innerHTML = ''; }
+  _cmsAnnEditIdx = null;
+}
+
+function cmsAnnSaveForm() {
+  var text = document.getElementById('caf-text').value.trim();
+  if (!text) { staffToast('Announcement text is required.', 'error'); return; }
+  var ann = { label: document.getElementById('caf-label').value.trim() || 'Notice', text: text, link: document.getElementById('caf-link').value.trim(), urgent: document.getElementById('caf-urgent').checked, active: true };
+  var sc = cmsGetContent();
+  if (!sc.announcements) sc.announcements = [];
+  if (_cmsAnnEditIdx === null) sc.announcements.push(ann);
+  else sc.announcements[_cmsAnnEditIdx] = ann;
+  cmsSave(sc, 'cms-ann-status');
+  cmsAnnCancelForm();
+  cmsAnnRenderList(sc.announcements);
+  staffToast('Announcement posted to homepage.', 'success');
+}
+
+function cmsAnnDelete(i) {
+  var sc = cmsGetContent();
+  sc.announcements.splice(i, 1);
+  cmsSave(sc, 'cms-ann-status');
+  cmsAnnRenderList(sc.announcements);
+}
+
+// ── HEROES ───────────────────────────────────────────────
+
+var CMS_HERO_PAGES = [
+  { key:'home',       label:'Home Page' },
+  { key:'golf',       label:'Golf Page' },
+  { key:'dining',     label:'Dining Page' },
+  { key:'aquatics',   label:'Aquatics Page' },
+  { key:'events',     label:'Events Page' },
+  { key:'membership', label:'Membership Page' },
+  { key:'about',      label:'About Page' }
+];
+
+function cmsHeroesLoad() {
+  var sc = cmsGetContent();
+  var heroes = sc.heroes || WH_SITE_DEFAULTS.heroes;
+  var list = document.getElementById('cms-heroes-list');
+  if (!list) return;
+  list.innerHTML = CMS_HERO_PAGES.map(function(p) {
+    var h = heroes[p.key] || {};
+    return '<div style="background:rgba(26,43,31,.35);border:1px solid rgba(184,151,106,.12);padding:16px;margin-bottom:12px;">' +
+      '<div style="font-size:12px;color:var(--gold);letter-spacing:.08em;margin-bottom:12px;">' + p.label.toUpperCase() + '</div>' +
+      '<div style="display:grid;gap:10px;">' +
+        '<div><label class="hrf-label">Tag / Eyebrow</label><input class="hrf-input" id="ch-' + p.key + '-tag" value="' + menuEsc(h.tag||'') + '" /></div>' +
+        '<div><label class="hrf-label">Headline (HTML ok — use &lt;em&gt; for italic gold)</label><input class="hrf-input" id="ch-' + p.key + '-title" value="' + menuEsc(h.title||'') + '" /></div>' +
+        '<div><label class="hrf-label">Subtitle</label><textarea class="hrf-textarea" id="ch-' + p.key + '-sub" rows="2">' + menuEsc(h.subtitle||'') + '</textarea></div>' +
+        '<div><label class="hrf-label">Banner Photo URL</label><input class="hrf-input" id="ch-' + p.key + '-img" value="' + menuEsc(h.image||'') + '" placeholder="https://... or images/filename.jpg" /></div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function cmsHeroesSave() {
+  var sc = cmsGetContent();
+  if (!sc.heroes) sc.heroes = {};
+  CMS_HERO_PAGES.forEach(function(p) {
+    sc.heroes[p.key] = {
+      tag:      document.getElementById('ch-' + p.key + '-tag').value.trim(),
+      title:    document.getElementById('ch-' + p.key + '-title').value.trim(),
+      subtitle: document.getElementById('ch-' + p.key + '-sub').value.trim(),
+      image:    document.getElementById('ch-' + p.key + '-img').value.trim()
+    };
+  });
+  cmsSave(sc, 'cms-heroes-status');
+  var st = document.getElementById('cms-heroes-status');
+  if (st) { st.style.display = 'block'; st.textContent = '✓ Page headers updated.'; setTimeout(function(){ st.style.display='none'; }, 4000); }
+}
+
+// ── CONTACT ──────────────────────────────────────────────
+
+function cmsContactLoad() {
+  var sc = cmsGetContent();
+  var ct = sc.contact || WH_SITE_DEFAULTS.contact;
+  document.getElementById('cms-ct-phone-main').value    = ct.phone_main      || '';
+  document.getElementById('cms-ct-phone-golf').value    = ct.phone_golf      || '';
+  document.getElementById('cms-ct-email').value         = ct.email           || '';
+  document.getElementById('cms-ct-address').value       = ct.address         || '';
+  document.getElementById('cms-ct-hours-wd').value      = ct.hours_weekday   || '';
+  document.getElementById('cms-ct-hours-sa').value      = ct.hours_saturday  || '';
+  document.getElementById('cms-ct-hours-su').value      = ct.hours_sunday    || '';
+  document.getElementById('cms-ct-hoovers-hours').value = ct.hoovers_hours   || '';
+  document.getElementById('cms-ct-hoovers-public').value= ct.hoovers_public  || '';
+}
+
+function cmsContactSave() {
+  var sc = cmsGetContent();
+  sc.contact = {
+    phone_main:     document.getElementById('cms-ct-phone-main').value.trim(),
+    phone_golf:     document.getElementById('cms-ct-phone-golf').value.trim(),
+    email:          document.getElementById('cms-ct-email').value.trim(),
+    address:        document.getElementById('cms-ct-address').value.trim(),
+    hours_weekday:  document.getElementById('cms-ct-hours-wd').value.trim(),
+    hours_saturday: document.getElementById('cms-ct-hours-sa').value.trim(),
+    hours_sunday:   document.getElementById('cms-ct-hours-su').value.trim(),
+    hoovers_hours:  document.getElementById('cms-ct-hoovers-hours').value.trim(),
+    hoovers_public: document.getElementById('cms-ct-hoovers-public').value.trim()
+  };
+  cmsSave(sc, 'cms-contact-status');
+  var st = document.getElementById('cms-contact-status');
+  if (st) { st.style.display='block'; st.textContent='✓ Contact info updated across the site.'; setTimeout(function(){ st.style.display='none'; }, 4000); }
+}
+
+// ── PHOTOS ───────────────────────────────────────────────
+
+var CMS_PHOTO_LABELS = {
+  hero_home:       'Home Page Banner',
+  hero_golf:       'Golf Page Banner',
+  hero_dining:     'Dining Page Banner',
+  hero_aquatics:   'Aquatics Page Banner',
+  hero_events:     'Events Page Banner',
+  hero_membership: 'Membership Page Banner',
+  hero_about:      'About Page Banner',
+  course_strip:    'Home Page — Course Strip Photo',
+  hoovers_cta:     'Hoover\'s Feature Photo'
+};
+
+function cmsPhotosLoad() {
+  var sc = cmsGetContent();
+  var photos = sc.photos || WH_SITE_DEFAULTS.photos;
+  var list = document.getElementById('cms-photos-list');
+  if (!list) return;
+  list.innerHTML = Object.keys(CMS_PHOTO_LABELS).map(function(key) {
+    return '<div><label class="hrf-label">' + CMS_PHOTO_LABELS[key] + '</label>' +
+      '<input class="hrf-input" id="cph-' + key + '" value="' + menuEsc(photos[key]||'') + '" placeholder="https://... or images/filename.jpg" />' +
+    '</div>';
+  }).join('');
+}
+
+function cmsPhotosSave() {
+  var sc = cmsGetContent();
+  if (!sc.photos) sc.photos = {};
+  Object.keys(CMS_PHOTO_LABELS).forEach(function(key) {
+    var el = document.getElementById('cph-' + key);
+    if (el) sc.photos[key] = el.value.trim();
+  });
+  // Also push photo URLs into heroes for background images
+  if (!sc.heroes) sc.heroes = {};
+  ['home','golf','dining','aquatics','events','membership','about'].forEach(function(p) {
+    var photoKey = 'hero_' + p;
+    if (sc.photos[photoKey]) {
+      if (!sc.heroes[p]) sc.heroes[p] = {};
+      sc.heroes[p].image = sc.photos[photoKey];
+    }
+  });
+  cmsSave(sc, 'cms-photos-status');
+  var st = document.getElementById('cms-photos-status');
+  if (st) { st.style.display='block'; st.textContent='✓ Photos updated.'; setTimeout(function(){ st.style.display='none'; }, 4000); }
 }
 
 // ── INIT ──
