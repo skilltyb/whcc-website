@@ -287,6 +287,14 @@ footer{background:var(--deep);padding:80px 80px 40px}
 .hoovers-hour-divider{width:1px;height:36px;background:rgba(184,151,106,.25)}
 .hoovers-public-note{font-size:12px;color:rgba(245,240,232,.45);margin-top:28px;font-style:italic;letter-spacing:.03em}
 .hoovers-public-note sup{font-size:9px}
+/* ── CHEF'S SELECTIONS DIPTYCH ───────────────── */
+#dining-specials-row{display:none}
+#dip-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#070d09}
+.dsc-card{position:relative;min-height:480px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.dsc-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .9s ease}
+.dsc-card:hover .dsc-bg{transform:scale(1.05)}
+.dsc-cta{display:inline-block;padding:11px 34px;border:1px solid rgba(184,151,106,.5);color:var(--cream);font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;transition:background .25s,border-color .25s}
+.dsc-cta:hover{background:rgba(184,151,106,.15);border-color:rgba(184,151,106,.85)}
 
 .hoovers-menu-header{text-align:center;margin-bottom:48px}
 .hoovers-menu-header .eyebrow{justify-content:center}
@@ -761,6 +769,14 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 .cf-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .map-ph{background:var(--forest);height:260px;display:flex;align-items:center;justify-content:center;color:rgba(184,151,106,.3);font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;margin-top:44px}
 
+/* ── TOAST NOTIFICATIONS ── */
+#whcc-toast-container{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.whcc-toast{padding:11px 18px;border-radius:4px;font-size:13px;font-family:inherit;max-width:360px;opacity:0;transform:translateY(8px);transition:opacity .25s,transform .25s;pointer-events:auto;line-height:1.4;}
+.whcc-toast.show{opacity:1;transform:translateY(0);}
+.whcc-toast.error{background:#2d1a1a;color:#f4a0a0;border:1px solid rgba(220,80,80,.3);}
+.whcc-toast.success{background:#1a2d1e;color:#8fcc8f;border:1px solid rgba(80,180,80,.3);}
+.whcc-toast.info{background:#1a2028;color:#a0c4f4;border:1px solid rgba(80,140,220,.3);}
+
 /* ── RESPONSIVE ── */
 @media(max-width:1024px){
   nav{padding:0 24px}
@@ -790,6 +806,8 @@ nav.staff-mode .nav-site-back{display:flex!important;}
   .hours-grid{grid-template-columns:1fr}
   .hoovers-intro{padding:64px 32px}
   .hoovers-menu-grid{grid-template-columns:1fr}
+  #dip-grid{grid-template-columns:1fr!important;}
+  .dsc-card{min-height:360px!important;}
   .hoovers-specialty{margin-top:48px;padding:44px 28px}
   .hoovers-res-section{padding:64px 32px}
   .hoovers-res-inner{grid-template-columns:1fr;gap:48px}
@@ -1264,6 +1282,53 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     </div>
   </div>
 
+  <!-- ── CHEF'S SELECTIONS DIPTYCH ── -->
+  <div id="dining-specials-row">
+    <div id="dip-grid">
+
+      <!-- Weekly Special card -->
+      <div id="dining-weekly-special" class="dsc-card">
+        <div id="ws-bg" class="dsc-bg" data-placeholder="images/food-fish.jpg" style="background-image:url('images/food-fish.jpg');"></div>
+        <div style="position:absolute;inset:0;background:linear-gradient(160deg,rgba(5,12,7,.25) 0%,rgba(5,12,7,.68) 100%);"></div>
+        <div style="position:absolute;inset:18px;border:1px solid rgba(184,151,106,.2);pointer-events:none;z-index:2;"></div>
+        <div style="position:relative;z-index:3;text-align:center;padding:64px 48px;width:100%;max-width:460px;">
+          <p style="font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:rgba(245,240,232,.5);margin:0 0 22px;font-family:'Cormorant Garamond',serif;font-style:normal;">This Week&rsquo;s Feature</p>
+          <div style="display:flex;align-items:center;gap:14px;margin:0 auto 26px;max-width:220px;">
+            <div style="flex:1;height:1px;background:rgba(184,151,106,.4);"></div>
+            <span style="color:var(--gold-lt);font-size:9px;">✦</span>
+            <div style="flex:1;height:1px;background:rgba(184,151,106,.4);"></div>
+          </div>
+          <h3 class="sf-name" style="font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:300;color:var(--cream);letter-spacing:.01em;margin:0 0 18px;line-height:1.05;text-shadow:0 2px 28px rgba(0,0,0,.6);"></h3>
+          <p class="sf-desc" style="font-size:13.5px;color:rgba(245,240,232,.58);line-height:2;max-width:300px;margin:0 auto 16px;"></p>
+          <p class="sf-wine" style="font-size:11px;font-style:italic;color:var(--gold-lt);margin:0 0 24px;display:none;"></p>
+          <p class="sf-price" style="font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;color:var(--gold-lt);letter-spacing:.07em;margin:0 0 32px;"></p>
+          <a class="dsc-cta" href="#" onclick="event.preventDefault();document.querySelector('.hoovers-res-section').scrollIntoView({behavior:'smooth'});">Reserve Tonight</a>
+        </div>
+      </div>
+
+      <!-- Friday Night card -->
+      <div id="dining-friday-special" class="dsc-card">
+        <div id="fn-bg" class="dsc-bg" data-placeholder="images/food-pasta.jpg" style="background-image:url('images/food-pasta.jpg');"></div>
+        <div style="position:absolute;inset:0;background:linear-gradient(160deg,rgba(5,12,7,.25) 0%,rgba(5,12,7,.68) 100%);"></div>
+        <div style="position:absolute;inset:18px;border:1px solid rgba(184,151,106,.2);pointer-events:none;z-index:2;"></div>
+        <div style="position:relative;z-index:3;text-align:center;padding:64px 48px;width:100%;max-width:460px;">
+          <p style="font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:rgba(245,240,232,.5);margin:0 0 22px;font-family:'Cormorant Garamond',serif;font-style:normal;">Friday Night Special</p>
+          <div style="display:flex;align-items:center;gap:14px;margin:0 auto 26px;max-width:220px;">
+            <div style="flex:1;height:1px;background:rgba(184,151,106,.35);"></div>
+            <span style="color:var(--gold-lt);font-size:9px;">✦</span>
+            <div style="flex:1;height:1px;background:rgba(184,151,106,.35);"></div>
+          </div>
+          <h3 class="sf-name" style="font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:300;color:var(--cream);letter-spacing:.01em;margin:0 0 18px;line-height:1.05;text-shadow:0 2px 28px rgba(0,0,0,.6);"></h3>
+          <p class="sf-desc" style="font-size:13.5px;color:rgba(245,240,232,.58);line-height:2;max-width:300px;margin:0 auto 16px;"></p>
+          <p class="sf-wine" style="font-size:11px;font-style:italic;color:var(--gold-lt);margin:0 0 24px;display:none;"></p>
+          <p class="sf-price" style="font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;color:var(--gold-lt);letter-spacing:.07em;margin:0 0 32px;"></p>
+          <a class="dsc-cta" href="#" onclick="event.preventDefault();document.querySelector('.hoovers-res-section').scrollIntoView({behavior:'smooth'});">Reserve Tonight</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <!-- ── HOOVER'S MENU ── -->
   <div class="section" style="background:var(--cream);">
     <div class="hoovers-menu-header fade-up">
@@ -1299,49 +1364,6 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     </div>
   </div>
 
-  <!-- ── WEEKLY SPECIAL (shown when active) ── -->
-  <div id="dining-weekly-special" style="display:none;background:radial-gradient(ellipse at center,#faf7f0 0%,#ebe3d0 100%);padding:88px 24px;text-align:center;position:relative;">
-    <div style="position:absolute;inset:14px;border:1px solid rgba(184,151,106,.28);pointer-events:none;"></div>
-    <div style="position:relative;max-width:600px;margin:0 auto;">
-      <p class="eyebrow" style="letter-spacing:.22em;">This Week's Feature</p>
-      <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin:20px auto;max-width:320px;">
-        <div style="flex:1;height:1px;background:rgba(184,151,106,.5);"></div>
-        <span style="color:var(--gold);font-size:11px;letter-spacing:.15em;">✦</span>
-        <div style="flex:1;height:1px;background:rgba(184,151,106,.5);"></div>
-      </div>
-      <h3 class="sf-name" style="font-family:'Cormorant Garamond',serif;font-size:62px;font-weight:300;color:var(--deep);letter-spacing:.01em;margin:0 0 18px;line-height:1.1;"></h3>
-      <p class="sf-desc" style="font-size:14.5px;color:var(--muted);margin:0 auto 16px;line-height:2;max-width:400px;"></p>
-      <p class="sf-wine" style="font-size:12px;font-style:italic;color:var(--gold);margin:0 0 20px;display:none;"></p>
-      <div style="display:flex;align-items:center;justify-content:center;gap:12px;max-width:200px;margin:0 auto 20px;">
-        <div style="flex:1;height:1px;background:rgba(184,151,106,.4);"></div>
-        <span style="color:var(--gold);font-size:9px;">◆</span>
-        <div style="flex:1;height:1px;background:rgba(184,151,106,.4);"></div>
-      </div>
-      <p class="sf-price" style="font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;color:var(--gold);margin:0;letter-spacing:.06em;"></p>
-    </div>
-  </div>
-
-  <!-- ── FRIDAY NIGHT SPECIAL (shown when active) ── -->
-  <div id="dining-friday-special" style="display:none;background:radial-gradient(ellipse at center,#183d24 0%,#0c1f14 100%);padding:88px 24px;text-align:center;position:relative;">
-    <div style="position:absolute;inset:14px;border:1px solid rgba(184,151,106,.2);pointer-events:none;"></div>
-    <div style="position:relative;max-width:600px;margin:0 auto;">
-      <p class="eyebrow lt" style="letter-spacing:.22em;">Friday Night Special</p>
-      <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin:20px auto;max-width:320px;">
-        <div style="flex:1;height:1px;background:rgba(184,151,106,.35);"></div>
-        <span style="color:var(--gold-lt);font-size:11px;letter-spacing:.15em;">✦</span>
-        <div style="flex:1;height:1px;background:rgba(184,151,106,.35);"></div>
-      </div>
-      <h3 class="sf-name" style="font-family:'Cormorant Garamond',serif;font-size:62px;font-weight:300;color:var(--cream);letter-spacing:.01em;margin:0 0 18px;line-height:1.1;"></h3>
-      <p class="sf-desc" style="font-size:14.5px;color:rgba(245,240,232,.55);margin:0 auto 16px;line-height:2;max-width:400px;"></p>
-      <p class="sf-wine" style="font-size:12px;font-style:italic;color:var(--gold-lt);margin:0 0 20px;display:none;"></p>
-      <div style="display:flex;align-items:center;justify-content:center;gap:12px;max-width:200px;margin:0 auto 20px;">
-        <div style="flex:1;height:1px;background:rgba(184,151,106,.3);"></div>
-        <span style="color:var(--gold-lt);font-size:9px;">◆</span>
-        <div style="flex:1;height:1px;background:rgba(184,151,106,.3);"></div>
-      </div>
-      <p class="sf-price" style="font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;color:var(--gold-lt);margin:0;letter-spacing:.06em;"></p>
-    </div>
-  </div>
 
   <!-- ── HOOVER'S RESERVATION ── -->
   <div class="hoovers-res-section">
@@ -1589,7 +1611,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 
   <div style="background:linear-gradient(135deg,#083050,#0d4a7a);padding:80px;display:flex;align-items:center;gap:64px;flex-wrap:wrap;">
     <div class="fade-up"><p class="eyebrow" style="color:rgba(100,180,240,.8)">Westwood Wahoos</p><h2 class="sec-title light">Join the <em>swim team</em></h2><p class="sec-body full" style="color:rgba(245,240,232,.55)">The Westwood Wahoos compete in the Southeast Missouri Swim League, bringing home championships each summer. Registration opens each April.</p></div>
-    <div class="fade-up d2" style="flex-shrink:0;display:flex;flex-direction:column;gap:12px;"><button class="btn-p">Register for Swim Team</button><button class="btn-g lt">View Swim Schedule</button></div>
+    <div class="fade-up d2" style="flex-shrink:0;display:flex;flex-direction:column;gap:12px;"><button class="btn-p" onclick="navigate('about');setTimeout(function(){var s=document.getElementById('cf-subject');if(s)s.value='Swim Team Registration';document.getElementById('contact').scrollIntoView({behavior:'smooth'});},600)">Register for Swim Team</button><button class="btn-g lt" onclick="navigate('about');setTimeout(function(){var s=document.getElementById('cf-subject');if(s)s.value='General Inquiry';document.getElementById('contact').scrollIntoView({behavior:'smooth'});},600)">View Swim Schedule</button></div>
   </div>
 
   <footer><div class="footer-top"><div><div class="footer-brand-logo"><div class="nav-emblem">WH</div><div class="footer-brand-text">Westwood Hills<br>Country Club<small>Est. 1936 · Poplar Bluff, MO</small></div></div><p class="footer-tagline">Southeast Missouri's premier private country club.</p></div><div><p class="fcol-title">Aquatics</p><ul class="flinks"><li><a onclick="navigate('aquatics')">Pool Complex</a></li><li><a onclick="navigate('aquatics')">Swim Programs</a></li><li><a onclick="navigate('aquatics')">Swim Team</a></li><li><a onclick="navigate('aquatics')">Hours</a></li></ul></div><div><p class="fcol-title">The Club</p><ul class="flinks"><li><a onclick="navigate('golf')">Golf</a></li><li><a onclick="navigate('dining')">Dining</a></li><li><a onclick="navigate('membership')">Membership</a></li></ul></div><div><p class="fcol-title">Contact</p><div class="fci"><strong>Clubhouse</strong>(573) 785-5253</div></div></div><div class="footer-bottom"><p class="fcopy">© 2026 Westwood Hills Country Club.</p><p class="fcopy">Poplar Bluff, Missouri · Est. 1936</p><p class="fcopy" style="margin-top:4px;"><a onclick="navigate('staff')" style="color:rgba(245,240,232,.35);cursor:pointer;text-decoration:none;font-size:10px;letter-spacing:.1em;">Staff Portal</a></p></div></footer>
@@ -1685,13 +1707,15 @@ nav.staff-mode .nav-site-back{display:flex!important;}
       </div>
       <div class="inq-form fade-up d3">
         <p class="inq-title">Request Event Information</p>
-        <div class="frow"><div class="fg"><label class="fl">First Name</label><input class="fi" type="text" placeholder="Jane" /></div><div class="fg"><label class="fl">Last Name</label><input class="fi" type="text" placeholder="Smith" /></div></div>
-        <div class="fg"><label class="fl">Email</label><input class="fi" type="email" placeholder="jane@example.com" /></div>
-        <div class="fg"><label class="fl">Phone</label><input class="fi" type="tel" placeholder="(573) 555-0000" /></div>
-        <div class="frow"><div class="fg"><label class="fl">Event Type</label><select class="fs"><option>Wedding / Reception</option><option>Rehearsal Dinner</option><option>Corporate Event</option><option>Birthday Party</option><option>Other</option></select></div><div class="fg"><label class="fl">Est. Guests</label><input class="fi" type="text" placeholder="e.g. 80" /></div></div>
-        <div class="fg"><label class="fl">Preferred Date</label><input class="fi" type="date" /></div>
-        <div class="fg"><label class="fl">Notes</label><textarea class="ft" placeholder="Tell us about your event…"></textarea></div>
-        <button class="btn-p" style="width:100%;margin-top:6px;">Submit Inquiry</button>
+        <div class="frow"><div class="fg"><label class="fl">First Name</label><input class="fi" id="inq-first" type="text" placeholder="Jane" /></div><div class="fg"><label class="fl">Last Name</label><input class="fi" id="inq-last" type="text" placeholder="Smith" /></div></div>
+        <div class="fg"><label class="fl">Email</label><input class="fi" id="inq-email" type="email" placeholder="jane@example.com" /></div>
+        <div class="fg"><label class="fl">Phone</label><input class="fi" id="inq-phone" type="tel" placeholder="(573) 555-0000" /></div>
+        <div class="frow"><div class="fg"><label class="fl">Event Type</label><select class="fs" id="inq-type"><option>Wedding / Reception</option><option>Rehearsal Dinner</option><option>Corporate Event</option><option>Birthday Party</option><option>Other</option></select></div><div class="fg"><label class="fl">Est. Guests</label><input class="fi" id="inq-guests" type="text" placeholder="e.g. 80" /></div></div>
+        <div class="fg"><label class="fl">Preferred Date</label><input class="fi" id="inq-date" type="date" /></div>
+        <div class="fg"><label class="fl">Notes</label><textarea class="ft" id="inq-notes" placeholder="Tell us about your event…"></textarea></div>
+        <div id="inq-error" style="display:none;color:#c0392b;font-size:12px;margin-top:6px;"></div>
+        <div id="inq-confirm" style="display:none;color:#2e7d32;font-size:13px;margin-top:8px;">Thank you! We'll be in touch shortly.</div>
+        <button class="btn-p" id="inq-btn" style="width:100%;margin-top:6px;" onclick="submitEventInquiry()">Submit Inquiry</button>
       </div>
     </div>
   </div>
@@ -1752,8 +1776,8 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <div class="wj-cta-text">Still on the fence? <strong>Come see it for yourself.</strong></div>
     <p class="wj-cta-sub">Schedule a personal tour and play a complimentary round — no strings attached. If you don't see the value, you'll know. But most people who walk the property end up asking for an application before they leave.</p>
     <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:20px;">
-      <button class="btn-p" onclick="navigate('about')">Schedule a Tour</button>
-      <button class="btn-g">Call (573) 785-5253</button>
+      <button class="btn-p" onclick="navigate('about');setTimeout(function(){var s=document.getElementById('cf-subject');if(s)s.value='Schedule a Tour';document.getElementById('contact').scrollIntoView({behavior:'smooth'});},600)">Schedule a Tour</button>
+      <button class="btn-g" onclick="window.location.href='tel:+13092369683'">Call (573) 785-5253</button>
     </div>
   </div>
 
@@ -1762,11 +1786,11 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <h2 class="sec-title fade-up d1">Find your <em>perfect fit</em></h2>
     <p class="sec-body fade-up d2">All memberships subject to availability. For current initiation fees and monthly dues, please contact our membership director.</p>
     <div class="mem-cards fade-up d2">
-      <div class="mcard featured"><div class="feat-bdg">Most Popular</div><div class="mcard-type">Golf &amp; Club</div><div class="mcard-name">Full Family</div><p class="mcard-desc">The complete Westwood Hills experience for your entire family — unlimited golf, aquatics, dining, and every club amenity and event.</p><ul class="mcard-feats"><li class="mcard-feat">Unlimited golf, 7 days/week</li><li class="mcard-feat">Full practice facility access</li><li class="mcard-feat">Pool &amp; aquatics complex</li><li class="mcard-feat">Dining &amp; full-service bar</li><li class="mcard-feat">All social events &amp; tournaments</li><li class="mcard-feat">GHIN handicap service</li><li class="mcard-feat">Spouse &amp; dependents included</li></ul><button class="btn-p" style="width:100%">Request Information</button></div>
-      <div class="mcard"><div class="mcard-type">Under 35</div><div class="mcard-name">Junior Executive</div><p class="mcard-desc">All the privileges of full membership at a reduced rate, designed for the next generation of members building their careers and families.</p><ul class="mcard-feats"><li class="mcard-feat">All full membership privileges</li><li class="mcard-feat">Reduced initiation &amp; dues</li><li class="mcard-feat">Ages 18–34</li><li class="mcard-feat">Transitions to Full Family at 35</li></ul><button class="btn-g" style="width:100%">Request Information</button></div>
-      <div class="mcard"><div class="mcard-type">Ages 14–18</div><div class="mcard-name">Youth</div><p class="mcard-desc">A focused introduction to the club experience. Youth members develop their game with course access, practice facilities, and junior programming.</p><ul class="mcard-feats"><li class="mcard-feat">Course &amp; practice facility access</li><li class="mcard-feat">Junior golf programming</li><li class="mcard-feat">Pool &amp; aquatics complex</li><li class="mcard-feat">Supervised participation</li></ul><button class="btn-g" style="width:100%">Request Information</button></div>
-      <div class="mcard"><div class="mcard-type">Social &amp; Recreation</div><div class="mcard-name">Social</div><p class="mcard-desc">Enjoy everything the club offers outside of golf. Dining, aquatics, bar privileges, and the full social event calendar throughout the year.</p><ul class="mcard-feats"><li class="mcard-feat">Dining &amp; bar privileges</li><li class="mcard-feat">Pool &amp; patio access</li><li class="mcard-feat">Full social event calendar</li><li class="mcard-feat">Golf at preferred guest rates</li></ul><button class="btn-g" style="width:100%">Request Information</button></div>
-      <div class="mcard"><div class="mcard-type">Non-Local</div><div class="mcard-name">Out of Town</div><p class="mcard-desc">For members residing more than 50 miles away. Full club privileges during your visits at reduced monthly dues reflecting part-time use.</p><ul class="mcard-feats"><li class="mcard-feat">Full club access during visits</li><li class="mcard-feat">Reduced monthly dues</li><li class="mcard-feat">Dining &amp; bar privileges</li><li class="mcard-feat">Pool &amp; aquatics complex</li><li class="mcard-feat">All social events &amp; tournaments</li><li class="mcard-feat">GHIN handicap service</li></ul><button class="btn-g" style="width:100%">Request Information</button></div>
+      <div class="mcard featured"><div class="feat-bdg">Most Popular</div><div class="mcard-type">Golf &amp; Club</div><div class="mcard-name">Full Family</div><p class="mcard-desc">The complete Westwood Hills experience for your entire family — unlimited golf, aquatics, dining, and every club amenity and event.</p><ul class="mcard-feats"><li class="mcard-feat">Unlimited golf, 7 days/week</li><li class="mcard-feat">Full practice facility access</li><li class="mcard-feat">Pool &amp; aquatics complex</li><li class="mcard-feat">Dining &amp; full-service bar</li><li class="mcard-feat">All social events &amp; tournaments</li><li class="mcard-feat">GHIN handicap service</li><li class="mcard-feat">Spouse &amp; dependents included</li></ul><button class="btn-p" style="width:100%" onclick="navigate('about');setTimeout(function(){var s=document.getElementById('cf-subject');if(s)s.value='Membership Information';document.getElementById('contact').scrollIntoView({behavior:'smooth'});},600)">Request Information</button></div>
+      <div class="mcard"><div class="mcard-type">Under 35</div><div class="mcard-name">Junior Executive</div><p class="mcard-desc">All the privileges of full membership at a reduced rate, designed for the next generation of members building their careers and families.</p><ul class="mcard-feats"><li class="mcard-feat">All full membership privileges</li><li class="mcard-feat">Reduced initiation &amp; dues</li><li class="mcard-feat">Ages 18–34</li><li class="mcard-feat">Transitions to Full Family at 35</li></ul><button class="btn-g" style="width:100%" onclick="navigate('about');setTimeout(function(){var s=document.getElementById('cf-subject');if(s)s.value='Membership Information';document.getElementById('contact').scrollIntoView({behavior:'smooth'});},600)">Request Information</button></div>
+      <div class="mcard"><div class="mcard-type">Ages 14–18</div><div class="mcard-name">Youth</div><p class="mcard-desc">A focused introduction to the club experience. Youth members develop their game with course access, practice facilities, and junior programming.</p><ul class="mcard-feats"><li class="mcard-feat">Course &amp; practice facility access</li><li class="mcard-feat">Junior golf programming</li><li class="mcard-feat">Pool &amp; aquatics complex</li><li class="mcard-feat">Supervised participation</li></ul><button class="btn-g" style="width:100%" onclick="navigate('about');setTimeout(function(){var s=document.getElementById('cf-subject');if(s)s.value='Membership Information';document.getElementById('contact').scrollIntoView({behavior:'smooth'});},600)">Request Information</button></div>
+      <div class="mcard"><div class="mcard-type">Social &amp; Recreation</div><div class="mcard-name">Social</div><p class="mcard-desc">Enjoy everything the club offers outside of golf. Dining, aquatics, bar privileges, and the full social event calendar throughout the year.</p><ul class="mcard-feats"><li class="mcard-feat">Dining &amp; bar privileges</li><li class="mcard-feat">Pool &amp; patio access</li><li class="mcard-feat">Full social event calendar</li><li class="mcard-feat">Golf at preferred guest rates</li></ul><button class="btn-g" style="width:100%" onclick="navigate('about');setTimeout(function(){var s=document.getElementById('cf-subject');if(s)s.value='Membership Information';document.getElementById('contact').scrollIntoView({behavior:'smooth'});},600)">Request Information</button></div>
+      <div class="mcard"><div class="mcard-type">Non-Local</div><div class="mcard-name">Out of Town</div><p class="mcard-desc">For members residing more than 50 miles away. Full club privileges during your visits at reduced monthly dues reflecting part-time use.</p><ul class="mcard-feats"><li class="mcard-feat">Full club access during visits</li><li class="mcard-feat">Reduced monthly dues</li><li class="mcard-feat">Dining &amp; bar privileges</li><li class="mcard-feat">Pool &amp; aquatics complex</li><li class="mcard-feat">All social events &amp; tournaments</li><li class="mcard-feat">GHIN handicap service</li></ul><button class="btn-g" style="width:100%" onclick="navigate('about');setTimeout(function(){var s=document.getElementById('cf-subject');if(s)s.value='Membership Information';document.getElementById('contact').scrollIntoView({behavior:'smooth'});},600)">Request Information</button></div>
     </div>
   </div>
 
@@ -1893,7 +1917,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
       <div class="fade-up d2">
         <div class="cf-g"><label class="cf-l">Full Name</label><input class="cf-i" id="cf-name" type="text" placeholder="Your name" /></div>
         <div class="cf-row"><div class="cf-g"><label class="cf-l">Email</label><input class="cf-i" id="cf-email" type="email" placeholder="you@email.com" /></div><div class="cf-g"><label class="cf-l">Phone</label><input class="cf-i" id="cf-phone" type="tel" placeholder="(573) 555-0000" /></div></div>
-        <div class="cf-g"><label class="cf-l">Subject</label><select class="cf-s" id="cf-subject"><option>General Inquiry</option><option>Membership Information</option><option>Golf Tee Times</option><option>Dining Reservations</option><option>Private Event Inquiry</option><option>Employment</option></select></div>
+        <div class="cf-g"><label class="cf-l">Subject</label><select class="cf-s" id="cf-subject"><option>General Inquiry</option><option>Membership Information</option><option>Schedule a Tour</option><option>Golf Tee Times</option><option>Dining Reservations</option><option>Private Event Inquiry</option><option>Swim Team Registration</option><option>Employment</option></select></div>
         <div class="cf-g"><label class="cf-l">Message</label><textarea class="cf-t" id="cf-message" placeholder="How can we help?"></textarea></div>
         <div id="cf-error" style="font-size:12px;color:#c0392b;margin-bottom:10px;display:none;"></div>
         <div id="cf-confirm" style="font-size:13px;color:#5aab62;background:rgba(90,171,98,.08);border:1px solid rgba(90,171,98,.25);padding:12px 16px;margin-bottom:10px;display:none;">&#10003; Your message has been sent! We'll be in touch within one business day.</div>
@@ -2199,6 +2223,17 @@ nav.staff-mode .nav-site-back{display:flex!important;}
                 <div class="hrf-group"><label class="hrf-label">Price (optional)</label><input class="hrf-input" id="sm-ws-price" placeholder="e.g. $36" /></div>
                 <div class="hrf-group"><label class="hrf-label">Wine Pairing (optional)</label><input class="hrf-input" id="sm-ws-wine" placeholder="e.g. Pinot Noir or Chardonnay" /></div>
               </div>
+              <div style="margin-top:10px;">
+                <label class="hrf-label">Photo</label>
+                <div id="sm-ws-img-preview" style="display:none;position:relative;margin-bottom:8px;border-radius:2px;overflow:hidden;">
+                  <img id="sm-ws-img-thumb" style="width:100%;height:110px;object-fit:cover;display:block;">
+                  <button onclick="smRemoveImage('ws')" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,.65);color:#fff;border:none;border-radius:2px;padding:3px 10px;cursor:pointer;font-size:11px;letter-spacing:.05em;">✕ Remove</button>
+                </div>
+                <label style="display:flex;align-items:center;justify-content:center;gap:8px;padding:8px;border:1px dashed rgba(184,151,106,.3);cursor:pointer;font-size:11px;color:rgba(245,240,232,.5);letter-spacing:.08em;border-radius:2px;">
+                  📷 Upload Photo
+                  <input type="file" id="sm-ws-img-input" accept="image/*" style="display:none;" onchange="smLoadImage('ws',this)">
+                </label>
+              </div>
               <button class="btn-p" style="width:100%;margin-top:12px;" onclick="smSaveSpecials()">Save Weekly Special</button>
               <div id="sm-ws-status" style="font-size:11px;color:#8fcc8f;margin-top:6px;display:none;"></div>
             </div>
@@ -2215,6 +2250,17 @@ nav.staff-mode .nav-site-back{display:flex!important;}
               <div class="hrf-row" style="margin-top:8px;">
                 <div class="hrf-group"><label class="hrf-label">Price (optional)</label><input class="hrf-input" id="sm-fn-price" placeholder="e.g. $42" /></div>
                 <div class="hrf-group"><label class="hrf-label">Wine Pairing (optional)</label><input class="hrf-input" id="sm-fn-wine" placeholder="e.g. Cabernet or Bordeaux" /></div>
+              </div>
+              <div style="margin-top:10px;">
+                <label class="hrf-label">Photo</label>
+                <div id="sm-fn-img-preview" style="display:none;position:relative;margin-bottom:8px;border-radius:2px;overflow:hidden;">
+                  <img id="sm-fn-img-thumb" style="width:100%;height:110px;object-fit:cover;display:block;">
+                  <button onclick="smRemoveImage('fn')" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,.65);color:#fff;border:none;border-radius:2px;padding:3px 10px;cursor:pointer;font-size:11px;letter-spacing:.05em;">✕ Remove</button>
+                </div>
+                <label style="display:flex;align-items:center;justify-content:center;gap:8px;padding:8px;border:1px dashed rgba(184,151,106,.3);cursor:pointer;font-size:11px;color:rgba(245,240,232,.5);letter-spacing:.08em;border-radius:2px;">
+                  📷 Upload Photo
+                  <input type="file" id="sm-fn-img-input" accept="image/*" style="display:none;" onchange="smLoadImage('fn',this)">
+                </label>
               </div>
               <button class="btn-p" style="width:100%;margin-top:12px;" onclick="smSaveFriday()">Save Friday Night Special</button>
               <div id="sm-fn-status" style="font-size:11px;color:#8fcc8f;margin-top:6px;display:none;"></div>
@@ -2951,7 +2997,7 @@ function openRegModal(eventTitle, eventMeta, isTeam) {
     partnerInput.previousElementSibling.textContent = 'Partner Names';
     playersSelect.parentElement.style.display = 'block';
     // Update player options for foursome
-    playersSelect.innerHTML = '<option value="1">1 (others TBD)</option><option value="2">2 Players</option><option value="3">3 Players</option><option value="4" selected>Full Group of 4</option>';
+    playersSelect.innerHTML = '<option value="1">Just Me (others TBD)</option><option value="2">2 Players</option><option value="3">3 Players</option><option value="4" selected>Full Group of 4</option>';
   }
 
   // Show spots remaining — cached count first (instant), then live-refresh from Sheet
@@ -3705,23 +3751,35 @@ function menuRenderGrill(g){
   });
 }
 function menuRenderSpecials(data){
-  var wsEl=document.getElementById('dining-weekly-special');
-  var fnEl=document.getElementById('dining-friday-special');
   var ws=data.weeklySpecial||{};
   var fn=data.fridayNight||{};
-  function fillSpecial(el,spec){
+  var wsActive=!!(ws.active&&ws.name);
+  var fnActive=!!(fn.active&&fn.name);
+  var row=document.getElementById('dining-specials-row');
+  var grid=document.getElementById('dip-grid');
+  var wsEl=document.getElementById('dining-weekly-special');
+  var fnEl=document.getElementById('dining-friday-special');
+  // Show/hide the whole row
+  if(row) row.style.display=(wsActive||fnActive)?'block':'none';
+  // Single active: expand to full width; both active: side-by-side
+  if(grid) grid.style.gridTemplateColumns=(wsActive&&fnActive)?'':'1fr';
+  function fillCard(el, bgId, spec){
     if(!el) return;
-    if(spec.active&&spec.name){
-      el.querySelector('.sf-name').textContent=spec.name;
-      el.querySelector('.sf-desc').textContent=spec.desc||'';
-      el.querySelector('.sf-price').textContent=spec.price||'';
-      var wEl=el.querySelector('.sf-wine');
-      if(wEl){wEl.textContent=spec.wine?'Pairs with '+spec.wine:'';wEl.style.display=spec.wine?'':'none';}
-      el.style.display='block';
-    } else el.style.display='none';
+    el.style.display=(spec.active&&spec.name)?'flex':'none';
+    if(!spec.active||!spec.name) return;
+    el.querySelector('.sf-name').textContent=spec.name;
+    el.querySelector('.sf-desc').textContent=spec.desc||'';
+    el.querySelector('.sf-price').textContent=spec.price||'';
+    var wEl=el.querySelector('.sf-wine');
+    if(wEl){wEl.textContent=spec.wine?'Pairs with '+spec.wine:'';wEl.style.display=spec.wine?'block':'none';}
+    var bg=document.getElementById(bgId);
+    if(bg){
+      var img=spec.image||bg.dataset.placeholder||'';
+      if(img) bg.style.backgroundImage='url('+img+')';
+    }
   }
-  fillSpecial(wsEl,ws);
-  fillSpecial(fnEl,fn);
+  fillCard(wsEl,'ws-bg',ws);
+  fillCard(fnEl,'fn-bg',fn);
 }
 function menuRenderAll(data){
   data=data||menuLoad();
@@ -3743,6 +3801,57 @@ menuRenderAll();
 })();
 
 // ── STAFF MENU PANEL ──
+// ── Image helpers for specials photo upload ──────────────────────────────────
+window._smImg = { ws: null, fn: null };
+
+function smLoadImage(which, input) {
+  var file = input.files && input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    var img = new Image();
+    img.onload = function() {
+      var MAX = 480;
+      var w = img.width, h = img.height;
+      if (w > MAX || h > MAX) {
+        var ratio = Math.min(MAX / w, MAX / h);
+        w = Math.round(w * ratio);
+        h = Math.round(h * ratio);
+      }
+      var canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      var dataUrl = canvas.toDataURL('image/jpeg', 0.45);
+      window._smImg[which] = dataUrl;
+      var thumb = document.getElementById('sm-' + which + '-img-thumb');
+      var preview = document.getElementById('sm-' + which + '-img-preview');
+      if (thumb) thumb.src = dataUrl;
+      if (preview) preview.style.display = 'block';
+      // reset file input so same file can be re-selected after remove
+      input.value = '';
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function smRemoveImage(which) {
+  window._smImg[which] = null;
+  var thumb = document.getElementById('sm-' + which + '-img-thumb');
+  var preview = document.getElementById('sm-' + which + '-img-preview');
+  if (thumb) thumb.src = '';
+  if (preview) preview.style.display = 'none';
+}
+
+function smRestoreImagePreview(which, dataUrl) {
+  if (!dataUrl) return;
+  window._smImg[which] = dataUrl;
+  var thumb = document.getElementById('sm-' + which + '-img-thumb');
+  var preview = document.getElementById('sm-' + which + '-img-preview');
+  if (thumb) thumb.src = dataUrl;
+  if (preview) preview.style.display = 'block';
+}
+
 function smLoad(){
   var data=menuLoad();
   var ws=data.weeklySpecial||{};var fn=data.fridayNight||{};
@@ -3752,6 +3861,11 @@ function smLoad(){
   setVal('sm-ws-price',ws.price);setVal('sm-ws-wine',ws.wine);
   setChk('sm-fn-active',fn.active);setVal('sm-fn-name',fn.name);setVal('sm-fn-desc',fn.desc);
   setVal('sm-fn-price',fn.price);setVal('sm-fn-wine',fn.wine);
+  // Restore image previews if photos were previously saved
+  window._smImg.ws = ws.image || null;
+  window._smImg.fn = fn.image || null;
+  smRestoreImagePreview('ws', ws.image);
+  smRestoreImagePreview('fn', fn.image);
   smRenderEditorLists(data);
   // Reset to specials tab
   smTab('specials',document.getElementById('sm-tab-specials'));
@@ -3785,9 +3899,11 @@ function smSaveSpecials(){
     name:document.getElementById('sm-ws-name').value.trim(),
     desc:document.getElementById('sm-ws-desc').value.trim(),
     price:document.getElementById('sm-ws-price').value.trim(),
-    wine:document.getElementById('sm-ws-wine').value.trim()};
+    wine:document.getElementById('sm-ws-wine').value.trim(),
+    image:window._smImg.ws||data.weeklySpecial&&data.weeklySpecial.image||''};
   menuSave(data);
   WHCC_SYNC.saveSpecials(data.weeklySpecial, data.fridayNight, function(){});
+  menuRenderAll();
   var st=document.getElementById('sm-ws-status');
   if(st){st.textContent='Saved — dining page updated!';st.style.display='block';setTimeout(function(){st.style.display='none';},2500);}
 }
@@ -3797,9 +3913,11 @@ function smSaveFriday(){
     name:document.getElementById('sm-fn-name').value.trim(),
     desc:document.getElementById('sm-fn-desc').value.trim(),
     price:document.getElementById('sm-fn-price').value.trim(),
-    wine:document.getElementById('sm-fn-wine').value.trim()};
+    wine:document.getElementById('sm-fn-wine').value.trim(),
+    image:window._smImg.fn||data.fridayNight&&data.fridayNight.image||''};
   menuSave(data);
   WHCC_SYNC.saveSpecials(data.weeklySpecial, data.fridayNight, function(){});
+  menuRenderAll();
   var st=document.getElementById('sm-fn-status');
   if(st){st.textContent='Saved — dining page updated!';st.style.display='block';setTimeout(function(){st.style.display='none';},2500);}
 }
@@ -4258,7 +4376,7 @@ function refreshRegsFromSheet() {
   if (btn) { btn.textContent = '↻ Syncing…'; btn.disabled = true; }
   WHCC_SYNC.fetchAll(function(regs, err) {
     if (btn) { btn.textContent = '↻ Sync Sheet'; btn.disabled = false; }
-    if (err || !regs) { alert('Could not reach Google Sheet. Showing cached data.'); return; }
+    if (err || !regs) { showToast('Could not reach Google Sheet. Showing cached data.', 'error'); return; }
     buildRegDropdown(regs);
     renderStaffRegs();
     var lbl = document.getElementById('reg-count-label');
@@ -4529,7 +4647,7 @@ function deleteReg(id) {
 function regExportCSV() {
   var filter = currentRegFilter || '';
   var regs = getAllRegs().filter(function(r){ return !filter || r.event === filter; });
-  if (!regs.length) { alert('No registrations to export.'); return; }
+  if (!regs.length) { showToast('No registrations to export.', 'error'); return; }
   var headers = ['Event','Date/Time','First Name','Last Name','Email','Phone','Partner','Partner GHIN','Players','Member #','GHIN #','Notes','Registered'];
   var rows = regs.map(function(r){
     return [r.event,r.eventMeta,r.firstName,r.lastName,r.email,r.phone,r.partner,r.partnerGhin||"",r.players,r.memberNum,r.ghin||"",r.notes,r.timestamp].map(function(v){
@@ -4547,7 +4665,7 @@ function regExportCSV() {
 function regPrintList() {
   var filter = currentRegFilter || '';
   var regs = getAllRegs().filter(function(r){ return !filter || r.event === filter; });
-  if (!regs.length) { alert('No registrations to print.'); return; }
+  if (!regs.length) { showToast('No registrations to print.', 'error'); return; }
   var html = '<html><head><title>Registration List</title><style>body{font-family:Arial,sans-serif;font-size:12px;color:#111}h1{font-size:16px;margin-bottom:4px}h2{font-size:13px;color:#555;font-weight:normal;margin-bottom:16px}table{width:100%;border-collapse:collapse}th{background:#1a2b1f;color:#f5f0e8;padding:6px 10px;text-align:left;font-size:11px}td{padding:5px 10px;border-bottom:1px solid #e8e0d0}tr:nth-child(even){background:#f9f6f0}.footer{margin-top:20px;font-size:10px;color:#999}</style></head><body>';
   html += '<h1>Westwood Hills Country Club — Event Registration List</h1>';
   html += '<h2>' + (filter || 'All Events') + ' · Printed ' + new Date().toLocaleDateString() + '</h2>';
@@ -4656,7 +4774,7 @@ function regPrintSignupSheet() {
 function regEmailList() {
   var filter = currentRegFilter || '';
   var regs = getAllRegs().filter(function(r){ return !filter || r.event === filter; });
-  if (!regs.length) { alert('No registrations to email.'); return; }
+  if (!regs.length) { showToast('No registrations to email.', 'error'); return; }
   var body = 'Registration List: ' + (filter || 'All Events') + '\n\n';
   regs.forEach(function(r,i){
     body += (i+1) + '. ' + (r.firstName||'') + ' ' + (r.lastName||'');
@@ -5579,7 +5697,7 @@ function pairGenerate() {
   if (pairConfig.mode === 'team') { pairGenerateTeamMode(); return; }
   var gs = pairConfig.groupSize;
   if (pairRoster.length < gs) {
-    alert('Need at least ' + gs + ' players to generate groups.');
+    showToast('Need at least ' + gs + ' players to generate groups.', 'error');
     return;
   }
   var sorted = pairRoster.slice().sort(function(a,b){ return a.hcap - b.hcap; });
@@ -5799,7 +5917,7 @@ function pairClearRosterAndGroups() {
 
 function pairImportFromRegs() {
   if (!pairEventFilter) {
-    alert('Select an event from the dropdown first.');
+    showToast('Select an event from the dropdown first.', 'error');
     return;
   }
   var regs = (typeof getAllRegs === 'function') ? getAllRegs() : [];
@@ -5808,12 +5926,12 @@ function pairImportFromRegs() {
     // Nothing in cache — fetch live from sheet, then retry
     WHCC_SYNC.fetchAll(function(freshRegs, err) {
       if (err || !freshRegs) {
-        alert('Could not reach the sheet. Check your connection and try again.');
+        showToast('Could not reach the sheet. Check your connection and try again.', 'error');
         return;
       }
       list = freshRegs.filter(function(r){ return r.event === pairEventFilter; });
       if (!list.length) {
-        alert('No registrations found for "' + pairEventFilter + '".');
+        showToast('No registrations found for "' + pairEventFilter + '".', 'error');
         return;
       }
       _pairDoImport(list);
@@ -5900,7 +6018,7 @@ function _pairDoImport(list) {
     pairSave();
     pairRenderRoster();
     var label = isF ? 'group' : 'couple';
-    alert('Imported ' + added + ' ' + label + (added !== 1 ? 's' : '') + ' from "' + pairEventFilter + '".');
+    showToast('Imported ' + added + ' ' + label + (added !== 1 ? 's' : '') + ' from "' + pairEventFilter + '".', 'success');
     return;
   }
 
@@ -5915,11 +6033,11 @@ function _pairDoImport(list) {
   });
   pairSave();
   pairRenderRoster();
-  alert('Imported ' + added + ' player' + (added !== 1 ? 's' : '') + ' from "' + pairEventFilter + '".');
+  showToast('Imported ' + added + ' player' + (added !== 1 ? 's' : '') + ' from "' + pairEventFilter + '".', 'success');
 }
 
 function pairPrint() {
-  if (!pairTeams.length) { alert('Generate teams first.'); return; }
+  if (!pairTeams.length) { showToast('Generate teams first.', 'error'); return; }
   var bal = pairCalcBalance();
   var html = '<!DOCTYPE html><html><head><title>Team Pairings</title><style>' +
     'body{font-family:Arial,sans-serif;padding:24px;color:#111;max-width:900px;margin:0 auto;}' +
@@ -5952,7 +6070,7 @@ function pairPrint() {
     }).join('') +
     '</div></body></html>';
   var w = window.open('', '_blank');
-  if (!w) { alert('Pop-up blocked — please allow pop-ups for this page.'); return; }
+  if (!w) { showToast('Pop-up blocked — please allow pop-ups for this page.', 'error'); return; }
   w.document.write(html);
   w.document.close();
   w.focus();
@@ -5976,7 +6094,7 @@ function pairAddCouple() {
   var n2 = (document.getElementById('pair-c-name2').value || '').trim();
   var h1 = parseFloat(document.getElementById('pair-c-hcap1').value);
   var h2 = parseFloat(document.getElementById('pair-c-hcap2').value);
-  if (!n1 || !n2) { alert('Enter both player names.'); document.getElementById('pair-c-name1').focus(); return; }
+  if (!n1 || !n2) { showToast('Enter both player names.', 'error'); document.getElementById('pair-c-name1').focus(); return; }
   if (isNaN(h1)) h1 = 18;
   if (isNaN(h2)) h2 = 18;
   h1 = Math.round(h1 * 10) / 10;
@@ -6158,7 +6276,7 @@ function pairBuildFoursomeGroups() {
 function pairGenerateTeamMode() {
   // Route to foursome builder if needed
   if (pairConfig.teamSize === 4) {
-    if (pairRoster.length < 4) { alert('Need at least 4 players to generate groups.'); return; }
+    if (pairRoster.length < 4) { showToast('Need at least 4 players to generate groups.', 'error'); return; }
     pairTeams = pairBuildFoursomeGroups();
     pairSwapSource = null;
     var hint = document.getElementById('pair-swap-hint');
@@ -6173,7 +6291,7 @@ function pairGenerateTeamMode() {
   var locked  = pairRoster.filter(function(p){ return p.isCouple; });
   var singles = pairRoster.filter(function(p){ return !p.isCouple; });
   if (locked.length + singles.length < 2) {
-    alert('Need at least 2 entries to generate groups.');
+    showToast('Need at least 2 entries to generate groups.', 'error');
     return;
   }
 
@@ -6479,7 +6597,7 @@ function tsRenderSheet() {
 
 function tsPrint() {
   if (!teeSheet.length) { tsBuild(); }
-  if (!teeSheet.length) { alert('Build the tee sheet first.'); return; }
+  if (!teeSheet.length) { showToast('Build the tee sheet first.', 'error'); return; }
   var showScore = teeRound > 1;
   var rHeaders  = '';
   if (showScore) {
@@ -6530,7 +6648,7 @@ function tsPrint() {
     }).join('') +
     '</tbody></table></body></html>';
   var w = window.open('', '_blank');
-  if (!w) { alert('Pop-up blocked — please allow pop-ups for this page.'); return; }
+  if (!w) { showToast('Pop-up blocked — please allow pop-ups for this page.', 'error'); return; }
   w.document.write(html);
   w.document.close();
   w.focus();
@@ -6543,7 +6661,7 @@ function pairEsc(s) {
 
 // ── TEE SHEET SYNC ────────────────────────────────────────────────────────────
 function tsSaveToSheet() {
-  if (!teeSheet.length) { alert('Generate a tee sheet first.'); return; }
+  if (!teeSheet.length) { showToast('Generate a tee sheet first.', 'error'); return; }
   var btn = document.getElementById('ts-save-btn');
   var status = document.getElementById('ts-sync-status');
   if (btn) { btn.textContent = '⏳ Saving…'; btn.disabled = true; }
@@ -6650,7 +6768,7 @@ function ghinParseCSV(text) {
     if (/club/i.test(h))                           colClub  = i;
   });
   if (colFirst < 0 || colLast < 0 || colHcp < 0) {
-    alert('Could not find required columns (First Name, Last Name, Handicap Index) in the CSV.\nMake sure you\'re uploading a GHIN export file.');
+    showToast('Could not find required columns in the CSV. Make sure you\'re uploading a GHIN export file.', 'error');
     return null;
   }
   var data = {};
@@ -6924,6 +7042,54 @@ function pairRunTest() {
   });
 
   return { passed: pass, failed: fail };
+}
+
+function showToast(msg, type) {
+  var container = document.getElementById('whcc-toast-container');
+  if (!container) { container = document.createElement('div'); container.id = 'whcc-toast-container'; document.body.appendChild(container); }
+  var toast = document.createElement('div');
+  toast.className = 'whcc-toast ' + (type || 'info');
+  toast.textContent = msg;
+  container.appendChild(toast);
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ toast.classList.add('show'); }); });
+  setTimeout(function(){ toast.classList.remove('show'); setTimeout(function(){ toast.parentNode && toast.parentNode.removeChild(toast); }, 300); }, 3500);
+}
+
+function submitEventInquiry() {
+  var first   = document.getElementById('inq-first').value.trim();
+  var last    = document.getElementById('inq-last').value.trim();
+  var email   = document.getElementById('inq-email').value.trim();
+  var phone   = document.getElementById('inq-phone').value.trim();
+  var type    = document.getElementById('inq-type').value;
+  var guests  = document.getElementById('inq-guests').value.trim();
+  var date    = document.getElementById('inq-date').value;
+  var notes   = document.getElementById('inq-notes').value.trim();
+  var errEl   = document.getElementById('inq-error');
+  var btn     = document.getElementById('inq-btn');
+  errEl.style.display = 'none';
+  if (!first && !last)  { errEl.textContent = 'Please enter your name.'; errEl.style.display = 'block'; return; }
+  if (!email && !phone) { errEl.textContent = 'Please provide an email or phone number.'; errEl.style.display = 'block'; return; }
+  var message = 'Event Type: ' + type + '\nEstimated Guests: ' + (guests || 'Not specified') +
+                '\nPreferred Date: ' + (date || 'Not specified') + '\nNotes: ' + (notes || 'None');
+  btn.disabled = true; btn.textContent = 'Sending…';
+  fetch(WHCC_SCRIPT_URL, {
+    method: 'POST', headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({
+      action: 'addContact', name: (first + ' ' + last).trim(),
+      email: email, phone: phone, subject: 'Private Event Inquiry',
+      message: message, timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Chicago' })
+    })
+  }).then(function() {
+    document.getElementById('inq-confirm').style.display = 'block';
+    btn.style.display = 'none';
+    ['inq-first','inq-last','inq-email','inq-phone','inq-guests','inq-date','inq-notes'].forEach(function(id){
+      document.getElementById(id).value = '';
+    });
+  }).catch(function() {
+    errEl.textContent = 'Unable to send — please call (573) 785-5253.';
+    errEl.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Submit Inquiry';
+  });
 }
 
 function submitContactForm() {
