@@ -2705,9 +2705,9 @@ var WH_SITE_DEFAULTS = {
   announcements: [],
   heroes: {
     home:       { tag:'Poplar Bluff, Missouri',  title:'Where <em>legends</em> are made',               subtitle:'Southeast Missouri\u2019s finest private country club \u2014 18 championship holes, exceptional dining, and a community built over nine decades.', image:'images/hero-clubhouse.jpg' },
-    golf:       { tag:'Championship Golf',       title:'18 Holes of <em>distinction</em>',              subtitle:'A classic parkland layout nestled in rolling terrain \u2014 challenging for low handicappers, enjoyable for every skill level.',                    image:'images/golf-hero.jpg' },
+    golf:       { tag:'Championship Golf',       title:'18 Holes of <em>distinction</em>',              subtitle:'A classic parkland layout nestled in rolling terrain \u2014 challenging for low handicappers, enjoyable for every skill level.',                    image:'images/golf-carts-sunset.jpg' },
     dining:     { tag:'Fine Dining & More',      title:'Flavors as refined <em>as the game</em>',       subtitle:'From casual post-round bites at the Westwood Grill to an elevated evening at Hoover\u2019s \u2014 exceptional food is always on the menu.',      image:'images/dining-hero.jpg' },
-    aquatics:   { tag:'Aquatics Complex',        title:'Summer\u2019s <em>best address</em>',           subtitle:'A premier aquatics facility for members of all ages \u2014 competition pool, zero-entry kids area, and programming for the whole family.',          image:'images/pool-hero.jpg' },
+    aquatics:   { tag:'Aquatics Complex',        title:'Summer\u2019s <em>best address</em>',           subtitle:'A premier aquatics facility for members of all ages \u2014 competition pool, zero-entry kids area, and programming for the whole family.',          image:'images/pool-main.jpg' },
     events:     { tag:'Events & Tournaments',    title:'Always something <em>to celebrate</em>',        subtitle:'From weekly golf socials to signature tournaments and private celebrations \u2014 Westwood Hills brings people together all year long.',             image:'images/events-hero.jpg' },
     membership: { tag:'Membership',             title:'Join a tradition <em>nearly 90 years deep</em>', subtitle:'Westwood Hills is more than a club \u2014 it\u2019s where Poplar Bluff\u2019s finest families have gathered for generations.',                    image:'images/membership-hero.jpg' },
     about:      { tag:'About Us',               title:'Nearly 90 years <em>of community</em>',          subtitle:'From a modest nine-hole layout in 1936 to the premier private club in Southeast Missouri \u2014 our story is one of growth, dedication, and community.', image:'images/about-hero.jpg' }
@@ -2725,9 +2725,9 @@ var WH_SITE_DEFAULTS = {
   },
   photos: {
     hero_home:        'images/hero-clubhouse.jpg',
-    hero_golf:        'images/golf-hero.jpg',
+    hero_golf:        'images/golf-carts-sunset.jpg',
     hero_dining:      'images/dining-hero.jpg',
-    hero_aquatics:    'images/pool-hero.jpg',
+    hero_aquatics:    'images/pool-main.jpg',
     hero_events:      'images/events-hero.jpg',
     hero_membership:  'images/membership-hero.jpg',
     hero_about:       'images/about-hero.jpg',
@@ -2746,9 +2746,7 @@ function applySiteContent(sc) {
     var bgMap = { home:'hero-bg', golf:'golf-bg', dining:'dining-bg', aquatics:'aquatics-bg', events:'events-bg', membership:'membership-bg', about:'about-bg' };
     pages.forEach(function(p) {
       var h = sc.heroes[p]; if (!h) return;
-      // Background image
-      var bg = document.querySelector('.' + bgMap[p]);
-      if (bg && h.image) bg.style.backgroundImage = 'url(' + h.image + ')';
+      // Background image — CSS classes define the correct images; skip inline override
       // Text content — find ph-content inside the page hero
       var pageEl = document.getElementById('page-' + p);
       if (!pageEl) return;
