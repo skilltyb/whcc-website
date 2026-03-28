@@ -1359,7 +1359,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
               </button>
               <button class="hrf-venue-btn" onclick="selectVenue('grille',this)" type="button">
                 <span class="hrf-venue-name">The Westwood Grill</span>
-                <span class="hrf-venue-desc">Casual · Daily 11 AM–8 PM</span>
+                <span class="hrf-venue-desc" data-wh-contact="grill_hours">Casual · Daily 11 AM–8 PM</span>
               </button>
             </div>
             <input type="hidden" id="res-venue" value="hoovers" />
@@ -1460,8 +1460,8 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <p class="eyebrow fade-up">Westwood Grill</p>
     <h2 class="sec-title fade-up d1">Express Lunch — <em>15 Minute Guarantee</em></h2>
     <p class="sec-body fade-up d2">Short on time? Our Express Lunch gets you a fresh, delicious meal in 15 minutes or less. Choose from four great options, available Tuesday through Friday from 11:30 AM to 1:00 PM.</p>
-    <div class="express-banner fade-up d2">⚡ 15 Minute Guarantee &nbsp;·&nbsp; Tue – Fri &nbsp;·&nbsp; 11:30 AM – 1:00 PM</div>
-    <div class="express-grid fade-up d3">
+    <div class="express-banner fade-up d2" id="express-lunch-banner">⚡ 15 Minute Guarantee &nbsp;·&nbsp; Tue – Fri &nbsp;·&nbsp; 11:30 AM – 1:00 PM</div>
+    <div class="express-grid fade-up d3" id="express-lunch-grid">
       <div class="express-card">
         <div class="express-price">$13</div>
         <div class="express-name">Chicken Bacon Ranch Wrap</div>
@@ -1557,8 +1557,8 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 
   <div class="section sand" id="pool-hours">
     <p class="eyebrow fade-up">Pool Hours</p>
-    <h2 class="sec-title fade-up d1">Open <em>Memorial Day</em> through Labor Day</h2>
-    <div class="ph-grid fade-up d2">
+    <h2 class="sec-title fade-up d1" id="pool-season-label">Open <em>Memorial Day</em> through Labor Day</h2>
+    <div class="ph-grid fade-up d2" id="pool-hours-grid">
       <div class="ph-cell"><div class="ph-day">Monday</div><div class="ph-time">6–9 AM / 12–8 PM</div><div class="ph-note">Lap swim + Open swim</div></div>
       <div class="ph-cell"><div class="ph-day">Tue – Thu</div><div class="ph-time">6–9 AM / 12–8 PM</div><div class="ph-note">Lap swim + Open swim</div></div>
       <div class="ph-cell"><div class="ph-day">Friday</div><div class="ph-time">12–9 PM</div><div class="ph-note">Open swim all day</div></div>
@@ -1832,7 +1832,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
   <div class="section sand">
     <p class="eyebrow fade-up">Common Questions</p>
     <h2 class="sec-title fade-up d1">Frequently <em>asked</em></h2>
-    <div class="faq-grid fade-up d2">
+    <div class="faq-grid fade-up d2" id="membership-faq-grid">
       <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is there a waitlist for membership? <span class="faq-icon">+</span></div><div class="faq-a">Membership availability varies by category. Contact our membership director to check current availability for your preferred type.</div></div>
       <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I host non-member guests? <span class="faq-icon">+</span></div><div class="faq-a">Yes! Golf members receive 2 reduced-rate guest rounds per month. Additional guest visits are available at standard guest rates.</div></div>
       <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What is the initiation fee? <span class="faq-icon">+</span></div><div class="faq-a">Initiation fees vary by membership category and are occasionally waived for promotional periods. Contact our membership office for current schedules.</div></div>
@@ -1891,11 +1891,11 @@ nav.staff-mode .nav-site-back{display:flex!important;}
   </div>
 
   <div class="stats-band">
-    <div class="sbi"><div class="sbi-n">1936</div><div class="sbi-l">Year Founded</div></div>
-    <div class="sbi"><div class="sbi-n">18</div><div class="sbi-l">Championship Holes</div></div>
-    <div class="sbi"><div class="sbi-n">500<sup>+</sup></div><div class="sbi-l">Member Families</div></div>
-    <div class="sbi"><div class="sbi-n">25<sup>+</sup></div><div class="sbi-l">Annual Events</div></div>
-    <div class="sbi"><div class="sbi-n">30<sup>+</sup></div><div class="sbi-l">Staff Members</div></div>
+    <div class="sbi"><div class="sbi-n" data-wh-stat="year_founded">1936</div><div class="sbi-l">Year Founded</div></div>
+    <div class="sbi"><div class="sbi-n" data-wh-stat="holes">18</div><div class="sbi-l">Championship Holes</div></div>
+    <div class="sbi"><div class="sbi-n" data-wh-stat="member_families">500+</div><div class="sbi-l">Member Families</div></div>
+    <div class="sbi"><div class="sbi-n" data-wh-stat="annual_events">25+</div><div class="sbi-l">Annual Events</div></div>
+    <div class="sbi"><div class="sbi-n" data-wh-stat="staff">30+</div><div class="sbi-l">Staff Members</div></div>
   </div>
 
   <!-- ── CLUBHOUSE GALLERY ── -->
@@ -1993,6 +1993,10 @@ nav.staff-mode .nav-site-back{display:flex!important;}
             <button id="svb-heroes"        onclick="staffView('heroes');svCloseDrop()">Page Headers</button>
             <button id="svb-contact"       onclick="staffView('contact');svCloseDrop()">Contact Info</button>
             <button id="svb-photos"        onclick="staffView('photos');svCloseDrop()">Photos</button>
+            <button id="svb-pool"          onclick="staffView('pool');svCloseDrop()">Pool Hours</button>
+            <button id="svb-express"       onclick="staffView('express');svCloseDrop()">Express Lunch</button>
+            <button id="svb-stats"         onclick="staffView('stats');svCloseDrop()">Club Statistics</button>
+            <button id="svb-faq"           onclick="staffView('faq');svCloseDrop()">Membership FAQ</button>
           </div>
         </div>
         <span style="width:1px;background:rgba(184,151,106,.2);margin:0 4px;align-self:stretch;"></span>
@@ -2576,6 +2580,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
             <div class="hrf-group"><label class="hrf-label">Office Hours — Sunday</label><input class="hrf-input" id="cms-ct-hours-su" /></div>
             <div class="hrf-group"><label class="hrf-label">Hoover's Dinner Hours</label><input class="hrf-input" id="cms-ct-hoovers-hours" /></div>
             <div class="hrf-group"><label class="hrf-label">Hoover's Public Night</label><input class="hrf-input" id="cms-ct-hoovers-public" /></div>
+            <div class="hrf-group"><label class="hrf-label">Westwood Grill Hours</label><input class="hrf-input" id="cms-ct-grill-hours" /></div>
           </div>
           <button class="btn-p" style="margin-top:20px;width:100%;max-width:520px;" onclick="cmsContactSave()">Save Contact Info</button>
           <div id="cms-contact-status" style="display:none;color:#8fcc8f;font-size:12px;margin-top:8px;"></div>
@@ -2590,6 +2595,64 @@ nav.staff-mode .nav-site-back{display:flex!important;}
           <div id="cms-photos-list" style="display:grid;gap:12px;max-width:600px;"></div>
           <button class="btn-p" style="margin-top:20px;width:100%;max-width:600px;" onclick="cmsPhotosSave()">Save Photos</button>
           <div id="cms-photos-status" style="display:none;color:#8fcc8f;font-size:12px;margin-top:8px;"></div>
+        </div>
+
+        <!-- POOL HOURS EDITOR -->
+        <div id="sv-pool" style="display:none;">
+          <div class="staff-section-header" style="margin-bottom:16px;">
+            <div class="staff-tag">Pool Hours</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;">Set pool season dates and daily schedule shown on the Aquatics page.</div>
+          </div>
+          <div style="display:grid;gap:12px;max-width:560px;">
+            <div class="hrf-group"><label class="hrf-label">Season (shown in heading)</label><input class="hrf-input" id="cms-pool-season" placeholder="Memorial Day through Labor Day" /></div>
+            <div style="color:rgba(245,240,232,.5);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-top:4px;padding-bottom:4px;border-bottom:1px solid rgba(184,151,106,.1);">Daily Schedule — Days &nbsp;|&nbsp; Hours &nbsp;|&nbsp; Note</div>
+            <div id="cms-pool-hours-rows"></div>
+          </div>
+          <button class="btn-p" style="margin-top:20px;width:100%;max-width:560px;" onclick="cmsPoolSave()">Save Pool Hours</button>
+          <div id="cms-pool-status" style="display:none;color:#8fcc8f;font-size:12px;margin-top:8px;"></div>
+        </div>
+
+        <!-- EXPRESS LUNCH EDITOR -->
+        <div id="sv-express" style="display:none;">
+          <div class="staff-section-header" style="margin-bottom:16px;">
+            <div class="staff-tag">Express Lunch</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;">Update the Express Lunch items, prices, and availability shown on the Dining page.</div>
+          </div>
+          <div style="display:grid;gap:12px;max-width:520px;">
+            <div class="hrf-group"><label class="hrf-label">Availability (banner text)</label><input class="hrf-input" id="cms-el-available" placeholder="Tue – Fri · 11:30 AM – 1:00 PM" /></div>
+            <div style="color:rgba(245,240,232,.5);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-top:4px;padding-bottom:4px;border-bottom:1px solid rgba(184,151,106,.1);">Menu Items — Item Name &nbsp;|&nbsp; Price</div>
+            <div id="cms-el-items"></div>
+          </div>
+          <button class="btn-p" style="margin-top:20px;width:100%;max-width:520px;" onclick="cmsExpressSave()">Save Express Lunch</button>
+          <div id="cms-express-status" style="display:none;color:#8fcc8f;font-size:12px;margin-top:8px;"></div>
+        </div>
+
+        <!-- CLUB STATS EDITOR -->
+        <div id="sv-stats" style="display:none;">
+          <div class="staff-section-header" style="margin-bottom:16px;">
+            <div class="staff-tag">Club Statistics</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;">Numbers displayed in the statistics band on the About page.</div>
+          </div>
+          <div style="display:grid;gap:12px;max-width:400px;">
+            <div class="hrf-group"><label class="hrf-label">Year Founded</label><input class="hrf-input" id="cms-stat-year" /></div>
+            <div class="hrf-group"><label class="hrf-label">Championship Holes</label><input class="hrf-input" id="cms-stat-holes" /></div>
+            <div class="hrf-group"><label class="hrf-label">Member Families</label><input class="hrf-input" id="cms-stat-families" placeholder="e.g. 500+" /></div>
+            <div class="hrf-group"><label class="hrf-label">Annual Events</label><input class="hrf-input" id="cms-stat-events" placeholder="e.g. 25+" /></div>
+            <div class="hrf-group"><label class="hrf-label">Staff Members</label><input class="hrf-input" id="cms-stat-staff" placeholder="e.g. 30+" /></div>
+          </div>
+          <button class="btn-p" style="margin-top:20px;width:100%;max-width:400px;" onclick="cmsStatsSave()">Save Statistics</button>
+          <div id="cms-stats-status" style="display:none;color:#8fcc8f;font-size:12px;margin-top:8px;"></div>
+        </div>
+
+        <!-- MEMBERSHIP FAQ EDITOR -->
+        <div id="sv-faq" style="display:none;">
+          <div class="staff-section-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+            <div><div class="staff-tag">Membership FAQ</div><div style="font-size:11px;color:var(--muted);margin-top:4px;">Questions and answers shown on the Membership page.</div></div>
+            <button class="btn-p" style="padding:8px 16px;font-size:12px;" onclick="cmsFaqAddItem()">+ Add Question</button>
+          </div>
+          <div id="cms-faq-items" style="display:grid;gap:12px;max-width:620px;"></div>
+          <button class="btn-p" style="margin-top:20px;width:100%;max-width:620px;" onclick="cmsFaqSave()">Save FAQ</button>
+          <div id="cms-faq-status" style="display:none;color:#8fcc8f;font-size:12px;margin-top:8px;"></div>
         </div>
 
       </div>
@@ -2722,8 +2785,42 @@ var WH_SITE_DEFAULTS = {
     hours_saturday:   'Saturday: 8:00 AM \u2013 2:00 PM',
     hours_sunday:     'Sunday: Closed (Golf Shop open)',
     hoovers_hours:    'Thursday\u2013Saturday, 5 PM \u2013 9 PM',
-    hoovers_public:   '3rd Saturday of each month'
+    hoovers_public:   '3rd Saturday of each month',
+    grill_hours:      'Casual \u00b7 Daily 11 AM\u20138 PM'
   },
+  pool: {
+    season_label: 'Memorial Day through Labor Day',
+    hours: [
+      { days: 'Monday',    time: '6\u20139 AM / 12\u20138 PM', note: 'Lap swim + Open swim' },
+      { days: 'Tue \u2013 Thu', time: '6\u20139 AM / 12\u20138 PM', note: 'Lap swim + Open swim' },
+      { days: 'Friday',    time: '12\u20139 PM',           note: 'Open swim all day'    },
+      { days: 'Sat & Sun', time: '10 AM \u2013 9 PM',      note: 'Full day open swim'   }
+    ]
+  },
+  express_lunch: {
+    available: 'Tue \u2013 Fri \u00b7 11:30 AM \u2013 1:00 PM',
+    items: [
+      { name: 'Chicken Bacon Ranch Wrap', price: '$13' },
+      { name: '\u00bd lb Cheeseburger',   price: '$14' },
+      { name: 'Caesar Salad',             price: '$13' },
+      { name: 'Soup & Salad Combo',       price: '$12' }
+    ]
+  },
+  about_stats: {
+    year_founded:    '1936',
+    holes:           '18',
+    member_families: '500+',
+    annual_events:   '25+',
+    staff:           '30+'
+  },
+  membership_faq: [
+    { q: 'Is there a waitlist for membership?',   a: 'Membership availability varies by category. Contact our membership director to check current availability for your preferred type.' },
+    { q: 'Can I host non-member guests?',         a: 'Yes! Golf members receive 2 reduced-rate guest rounds per month. Additional guest visits are available at standard guest rates.' },
+    { q: 'What is the initiation fee?',           a: 'Initiation fees vary by membership category and are occasionally waived for promotional periods. Contact our membership office for current schedules.' },
+    { q: 'Are there junior membership options?',  a: 'Yes \u2014 our Junior Membership is available to members under age 35 at significantly reduced initiation and dues. We also offer Youth Memberships for ages 14\u201318.' },
+    { q: 'Can I upgrade my membership later?',    a: 'Absolutely. Members may upgrade at any time, subject to availability. Downgrades are permitted with 30 days\u2019 written notice.' },
+    { q: 'Is the club open year-round?',          a: 'The golf course and clubhouse are open year-round, weather permitting. The aquatics complex operates Memorial Day through Labor Day.' }
+  ],
   photos: {
     hero_home:        'images/hero-clubhouse.jpg',
     hero_golf:        'images/golf-carts-sunset.jpg',
@@ -2783,6 +2880,40 @@ function applySiteContent(sc) {
   // Announcements banner
   if (sc.announcements && sc.announcements.length > 0) {
     renderAnnouncements(sc.announcements);
+  }
+  // Pool hours
+  var poolData = sc.pool || WH_SITE_DEFAULTS.pool;
+  var poolLabel = document.getElementById('pool-season-label');
+  if (poolLabel) poolLabel.innerHTML = 'Open <em>' + (poolData.season_label || 'Memorial Day through Labor Day') + '</em>';
+  var poolGrid = document.getElementById('pool-hours-grid');
+  if (poolGrid && poolData.hours && poolData.hours.length) {
+    poolGrid.innerHTML = poolData.hours.map(function(h) {
+      return '<div class="ph-cell"><div class="ph-day">' + h.days + '</div><div class="ph-time">' + h.time + '</div><div class="ph-note">' + h.note + '</div></div>';
+    }).join('');
+  }
+  // Express lunch
+  var elData = sc.express_lunch || WH_SITE_DEFAULTS.express_lunch;
+  var elBanner = document.getElementById('express-lunch-banner');
+  if (elBanner) elBanner.innerHTML = '&#9889; 15 Minute Guarantee &nbsp;&middot;&nbsp; ' + (elData.available || '');
+  var elGrid = document.getElementById('express-lunch-grid');
+  if (elGrid && elData.items && elData.items.length) {
+    elGrid.innerHTML = elData.items.map(function(item) {
+      return '<div class="express-card"><div class="express-price">' + item.price + '</div><div class="express-name">' + item.name + '</div></div>';
+    }).join('');
+  }
+  // About stats
+  var statsData = sc.about_stats || WH_SITE_DEFAULTS.about_stats;
+  document.querySelectorAll('[data-wh-stat]').forEach(function(el) {
+    var key = el.getAttribute('data-wh-stat');
+    if (statsData[key] !== undefined) el.textContent = statsData[key];
+  });
+  // Membership FAQ
+  var faqData = sc.membership_faq || WH_SITE_DEFAULTS.membership_faq;
+  var faqGrid = document.getElementById('membership-faq-grid');
+  if (faqGrid && faqData && faqData.length) {
+    faqGrid.innerHTML = faqData.map(function(item) {
+      return '<div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">' + item.q + ' <span class="faq-icon">+</span></div><div class="faq-a">' + item.a + '</div></div>';
+    }).join('');
   }
 }
 
@@ -4728,7 +4859,7 @@ function staffView(view, btn, useSecondary) {
   var menuItem = document.getElementById('svb-' + view);
   if (menuItem) menuItem.classList.add('active-view');
 
-  ['calendar','upcoming','search','guests','settings','scoring','daily','menus','registrations','pairings','events','announcements','heroes','contact','photos'].forEach(v => {
+  ['calendar','upcoming','search','guests','settings','scoring','daily','menus','registrations','pairings','events','announcements','heroes','contact','photos','pool','express','stats','faq'].forEach(v => {
     const el = document.getElementById('sv-' + v);
     if (el) el.style.display = v === view ? 'block' : 'none';
   });
@@ -4750,6 +4881,10 @@ function staffView(view, btn, useSecondary) {
   if (view === 'heroes')        { cmsHeroesLoad(); }
   if (view === 'contact')       { cmsContactLoad(); }
   if (view === 'photos')        { cmsPhotosLoad(); }
+  if (view === 'pool')          { cmsPoolLoad(); }
+  if (view === 'express')       { cmsExpressLoad(); }
+  if (view === 'stats')         { cmsStatsLoad(); }
+  if (view === 'faq')           { cmsFaqLoad(); }
   // Hide right panel for full-width views
   var rightPanel = document.getElementById('staff-right');
   if (rightPanel) rightPanel.style.display = (view === 'registrations' || view === 'pairings') ? 'none' : '';
@@ -5957,6 +6092,7 @@ function cmsContactLoad() {
   document.getElementById('cms-ct-hours-su').value      = ct.hours_sunday    || '';
   document.getElementById('cms-ct-hoovers-hours').value = ct.hoovers_hours   || '';
   document.getElementById('cms-ct-hoovers-public').value= ct.hoovers_public  || '';
+  document.getElementById('cms-ct-grill-hours').value   = ct.grill_hours     || '';
 }
 
 function cmsContactSave() {
@@ -5970,7 +6106,8 @@ function cmsContactSave() {
     hours_saturday: document.getElementById('cms-ct-hours-sa').value.trim(),
     hours_sunday:   document.getElementById('cms-ct-hours-su').value.trim(),
     hoovers_hours:  document.getElementById('cms-ct-hoovers-hours').value.trim(),
-    hoovers_public: document.getElementById('cms-ct-hoovers-public').value.trim()
+    hoovers_public: document.getElementById('cms-ct-hoovers-public').value.trim(),
+    grill_hours:    document.getElementById('cms-ct-grill-hours').value.trim()
   };
   cmsSave(sc, 'cms-contact-status');
   var st = document.getElementById('cms-contact-status');
@@ -6022,6 +6159,141 @@ function cmsPhotosSave() {
   cmsSave(sc, 'cms-photos-status');
   var st = document.getElementById('cms-photos-status');
   if (st) { st.style.display='block'; st.textContent='✓ Photos updated.'; setTimeout(function(){ st.style.display='none'; }, 4000); }
+}
+
+// ── POOL HOURS ────────────────────────────────────────────
+
+function cmsPoolLoad() {
+  var sc = cmsGetContent();
+  var pool = sc.pool || WH_SITE_DEFAULTS.pool;
+  document.getElementById('cms-pool-season').value = pool.season_label || '';
+  var rows = document.getElementById('cms-pool-hours-rows');
+  if (!rows) return;
+  rows.innerHTML = (pool.hours || []).map(function(h, i) {
+    return '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px;">' +
+      '<input class="hrf-input" data-pool-days="'+i+'" placeholder="Days" value="'+(h.days||'').replace(/"/g,'&quot;')+'">' +
+      '<input class="hrf-input" data-pool-time="'+i+'" placeholder="Hours" value="'+(h.time||'').replace(/"/g,'&quot;')+'">' +
+      '<input class="hrf-input" data-pool-note="'+i+'" placeholder="Note" value="'+(h.note||'').replace(/"/g,'&quot;')+'">' +
+    '</div>';
+  }).join('');
+}
+
+function cmsPoolSave() {
+  var sc = cmsGetContent();
+  var rows = document.getElementById('cms-pool-hours-rows');
+  var n = rows ? rows.querySelectorAll('[data-pool-days]').length : 0;
+  var hours = [];
+  for (var i = 0; i < n; i++) {
+    var dEl = rows.querySelector('[data-pool-days="'+i+'"]');
+    var tEl = rows.querySelector('[data-pool-time="'+i+'"]');
+    var nEl = rows.querySelector('[data-pool-note="'+i+'"]');
+    hours.push({ days: dEl ? dEl.value : '', time: tEl ? tEl.value : '', note: nEl ? nEl.value : '' });
+  }
+  sc.pool = { season_label: document.getElementById('cms-pool-season').value.trim(), hours: hours };
+  cmsSave(sc, 'cms-pool-status');
+}
+
+// ── EXPRESS LUNCH ─────────────────────────────────────────
+
+function cmsExpressLoad() {
+  var sc = cmsGetContent();
+  var el = sc.express_lunch || WH_SITE_DEFAULTS.express_lunch;
+  document.getElementById('cms-el-available').value = el.available || '';
+  var itemsDiv = document.getElementById('cms-el-items');
+  if (!itemsDiv) return;
+  itemsDiv.innerHTML = (el.items || []).map(function(item, i) {
+    return '<div style="display:grid;grid-template-columns:1fr 80px;gap:8px;margin-bottom:8px;">' +
+      '<input class="hrf-input" data-el-name="'+i+'" placeholder="Item name" value="'+(item.name||'').replace(/"/g,'&quot;')+'">' +
+      '<input class="hrf-input" data-el-price="'+i+'" placeholder="$00" value="'+(item.price||'')+'">' +
+    '</div>';
+  }).join('');
+}
+
+function cmsExpressSave() {
+  var sc = cmsGetContent();
+  var itemsDiv = document.getElementById('cms-el-items');
+  var n = itemsDiv ? itemsDiv.querySelectorAll('[data-el-name]').length : 0;
+  var items = [];
+  for (var i = 0; i < n; i++) {
+    var nEl = itemsDiv.querySelector('[data-el-name="'+i+'"]');
+    var pEl = itemsDiv.querySelector('[data-el-price="'+i+'"]');
+    if (nEl && nEl.value.trim()) items.push({ name: nEl.value.trim(), price: pEl ? pEl.value.trim() : '' });
+  }
+  sc.express_lunch = { available: document.getElementById('cms-el-available').value.trim(), items: items };
+  cmsSave(sc, 'cms-express-status');
+}
+
+// ── CLUB STATS ────────────────────────────────────────────
+
+function cmsStatsLoad() {
+  var sc = cmsGetContent();
+  var st = sc.about_stats || WH_SITE_DEFAULTS.about_stats;
+  document.getElementById('cms-stat-year').value     = st.year_founded    || '';
+  document.getElementById('cms-stat-holes').value    = st.holes           || '';
+  document.getElementById('cms-stat-families').value = st.member_families || '';
+  document.getElementById('cms-stat-events').value   = st.annual_events   || '';
+  document.getElementById('cms-stat-staff').value    = st.staff           || '';
+}
+
+function cmsStatsSave() {
+  var sc = cmsGetContent();
+  sc.about_stats = {
+    year_founded:    document.getElementById('cms-stat-year').value.trim(),
+    holes:           document.getElementById('cms-stat-holes').value.trim(),
+    member_families: document.getElementById('cms-stat-families').value.trim(),
+    annual_events:   document.getElementById('cms-stat-events').value.trim(),
+    staff:           document.getElementById('cms-stat-staff').value.trim()
+  };
+  cmsSave(sc, 'cms-stats-status');
+}
+
+// ── MEMBERSHIP FAQ ────────────────────────────────────────
+
+function cmsFaqLoad() {
+  var sc = cmsGetContent();
+  var faqs = sc.membership_faq || WH_SITE_DEFAULTS.membership_faq;
+  var container = document.getElementById('cms-faq-items');
+  if (!container) return;
+  container.innerHTML = faqs.map(function(item, i) {
+    return '<div style="background:rgba(26,43,31,.4);border:1px solid rgba(184,151,106,.15);padding:14px;border-radius:4px;">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
+        '<div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);">Question '+(i+1)+'</div>' +
+        '<button onclick="cmsFaqRemove('+i+')" style="background:none;border:none;color:rgba(245,240,232,.3);cursor:pointer;font-size:14px;line-height:1;" title="Remove">&#x2715;</button>' +
+      '</div>' +
+      '<input class="hrf-input" data-faq-q="'+i+'" placeholder="Question" value="'+(item.q||'').replace(/"/g,'&quot;')+'" style="margin-bottom:8px;">' +
+      '<textarea class="hrf-input" data-faq-a="'+i+'" placeholder="Answer" rows="3" style="resize:vertical;">'+(item.a||'')+'</textarea>' +
+    '</div>';
+  }).join('');
+}
+
+function cmsFaqAddItem() {
+  var sc = cmsGetContent();
+  if (!sc.membership_faq) sc.membership_faq = (WH_SITE_DEFAULTS.membership_faq || []).slice();
+  sc.membership_faq.push({ q: '', a: '' });
+  WH_SITE_CONTENT = sc;
+  cmsFaqLoad();
+}
+
+function cmsFaqRemove(idx) {
+  var sc = cmsGetContent();
+  if (!sc.membership_faq) sc.membership_faq = (WH_SITE_DEFAULTS.membership_faq || []).slice();
+  sc.membership_faq.splice(idx, 1);
+  WH_SITE_CONTENT = sc;
+  cmsFaqLoad();
+}
+
+function cmsFaqSave() {
+  var sc = cmsGetContent();
+  var container = document.getElementById('cms-faq-items');
+  var n = container ? container.querySelectorAll('[data-faq-q]').length : 0;
+  var faqs = [];
+  for (var i = 0; i < n; i++) {
+    var qEl = container.querySelector('[data-faq-q="'+i+'"]');
+    var aEl = container.querySelector('[data-faq-a="'+i+'"]');
+    if (qEl && qEl.value.trim()) faqs.push({ q: qEl.value.trim(), a: aEl ? aEl.value.trim() : '' });
+  }
+  sc.membership_faq = faqs;
+  cmsSave(sc, 'cms-faq-status');
 }
 
 // ── INIT ──
