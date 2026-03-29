@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Westwood Hills Country Club — Poplar Bluff, Missouri's premier private country club since 1936. Championship golf, fine dining, aquatics, and family membership in Southeast Missouri." />
 <title>Westwood Hills Country Club — Poplar Bluff, Missouri</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <style>
@@ -3501,11 +3502,9 @@ function submitContactForm() {
       }
     })
     .catch(function() {
-      // On network error still confirm — message can go to staff manually
-      submitBtn.textContent = '✓ Message Sent';
-      statusEl.textContent  = 'Thank you! We\'ll be in touch soon.';
-      statusEl.style.color  = '#2e7d32';
-      statusEl.style.display = 'block';
+      submitBtn.disabled = false; submitBtn.textContent = 'Send Message';
+      statusEl.textContent = 'Unable to send — please call us at (573) 785-5253 or try again.';
+      statusEl.style.color = '#c0392b'; statusEl.style.display = 'block';
     });
 }
 
@@ -6303,10 +6302,25 @@ function initStaffDashboard() { staffLoadData().then(function() { staffRenderCal
 var staffAuthed = false;
 var _pinBuffer = '';
 var _pinTarget = null;
+var _pinSetupStep = 0; // 0=normal, 1=create new, 2=confirm new
+var _pinSetupFirst = '';
 
 function staffPinShow(page) {
   _pinBuffer = '';
   _pinTarget = page;
+  _pinSetupStep = 0;
+  _pinSetupFirst = '';
+  var hasPin = !!localStorage.getItem('staff-pin');
+  var titleEl = document.getElementById('pin-title');
+  var subEl   = document.getElementById('pin-sub');
+  if (!hasPin) {
+    _pinSetupStep = 1;
+    if (titleEl) titleEl.textContent = 'Create Staff PIN';
+    if (subEl)   subEl.textContent   = 'Enter a new 4-digit PIN for staff access';
+  } else {
+    if (titleEl) titleEl.textContent = 'Staff Portal';
+    if (subEl)   subEl.textContent   = 'Westwood Hills Country Club';
+  }
   pinUpdateDots();
   document.getElementById('pin-error').textContent = '';
   document.getElementById('staff-pin-overlay').classList.add('active');
@@ -6333,14 +6347,46 @@ function pinUpdateDots() {
 }
 
 function pinSubmit() {
-  var stored = localStorage.getItem('staff-pin') || '1936';
-  if (_pinBuffer === stored) {
+  var titleEl = document.getElementById('pin-title');
+  var subEl   = document.getElementById('pin-sub');
+  var errEl   = document.getElementById('pin-error');
+  // First-run: create PIN
+  if (_pinSetupStep === 1) {
+    _pinSetupFirst = _pinBuffer;
+    _pinBuffer = '';
+    _pinSetupStep = 2;
+    if (titleEl) titleEl.textContent = 'Confirm PIN';
+    if (subEl)   subEl.textContent   = 'Re-enter your 4-digit PIN to confirm';
+    errEl.textContent = '';
+    pinUpdateDots();
+    return;
+  }
+  if (_pinSetupStep === 2) {
+    if (_pinBuffer === _pinSetupFirst) {
+      localStorage.setItem('staff-pin', _pinBuffer);
+      _pinSetupStep = 0;
+      staffAuthed = true;
+      staffPinHide();
+      _origNavigate(_pinTarget || 'staff');
+      initStaffDashboard();
+    } else {
+      errEl.textContent = 'PINs did not match. Start over.';
+      _pinBuffer = ''; _pinSetupFirst = ''; _pinSetupStep = 1;
+      if (titleEl) titleEl.textContent = 'Create Staff PIN';
+      if (subEl)   subEl.textContent   = 'Enter a new 4-digit PIN for staff access';
+      setTimeout(pinUpdateDots, 0);
+    }
+    return;
+  }
+  // Normal login
+  var stored = localStorage.getItem('staff-pin');
+  if (stored && _pinBuffer === stored) {
     staffAuthed = true;
     staffPinHide();
     _origNavigate(_pinTarget || 'staff');
     initStaffDashboard();
   } else {
-    document.getElementById('pin-error').textContent = 'Incorrect PIN. Try again.';
+    errEl.textContent = 'Incorrect PIN. Try again.';
     _pinBuffer = '';
     setTimeout(pinUpdateDots, 0);
   }
@@ -8024,8 +8070,8 @@ function pairRunTest() {
 <!-- Staff PIN overlay -->
 <div id="staff-pin-overlay">
   <div class="pin-box">
-    <div class="pin-title">Staff Portal</div>
-    <div class="pin-sub">Westwood Hills Country Club</div>
+    <div class="pin-title" id="pin-title">Staff Portal</div>
+    <div class="pin-sub" id="pin-sub">Westwood Hills Country Club</div>
     <div class="pin-dots">
       <div class="pin-dot" id="pd0"></div>
       <div class="pin-dot" id="pd1"></div>
