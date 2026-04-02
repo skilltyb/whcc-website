@@ -4,6 +4,12 @@
 <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="description" content="Westwood Hills Country Club — Poplar Bluff, Missouri's premier private country club since 1936. Championship golf, fine dining, aquatics, and family membership in Southeast Missouri." />
 <title>Westwood Hills Country Club — Poplar Bluff, Missouri</title>
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192.png" />
+<!-- Google Analytics — replace G-XXXXXXXXXX with your Measurement ID -->
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script> -->
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -115,7 +121,7 @@ footer{background:var(--deep);padding:80px 80px 40px}
 .hero-bg{position:absolute;inset:0;
   background:
     linear-gradient(to bottom,rgba(17,26,20,.35) 0%,rgba(17,26,20,.15) 40%,rgba(17,26,20,.75) 100%),
-    url("images/hero-clubhouse.jpg") center/cover no-repeat;
+    var(--wh-bg, url("images/hero-clubhouse.jpg")) center/cover no-repeat;
   background-size:cover,cover;
   background-repeat:no-repeat,no-repeat;
   background-position:center,center}
@@ -132,7 +138,7 @@ footer{background:var(--deep);padding:80px 80px 40px}
 .intro{display:grid;grid-template-columns:1fr 1fr;min-height:72vh}
 .intro-vis{position:relative;overflow:hidden;min-height:520px;display:flex;align-items:flex-end;padding:48px;
   background:linear-gradient(to top,rgba(17,26,20,.72) 0%,rgba(17,26,20,.2) 50%,rgba(17,26,20,.1) 100%),
-  url("images/golf-carts-sunset.jpg") center 60%/cover}
+  var(--wh-bg,url("images/golf-carts-sunset.jpg")) center 60%/cover}
 .intro-vis::before{content:'';position:absolute;top:32px;left:32px;width:48px;height:48px;border-top:1.5px solid var(--gold);border-left:1.5px solid var(--gold)}
 .intro-vis::after{content:'';position:absolute;bottom:32px;right:32px;width:48px;height:48px;border-bottom:1.5px solid var(--gold);border-right:1.5px solid var(--gold)}
 .intro-vis-cap{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:rgba(245,240,232,.5);position:relative;z-index:2}
@@ -175,7 +181,7 @@ footer{background:var(--deep);padding:80px 80px 40px}
 .ev-sub{font-size:12px;color:var(--muted);margin-top:3px}
 .ev-tag{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold);padding:4px 10px;white-space:nowrap}
 
-.dining-cta{position:relative;overflow:hidden;background:linear-gradient(to right,rgba(17,26,20,.97) 30%,rgba(17,26,20,.7) 100%),url("images/hoovers-table.jpg") center/cover;padding:112px 80px;display:flex;align-items:center;justify-content:space-between;gap:60px}
+.dining-cta{position:relative;overflow:hidden;background:linear-gradient(to right,rgba(17,26,20,.97) 30%,rgba(17,26,20,.7) 100%),var(--wh-bg,url("images/hoovers-table.jpg")) center/cover;padding:112px 80px;display:flex;align-items:center;justify-content:space-between;gap:60px}
 .dining-cta::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(to bottom,var(--gold),transparent)}
 
 .mem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px}
@@ -197,7 +203,7 @@ footer{background:var(--deep);padding:80px 80px 40px}
 /* ══════════════════════════════════════════
    GOLF PAGE
 ══════════════════════════════════════════ */
-.golf-bg{background:linear-gradient(to bottom,rgba(17,26,20,.25) 0%,rgba(17,26,20,.72) 100%),url("images/golf-carts-sunset.jpg") center 55%/cover no-repeat;background-size:auto,cover;background-repeat:no-repeat;background-position:center,center 55%}
+.golf-bg{background:linear-gradient(to bottom,rgba(17,26,20,.25) 0%,rgba(17,26,20,.72) 100%),var(--wh-bg,url("images/golf-carts-sunset.jpg")) center 55%/cover no-repeat;background-size:auto,cover;background-repeat:no-repeat;background-position:center,center 55%}
 .course-split{display:grid;grid-template-columns:1.1fr 1fr;gap:72px;align-items:start}
 .tee-box{background:var(--forest);padding:36px}
 .tee-box::before{content:'';display:block;width:40px;height:40px;border-top:1.5px solid var(--gold);border-left:1.5px solid var(--gold);margin-bottom:24px}
@@ -229,7 +235,7 @@ footer{background:var(--deep);padding:80px 80px 40px}
 /* ══════════════════════════════════════════
    DINING PAGE
 ══════════════════════════════════════════ */
-.dining-bg{background:linear-gradient(to bottom,rgba(17,26,20,.2) 0%,rgba(17,26,20,.78) 100%),url("images/dining-hero.jpg") center 40%/cover no-repeat;background-size:auto,cover;background-repeat:no-repeat;background-position:center,center 40%}
+.dining-bg{background:linear-gradient(to bottom,rgba(17,26,20,.2) 0%,rgba(17,26,20,.78) 100%),var(--wh-bg,url("images/dining-hero.jpg")) center 40%/cover no-repeat;background-size:auto,cover;background-repeat:no-repeat;background-position:center,center 40%}
 .menu-tabs{display:flex;gap:0;border-bottom:1px solid rgba(26,43,31,.12);margin-bottom:40px}
 .menu-tab{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);padding:13px 26px;cursor:pointer;background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;font-family:'Raleway',sans-serif;transition:all .2s}
 .menu-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
@@ -397,6 +403,45 @@ footer{background:var(--deep);padding:80px 80px 40px}
 .pair-balance{font-size:11px;color:rgba(245,240,232,.4);padding:4px 0;}
 .pair-swap-hint{font-size:10px;color:var(--gold);padding:4px 8px;background:rgba(184,151,106,.1);border:1px solid rgba(184,151,106,.25);border-radius:2px;display:none;}
 .pair-swap-hint.show{display:inline-block;}
+/* ── PHOTO MANAGER ── */
+.ph-tabs{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap;}
+.ph-tab{padding:7px 16px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;background:transparent;color:rgba(245,240,232,.5);border:1px solid rgba(184,151,106,.25);cursor:pointer;font-family:'Raleway',sans-serif;transition:all .2s;}
+.ph-tab.active{background:var(--gold);color:var(--deep);}
+.ph-panel{max-width:680px;}
+.ph-drop-zone{border:2px dashed rgba(184,151,106,.35);border-radius:8px;padding:36px 24px;text-align:center;cursor:pointer;transition:all .2s;}
+.ph-drop-zone:hover{border-color:var(--gold);background:rgba(184,151,106,.06);}
+.ph-drop-icon{font-size:32px;margin-bottom:8px;}
+.ph-drop-text{font-size:13px;color:var(--cream);margin-bottom:4px;}
+.ph-drop-sub{font-size:11px;color:var(--muted);}
+.ph-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;}
+.ph-card{background:rgba(255,255,255,.04);border:1px solid rgba(184,151,106,.15);border-radius:6px;overflow:hidden;}
+.ph-card-img{width:100%;height:110px;object-fit:cover;display:block;background:rgba(255,255,255,.05);}
+.ph-card-body{padding:8px;}
+.ph-card-name{font-size:10px;color:rgba(245,240,232,.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px;}
+.ph-card-cat{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.ph-card-btns{display:flex;gap:5px;}
+.ph-card-btn{flex:1;padding:5px 4px;font-size:9px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:1px solid rgba(184,151,106,.3);color:rgba(245,240,232,.6);cursor:pointer;font-family:'Raleway',sans-serif;border-radius:3px;transition:all .2s;}
+.ph-card-btn:hover{background:rgba(184,151,106,.12);color:var(--gold-lt);}
+.ph-card-btn.del{border-color:rgba(224,112,112,.3);color:rgba(224,112,112,.5);}
+.ph-card-btn.del:hover{background:rgba(224,112,112,.12);color:#e07070;}
+/* assign sections */
+.ph-sec-hdr{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:rgba(184,151,106,.07);border:1px solid rgba(184,151,106,.2);border-radius:6px;cursor:pointer;margin-bottom:6px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-lt);transition:background .2s;}
+.ph-sec-hdr:hover{background:rgba(184,151,106,.14);}
+.ph-sec-body{margin-bottom:16px;padding:4px 2px;}
+.ph-queue-item{display:flex;gap:10px;align-items:flex-start;padding:10px;background:rgba(255,255,255,.04);border:1px solid rgba(184,151,106,.12);border-radius:6px;margin-bottom:8px;}
+.ph-queue-thumb{width:72px;height:72px;object-fit:cover;border-radius:4px;flex-shrink:0;}
+.ph-queue-info{flex:1;min-width:0;}
+.ph-assign-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;}
+.ph-assign-slot{background:rgba(255,255,255,.04);border:1px solid rgba(184,151,106,.15);border-radius:6px;overflow:hidden;transition:opacity .2s;}
+.ph-assign-slot-img{width:100%;height:88px;object-fit:cover;display:block;}
+.ph-assign-slot-empty{height:88px;display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.2;}
+.ph-assign-slot-body{padding:6px 8px;}
+.ph-assign-slot-label{font-size:9px;color:var(--muted);margin-bottom:5px;}
+.ph-assign-slot-btns{display:flex;gap:4px;}
+.ph-slot-btn{flex:1;padding:4px 3px;font-size:9px;letter-spacing:.06em;text-transform:uppercase;background:transparent;border:1px solid rgba(184,151,106,.3);color:rgba(245,240,232,.55);cursor:pointer;font-family:'Raleway',sans-serif;border-radius:3px;transition:all .2s;}
+.ph-slot-btn:hover{background:rgba(184,151,106,.12);color:var(--gold-lt);}
+.ph-slot-btn.del{border-color:rgba(224,112,112,.3);color:rgba(224,112,112,.45);}
+.ph-slot-btn.del:hover{background:rgba(224,112,112,.1);color:#e07070;}
 /* ── TEE SHEET TABLE ── */
 .ts-table{width:100%;border-collapse:collapse;}
 .ts-table th{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.35);padding:6px 8px;border-bottom:1px solid rgba(184,151,106,.15);text-align:left;white-space:nowrap;}
@@ -449,7 +494,15 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 }
 .staff-layout{display:flex;min-height:calc(100vh - 160px)}
 .staff-left{flex:1 1 420px;padding:24px;border-right:1px solid rgba(184,151,106,.12);overflow:auto}
-.staff-right{flex:1 1 380px;padding:24px;overflow:auto;max-width:520px}
+.staff-right{flex:1 1 380px;padding:0;overflow:hidden;max-width:520px;display:flex;flex-direction:column;}
+.staff-right.preview-mode{max-width:none;flex:1 1 600px;}
+.sr-tabs{display:flex;border-bottom:1px solid rgba(184,151,106,.15);flex-shrink:0;}
+.sr-tab{flex:1;padding:10px 14px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;background:transparent;color:rgba(245,240,232,.4);border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:'Raleway',sans-serif;transition:all .2s;}
+.sr-tab.active{color:var(--gold-lt);border-bottom-color:var(--gold);}
+.sr-tab:hover{color:rgba(245,240,232,.65);}
+.sr-panel{flex:1;overflow:auto;}
+.sr-panel.detail-panel{padding:24px;}
+.sr-preview-iframe{width:100%;height:100%;border:none;display:block;}
 .staff-cal-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
 .staff-cal-month{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--cream);letter-spacing:.05em}
 .staff-cal-head{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px}
@@ -591,9 +644,9 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 /* ══════════════════════════════════════════
    AQUATICS PAGE
 ══════════════════════════════════════════ */
-.aquatics-bg{background:linear-gradient(to bottom,rgba(8,48,80,.3) 0%,rgba(8,48,80,.78) 100%),url("images/pool-main.jpg") center 50%/cover no-repeat;background-size:auto,cover;background-repeat:no-repeat;background-position:center,center 50%}
+.aquatics-bg{background:linear-gradient(to bottom,rgba(8,48,80,.3) 0%,rgba(8,48,80,.78) 100%),var(--wh-bg,url("images/pool-main.jpg")) center 50%/cover no-repeat;background-size:auto,cover;background-repeat:no-repeat;background-position:center,center 50%}
 .pool-split{display:grid;grid-template-columns:1fr 1fr}
-.pool-vis{min-height:480px;background:url("images/pool-hero.jpg") center 30%/cover no-repeat;background-size:cover;background-repeat:no-repeat;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.pool-vis{min-height:480px;background:var(--wh-bg,url("images/pool-hero.jpg")) center 30%/cover no-repeat;background-size:cover;background-repeat:no-repeat;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
 .pool-text{background:var(--forest);padding:64px 56px;display:flex;flex-direction:column;justify-content:center}
 .pool-text .eyebrow{color:var(--gold-lt)}.pool-text .eyebrow::after{background:var(--gold-lt)}
 .pool-text .sec-title{color:var(--cream)}
@@ -618,7 +671,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 /* ══════════════════════════════════════════
    EVENTS PAGE
 ══════════════════════════════════════════ */
-.events-bg{background:linear-gradient(to bottom,rgba(17,26,20,.2) 0%,rgba(17,26,20,.78) 100%),url("images/events-hero.jpg") center 55%/cover no-repeat;background-size:auto,cover;background-repeat:no-repeat;background-position:center,center 55%}
+.events-bg{background:linear-gradient(to bottom,rgba(17,26,20,.2) 0%,rgba(17,26,20,.78) 100%),var(--wh-bg,url("images/events-hero.jpg")) center 55%/cover no-repeat;background-size:auto,cover;background-repeat:no-repeat;background-position:center,center 55%}
 .filter-bar{background:var(--forest);padding:0 80px;display:flex;align-items:center;gap:0;border-bottom:1px solid rgba(184,151,106,.15);overflow-x:auto}
 .filter-btn{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(245,240,232,.5);background:none;border:none;padding:17px 22px;cursor:pointer;font-family:'Raleway',sans-serif;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all .2s}
 .filter-btn.active,.filter-btn:hover{color:var(--gold-lt);border-bottom-color:var(--gold-lt)}
@@ -648,7 +701,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 .ev-cta{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
 .ev-cta:hover{color:var(--forest)}
 
-.priv-ev{background:linear-gradient(to right,rgba(17,26,20,.97) 40%,rgba(17,26,20,.75) 100%),url("images/events-interior.jpg") center/cover;padding:88px 80px}
+.priv-ev{background:linear-gradient(to right,rgba(17,26,20,.97) 40%,rgba(17,26,20,.75) 100%),var(--wh-bg,url("images/events-interior.jpg")) center/cover;padding:88px 80px}
 .priv-ev .eyebrow{color:var(--gold-lt)}.priv-ev .eyebrow::after{background:var(--gold-lt)}
 .priv-ev .sec-title{color:var(--cream)}
 .priv-ev-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:44px;align-items:start}
@@ -671,7 +724,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 /* ══════════════════════════════════════════
    MEMBERSHIP PAGE
 ══════════════════════════════════════════ */
-.membership-bg{background:linear-gradient(to bottom,rgba(17,26,20,.2) 0%,rgba(17,26,20,.78) 100%),url("images/membership-hero.jpg") center 25%/cover no-repeat;background-size:auto,cover;background-repeat:no-repeat;background-position:center,center 25%}
+.membership-bg{background:linear-gradient(to bottom,rgba(17,26,20,.2) 0%,rgba(17,26,20,.78) 100%),var(--wh-bg,url("images/membership-hero.jpg")) center 25%/cover no-repeat;background-size:auto,cover;background-repeat:no-repeat;background-position:center,center 25%}
 .mem-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border:1px solid rgba(26,43,31,.12);margin-top:52px}
 .mcard{padding:36px 20px;position:relative;border-right:1px solid rgba(26,43,31,.1)}
 .mcard:last-child{border-right:none}
@@ -720,7 +773,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 /* ══════════════════════════════════════════
    ABOUT PAGE
 ══════════════════════════════════════════ */
-.about-bg{background:linear-gradient(to bottom,rgba(17,26,20,.15) 0%,rgba(17,26,20,.78) 100%),url("images/about-hero.jpg") center 40%/cover no-repeat;background-size:auto,cover;background-repeat:no-repeat;background-position:center,center 40%}
+.about-bg{background:linear-gradient(to bottom,rgba(17,26,20,.15) 0%,rgba(17,26,20,.78) 100%),var(--wh-bg,url("images/about-hero.jpg")) center 40%/cover no-repeat;background-size:auto,cover;background-repeat:no-repeat;background-position:center,center 40%}
 .about-split{display:grid;grid-template-columns:1fr 1.2fr;gap:80px;align-items:start}
 .timeline{position:relative;padding:0 0 0 44px}
 .timeline::before{content:'';position:absolute;left:14px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--gold),transparent)}
@@ -936,7 +989,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 <div class="page active" id="page-home">
   <div id="wh-announce-bar" style="display:none;"></div>
   <section class="hero">
-    <div class="hero-bg"></div>
+    <div class="hero-bg" data-wh-photo="hero_home"></div>
     <div class="hero-year">1936</div>
     <div class="hero-content">
       <p class="hero-tag">Poplar Bluff, Missouri</p>
@@ -974,7 +1027,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
   </div>
 
   <div class="intro">
-    <div class="intro-vis fade-up"></div>
+    <div class="intro-vis fade-up" data-wh-photo="course_strip"></div>
     <div class="intro-text">
       <p class="eyebrow fade-up">Our Heritage</p>
       <h2 class="sec-title fade-up d1">Nearly a century<br>of <em>tradition</em></h2>
@@ -1051,7 +1104,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     </div>
   </div>
 
-  <div class="dining-cta">
+  <div class="dining-cta" data-wh-photo="hoovers_cta">
     <div class="fade-up">
       <p class="eyebrow lt">Dining &amp; Events</p>
       <h2 class="sec-title light">Introducing <em>Hoover's</em><br>at Westwood Hills</h2>
@@ -1103,7 +1156,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
      GOLF PAGE
 ════════════════════════════════════════ -->
 <div class="page" id="page-golf">
-  <div class="page-hero"><div class="ph-bg golf-bg"></div><div class="ph-overlay"></div>
+  <div class="page-hero"><div class="ph-bg golf-bg" data-wh-photo="hero_golf"></div><div class="ph-overlay"></div>
     <div class="ph-content"><p class="ph-tag">Championship Golf</p><h1 class="ph-title">18 Holes of <em>distinction</em></h1><p class="ph-sub">A classic parkland layout nestled in the rolling terrain of Southeast Missouri — challenging every skill level since 1936.</p></div>
   </div>
   <div class="breadcrumb"><a onclick="navigate('home')">Home</a><span class="bc-sep">›</span><span class="bc-cur">Golf</span></div>
@@ -1221,13 +1274,13 @@ nav.staff-mode .nav-site-back{display:flex!important;}
   <div class="section sand">
     <p class="eyebrow fade-up">Life on the Course</p>
     <h2 class="sec-title fade-up d1">Moments worth <em>chasing</em></h2>
-    <div class="golf-gallery fade-up d2">
-      <div class="gg-img tall"><img src="images/golf-swing.jpg" alt="Golf swing" loading="lazy"></div>
-      <div class="gg-img"><img src="images/golf-fairway.jpg" alt="Course fairway" loading="lazy"></div>
-      <div class="gg-img"><img src="images/golf-green.png" alt="Putting green" loading="lazy"></div>
-      <div class="gg-img"><img src="images/golf-carts-sunset.jpg" alt="Golf carts at sunset" loading="lazy"></div>
-      <div class="gg-img"><img src="images/golf-group.jpg" alt="Group round" loading="lazy"></div>
-      <div class="gg-img tall"><img src="images/golf-sunset-group.jpg" alt="Sunset on the course" loading="lazy"></div>
+    <div class="golf-gallery fade-up d2" id="golf-gallery-container">
+      <div class="gg-img tall"><img data-wh-photo="golf_gallery_1" src="images/golf-swing.jpg" alt="Golf swing" loading="lazy"></div>
+      <div class="gg-img"><img data-wh-photo="golf_gallery_2" src="images/golf-fairway.jpg" alt="Course fairway" loading="lazy"></div>
+      <div class="gg-img"><img data-wh-photo="golf_gallery_3" src="images/golf-green.png" alt="Putting green" loading="lazy"></div>
+      <div class="gg-img"><img data-wh-photo="golf_gallery_4" src="images/golf-carts-sunset.jpg" alt="Golf carts at sunset" loading="lazy"></div>
+      <div class="gg-img"><img data-wh-photo="golf_gallery_5" src="images/golf-group.jpg" alt="Group round" loading="lazy"></div>
+      <div class="gg-img tall"><img data-wh-photo="golf_gallery_6" src="images/golf-sunset-group.jpg" alt="Sunset on the course" loading="lazy"></div>
     </div>
   </div>
 
@@ -1238,7 +1291,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
      DINING PAGE
 ════════════════════════════════════════ -->
 <div class="page" id="page-dining">
-  <div class="page-hero"><div class="ph-bg dining-bg"></div><div class="ph-overlay"></div>
+  <div class="page-hero"><div class="ph-bg dining-bg" data-wh-photo="hero_dining"></div><div class="ph-overlay"></div>
     <div class="ph-content"><p class="ph-tag">Dining &amp; Cuisine</p><h1 class="ph-title">Flavors as <em>refined</em><br>as the game</h1><p class="ph-sub">From casual post-round bites to the elevated experience of Hoover's — Westwood Hills takes dining as seriously as the game itself.</p></div>
   </div>
   <div class="breadcrumb"><a onclick="navigate('home')">Home</a><span class="bc-sep">›</span><span class="bc-cur">Dining</span></div>
@@ -1488,9 +1541,9 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <p class="eyebrow fade-up">Our Spaces</p>
     <h2 class="sec-title fade-up d1">Every setting, <em>perfectly appointed</em></h2>
     <div class="spaces-grid">
-      <div class="space-card fade-up d1"><div class="space-vis" style="background:url('images/hoovers-table.jpg') center/cover no-repeat;background-size:cover;background-repeat:no-repeat;"></div><div class="space-info"><div class="space-cap">Hoover's at Westwood Hills</div><div class="space-name">Main Dining Room</div><p class="space-desc">Home to Hoover's — our signature fine dining experience. Elegant, airy, and ideal for an unforgettable evening.</p></div></div>
-      <div class="space-card fade-up d2"><div class="space-vis" style="background:url('images/grill-bar.jpg') center/cover no-repeat;background-size:cover;background-repeat:no-repeat;"></div><div class="space-info"><div class="space-cap">Up to 40 guests</div><div class="space-name">The Westwood Grill</div><p class="space-desc">Relaxed and inviting — the everyday gathering spot for members after a round, with sports on screen and cold drinks on tap.</p></div></div>
-      <div class="space-card fade-up d3"><div class="space-vis" style="background:url('images/terrace-cocktail.jpg') center/cover no-repeat;background-size:cover;background-repeat:no-repeat;"></div><div class="space-info"><div class="space-cap">Up to 80 guests</div><div class="space-name">The Terrace</div><p class="space-desc">Alfresco dining overlooking the 18th green — ideal for warm-weather evenings, cocktail receptions, and sunset gatherings.</p></div></div>
+      <div class="space-card fade-up d1"><div class="space-vis" data-wh-photo="venue_hoovers" style="background:var(--wh-bg,url('images/hoovers-table.jpg')) center/cover no-repeat;"></div><div class="space-info"><div class="space-cap">Hoover's at Westwood Hills</div><div class="space-name">Main Dining Room</div><p class="space-desc">Home to Hoover's — our signature fine dining experience. Elegant, airy, and ideal for an unforgettable evening.</p></div></div>
+      <div class="space-card fade-up d2"><div class="space-vis" data-wh-photo="venue_grill" style="background:var(--wh-bg,url('images/grill-bar.jpg')) center/cover no-repeat;"></div><div class="space-info"><div class="space-cap">Up to 40 guests</div><div class="space-name">The Westwood Grill</div><p class="space-desc">Relaxed and inviting — the everyday gathering spot for members after a round, with sports on screen and cold drinks on tap.</p></div></div>
+      <div class="space-card fade-up d3"><div class="space-vis" data-wh-photo="venue_terrace" style="background:var(--wh-bg,url('images/terrace-cocktail.jpg')) center/cover no-repeat;"></div><div class="space-info"><div class="space-cap">Up to 80 guests</div><div class="space-name">The Terrace</div><p class="space-desc">Alfresco dining overlooking the 18th green — ideal for warm-weather evenings, cocktail receptions, and sunset gatherings.</p></div></div>
     </div>
   </div>
 
@@ -1498,13 +1551,13 @@ nav.staff-mode .nav-site-back{display:flex!important;}
   <div class="section" style="background:var(--cream);">
     <p class="eyebrow fade-up">From Our Kitchen</p>
     <h2 class="sec-title fade-up d1">Crafted with <em>intention</em></h2>
-    <div class="food-grid fade-up d2">
-      <div class="food-img wide"><img src="images/dining-hero.jpg" alt="Signature filet mignon" loading="lazy"></div>
-      <div class="food-img"><img src="images/food-fish.jpg" alt="Fresh catch" loading="lazy"></div>
-      <div class="food-img"><img src="images/food-pasta.jpg" alt="House pasta" loading="lazy"></div>
-      <div class="food-img"><img src="images/food-skewers.jpg" alt="Grilled skewers" loading="lazy"></div>
-      <div class="food-img"><img src="images/food-charcuterie.jpg" alt="Charcuterie board" loading="lazy"></div>
-      <div class="food-img"><img src="images/bar-cocktail.jpg" alt="Craft cocktail" loading="lazy"></div>
+    <div class="food-grid fade-up d2" id="food-grid-container">
+      <div class="food-img wide"><img data-wh-photo="dining_food_1" src="images/dining-hero.jpg" alt="Signature filet mignon" loading="lazy"></div>
+      <div class="food-img"><img data-wh-photo="dining_food_2" src="images/food-fish.jpg" alt="Fresh catch" loading="lazy"></div>
+      <div class="food-img"><img data-wh-photo="dining_food_3" src="images/food-pasta.jpg" alt="House pasta" loading="lazy"></div>
+      <div class="food-img"><img data-wh-photo="dining_food_4" src="images/food-skewers.jpg" alt="Grilled skewers" loading="lazy"></div>
+      <div class="food-img"><img data-wh-photo="dining_food_5" src="images/food-charcuterie.jpg" alt="Charcuterie board" loading="lazy"></div>
+      <div class="food-img"><img data-wh-photo="dining_food_6" src="images/bar-cocktail.jpg" alt="Craft cocktail" loading="lazy"></div>
     </div>
   </div>
 
@@ -1521,13 +1574,13 @@ nav.staff-mode .nav-site-back{display:flex!important;}
      AQUATICS PAGE
 ════════════════════════════════════════ -->
 <div class="page" id="page-aquatics">
-  <div class="page-hero"><div class="ph-bg aquatics-bg"></div><div class="ph-overlay" style="background:linear-gradient(to bottom,rgba(8,48,80,.2) 0%,rgba(8,48,80,.72) 100%)"></div>
+  <div class="page-hero"><div class="ph-bg aquatics-bg" data-wh-photo="hero_aquatics"></div><div class="ph-overlay" style="background:linear-gradient(to bottom,rgba(8,48,80,.2) 0%,rgba(8,48,80,.72) 100%)"></div>
     <div class="ph-content"><p class="ph-tag">Aquatics Complex</p><h1 class="ph-title">Summer's <em>best</em><br>address</h1><p class="ph-sub">A premier aquatics facility for members of all ages — swimming, sunning, and splashing from Memorial Day through Labor Day.</p></div>
   </div>
   <div class="breadcrumb"><a onclick="navigate('home')">Home</a><span class="bc-sep">›</span><span class="bc-cur">Aquatics</span></div>
 
   <div class="pool-split">
-    <div class="pool-vis fade-up"></div>
+    <div class="pool-vis fade-up" data-wh-photo="pool_main"></div>
     <div class="pool-text fade-up d2">
       <p class="eyebrow">The Facilities</p>
       <h2 class="sec-title">More than <em>just a pool</em></h2>
@@ -1579,7 +1632,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
      EVENTS PAGE
 ════════════════════════════════════════ -->
 <div class="page" id="page-events">
-  <div class="page-hero"><div class="ph-bg events-bg"></div><div class="ph-overlay"></div>
+  <div class="page-hero"><div class="ph-bg events-bg" data-wh-photo="hero_events"></div><div class="ph-overlay"></div>
     <div class="ph-content"><p class="ph-tag">Events &amp; Tournaments</p><h1 class="ph-title">Always something<br><em>to celebrate</em></h1><p class="ph-sub">From weekly golf socials to signature tournaments and private celebrations — Westwood Hills brings people together all year long.</p></div>
   </div>
   <div class="breadcrumb"><a onclick="navigate('home')">Home</a><span class="bc-sep">›</span><span class="bc-cur">Events</span></div>
@@ -1698,7 +1751,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     </div>
   </div>
 
-  <div class="priv-ev">
+  <div class="priv-ev" data-wh-photo="events_interior">
     <p class="eyebrow fade-up">Host Your Celebration</p>
     <h2 class="sec-title fade-up d1">Make it <em>unforgettable</em></h2>
     <div class="priv-ev-grid">
@@ -1731,7 +1784,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
      MEMBERSHIP PAGE
 ════════════════════════════════════════ -->
 <div class="page" id="page-membership">
-  <div class="page-hero"><div class="ph-bg membership-bg"></div><div class="ph-overlay"></div>
+  <div class="page-hero"><div class="ph-bg membership-bg" data-wh-photo="hero_membership"></div><div class="ph-overlay"></div>
     <div class="ph-content"><p class="ph-tag">Become a Member</p><h1 class="ph-title">Join a <em>tradition</em><br>nearly 90 years deep</h1><p class="ph-sub">Westwood Hills is more than a club — it's a community. Discover the membership that's right for you and your family.</p></div>
   </div>
   <div class="breadcrumb"><a onclick="navigate('home')">Home</a><span class="bc-sep">›</span><span class="bc-cur">Membership</span></div>
@@ -1855,7 +1908,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
      ABOUT PAGE
 ════════════════════════════════════════ -->
 <div class="page" id="page-about">
-  <div class="page-hero"><div class="ph-bg about-bg"></div><div class="ph-overlay"></div>
+  <div class="page-hero"><div class="ph-bg about-bg" data-wh-photo="hero_about"></div><div class="ph-overlay"></div>
     <div class="ph-content"><p class="ph-tag">Our Story</p><h1 class="ph-title">Nearly <em>90 years</em><br>of community</h1><p class="ph-sub">From a modest nine-hole layout in 1936 to Southeast Missouri's finest private country club — the Westwood Hills story is a Poplar Bluff story.</p></div>
   </div>
   <div class="breadcrumb"><a onclick="navigate('home')">Home</a><span class="bc-sep">›</span><span class="bc-cur">About</span></div>
@@ -2587,15 +2640,64 @@ nav.staff-mode .nav-site-back{display:flex!important;}
           <div id="cms-contact-status" style="display:none;color:#8fcc8f;font-size:12px;margin-top:8px;"></div>
         </div>
 
-        <!-- PHOTOS EDITOR -->
+        <!-- PHOTOS MANAGER -->
         <div id="sv-photos" style="display:none;">
-          <div class="staff-section-header" style="margin-bottom:16px;">
-            <div class="staff-tag">Photos</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:4px;">Paste a URL for each photo. Tip: upload to Google Drive, right-click → Get link → change to "Anyone with the link" — then paste the direct image URL here.</div>
+          <div class="staff-section-header" style="margin-bottom:14px;">
+            <div class="staff-tag">Photo Manager</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;">Upload photos to the club's Drive library, then assign them to sections of the website.</div>
           </div>
-          <div id="cms-photos-list" style="display:grid;gap:12px;max-width:600px;"></div>
-          <button class="btn-p" style="margin-top:20px;width:100%;max-width:600px;" onclick="cmsPhotosSave()">Save Photos</button>
-          <div id="cms-photos-status" style="display:none;color:#8fcc8f;font-size:12px;margin-top:8px;"></div>
+
+          <!-- Sub-tabs -->
+          <div class="ph-tabs">
+            <button class="ph-tab active" id="pht-upload"  onclick="phTab('upload')">⬆ Upload</button>
+            <button class="ph-tab"        id="pht-library" onclick="phTab('library')">🖼 Library</button>
+            <button class="ph-tab"        id="pht-assign"  onclick="phTab('assign')">📌 Assign to Pages</button>
+          </div>
+
+          <!-- UPLOAD panel -->
+          <div id="ph-upload" class="ph-panel">
+            <div class="ph-drop-zone" id="ph-drop-zone" onclick="document.getElementById('ph-file-input').click()">
+              <div class="ph-drop-icon">📷</div>
+              <div class="ph-drop-text">Click to choose photos</div>
+              <div class="ph-drop-sub">Select one or many · JPG, PNG, WebP · max 8 MB each</div>
+              <input type="file" id="ph-file-input" accept="image/*" multiple style="display:none" onchange="phFilesChosen(this)">
+            </div>
+            <div id="ph-queue" style="margin-top:14px;"></div>
+            <div id="ph-queue-actions" style="display:none;gap:8px;margin-top:4px;flex-wrap:wrap;">
+              <button class="btn-p" id="ph-upload-all-btn" onclick="phUploadAll()">⬆ Upload All</button>
+              <button class="staff-add-btn" onclick="phClearQueue()" style="background:transparent;color:rgba(245,240,232,.4);border-color:rgba(245,240,232,.15);">Clear</button>
+            </div>
+            <div id="ph-upload-status" style="font-size:12px;margin-top:10px;min-height:16px;"></div>
+          </div>
+
+          <!-- LIBRARY panel -->
+          <div id="ph-library" class="ph-panel" style="display:none;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+              <select id="ph-lib-cat" class="hrf-input" style="max-width:200px;" onchange="phLibLoad()">
+                <option value="">All Categories</option>
+                <option value="Golf">Golf</option>
+                <option value="Dining">Dining</option>
+                <option value="Pool">Pool / Aquatics</option>
+                <option value="Events">Events</option>
+                <option value="Membership">Membership</option>
+                <option value="About">About / History</option>
+                <option value="General">General</option>
+              </select>
+              <button class="staff-add-btn" onclick="phLibLoad()">↻ Refresh</button>
+            </div>
+            <div id="ph-lib-status" style="font-size:12px;color:var(--muted);margin-bottom:12px;"></div>
+            <div id="ph-lib-grid" class="ph-grid"></div>
+          </div>
+
+          <!-- ASSIGN panel -->
+          <div id="ph-assign" class="ph-panel" style="display:none;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">Paste a URL from the Library, or type a filename like <code style="color:var(--gold-lt);font-size:11px;">images/golf-hero.jpg</code></div>
+            <div style="background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);border-radius:6px;padding:10px 14px;font-size:11px;color:rgba(245,240,232,.55);margin-bottom:16px;">
+              💡 <strong style="color:var(--gold-lt);">Weekly Special &amp; Friday Night Special photos</strong> are managed under <strong style="color:var(--gold-lt);">Admin → Menus</strong> — scroll to the specials section and use the 📷 Upload Photo button there.
+            </div>
+            <div id="cms-photos-list" style="display:grid;gap:6px;max-width:640px;"></div>
+          </div>
+
         </div>
 
         <!-- POOL HOURS EDITOR -->
@@ -2660,6 +2762,14 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 
       <!-- Right panel: detail -->
       <div class="staff-right" id="staff-right">
+        <!-- Tab bar -->
+        <div class="sr-tabs">
+          <button class="sr-tab active" id="sr-tab-detail"  onclick="srTab('detail')">📋 Detail</button>
+          <button class="sr-tab"        id="sr-tab-preview" onclick="srTab('preview')">🌐 Website</button>
+        </div>
+
+        <!-- Detail panel -->
+        <div class="sr-panel detail-panel" id="sr-panel-detail">
         <!-- Reservations -->
         <div id="sr-res-wrap">
         <div id="staff-detail-empty" class="staff-empty-msg">
@@ -2715,6 +2825,13 @@ nav.staff-mode .nav-site-back{display:flex!important;}
           </div>
         </div>
         </div><!-- end sr-res-wrap -->
+        </div><!-- end sr-panel-detail -->
+
+        <!-- Website preview panel -->
+        <div class="sr-panel" id="sr-panel-preview" style="display:none;">
+          <iframe id="sr-preview-iframe" class="sr-preview-iframe" src="" title="Website Preview"></iframe>
+        </div>
+
       </div>
     </div>
 
@@ -2831,7 +2948,24 @@ var WH_SITE_DEFAULTS = {
     hero_membership:  'images/membership-hero.jpg',
     hero_about:       'images/about-hero.jpg',
     course_strip:     'images/golf-carts-sunset.jpg',
-    hoovers_cta:      'images/hoovers-table.jpg'
+    hoovers_cta:      'images/hoovers-table.jpg',
+    dining_food_1:    'images/dining-hero.jpg',
+    dining_food_2:    'images/food-fish.jpg',
+    dining_food_3:    'images/food-pasta.jpg',
+    dining_food_4:    'images/food-skewers.jpg',
+    dining_food_5:    'images/food-charcuterie.jpg',
+    dining_food_6:    'images/bar-cocktail.jpg',
+    golf_gallery_1:   'images/golf-tournament-1.jpg',
+    golf_gallery_2:   'images/golf-tournament-2.jpg',
+    golf_gallery_3:   'images/golf-tournament-3.jpg',
+    golf_gallery_4:   'images/golf-tournament-4.jpg',
+    golf_gallery_5:   'images/golf-tournament-5.jpg',
+    golf_gallery_6:   'images/golf-tournament-6.jpg',
+    pool_main:        'images/pool-hero.jpg',
+    events_interior:  'images/events-interior.jpg',
+    venue_hoovers:    'images/hoovers-table.jpg',
+    venue_grill:      'images/grill-bar.jpg',
+    venue_terrace:    'images/terrace-cocktail.jpg'
   }
 };
 
@@ -2864,12 +2998,15 @@ function applySiteContent(sc) {
       if (sc.contact[key]) el.textContent = sc.contact[key];
     });
   }
-  // Photos — non-hero images
+  // Photos
+  var mergedPhotos = Object.assign({}, WH_SITE_DEFAULTS.photos, sc.photos || {});
+  renderFoodGrid(mergedPhotos);
+  renderGolfGallery(mergedPhotos);
   if (sc.photos) {
     Object.keys(sc.photos).forEach(function(key) {
       document.querySelectorAll('[data-wh-photo="' + key + '"]').forEach(function(el) {
         if (el.tagName === 'IMG') el.src = sc.photos[key];
-        else el.style.backgroundImage = 'url(' + sc.photos[key] + ')';
+        else el.style.setProperty('--wh-bg', 'url(' + sc.photos[key] + ')');
       });
     });
   }
@@ -4879,14 +5016,14 @@ function staffView(view, btn, useSecondary) {
   if (view === 'announcements') { cmsAnnLoad(); }
   if (view === 'heroes')        { cmsHeroesLoad(); }
   if (view === 'contact')       { cmsContactLoad(); }
-  if (view === 'photos')        { cmsPhotosLoad(); }
+  if (view === 'photos')        { phTab('upload'); }
   if (view === 'pool')          { cmsPoolLoad(); }
   if (view === 'express')       { cmsExpressLoad(); }
   if (view === 'stats')         { cmsStatsLoad(); }
   if (view === 'faq')           { cmsFaqLoad(); }
   // Hide right panel for full-width views
   var rightPanel = document.getElementById('staff-right');
-  if (rightPanel) rightPanel.style.display = (view === 'registrations' || view === 'pairings') ? 'none' : '';
+  if (rightPanel) rightPanel.style.display = (view === 'registrations' || view === 'pairings') ? 'none' : 'flex';
 }
 
 // ═══════════════════════════════════════
@@ -6123,41 +6260,560 @@ var CMS_PHOTO_LABELS = {
   hero_events:     'Events Page Banner',
   hero_membership: 'Membership Page Banner',
   hero_about:      'About Page Banner',
-  course_strip:    'Home Page — Course Strip Photo',
-  hoovers_cta:     'Hoover\'s Feature Photo'
+  course_strip:    'Home — Course Strip',
+  hoovers_cta:     'Hoover\'s Feature'
 };
+var CMS_COLLAGE_LABELS = {
+  dining_food_1: 'Wide feature', dining_food_2: 'Photo 2', dining_food_3: 'Photo 3',
+  dining_food_4: 'Photo 4',      dining_food_5: 'Photo 5', dining_food_6: 'Photo 6'
+};
+var CMS_GALLERY_LABELS = {
+  golf_gallery_1: 'Photo 1 (tall)', golf_gallery_2: 'Photo 2', golf_gallery_3: 'Photo 3',
+  golf_gallery_4: 'Photo 4',        golf_gallery_5: 'Photo 5', golf_gallery_6: 'Photo 6 (tall)'
+};
+var CMS_OTHER_LABELS = {
+  pool_main:       'Pool — Main Photo',
+  events_interior: 'Events — Private Events Background',
+  venue_hoovers:   'Venue Card — Main Dining Room',
+  venue_grill:     'Venue Card — The Westwood Grill',
+  venue_terrace:   'Venue Card — The Terrace'
+};
+
+// ── PHOTO MANAGER ────────────────────────────────────────────────────────────
+var _phFile = null;
+var _phQueue = []; // [{file, category, filename, status, objectUrl}]
+
+function phTab(name) {
+  ['upload','library','assign'].forEach(function(t) {
+    var panel = document.getElementById('ph-' + t);
+    if (panel) panel.style.display = t === name ? 'block' : 'none';
+    var tab = document.getElementById('pht-' + t);
+    if (tab) tab.classList.toggle('active', t === name);
+  });
+  if (name === 'library') phLibLoad();
+  if (name === 'assign')  cmsPhotosLoad();
+}
+
+var PH_CATS = ['Golf','Dining','Pool','Events','Membership','About','General'];
+
+function phFilesChosen(input) {
+  var files = Array.from(input.files || []);
+  if (!files.length) return;
+  var oversized = files.filter(function(f){ return f.size > 8*1024*1024; });
+  if (oversized.length) {
+    var st = document.getElementById('ph-upload-status');
+    st.style.color = '#e07070';
+    st.textContent = oversized.length + ' file(s) exceed 8 MB and were skipped.';
+    files = files.filter(function(f){ return f.size <= 8*1024*1024; });
+  }
+  files.forEach(function(f) {
+    _phQueue.push({ file: f, category: 'General', filename: f.name.replace(/\s+/g,'-').toLowerCase(), status: 'pending', objectUrl: URL.createObjectURL(f) });
+  });
+  input.value = '';
+  phRenderQueue();
+}
+
+function phRenderQueue() {
+  var el = document.getElementById('ph-queue');
+  var actions = document.getElementById('ph-queue-actions');
+  if (!_phQueue.length) { el.innerHTML = ''; actions.style.display = 'none'; return; }
+  actions.style.display = 'flex';
+  var pendingCount = _phQueue.filter(function(q){ return q.status === 'pending'; }).length;
+  var btn = document.getElementById('ph-upload-all-btn');
+  if (btn) btn.textContent = '\u2B06 Upload ' + pendingCount + ' Photo' + (pendingCount !== 1 ? 's' : '');
+  el.innerHTML = _phQueue.map(function(item, i) {
+    var statusHtml = '';
+    if (item.status === 'uploading') statusHtml = '<span style="color:var(--gold-lt);font-size:11px;">Uploading\u2026</span>';
+    else if (item.status === 'done')  statusHtml = '<span style="color:#8fcc8f;font-size:11px;">\u2713 Done</span>';
+    else if (item.status === 'error') statusHtml = '<span style="color:#e07070;font-size:11px;">\u2717 ' + (item.errorMsg || 'Failed') + '</span>';
+    var catOpts = PH_CATS.map(function(c){ return '<option value="'+c+'"'+(c===item.category?' selected':'')+'>'+c+'</option>'; }).join('');
+    var disabled = item.status !== 'pending' ? 'disabled' : '';
+    return '<div class="ph-queue-item" id="phqi-'+i+'">' +
+      '<img class="ph-queue-thumb" src="'+item.objectUrl+'">' +
+      '<div class="ph-queue-info">' +
+        '<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">' +
+          '<select class="hrf-input ph-queue-cat" style="font-size:11px;padding:4px 6px;" '+disabled+' onchange="_phQueue['+i+'].category=this.value">' + catOpts + '</select>' +
+          (item.status === 'pending' ? '<button onclick="phQueueRemove('+i+')" style="background:none;border:none;color:rgba(245,240,232,.3);font-size:14px;cursor:pointer;padding:0 4px;" title="Remove">\u2715</button>' : '') +
+        '</div>' +
+        '<input class="hrf-input" style="font-size:11px;padding:4px 6px;margin-top:5px;" value="'+item.filename+'" '+disabled+' onchange="_phQueue['+i+'].filename=this.value" placeholder="filename.jpg">' +
+        '<div style="margin-top:4px;">'+statusHtml+'</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function phQueueRemove(i) {
+  if (_phQueue[i] && _phQueue[i].objectUrl) URL.revokeObjectURL(_phQueue[i].objectUrl);
+  _phQueue.splice(i, 1);
+  phRenderQueue();
+}
+
+function phClearQueue() {
+  _phQueue.forEach(function(q){ if (q.objectUrl) URL.revokeObjectURL(q.objectUrl); });
+  _phQueue = [];
+  phRenderQueue();
+  document.getElementById('ph-upload-status').textContent = '';
+}
+
+function phUploadAll() {
+  var pending = _phQueue.filter(function(q){ return q.status === 'pending'; });
+  if (!pending.length) return;
+  var btn = document.getElementById('ph-upload-all-btn');
+  if (btn) btn.disabled = true;
+  var statusEl = document.getElementById('ph-upload-status');
+  statusEl.style.color = 'rgba(245,240,232,.6)';
+  statusEl.textContent = 'Uploading\u2026';
+  var done = 0; var errors = 0;
+  function uploadNext(idx) {
+    if (idx >= _phQueue.length) {
+      if (btn) btn.disabled = false;
+      statusEl.style.color = errors ? '#e07070' : '#8fcc8f';
+      statusEl.textContent = done + ' uploaded' + (errors ? ', ' + errors + ' failed' : ' successfully.');
+      phRenderQueue();
+      return;
+    }
+    var item = _phQueue[idx];
+    if (item.status !== 'pending') { uploadNext(idx + 1); return; }
+    item.status = 'uploading';
+    phRenderQueue();
+    phCompressImage(item.file, function(base64, mime) {
+      fetch(WHCC_SCRIPT_URL, {
+        method: 'POST', headers: {'Content-Type':'text/plain'},
+        body: JSON.stringify({
+          action: 'upload-photo',
+          base64: base64,
+          mimeType: mime,
+          filename: item.filename, category: item.category
+        })
+      })
+      .then(function(r){ return r.json(); })
+      .then(function(data) {
+        if (data && data.ok) {
+          item.status = 'done'; item.url = data.url; done++;
+        } else {
+          item.status = 'error';
+          item.errorMsg = (data && data.error) ? data.error : 'Unknown error';
+          errors++;
+        }
+        phRenderQueue();
+        uploadNext(idx + 1);
+      })
+      .catch(function(err){
+        item.status = 'error';
+        item.errorMsg = err ? err.toString() : 'Network error';
+        errors++;
+        phRenderQueue();
+        uploadNext(idx + 1);
+      });
+    });
+  }
+  uploadNext(0);
+}
+
+// Compress image to stay under Apps Script 6 MB POST limit
+// Targets max 1800px on longest side, 0.82 quality JPEG
+function phCompressImage(file, callback) {
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    var img = new Image();
+    img.onload = function() {
+      var MAX = 1800;
+      var w = img.width; var h = img.height;
+      if (w > MAX || h > MAX) {
+        if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+        else       { w = Math.round(w * MAX / h); h = MAX; }
+      }
+      var canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      var dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+      callback(dataUrl.split(',')[1], 'image/jpeg');
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+// Legacy single-file helpers (used by phReplaceSlot / phAddToSection)
+function phClearUpload() { phClearQueue(); }
+
+function phLibLoad() {
+  var cat    = (document.getElementById('ph-lib-cat') || {}).value || '';
+  var grid   = document.getElementById('ph-lib-grid');
+  var status = document.getElementById('ph-lib-status');
+  if (!grid) return;
+  grid.innerHTML = '';
+  status.textContent = 'Loading…';
+  var url = WHCC_SCRIPT_URL + '?action=get-photos' + (cat ? '&category=' + encodeURIComponent(cat) : '');
+  fetch(url)
+    .then(function(r) { return r.json(); })
+    .then(function(photos) {
+      if (!Array.isArray(photos) || photos.length === 0) {
+        status.textContent = 'No photos uploaded yet.';
+        return;
+      }
+      status.textContent = photos.length + ' photo' + (photos.length === 1 ? '' : 's');
+      photos.forEach(function(p) {
+        var card = document.createElement('div');
+        card.className = 'ph-card';
+        card.innerHTML =
+          '<img class="ph-card-img" src="' + p.url + '" loading="lazy" onerror="this.style.opacity=\'.2\'">' +
+          '<div class="ph-card-body">' +
+            '<div class="ph-card-cat">' + menuEsc(p.category) + '</div>' +
+            '<div class="ph-card-name">' + menuEsc(p.name) + '</div>' +
+            '<div class="ph-card-btns">' +
+              '<button class="ph-card-btn" onclick="phCopyUrl(\'' + p.url + '\',this)">Copy URL</button>' +
+              '<button class="ph-card-btn del" onclick="phDelete(\'' + p.id + '\',this)">Delete</button>' +
+            '</div>' +
+          '</div>';
+        grid.appendChild(card);
+      });
+    })
+    .catch(function() { status.textContent = 'Could not load photos.'; });
+}
+
+function phCopyUrl(url, btn) {
+  navigator.clipboard.writeText(url).then(function() {
+    var orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(function() { btn.textContent = orig; }, 1500);
+  }).catch(function() { prompt('Copy this URL:', url); });
+}
+
+function phDelete(fileId, btn) {
+  if (!confirm('Delete this photo? This cannot be undone.')) return;
+  btn.textContent = '…';
+  btn.disabled = true;
+  fetch(WHCC_SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({ action: 'delete-photo', fileId: fileId })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data && data.ok) {
+      btn.closest('.ph-card').remove();
+      var remaining = document.getElementById('ph-lib-grid').querySelectorAll('.ph-card').length;
+      document.getElementById('ph-lib-status').textContent =
+        remaining + ' photo' + (remaining === 1 ? '' : 's');
+    } else { btn.textContent = 'Error'; btn.disabled = false; }
+  })
+  .catch(function() { btn.textContent = 'Error'; btn.disabled = false; });
+}
 
 function cmsPhotosLoad() {
   var sc = cmsGetContent();
   var photos = sc.photos || WH_SITE_DEFAULTS.photos;
   var list = document.getElementById('cms-photos-list');
   if (!list) return;
-  list.innerHTML = Object.keys(CMS_PHOTO_LABELS).map(function(key) {
-    return '<div><label class="hrf-label">' + CMS_PHOTO_LABELS[key] + '</label>' +
-      '<input class="hrf-input" id="cph-' + key + '" value="' + menuEsc(photos[key]||'') + '" placeholder="https://... or images/filename.jpg" />' +
-    '</div>';
-  }).join('');
+
+  // ── Page Banners (visual grid, open by default) ──
+  var bannersHtml = '<p style="font-size:11px;color:var(--muted);margin-bottom:12px;">Click <strong style="color:var(--gold-lt);">Replace</strong> to swap any banner photo. Changes apply instantly.</p>' +
+    '<div class="ph-assign-grid">' +
+    Object.keys(CMS_PHOTO_LABELS).map(function(key) {
+      return phAssignSlot(key, photos[key] || WH_SITE_DEFAULTS.photos[key] || '', CMS_PHOTO_LABELS[key]);
+    }).join('') + '</div>';
+
+  // ── Dining Collage (dynamic) ──
+  var diningKeys = [];
+  for (var di = 1; di <= 20; di++) {
+    var dk = 'dining_food_' + di;
+    if (photos[dk] || WH_SITE_DEFAULTS.photos[dk]) diningKeys.push(dk);
+    else if (di > 6) break;
+    else diningKeys.push(dk);
+  }
+  var diningHtml = '<p style="font-size:11px;color:var(--muted);margin-bottom:12px;">Photo 1 is the wide feature. Click <strong style="color:var(--gold-lt);">Replace</strong> to swap, or <strong style="color:#e07070;">✕</strong> to remove.</p>' +
+    '<div class="ph-assign-grid">' +
+    diningKeys.map(function(key, idx) {
+      return phAssignSlot(key, photos[key] || WH_SITE_DEFAULTS.photos[key] || '', idx === 0 ? 'Wide feature' : 'Photo ' + (idx + 1));
+    }).join('') + '</div>' +
+    '<button onclick="phAddToSection(\'dining_food\',\'dining\')" style="margin-top:10px;width:100%;padding:9px;background:rgba(184,151,106,.12);border:1px dashed rgba(184,151,106,.35);border-radius:6px;color:var(--gold-lt);font-size:12px;cursor:pointer;letter-spacing:.05em;">+ Add Photo</button>';
+
+  // ── Golf Gallery (dynamic) ──
+  var golfKeys = [];
+  for (var gi = 1; gi <= 20; gi++) {
+    var gk = 'golf_gallery_' + gi;
+    if (photos[gk] || WH_SITE_DEFAULTS.photos[gk]) golfKeys.push(gk);
+    else if (gi > 6) break;
+    else golfKeys.push(gk);
+  }
+  var golfHtml = '<p style="font-size:11px;color:var(--muted);margin-bottom:12px;">First & last photos are tall. Click <strong style="color:var(--gold-lt);">Replace</strong> to swap a photo.</p>' +
+    '<div class="ph-assign-grid">' +
+    golfKeys.map(function(key, idx) {
+      var isTall = idx === 0 || idx === golfKeys.length - 1;
+      return phAssignSlot(key, photos[key] || WH_SITE_DEFAULTS.photos[key] || '', isTall ? 'Photo ' + (idx+1) + ' (tall)' : 'Photo ' + (idx+1));
+    }).join('') + '</div>' +
+    '<button onclick="phAddToSection(\'golf_gallery\',\'golf\')" style="margin-top:10px;width:100%;padding:9px;background:rgba(184,151,106,.12);border:1px dashed rgba(184,151,106,.35);border-radius:6px;color:var(--gold-lt);font-size:12px;cursor:pointer;letter-spacing:.05em;">+ Add Photo</button>';
+
+  // ── Pool / Events / Venues ──
+  var otherHtml = '<p style="font-size:11px;color:var(--muted);margin-bottom:12px;">Click <strong style="color:var(--gold-lt);">Replace</strong> to swap any photo.</p>' +
+    '<div class="ph-assign-grid">' +
+    Object.keys(CMS_OTHER_LABELS).map(function(key) {
+      return phAssignSlot(key, photos[key] || WH_SITE_DEFAULTS.photos[key] || '', CMS_OTHER_LABELS[key]);
+    }).join('') + '</div>';
+
+  list.innerHTML =
+    phSecHdr('banners', '🖼 Page Banners', true) +
+    '<div class="ph-sec-body" id="ph-sec-banners">' + bannersHtml + '</div>' +
+    phSecHdr('dining', '🍽 Dining Food Collage', false) +
+    '<div class="ph-sec-body" id="ph-sec-dining" style="display:none;">' + diningHtml + '</div>' +
+    phSecHdr('golf', '⛳ Golf Gallery', false) +
+    '<div class="ph-sec-body" id="ph-sec-golf" style="display:none;">' + golfHtml + '</div>' +
+    phSecHdr('other', '🏊 Pool, Events & Venues', false) +
+    '<div class="ph-sec-body" id="ph-sec-other" style="display:none;">' + otherHtml + '</div>';
 }
 
-function cmsPhotosSave() {
+function phSecHdr(id, label, open) {
+  return '<div class="ph-sec-hdr" onclick="phToggleSec(\'' + id + '\')">' +
+    '<span>' + label + '</span>' +
+    '<span id="ph-arr-' + id + '">' + (open ? '▴' : '▾') + '</span>' +
+  '</div>';
+}
+
+function phAssignSlot(key, url, label) {
+  var imgHtml = url
+    ? '<img class="ph-assign-slot-img" src="' + menuEsc(url) + '">'
+    : '<div class="ph-assign-slot-empty">📷</div>';
+  var delBtn = url
+    ? '<button class="ph-slot-btn del" onclick="phClearSlot(\'' + key + '\')">✕</button>'
+    : '';
+  return '<div class="ph-assign-slot" id="ph-slot-' + key + '">' +
+    imgHtml +
+    '<div class="ph-assign-slot-body">' +
+      '<div class="ph-assign-slot-label">' + label + '</div>' +
+      '<div class="ph-assign-slot-btns">' +
+        '<button class="ph-slot-btn" onclick="phReplaceSlot(\'' + key + '\')">Replace</button>' +
+        delBtn +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+function phToggleSec(id) {
+  var body  = document.getElementById('ph-sec-'  + id);
+  var arrow = document.getElementById('ph-arr-' + id);
+  if (!body) return;
+  var open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : 'block';
+  if (arrow) arrow.textContent = open ? '▾' : '▴';
+}
+
+var _phPickerKey = '';
+
+function phReplaceSlot(key) {
+  _phPickerKey = key;
+  var modal = document.getElementById('ph-picker-modal');
+  modal.style.display = 'flex';
+  phPickerLoadLib();
+}
+
+function phPickerClose() {
+  document.getElementById('ph-picker-modal').style.display = 'none';
+  _phPickerKey = '';
+}
+
+function phPickerUpload() {
+  phPickerClose();
+  var key = _phPickerKey || '';
+  _phPickerKey = key; // restore since close cleared it
+  var input = document.createElement('input');
+  input.type = 'file'; input.accept = 'image/*';
+  input.onchange = function() {
+    var file = input.files[0];
+    if (!file) return;
+    if (file.size > 8 * 1024 * 1024) { alert('Max 8 MB.'); return; }
+    var slot = document.getElementById('ph-slot-' + key);
+    if (slot) slot.style.opacity = '0.4';
+    phCompressImage(file, function(base64, mime) {
+      fetch(WHCC_SCRIPT_URL, {
+        method: 'POST', headers: {'Content-Type':'text/plain'},
+        body: JSON.stringify({
+          action: 'upload-photo', base64: base64,
+          mimeType: mime,
+          filename: key + '-' + file.name.replace(/\s+/g,'-').toLowerCase(),
+          category: key.startsWith('dining_food') ? 'Dining' : key.startsWith('golf_gallery') ? 'Golf' : (key.startsWith('pool') || key.startsWith('events') || key.startsWith('venue')) ? 'Pool & Events' : 'Banners'
+        })
+      })
+      .then(function(r){return r.json();})
+      .then(function(data) {
+        if (slot) slot.style.opacity = '1';
+        if (data && data.ok) {
+          var sc = cmsGetContent();
+          if (!sc.photos) sc.photos = {};
+          sc.photos[key] = data.url;
+          localStorage.setItem('wh_site_content', JSON.stringify(sc));
+          document.querySelectorAll('[data-wh-photo="' + key + '"]').forEach(function(el) {
+            if (el.tagName === 'IMG') el.src = data.url;
+            else el.style.setProperty('--wh-bg', 'url(' + data.url + ')');
+          });
+          // Re-render keeping section open
+          cmsPhotosLoad();
+          var sec = key.startsWith('dining_food') ? 'dining' : key.startsWith('golf_gallery') ? 'golf' : (key.startsWith('pool') || key.startsWith('events') || key.startsWith('venue')) ? 'other' : 'banners';
+          var b = document.getElementById('ph-sec-' + sec);
+          var a = document.getElementById('ph-arr-' + sec);
+          if (b) b.style.display = 'block';
+          if (a) a.textContent = '▴';
+          staffToast('Photo updated!', 'success');
+        } else { alert(data.error || 'Upload failed.'); }
+      })
+      .catch(function(){ if (slot) slot.style.opacity='1'; alert('Upload failed.'); });
+    });
+  };
+  input.click();
+}
+
+function phPickerLoadLib() {
+  var cat = (document.getElementById('ph-picker-cat') || {}).value || '';
+  var grid = document.getElementById('ph-picker-grid');
+  var status = document.getElementById('ph-picker-status');
+  if (!grid) return;
+  grid.innerHTML = '';
+  status.textContent = 'Loading…';
+  var url = WHCC_SCRIPT_URL + '?action=get-photos' + (cat ? '&category=' + encodeURIComponent(cat) : '');
+  fetch(url)
+    .then(function(r){ return r.json(); })
+    .then(function(photos) {
+      if (!Array.isArray(photos) || photos.length === 0) {
+        status.textContent = 'No photos in library yet. Upload some first.';
+        return;
+      }
+      status.textContent = photos.length + ' photo' + (photos.length === 1 ? '' : 's') + ' — click one to assign it';
+      grid.innerHTML = '';
+      photos.forEach(function(p) {
+        var card = document.createElement('div');
+        card.style.cssText = 'cursor:pointer;border-radius:6px;overflow:hidden;border:2px solid transparent;transition:border-color .2s;';
+        card.innerHTML = '<img src="' + p.url + '" style="width:100%;height:100px;object-fit:cover;display:block;">' +
+          '<div style="padding:5px 6px;font-size:9px;color:rgba(245,240,232,.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + p.name + '</div>';
+        card.onmouseover = function(){ card.style.borderColor = 'rgba(184,151,106,.7)'; };
+        card.onmouseout  = function(){ card.style.borderColor = 'transparent'; };
+        card.onclick = function(){ phAssignFromLibrary(_phPickerKey, p.url); };
+        grid.appendChild(card);
+      });
+    })
+    .catch(function(){ status.textContent = 'Could not load library.'; });
+}
+
+function phAssignFromLibrary(key, url) {
+  if (!key || !url) return;
   var sc = cmsGetContent();
   if (!sc.photos) sc.photos = {};
-  Object.keys(CMS_PHOTO_LABELS).forEach(function(key) {
-    var el = document.getElementById('cph-' + key);
-    if (el) sc.photos[key] = el.value.trim();
+  sc.photos[key] = url;
+  localStorage.setItem('wh_site_content', JSON.stringify(sc));
+  document.querySelectorAll('[data-wh-photo="' + key + '"]').forEach(function(el) {
+    if (el.tagName === 'IMG') el.src = url;
+    else el.style.setProperty('--wh-bg', 'url(' + url + ')');
   });
-  // Also push photo URLs into heroes for background images
-  if (!sc.heroes) sc.heroes = {};
-  ['home','golf','dining','aquatics','events','membership','about'].forEach(function(p) {
-    var photoKey = 'hero_' + p;
-    if (sc.photos[photoKey]) {
-      if (!sc.heroes[p]) sc.heroes[p] = {};
-      sc.heroes[p].image = sc.photos[photoKey];
-    }
+  cmsPhotosLoad();
+  var sec = key.startsWith('dining_food') ? 'dining' : key.startsWith('golf_gallery') ? 'golf' : (key.startsWith('pool') || key.startsWith('events') || key.startsWith('venue')) ? 'other' : 'banners';
+  var b = document.getElementById('ph-sec-' + sec);
+  var a = document.getElementById('ph-arr-' + sec);
+  if (b) b.style.display = 'block';
+  if (a) a.textContent = '▴';
+  phPickerClose();
+  staffToast('Photo assigned!', 'success');
+}
+
+function phClearSlot(key) {
+  if (!confirm('Remove this photo? The original default will show.')) return;
+  var sc = cmsGetContent();
+  if (!sc.photos) sc.photos = {};
+  delete sc.photos[key];
+  localStorage.setItem('wh_site_content', JSON.stringify(sc));
+  var def = WH_SITE_DEFAULTS.photos[key] || '';
+  document.querySelectorAll('[data-wh-photo="' + key + '"]').forEach(function(el) {
+    if (el.tagName === 'IMG') el.src = def;
+    else el.style.removeProperty('--wh-bg');
   });
-  cmsSave(sc, 'cms-photos-status');
-  var st = document.getElementById('cms-photos-status');
-  if (st) { st.style.display='block'; st.textContent='✓ Photos updated.'; setTimeout(function(){ st.style.display='none'; }, 4000); }
+  var sec = key.startsWith('dining_food') ? 'dining' : key.startsWith('golf_gallery') ? 'golf' : (key.startsWith('pool') || key.startsWith('events') || key.startsWith('venue')) ? 'other' : 'banners';
+  cmsPhotosLoad();
+  var b = document.getElementById('ph-sec-' + sec);
+  var a = document.getElementById('ph-arr-' + sec);
+  if (b) b.style.display = 'block';
+  if (a) a.textContent = '▴';
+}
+
+function cmsPhotosSave() { /* banners now save immediately via phReplaceSlot/phClearSlot */ }
+
+function phAddToSection(prefix, sectionId) {
+  var sc = cmsGetContent();
+  var photos = sc.photos || {};
+  // Find next available slot number
+  var n = 1;
+  while (photos[prefix + '_' + n] || WH_SITE_DEFAULTS.photos[prefix + '_' + n]) { n++; if (n > 20) return; }
+  var key = prefix + '_' + n;
+  var input = document.createElement('input');
+  input.type = 'file'; input.accept = 'image/*';
+  input.onchange = function() {
+    var file = input.files[0];
+    if (!file) return;
+    if (file.size > 8 * 1024 * 1024) { alert('Max 8 MB.'); return; }
+    staffToast('Uploading…', 'info');
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      var cat = prefix === 'dining_food' ? 'Dining' : 'Golf';
+      fetch(WHCC_SCRIPT_URL, {
+        method: 'POST', headers: {'Content-Type':'text/plain'},
+        body: JSON.stringify({
+          action: 'upload-photo',
+          base64: ev.target.result.split(',')[1],
+          mimeType: file.type || 'image/jpeg',
+          filename: key + '-' + file.name.replace(/\s+/g,'-').toLowerCase(),
+          category: cat
+        })
+      })
+      .then(function(r){return r.json();})
+      .then(function(data) {
+        if (data && data.ok) {
+          if (!sc.photos) sc.photos = {};
+          sc.photos[key] = data.url;
+          localStorage.setItem('wh_site_content', JSON.stringify(sc));
+          var merged = Object.assign({}, WH_SITE_DEFAULTS.photos, sc.photos);
+          if (prefix === 'dining_food')  renderFoodGrid(merged);
+          if (prefix === 'golf_gallery') renderGolfGallery(merged);
+          cmsPhotosLoad();
+          var b = document.getElementById('ph-sec-' + sectionId);
+          var a = document.getElementById('ph-arr-' + sectionId);
+          if (b) b.style.display = 'block';
+          if (a) a.textContent = '▴';
+          staffToast('Photo added!', 'success');
+        } else { staffToast(data.error || 'Upload failed.', 'error'); }
+      })
+      .catch(function() { staffToast('Upload failed.', 'error'); });
+    };
+  };
+  input.click();
+}
+
+function renderFoodGrid(photos) {
+  var grid = document.getElementById('food-grid-container');
+  if (!grid) return;
+  var all = Object.assign({}, WH_SITE_DEFAULTS.photos, photos || {});
+  var html = '';
+  for (var i = 1; i <= 20; i++) {
+    var url = all['dining_food_' + i];
+    if (!url) break;
+    html += '<div class="food-img' + (i === 1 ? ' wide' : '') + '">' +
+      '<img data-wh-photo="dining_food_' + i + '" src="' + url + '" alt="Menu item ' + i + '" loading="lazy"></div>';
+  }
+  if (html) grid.innerHTML = html;
+}
+
+function renderGolfGallery(photos) {
+  var gallery = document.getElementById('golf-gallery-container');
+  if (!gallery) return;
+  var all = Object.assign({}, WH_SITE_DEFAULTS.photos, photos || {});
+  var urls = [];
+  for (var i = 1; i <= 20; i++) {
+    if (!all['golf_gallery_' + i]) break;
+    urls.push({ key: 'golf_gallery_' + i, url: all['golf_gallery_' + i] });
+  }
+  var html = '';
+  urls.forEach(function(p, idx) {
+    var isTall = idx === 0 || idx === urls.length - 1;
+    html += '<div class="gg-img' + (isTall ? ' tall' : '') + '">' +
+      '<img data-wh-photo="' + p.key + '" src="' + p.url + '" alt="Golf photo ' + (idx+1) + '" loading="lazy"></div>';
+  });
+  if (html) gallery.innerHTML = html;
 }
 
 // ── POOL HOURS ────────────────────────────────────────────
@@ -6392,6 +7048,22 @@ function pinSubmit() {
   }
 }
 
+// ── RIGHT PANEL TABS ──
+function srTab(name) {
+  var isPreview = name === 'preview';
+  document.getElementById('sr-panel-detail').style.display  = isPreview ? 'none' : 'block';
+  document.getElementById('sr-panel-preview').style.display = isPreview ? 'block' : 'none';
+  document.getElementById('sr-tab-detail').classList.toggle('active',  !isPreview);
+  document.getElementById('sr-tab-preview').classList.toggle('active', isPreview);
+  document.getElementById('staff-right').classList.toggle('preview-mode', isPreview);
+  if (isPreview) {
+    var iframe = document.getElementById('sr-preview-iframe');
+    if (!iframe.src || iframe.src === window.location.href) {
+      iframe.src = window.location.origin + window.location.pathname;
+    }
+  }
+}
+
 function staffLockDashboard() {
   staffAuthed = false;
   navigate('home');
@@ -6409,6 +7081,61 @@ function staffChangePin() {
   msg.style.color = '#8fcc8f';
   msg.textContent = 'PIN updated successfully.';
   setTimeout(function() { msg.textContent = ''; }, 3000);
+}
+
+// ── BOARD OVERRIDE ──
+function boardOverrideShow() {
+  document.getElementById('pin-main').style.display  = 'none';
+  document.getElementById('pin-board').style.display = 'block';
+  document.getElementById('board-step1').style.display = 'block';
+  document.getElementById('board-step2').style.display = 'none';
+  document.getElementById('board-code-input').value = '';
+  document.getElementById('board-error').textContent = '';
+}
+
+function boardOverrideCancel() {
+  document.getElementById('pin-board').style.display = 'none';
+  document.getElementById('pin-main').style.display  = 'block';
+  document.getElementById('board-code-input').value  = '';
+  document.getElementById('board-error').textContent = '';
+  if (document.getElementById('board-pin1'))  document.getElementById('board-pin1').value  = '';
+  if (document.getElementById('board-pin2'))  document.getElementById('board-pin2').value  = '';
+  if (document.getElementById('board-pin-error')) document.getElementById('board-pin-error').textContent = '';
+}
+
+function boardOverrideVerify() {
+  var code    = document.getElementById('board-code-input').value.trim();
+  var errEl   = document.getElementById('board-error');
+  var boardSub = document.getElementById('board-sub');
+  if (!code) { errEl.textContent = 'Please enter the recovery code.'; return; }
+  errEl.textContent = 'Verifying…';
+  fetch(WHCC_SCRIPT_URL + '?action=validate-board-pin&code=' + encodeURIComponent(code))
+    .then(function(r){ return r.json(); })
+    .then(function(data) {
+      if (data && data.ok) {
+        errEl.textContent = '';
+        if (boardSub) boardSub.textContent = 'Set a new 4-digit Staff PIN';
+        document.getElementById('board-step1').style.display = 'none';
+        document.getElementById('board-step2').style.display = 'block';
+      } else {
+        errEl.textContent = data.error || 'Invalid recovery code.';
+      }
+    })
+    .catch(function() { errEl.textContent = 'Could not reach server. Try again.'; });
+}
+
+function boardSetPin() {
+  var pin1   = (document.getElementById('board-pin1').value || '').trim();
+  var pin2   = (document.getElementById('board-pin2').value || '').trim();
+  var errEl  = document.getElementById('board-pin-error');
+  if (!/^\d{4}$/.test(pin1)) { errEl.textContent = 'PIN must be exactly 4 digits.'; return; }
+  if (pin1 !== pin2)          { errEl.textContent = 'PINs do not match.'; return; }
+  localStorage.setItem('staff-pin', pin1);
+  staffAuthed = true;
+  staffPinHide();
+  boardOverrideCancel();
+  _origNavigate(_pinTarget || 'staff');
+  initStaffDashboard();
 }
 
 document.addEventListener('keydown', function(e) {
@@ -8070,29 +8797,62 @@ function pairRunTest() {
 <!-- Staff PIN overlay -->
 <div id="staff-pin-overlay">
   <div class="pin-box">
-    <div class="pin-title" id="pin-title">Staff Portal</div>
-    <div class="pin-sub" id="pin-sub">Westwood Hills Country Club</div>
-    <div class="pin-dots">
-      <div class="pin-dot" id="pd0"></div>
-      <div class="pin-dot" id="pd1"></div>
-      <div class="pin-dot" id="pd2"></div>
-      <div class="pin-dot" id="pd3"></div>
+
+    <!-- Normal PIN entry -->
+    <div id="pin-main">
+      <div class="pin-title" id="pin-title">Staff Portal</div>
+      <div class="pin-sub" id="pin-sub">Westwood Hills Country Club</div>
+      <div class="pin-dots">
+        <div class="pin-dot" id="pd0"></div>
+        <div class="pin-dot" id="pd1"></div>
+        <div class="pin-dot" id="pd2"></div>
+        <div class="pin-dot" id="pd3"></div>
+      </div>
+      <div class="pin-keys">
+        <button class="pin-key" onclick="pinKey('1')">1</button>
+        <button class="pin-key" onclick="pinKey('2')">2</button>
+        <button class="pin-key" onclick="pinKey('3')">3</button>
+        <button class="pin-key" onclick="pinKey('4')">4</button>
+        <button class="pin-key" onclick="pinKey('5')">5</button>
+        <button class="pin-key" onclick="pinKey('6')">6</button>
+        <button class="pin-key" onclick="pinKey('7')">7</button>
+        <button class="pin-key" onclick="pinKey('8')">8</button>
+        <button class="pin-key" onclick="pinKey('9')">9</button>
+        <button class="pin-key" onclick="pinKey('back')" style="font-size:14px;">⌫</button>
+        <button class="pin-key" onclick="pinKey('0')">0</button>
+        <button class="pin-key" onclick="pinKey('cancel')" style="font-size:10px;letter-spacing:.08em;color:rgba(245,240,232,.45);">Cancel</button>
+      </div>
+      <div class="pin-error" id="pin-error"></div>
+      <p onclick="boardOverrideShow()" style="text-align:center;font-size:11px;color:rgba(245,240,232,.2);margin-top:14px;cursor:pointer;letter-spacing:.04em;">Board override</p>
     </div>
-    <div class="pin-keys">
-      <button class="pin-key" onclick="pinKey('1')">1</button>
-      <button class="pin-key" onclick="pinKey('2')">2</button>
-      <button class="pin-key" onclick="pinKey('3')">3</button>
-      <button class="pin-key" onclick="pinKey('4')">4</button>
-      <button class="pin-key" onclick="pinKey('5')">5</button>
-      <button class="pin-key" onclick="pinKey('6')">6</button>
-      <button class="pin-key" onclick="pinKey('7')">7</button>
-      <button class="pin-key" onclick="pinKey('8')">8</button>
-      <button class="pin-key" onclick="pinKey('9')">9</button>
-      <button class="pin-key" onclick="pinKey('back')" style="font-size:14px;">⌫</button>
-      <button class="pin-key" onclick="pinKey('0')">0</button>
-      <button class="pin-key" onclick="pinKey('cancel')" style="font-size:10px;letter-spacing:.08em;color:rgba(245,240,232,.45);">Cancel</button>
+
+    <!-- Board override panel -->
+    <div id="pin-board" style="display:none;">
+      <div class="pin-title">Board Override</div>
+      <div class="pin-sub" id="board-sub">Enter the Board Recovery Code</div>
+
+      <!-- Step 1: enter recovery code -->
+      <div id="board-step1">
+        <input id="board-code-input" type="password" placeholder="Recovery code"
+          style="width:100%;padding:11px 14px;border:1.5px solid rgba(245,240,232,.2);border-radius:8px;background:rgba(245,240,232,.08);color:var(--cream);font-size:.95rem;text-align:center;letter-spacing:.1em;outline:none;margin:16px 0 8px;">
+        <button onclick="boardOverrideVerify()" style="width:100%;padding:12px;background:var(--gold);color:var(--forest);border:none;border-radius:8px;font-weight:700;font-size:.9rem;cursor:pointer;margin-bottom:8px;">Verify Code</button>
+        <div class="pin-error" id="board-error"></div>
+      </div>
+
+      <!-- Step 2: set new PIN -->
+      <div id="board-step2" style="display:none;">
+        <div style="font-size:.78rem;color:rgba(245,240,232,.55);text-align:center;margin:8px 0 14px;">Identity confirmed. Set a new staff PIN.</div>
+        <input id="board-pin1" type="password" placeholder="New 4-digit PIN" maxlength="4" pattern="[0-9]*" inputmode="numeric"
+          style="width:100%;padding:11px 14px;border:1.5px solid rgba(245,240,232,.2);border-radius:8px;background:rgba(245,240,232,.08);color:var(--cream);font-size:1.1rem;text-align:center;letter-spacing:.3em;outline:none;margin-bottom:8px;">
+        <input id="board-pin2" type="password" placeholder="Confirm PIN" maxlength="4" pattern="[0-9]*" inputmode="numeric"
+          style="width:100%;padding:11px 14px;border:1.5px solid rgba(245,240,232,.2);border-radius:8px;background:rgba(245,240,232,.08);color:var(--cream);font-size:1.1rem;text-align:center;letter-spacing:.3em;outline:none;margin-bottom:8px;">
+        <button onclick="boardSetPin()" style="width:100%;padding:12px;background:var(--gold);color:var(--forest);border:none;border-radius:8px;font-weight:700;font-size:.9rem;cursor:pointer;margin-bottom:8px;">Set New PIN &amp; Enter</button>
+        <div class="pin-error" id="board-pin-error"></div>
+      </div>
+
+      <p onclick="boardOverrideCancel()" style="text-align:center;font-size:11px;color:rgba(245,240,232,.25);margin-top:10px;cursor:pointer;">← Back to PIN</p>
     </div>
-    <div class="pin-error" id="pin-error"></div>
+
   </div>
 </div>
 
@@ -8110,6 +8870,32 @@ function pairRunTest() {
 
 <!-- Toast container -->
 <div id="staff-toast"></div>
+
+<!-- Photo Picker Modal -->
+<div id="ph-picker-modal" style="display:none;position:fixed;inset:0;z-index:900;background:rgba(8,14,10,.85);align-items:center;justify-content:center;">
+  <div style="background:#0f1f15;border:1px solid rgba(184,151,106,.25);border-radius:10px;width:min(760px,96vw);max-height:88vh;display:flex;flex-direction:column;overflow:hidden;">
+    <div style="padding:16px 20px;border-bottom:1px solid rgba(184,151,106,.15);display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-lt);">Replace Photo</div>
+      <button onclick="phPickerClose()" style="background:none;border:none;color:rgba(245,240,232,.4);font-size:18px;cursor:pointer;line-height:1;">✕</button>
+    </div>
+    <div style="padding:14px 20px;border-bottom:1px solid rgba(184,151,106,.1);display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+      <button onclick="phPickerUpload()" class="btn-p" style="font-size:11px;padding:8px 18px;">⬆ Upload from Computer</button>
+      <span style="font-size:11px;color:rgba(245,240,232,.3);">or choose from your library below</span>
+      <select id="ph-picker-cat" onchange="phPickerLoadLib()" style="margin-left:auto;background:#0f1f15;border:1px solid rgba(184,151,106,.25);color:var(--cream);border-radius:4px;padding:6px 10px;font-size:11px;">
+        <option value="">All Photos</option>
+        <option value="Banners">Banners</option>
+        <option value="Dining">Dining</option>
+        <option value="Golf">Golf</option>
+        <option value="Pool & Events">Pool &amp; Events</option>
+        <option value="General">General</option>
+      </select>
+    </div>
+    <div style="padding:14px 20px;overflow-y:auto;flex:1;">
+      <div id="ph-picker-status" style="font-size:11px;color:var(--muted);margin-bottom:10px;"></div>
+      <div id="ph-picker-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;"></div>
+    </div>
+  </div>
+</div>
 
 <!-- ═══ EVENT REGISTRATION MODAL ═══ -->
 <div class="reg-overlay" id="reg-overlay" style="display:none" onclick="if(event.target===this)closeRegModal()">

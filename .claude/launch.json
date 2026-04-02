@@ -4,20 +4,14 @@
     {
       "name": "Website",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["-c", "import os,http.server; http.server.test(HandlerClass=http.server.SimpleHTTPRequestHandler,port=int(os.environ.get('PORT',8080)),bind='127.0.0.1')"],
-      "autoPort": true
-    },
-    {
-      "name": "Desktop",
-      "runtimeExecutable": "python",
-      "runtimeArgs": ["-c", "import os,http.server; http.server.test(HandlerClass=http.server.SimpleHTTPRequestHandler,port=int(os.environ.get('PORT',8080)),bind='127.0.0.1')"],
-      "autoPort": true
+      "runtimeArgs": ["-c", "import os,http.server; os.chdir('C:\\\\Users\\\\sctr1\\\\claude'); http.server.test(HandlerClass=http.server.SimpleHTTPRequestHandler,port=int(os.environ.get('PORT',3000)),bind='127.0.0.1')"],
+      "port": 3000
     },
     {
       "name": "Mobile",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["-c", "import os,http.server; os.chdir('C:\\\\Users\\\\sctr1\\\\whcc-mobile'); http.server.test(HandlerClass=http.server.SimpleHTTPRequestHandler,port=int(os.environ.get('PORT',8081)),bind='127.0.0.1')"],
-      "autoPort": true
+      "runtimeArgs": ["-c", "import os,http.server; os.chdir('C:\\\\Users\\\\sctr1\\\\whcc-mobile'); http.server.test(HandlerClass=http.server.SimpleHTTPRequestHandler,port=int(os.environ.get('PORT',3001)),bind='127.0.0.1')"],
+      "port": 3001
     }
   ]
 }
