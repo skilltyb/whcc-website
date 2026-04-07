@@ -31,6 +31,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .nav-links a:hover,.nav-links a.active{color:var(--gold-lt);border-bottom-color:var(--gold-lt)}
 .nav-cta{font-size:11px;letter-spacing:.15em;text-transform:uppercase;background:transparent;border:1px solid var(--gold);color:var(--gold);padding:9px 22px;cursor:pointer;transition:all .25s;font-family:'Raleway',sans-serif}
 .nav-cta:hover{background:var(--gold);color:var(--deep)}
+.nav-bill-link{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(245,240,232,.5);text-decoration:none;margin-right:4px;transition:color .2s}
+.nav-bill-link:hover{color:var(--gold-lt)}
 .nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
 .nav-hamburger span{display:block;width:22px;height:1.5px;background:var(--cream);transition:all .3s}
 .nav-mobile{display:none;position:fixed;top:72px;left:0;right:0;background:var(--deep);z-index:190;padding:24px 40px;border-bottom:1px solid rgba(184,151,106,.15)}
@@ -483,7 +485,7 @@ footer{background:var(--deep);padding:80px 80px 40px}
 .sv-drop-menu button:hover{background:rgba(184,151,106,.12);color:var(--gold-lt);}
 .sv-drop-menu button.active-view{background:rgba(184,151,106,.18);color:var(--gold-lt);}
 /* Hide public nav links in staff mode */
-nav.staff-mode .nav-links,nav.staff-mode .nav-cta,nav.staff-mode .nav-hamburger{display:none!important;}
+nav.staff-mode .nav-links,nav.staff-mode .nav-cta,nav.staff-mode .nav-bill-link,nav.staff-mode .nav-hamburger{display:none!important;}
 nav.staff-mode .nav-site-back{display:flex!important;}
 .nav-site-back{display:none;align-items:center;gap:6px;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(245,240,232,.5);cursor:pointer;background:none;border:1px solid rgba(184,151,106,.2);padding:7px 14px;font-family:'Raleway',sans-serif;transition:all .2s;}
 .nav-site-back:hover{color:var(--gold-lt);border-color:var(--gold);}
@@ -966,7 +968,8 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <li><a onclick="navigate('membership')">Membership</a></li>
     <li><a onclick="navigate('about')">About</a></li>
   </ul>
-  <button class="nav-cta" onclick="window.open('https://cerulean-klepon-c373b2.netlify.app','_blank')">Member Login</button>
+  <a class="nav-bill-link" href="https://www.goibsvision.com/WebRes/Club/westwoodhillscc/LogIn" target="_blank" rel="noopener">Pay My Bill</a>
+  <button class="nav-cta" onclick="window.open('https://skilltyb.github.io/whcc-mobile/','_blank')">Member Login</button>
   <button class="nav-hamburger" onclick="toggleMobileNav()"><span></span><span></span><span></span></button>
   <button class="nav-site-back" onclick="navigate('home')">← Back to Site</button>
 </nav>
@@ -978,6 +981,8 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <li><a onclick="navigate('events')">Events</a></li>
     <li><a onclick="navigate('membership')">Membership</a></li>
     <li><a onclick="navigate('about')">About</a></li>
+    <li><a href="https://www.goibsvision.com/WebRes/Club/westwoodhillscc/LogIn" target="_blank" rel="noopener">Pay My Bill</a></li>
+    <li><a onclick="window.open('https://skilltyb.github.io/whcc-mobile/','_blank')">Member Login</a></li>
   </ul>
 </div>
 
@@ -1129,7 +1134,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
       </div>
       <div class="mem-card feat fade-up d2">
         <div class="mem-badge">Great Value</div>
-        <div class="mem-type">Under 35</div><div class="mem-name">Junior<br>Membership</div>
+        <div class="mem-type">Under 35</div><div class="mem-name">Junior<br>Executive</div>
         <p class="mem-desc">All the benefits of full membership at a reduced rate — designed for younger members building their careers and families.</p>
         <ul class="mem-feats"><li class="mem-feat">All golf privileges</li><li class="mem-feat">Full club access</li><li class="mem-feat">Reduced initiation</li><li class="mem-feat">Ages 18–34</li></ul>
         <button class="btn-p" style="width:100%" onclick="navigate('membership')">Inquire Now</button>
@@ -1766,13 +1771,14 @@ nav.staff-mode .nav-site-back{display:flex!important;}
       </div>
       <div class="inq-form fade-up d3">
         <p class="inq-title">Request Event Information</p>
-        <div class="frow"><div class="fg"><label class="fl">First Name</label><input class="fi" type="text" placeholder="Jane" /></div><div class="fg"><label class="fl">Last Name</label><input class="fi" type="text" placeholder="Smith" /></div></div>
-        <div class="fg"><label class="fl">Email</label><input class="fi" type="email" placeholder="jane@example.com" /></div>
-        <div class="fg"><label class="fl">Phone</label><input class="fi" type="tel" placeholder="(573) 555-0000" /></div>
-        <div class="frow"><div class="fg"><label class="fl">Event Type</label><select class="fs"><option>Wedding / Reception</option><option>Rehearsal Dinner</option><option>Corporate Event</option><option>Birthday Party</option><option>Other</option></select></div><div class="fg"><label class="fl">Est. Guests</label><input class="fi" type="text" placeholder="e.g. 80" /></div></div>
-        <div class="fg"><label class="fl">Preferred Date</label><input class="fi" type="date" /></div>
-        <div class="fg"><label class="fl">Notes</label><textarea class="ft" placeholder="Tell us about your event…"></textarea></div>
-        <button class="btn-p" style="width:100%;margin-top:6px;">Submit Inquiry</button>
+        <div class="frow"><div class="fg"><label class="fl">First Name</label><input class="fi" id="pei-fname" type="text" placeholder="Jane" /></div><div class="fg"><label class="fl">Last Name</label><input class="fi" id="pei-lname" type="text" placeholder="Smith" /></div></div>
+        <div class="fg"><label class="fl">Email</label><input class="fi" id="pei-email" type="email" placeholder="jane@email.com" /></div>
+        <div class="fg"><label class="fl">Phone</label><input class="fi" id="pei-phone" type="tel" placeholder="(573) 785-5253" /></div>
+        <div class="frow"><div class="fg"><label class="fl">Event Type</label><select class="fs" id="pei-type"><option>Wedding / Reception</option><option>Rehearsal Dinner</option><option>Corporate Event</option><option>Birthday Party</option><option>Other</option></select></div><div class="fg"><label class="fl">Est. Guests</label><input class="fi" id="pei-guests" type="text" placeholder="e.g. 80" /></div></div>
+        <div class="fg"><label class="fl">Preferred Date</label><input class="fi" id="pei-date" type="date" /></div>
+        <div class="fg"><label class="fl">Notes</label><textarea class="ft" id="pei-notes" placeholder="Tell us about your event…"></textarea></div>
+        <button class="btn-p" id="pei-submit" style="width:100%;margin-top:6px;" onclick="submitPrivateInquiry()">Submit Inquiry</button>
+        <div id="pei-status" style="font-size:12px;margin-top:8px;display:none;"></div>
       </div>
     </div>
   </div>
@@ -3667,6 +3673,51 @@ function submitContactForm() {
     });
 }
 
+function submitPrivateInquiry() {
+  var fname   = (document.getElementById('pei-fname').value   || '').trim();
+  var lname   = (document.getElementById('pei-lname').value   || '').trim();
+  var email   = (document.getElementById('pei-email').value   || '').trim();
+  var phone   = (document.getElementById('pei-phone').value   || '').trim();
+  var type    = (document.getElementById('pei-type').value    || '').trim();
+  var guests  = (document.getElementById('pei-guests').value  || '').trim();
+  var date    = (document.getElementById('pei-date').value    || '').trim();
+  var notes   = (document.getElementById('pei-notes').value   || '').trim();
+  var statusEl  = document.getElementById('pei-status');
+  var submitBtn = document.getElementById('pei-submit');
+  if (!fname) { statusEl.textContent = 'Please enter your first name.'; statusEl.style.color='#c0392b'; statusEl.style.display='block'; return; }
+  if (!email && !phone) { statusEl.textContent = 'Please provide an email or phone number.'; statusEl.style.color='#c0392b'; statusEl.style.display='block'; return; }
+  submitBtn.disabled = true; submitBtn.textContent = 'Sending…';
+  var msg = 'Event Type: ' + type + '\nEst. Guests: ' + (guests || 'Not specified') + '\nPreferred Date: ' + (date || 'Not specified') + '\nNotes: ' + (notes || 'None');
+  var body = JSON.stringify({
+    action: 'addContact',
+    name: fname + ' ' + lname, email: email, phone: phone,
+    subject: 'Private Event Inquiry',
+    message: msg,
+    source: 'website-event-inquiry',
+    submitted: new Date().toISOString()
+  });
+  fetch(WHCC_SCRIPT_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body: body })
+    .then(function(r){ return r.json(); })
+    .then(function(data) {
+      if (data && data.ok !== false) {
+        submitBtn.textContent = '✓ Inquiry Sent';
+        statusEl.textContent  = 'Thank you! Our events team will be in touch soon.';
+        statusEl.style.color  = '#2e7d32'; statusEl.style.display = 'block';
+        ['pei-fname','pei-lname','pei-email','pei-phone','pei-guests','pei-notes'].forEach(function(id){ var e=document.getElementById(id); if(e) e.value=''; });
+        document.getElementById('pei-date').value = '';
+      } else {
+        submitBtn.disabled = false; submitBtn.textContent = 'Submit Inquiry';
+        statusEl.textContent = 'Something went wrong — please call (573) 785-5253.';
+        statusEl.style.color = '#c0392b'; statusEl.style.display = 'block';
+      }
+    })
+    .catch(function() {
+      submitBtn.disabled = false; submitBtn.textContent = 'Submit Inquiry';
+      statusEl.textContent = 'Unable to send — please call (573) 785-5253 or try again.';
+      statusEl.style.color = '#c0392b'; statusEl.style.display = 'block';
+    });
+}
+
 function submitRegForm(e) {
   e.preventDefault();
   var btn = document.getElementById('reg-submit-btn');
@@ -4096,7 +4147,7 @@ async function submitReservation() {
     existing[dateVal].push(reservation);
     await window.storage.set(storageKey, JSON.stringify(existing));
   } catch(e) {
-    console.log('Storage unavailable, reservation noted client-side only');
+    // storage unavailable
   }
 
   // Sync to Google Sheets so staff portal and mobile app can see it
