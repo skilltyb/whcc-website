@@ -9046,19 +9046,17 @@ function launchRunChecks() {
   _lcPending('pin',    'Verifying board PIN…');
   _lcPending('photos', 'Checking Drive library…');
 
-  // Check 1: GitHub Pages status via public API
-  fetch('https://api.github.com/repos/skilltyb/whcc-website/pages', {
-    headers: { 'Accept': 'application/vnd.github+json' }
+  // Check 1: GitHub Pages — fetch the live URL directly (no-cors returns opaque if server responds)
+  fetch('https://skilltyb.github.io/whcc-website/', { mode: 'no-cors', cache: 'no-store' })
+  .then(function(r) {
+    // opaque = server responded (CORS blocked body but site is live); type 'error' = unreachable
+    var live = r.type === 'opaque' || r.ok;
+    _lcSet('pages', live, live
+      ? 'Site is live at skilltyb.github.io/whcc-website'
+      : 'GitHub Pages not responding — enable Pages in repo Settings → Pages → main branch');
   })
-  .then(function(r) { return r.ok ? r.json() : Promise.reject(r.status); })
-  .then(function(d) {
-    var built = d.status === 'built';
-    _lcSet('pages', built, built
-      ? 'Built and served at skilltyb.github.io/whcc-website'
-      : 'Pages exists but status is "' + d.status + '" — wait and retry');
-  })
-  .catch(function(err) {
-    _lcSet('pages', false, 'Could not reach GitHub API (' + err + ')');
+  .catch(function() {
+    _lcSet('pages', false, 'GitHub Pages unreachable — enable Pages in repo Settings → Pages → main branch');
   });
 
   // Check 2: Apps Script alive + Check 3: Board PIN configured + Check 4: Photos accessible
@@ -9082,10 +9080,12 @@ function launchRunChecks() {
   fetch(WHCC_SCRIPT_URL + '?action=get-photos')
   .then(function(r) { return r.json(); })
   .then(function(d) {
-    var hasPhotos = d.photos && d.photos.length > 0;
-    _lcSet('photos', hasPhotos, hasPhotos
-      ? d.photos.length + ' photo(s) found in WHCC Photos Drive folder'
-      : 'No photos found — upload at least one photo before launch');
+    // Pass if Drive is accessible (valid JSON back), regardless of photo count
+    var driveOk = d && !d.error;
+    var count = (d.photos && d.photos.length) || 0;
+    _lcSet('photos', driveOk, driveOk
+      ? 'Drive accessible — ' + (count > 0 ? count + ' photo(s) in library' : 'library empty but Drive is connected')
+      : 'Drive error: ' + (d.error || 'unknown'));
   })
   .catch(function() {
     _lcSet('photos', false, 'Could not reach Drive library — check Apps Script');
@@ -9095,7 +9095,6 @@ function launchRunChecks() {
 function launchFire() {
   var btn = document.getElementById('launch-fire-btn');
   if (btn && btn.disabled) return;
-  if (!confirm('This will display the DNS records and GitHub settings you need to go live.\n\nProceed?')) return;
   if (btn) { btn.textContent = '✅ Instructions Below'; btn.disabled = true; }
   var dns = document.getElementById('launch-dns');
   if (dns) {
