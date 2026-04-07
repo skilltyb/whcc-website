@@ -2810,16 +2810,24 @@ nav.staff-mode .nav-site-back{display:flex!important;}
               </div>
 
               <!-- Buttons -->
-              <div style="display:flex;flex-direction:column;align-items:center;gap:14px;">
-                <div style="display:flex;gap:16px;align-items:center;">
-                  <button onclick="launchRunChecks()" style="font-family:monospace;font-size:10px;letter-spacing:.2em;padding:10px 24px;background:transparent;border:1px solid rgba(220,80,80,.4);color:rgba(220,100,100,.7);cursor:pointer;text-transform:uppercase;transition:all .2s;border-radius:2px;">
-                    ▶ RUN CHECKS
-                  </button>
-                  <button id="launch-fire-btn" disabled onclick="launchFire()"
-                    style="font-family:monospace;font-size:13px;letter-spacing:.25em;padding:18px 44px;background:rgba(140,20,20,.35);border:2px solid rgba(200,50,50,.3);color:rgba(220,80,80,.4);cursor:not-allowed;text-transform:uppercase;transition:all .4s;border-radius:3px;">
-                    🚀 FIRE THE MISSILES
-                  </button>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:24px;">
+                <button onclick="launchRunChecks()" style="font-family:monospace;font-size:10px;letter-spacing:.2em;padding:10px 24px;background:transparent;border:1px solid rgba(220,80,80,.4);color:rgba(220,100,100,.7);cursor:pointer;text-transform:uppercase;transition:all .2s;border-radius:2px;">
+                  ▶ RUN CHECKS
+                </button>
+
+                <!-- Big Red Button -->
+                <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
+                  <div style="width:160px;height:50px;background:linear-gradient(to bottom,#2a0808,#1a0404);border-radius:8px 8px 4px 4px;box-shadow:0 6px 0 #0a0000,0 8px 12px rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;">
+                    <button id="launch-fire-btn" disabled onclick="launchFire()" title="Fire the Missiles"
+                      style="width:130px;height:130px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#5a0a0a,#2a0404);border:none;box-shadow:0 4px 0 #1a0000,inset 0 2px 4px rgba(255,255,255,.04);cursor:not-allowed;transition:all .4s;position:relative;top:-40px;outline:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;">
+                      <span style="font-size:28px;line-height:1;filter:grayscale(1);opacity:.35;transition:all .4s;">🚀</span>
+                      <span style="font-family:monospace;font-size:8px;letter-spacing:.2em;color:rgba(180,60,60,.4);text-transform:uppercase;transition:all .4s;">FIRE</span>
+                    </button>
+                  </div>
+                  <!-- Button label below the mount -->
+                  <div style="font-family:monospace;font-size:9px;letter-spacing:.2em;color:rgba(180,60,60,.35);text-transform:uppercase;margin-top:44px;">FIRE THE MISSILES</div>
                 </div>
+
                 <div id="launch-check-status" style="font-size:10px;color:rgba(220,100,100,.5);letter-spacing:.2em;min-height:14px;text-align:center;"></div>
               </div>
             </div>
@@ -9028,12 +9036,15 @@ function _launchEvaluate() {
   if (btn) {
     btn.disabled = !all;
     if (all) {
-      btn.style.background = 'rgba(180,30,30,.8)';
-      btn.style.borderColor = 'rgba(255,80,80,.8)';
-      btn.style.color = '#fff';
+      btn.style.background = 'radial-gradient(circle at 38% 32%, #ff4444, #aa0000)';
+      btn.style.boxShadow = '0 4px 0 #660000, 0 0 30px rgba(255,60,60,.6), 0 0 60px rgba(255,40,40,.3), inset 0 2px 6px rgba(255,255,255,.2)';
       btn.style.cursor = 'pointer';
       btn.style.animation = 'launch-pulse 1.6s ease-in-out infinite';
-      btn.style.textShadow = '0 0 12px rgba(255,100,100,.6)';
+      btn.querySelector('span:first-child').style.filter = 'none';
+      btn.querySelector('span:first-child').style.opacity = '1';
+      btn.querySelector('span:last-child').style.color = 'rgba(255,220,220,.9)';
+      btn.onmousedown = function(){ btn.style.top='-36px'; btn.style.boxShadow='0 1px 0 #440000,0 0 20px rgba(255,60,60,.4),inset 0 2px 4px rgba(0,0,0,.4)'; };
+      btn.onmouseup   = function(){ btn.style.top='-40px'; btn.style.boxShadow='0 4px 0 #660000,0 0 30px rgba(255,60,60,.6),0 0 60px rgba(255,40,40,.3),inset 0 2px 6px rgba(255,255,255,.2)'; };
     }
   }
   if (lbl) lbl.textContent = all ? '⚡  ALL SYSTEMS GO  —  LAUNCH AUTHORIZED' : '';
