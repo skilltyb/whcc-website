@@ -468,14 +468,7 @@ footer{background:var(--deep);padding:80px 80px 40px}
 .pair-history-body.open{display:block;}
 .pair-history-group{font-size:11px;color:rgba(245,240,232,.55);padding:2px 0;}
 .staff-tag{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
-.launch-check{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:rgba(0,0,0,.2);border:1px solid rgba(184,151,106,.1);border-radius:3px;}
-.launch-check.lc-pass{border-color:rgba(80,180,80,.3);background:rgba(40,100,40,.15);}
-.launch-check.lc-fail{border-color:rgba(200,80,80,.3);background:rgba(100,30,30,.15);}
-.lc-icon{font-size:16px;line-height:1;margin-top:1px;flex-shrink:0;width:20px;text-align:center;}
-.lc-body{flex:1;}
-.lc-name{font-size:12px;color:var(--cream);margin-bottom:2px;}
-.lc-detail{font-size:11px;color:rgba(245,240,232,.4);}
-#launch-fire-btn:not(:disabled){background:rgba(160,40,40,.7)!important;border-color:rgba(220,80,80,.6)!important;color:#fff!important;cursor:pointer!important;}
+@keyframes launch-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,60,60,.5),0 0 18px rgba(255,60,60,.3)}50%{box-shadow:0 0 0 10px rgba(255,60,60,0),0 0 32px rgba(255,80,80,.5)}}
 .staff-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;color:var(--cream);letter-spacing:.02em}
 .staff-title em{font-style:italic;color:var(--gold-lt);font-weight:300}
 .staff-views{display:flex;gap:6px;flex-wrap:wrap;width:100%;align-items:center;}
@@ -2774,58 +2767,61 @@ nav.staff-mode .nav-site-back{display:flex!important;}
         </div>
 
         <!-- ── LAUNCH SITE ── -->
-        <div id="sv-launch" style="display:none;max-width:680px;">
-          <div style="border:1px solid rgba(200,80,80,.35);border-radius:4px;padding:28px 32px;background:rgba(120,30,30,.12);">
-            <div style="display:flex;align-items:center;gap:14px;margin-bottom:6px;">
-              <div style="font-size:28px;">🚀</div>
-              <div>
-                <div style="font-size:15px;font-weight:600;color:var(--cream);letter-spacing:.04em;">FIRE THE MISSILES</div>
-                <div style="font-size:11px;color:rgba(245,240,232,.4);margin-top:2px;">Deploy westwoodhillscountryclub.com · All pre-flight checks must pass</div>
-              </div>
+        <div id="sv-launch" style="display:none;max-width:720px;">
+          <div style="background:linear-gradient(160deg,#0a0404 0%,#1a0606 100%);border:1px solid rgba(220,60,60,.45);border-radius:6px;overflow:hidden;font-family:monospace;">
+            <!-- Header strip -->
+            <div style="background:rgba(200,40,40,.18);border-bottom:1px solid rgba(220,60,60,.3);padding:10px 24px;display:flex;justify-content:space-between;align-items:center;">
+              <div style="font-size:9px;color:rgba(220,100,100,.6);letter-spacing:.35em;">WHCC · LAUNCH CONTROL · AUTHORIZED PERSONNEL ONLY</div>
+              <div style="font-size:9px;color:rgba(220,100,100,.45);letter-spacing:.1em;" id="launch-clock">--:--:--</div>
             </div>
 
-            <div style="height:1px;background:rgba(200,80,80,.2);margin:20px 0;"></div>
+            <div style="padding:44px 48px 40px;">
+              <!-- Rocket + title -->
+              <div style="text-align:center;margin-bottom:40px;">
+                <div style="font-size:80px;line-height:1;margin-bottom:14px;filter:drop-shadow(0 0 18px rgba(255,80,80,.5));">🚀</div>
+                <div style="font-size:22px;font-weight:700;color:#ff5555;letter-spacing:.35em;margin-bottom:8px;text-shadow:0 0 20px rgba(255,60,60,.5);">FIRE THE MISSILES</div>
+                <div style="font-size:10px;color:rgba(220,100,100,.5);letter-spacing:.25em;">DEPLOY · WESTWOODHILLSCOUNTRYCLUB.COM</div>
+              </div>
 
-            <!-- Pre-flight checklist -->
-            <div style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(245,240,232,.4);margin-bottom:14px;">Pre-Flight Checklist</div>
-            <div id="launch-checks" style="display:grid;gap:10px;margin-bottom:22px;">
-              <div class="launch-check" id="lc-pages">
-                <div class="lc-icon" id="lci-pages">⏳</div>
-                <div class="lc-body">
-                  <div class="lc-name">GitHub Pages is live</div>
-                  <div class="lc-detail" id="lcd-pages">Checking skilltyb.github.io/whcc-website…</div>
+              <!-- Status board -->
+              <div style="background:rgba(0,0,0,.5);border:1px solid rgba(220,60,60,.2);border-radius:4px;padding:18px 22px;margin-bottom:32px;">
+                <div style="font-size:9px;color:rgba(220,80,80,.5);letter-spacing:.35em;margin-bottom:16px;">■ SYSTEM STATUS</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;margin-bottom:16px;">
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <div id="lci-pages" style="width:11px;height:11px;border-radius:50%;background:#333;box-shadow:none;flex-shrink:0;transition:all .4s;"></div>
+                    <span style="font-size:11px;color:rgba(245,240,232,.5);">GitHub Pages</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <div id="lci-script" style="width:11px;height:11px;border-radius:50%;background:#333;box-shadow:none;flex-shrink:0;transition:all .4s;"></div>
+                    <span style="font-size:11px;color:rgba(245,240,232,.5);">Apps Script</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <div id="lci-pin" style="width:11px;height:11px;border-radius:50%;background:#333;box-shadow:none;flex-shrink:0;transition:all .4s;"></div>
+                    <span style="font-size:11px;color:rgba(245,240,232,.5);">Board PIN</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <div id="lci-photos" style="width:11px;height:11px;border-radius:50%;background:#333;box-shadow:none;flex-shrink:0;transition:all .4s;"></div>
+                    <span style="font-size:11px;color:rgba(245,240,232,.5);">Photo Library</span>
+                  </div>
+                </div>
+                <div style="border-top:1px solid rgba(220,60,60,.15);padding-top:12px;">
+                  <div id="launch-status-log" style="font-size:10px;color:rgba(220,100,100,.5);letter-spacing:.05em;min-height:14px;">_ awaiting check sequence</div>
                 </div>
               </div>
-              <div class="launch-check" id="lc-script">
-                <div class="lc-icon" id="lci-script">⏳</div>
-                <div class="lc-body">
-                  <div class="lc-name">Apps Script is responding</div>
-                  <div class="lc-detail" id="lcd-script">Checking web app endpoint…</div>
-                </div>
-              </div>
-              <div class="launch-check" id="lc-pin">
-                <div class="lc-icon" id="lci-pin">⏳</div>
-                <div class="lc-body">
-                  <div class="lc-name">Board PIN is configured</div>
-                  <div class="lc-detail" id="lcd-pin">Checking Settings sheet…</div>
-                </div>
-              </div>
-              <div class="launch-check" id="lc-photos">
-                <div class="lc-icon" id="lci-photos">⏳</div>
-                <div class="lc-body">
-                  <div class="lc-name">Drive photo library is accessible</div>
-                  <div class="lc-detail" id="lcd-photos">Checking WHCC Photos folder…</div>
-                </div>
-              </div>
-            </div>
 
-            <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
-              <button class="btn-g" style="font-size:11px;padding:10px 20px;" onclick="launchRunChecks()">Run Pre-Flight Checks</button>
-              <button id="launch-fire-btn" disabled onclick="launchFire()"
-                style="font-size:12px;letter-spacing:.15em;padding:12px 28px;background:rgba(160,40,40,.25);border:1px solid rgba(200,80,80,.4);color:rgba(220,120,120,.5);cursor:not-allowed;font-family:'Raleway',sans-serif;text-transform:uppercase;transition:all .3s;">
-                🚀 Fire the Missiles
-              </button>
-              <div id="launch-check-status" style="font-size:11px;color:rgba(245,240,232,.35);"></div>
+              <!-- Buttons -->
+              <div style="display:flex;flex-direction:column;align-items:center;gap:14px;">
+                <div style="display:flex;gap:16px;align-items:center;">
+                  <button onclick="launchRunChecks()" style="font-family:monospace;font-size:10px;letter-spacing:.2em;padding:10px 24px;background:transparent;border:1px solid rgba(220,80,80,.4);color:rgba(220,100,100,.7);cursor:pointer;text-transform:uppercase;transition:all .2s;border-radius:2px;">
+                    ▶ RUN CHECKS
+                  </button>
+                  <button id="launch-fire-btn" disabled onclick="launchFire()"
+                    style="font-family:monospace;font-size:13px;letter-spacing:.25em;padding:18px 44px;background:rgba(140,20,20,.35);border:2px solid rgba(200,50,50,.3);color:rgba(220,80,80,.4);cursor:not-allowed;text-transform:uppercase;transition:all .4s;border-radius:3px;">
+                    🚀 FIRE THE MISSILES
+                  </button>
+                </div>
+                <div id="launch-check-status" style="font-size:10px;color:rgba(220,100,100,.5);letter-spacing:.2em;min-height:14px;text-align:center;"></div>
+              </div>
             </div>
           </div>
 
@@ -5210,6 +5206,7 @@ function staffView(view, btn, useSecondary) {
   if (view === 'express')       { cmsExpressLoad(); }
   if (view === 'stats')         { cmsStatsLoad(); }
   if (view === 'faq')           { cmsFaqLoad(); }
+  if (view === 'launch')        { _launchStartClock(); }
   // Hide right panel for full-width views
   var rightPanel = document.getElementById('staff-right');
   if (rightPanel) rightPanel.style.display = (view === 'registrations' || view === 'pairings' || view === 'launch') ? 'none' : 'flex';
@@ -8986,25 +8983,40 @@ function pairRunTest() {
 // LAUNCH SITE — PRE-FLIGHT CHECKS
 // ═══════════════════════════════════════
 var _launchCheckResults = { pages: false, script: false, pin: false, photos: false };
+var _launchClockInterval = null;
+
+function _launchStartClock() {
+  var el = document.getElementById('launch-clock');
+  if (!el) return;
+  if (_launchClockInterval) clearInterval(_launchClockInterval);
+  _launchClockInterval = setInterval(function() {
+    var now = new Date();
+    el.textContent = now.toLocaleTimeString('en-US', {hour12:false});
+  }, 1000);
+}
+
+function _lcDot(id, color, glow) {
+  var dot = document.getElementById('lci-' + id);
+  if (!dot) return;
+  dot.style.background = color;
+  dot.style.boxShadow = glow ? '0 0 8px ' + color + ', 0 0 16px ' + color + '66' : 'none';
+}
+
+function _lcLog(msg) {
+  var el = document.getElementById('launch-status-log');
+  if (el) el.textContent = '> ' + msg;
+}
 
 function _lcSet(id, pass, detail) {
-  var el = document.getElementById('lc-' + id);
-  var icon = document.getElementById('lci-' + id);
-  var det  = document.getElementById('lcd-' + id);
-  if (el)   { el.classList.toggle('lc-pass', pass); el.classList.toggle('lc-fail', !pass); }
-  if (icon) icon.textContent = pass ? '✅' : '❌';
-  if (det)  det.textContent  = detail;
+  _lcDot(id, pass ? '#4caf50' : '#e53935', true);
+  _lcLog(detail);
   _launchCheckResults[id] = pass;
   _launchEvaluate();
 }
 
 function _lcPending(id, detail) {
-  var el   = document.getElementById('lc-' + id);
-  var icon = document.getElementById('lci-' + id);
-  var det  = document.getElementById('lcd-' + id);
-  if (el)   { el.classList.remove('lc-pass','lc-fail'); }
-  if (icon) icon.textContent = '⏳';
-  if (det)  det.textContent  = detail;
+  _lcDot(id, '#f0a020', true);
+  _lcLog(detail);
   _launchCheckResults[id] = false;
   _launchEvaluate();
 }
@@ -9013,8 +9025,18 @@ function _launchEvaluate() {
   var all = Object.values(_launchCheckResults).every(Boolean);
   var btn = document.getElementById('launch-fire-btn');
   var lbl = document.getElementById('launch-check-status');
-  if (btn) btn.disabled = !all;
-  if (lbl) lbl.textContent = all ? 'All checks passed — ready to launch.' : '';
+  if (btn) {
+    btn.disabled = !all;
+    if (all) {
+      btn.style.background = 'rgba(180,30,30,.8)';
+      btn.style.borderColor = 'rgba(255,80,80,.8)';
+      btn.style.color = '#fff';
+      btn.style.cursor = 'pointer';
+      btn.style.animation = 'launch-pulse 1.6s ease-in-out infinite';
+      btn.style.textShadow = '0 0 12px rgba(255,100,100,.6)';
+    }
+  }
+  if (lbl) lbl.textContent = all ? '⚡  ALL SYSTEMS GO  —  LAUNCH AUTHORIZED' : '';
 }
 
 function launchRunChecks() {
