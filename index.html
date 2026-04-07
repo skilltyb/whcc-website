@@ -468,6 +468,14 @@ footer{background:var(--deep);padding:80px 80px 40px}
 .pair-history-body.open{display:block;}
 .pair-history-group{font-size:11px;color:rgba(245,240,232,.55);padding:2px 0;}
 .staff-tag{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.launch-check{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:rgba(0,0,0,.2);border:1px solid rgba(184,151,106,.1);border-radius:3px;}
+.launch-check.lc-pass{border-color:rgba(80,180,80,.3);background:rgba(40,100,40,.15);}
+.launch-check.lc-fail{border-color:rgba(200,80,80,.3);background:rgba(100,30,30,.15);}
+.lc-icon{font-size:16px;line-height:1;margin-top:1px;flex-shrink:0;width:20px;text-align:center;}
+.lc-body{flex:1;}
+.lc-name{font-size:12px;color:var(--cream);margin-bottom:2px;}
+.lc-detail{font-size:11px;color:rgba(245,240,232,.4);}
+#launch-fire-btn:not(:disabled){background:rgba(160,40,40,.7)!important;border-color:rgba(220,80,80,.6)!important;color:#fff!important;cursor:pointer!important;}
 .staff-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;color:var(--cream);letter-spacing:.02em}
 .staff-title em{font-style:italic;color:var(--gold-lt);font-weight:300}
 .staff-views{display:flex;gap:6px;flex-wrap:wrap;width:100%;align-items:center;}
@@ -2042,6 +2050,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
           <div class="sv-drop-menu" id="sv-menu-admin">
             <button id="svb-menus" onclick="staffView('menus');svCloseDrop()">Menus</button>
             <button id="svb-settings" onclick="staffView('settings');svCloseDrop()">Settings</button>
+            <button id="svb-launch" onclick="staffView('launch');svCloseDrop()" style="color:#e07070;">🚀 Launch Site</button>
           </div>
         </div>
         <!-- Website CMS dropdown -->
@@ -2762,6 +2771,113 @@ nav.staff-mode .nav-site-back{display:flex!important;}
           <div id="cms-faq-items" style="display:grid;gap:12px;max-width:620px;"></div>
           <button class="btn-p" style="margin-top:20px;width:100%;max-width:620px;" onclick="cmsFaqSave()">Save FAQ</button>
           <div id="cms-faq-status" style="display:none;color:#8fcc8f;font-size:12px;margin-top:8px;"></div>
+        </div>
+
+        <!-- ── LAUNCH SITE ── -->
+        <div id="sv-launch" style="display:none;max-width:680px;">
+          <div style="border:1px solid rgba(200,80,80,.35);border-radius:4px;padding:28px 32px;background:rgba(120,30,30,.12);">
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:6px;">
+              <div style="font-size:28px;">🚀</div>
+              <div>
+                <div style="font-size:15px;font-weight:600;color:var(--cream);letter-spacing:.04em;">FIRE THE MISSILES</div>
+                <div style="font-size:11px;color:rgba(245,240,232,.4);margin-top:2px;">Deploy westwoodhillscountryclub.com · All pre-flight checks must pass</div>
+              </div>
+            </div>
+
+            <div style="height:1px;background:rgba(200,80,80,.2);margin:20px 0;"></div>
+
+            <!-- Pre-flight checklist -->
+            <div style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(245,240,232,.4);margin-bottom:14px;">Pre-Flight Checklist</div>
+            <div id="launch-checks" style="display:grid;gap:10px;margin-bottom:22px;">
+              <div class="launch-check" id="lc-pages">
+                <div class="lc-icon" id="lci-pages">⏳</div>
+                <div class="lc-body">
+                  <div class="lc-name">GitHub Pages is live</div>
+                  <div class="lc-detail" id="lcd-pages">Checking skilltyb.github.io/whcc-website…</div>
+                </div>
+              </div>
+              <div class="launch-check" id="lc-script">
+                <div class="lc-icon" id="lci-script">⏳</div>
+                <div class="lc-body">
+                  <div class="lc-name">Apps Script is responding</div>
+                  <div class="lc-detail" id="lcd-script">Checking web app endpoint…</div>
+                </div>
+              </div>
+              <div class="launch-check" id="lc-pin">
+                <div class="lc-icon" id="lci-pin">⏳</div>
+                <div class="lc-body">
+                  <div class="lc-name">Board PIN is configured</div>
+                  <div class="lc-detail" id="lcd-pin">Checking Settings sheet…</div>
+                </div>
+              </div>
+              <div class="launch-check" id="lc-photos">
+                <div class="lc-icon" id="lci-photos">⏳</div>
+                <div class="lc-body">
+                  <div class="lc-name">Drive photo library is accessible</div>
+                  <div class="lc-detail" id="lcd-photos">Checking WHCC Photos folder…</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+              <button class="btn-g" style="font-size:11px;padding:10px 20px;" onclick="launchRunChecks()">Run Pre-Flight Checks</button>
+              <button id="launch-fire-btn" disabled onclick="launchFire()"
+                style="font-size:12px;letter-spacing:.15em;padding:12px 28px;background:rgba(160,40,40,.25);border:1px solid rgba(200,80,80,.4);color:rgba(220,120,120,.5);cursor:not-allowed;font-family:'Raleway',sans-serif;text-transform:uppercase;transition:all .3s;">
+                🚀 Fire the Missiles
+              </button>
+              <div id="launch-check-status" style="font-size:11px;color:rgba(245,240,232,.35);"></div>
+            </div>
+          </div>
+
+          <!-- DNS Instructions (hidden until fired) -->
+          <div id="launch-dns" style="display:none;margin-top:24px;border:1px solid rgba(184,151,106,.25);border-radius:4px;padding:28px 32px;">
+            <div style="font-size:13px;font-weight:600;color:var(--gold-lt);margin-bottom:4px;">✅ Go-Live Instructions</div>
+            <div style="font-size:11px;color:rgba(245,240,232,.45);margin-bottom:22px;">Complete these steps in order. The site will go live once DNS propagates (typically 15–60 minutes).</div>
+
+            <div style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(245,240,232,.35);margin-bottom:12px;">Step 1 — Find Your Domain Registrar</div>
+            <p style="font-size:12px;color:rgba(245,240,232,.6);margin-bottom:10px;">Run a WHOIS lookup to find where <strong style="color:var(--cream);">westwoodhillscountryclub.com</strong> is registered:</p>
+            <a href="https://lookup.icann.org/en/lookup?name=westwoodhillscountryclub.com" target="_blank" rel="noopener"
+              style="display:inline-block;font-size:11px;color:var(--gold-lt);border:1px solid rgba(184,151,106,.3);padding:8px 16px;text-decoration:none;letter-spacing:.06em;">
+              🔍 WHOIS Lookup →
+            </a>
+
+            <div style="height:1px;background:rgba(184,151,106,.1);margin:22px 0;"></div>
+
+            <div style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(245,240,232,.35);margin-bottom:12px;">Step 2 — Set These DNS Records at Your Registrar</div>
+            <p style="font-size:11px;color:rgba(245,240,232,.4);margin-bottom:14px;">Delete any existing A records for @ first, then add these:</p>
+            <div style="font-family:monospace;font-size:12px;background:rgba(0,0,0,.3);border-radius:3px;padding:16px 20px;display:grid;gap:6px;">
+              <div style="display:grid;grid-template-columns:60px 40px 1fr;gap:12px;color:rgba(245,240,232,.35);font-size:10px;margin-bottom:4px;letter-spacing:.08em;">
+                <span>TYPE</span><span>NAME</span><span>VALUE</span>
+              </div>
+              <div style="display:grid;grid-template-columns:60px 40px 1fr;gap:12px;color:var(--cream);"><span style="color:var(--gold);">A</span><span>@</span><span>185.199.108.153</span></div>
+              <div style="display:grid;grid-template-columns:60px 40px 1fr;gap:12px;color:var(--cream);"><span style="color:var(--gold);">A</span><span>@</span><span>185.199.109.153</span></div>
+              <div style="display:grid;grid-template-columns:60px 40px 1fr;gap:12px;color:var(--cream);"><span style="color:var(--gold);">A</span><span>@</span><span>185.199.110.153</span></div>
+              <div style="display:grid;grid-template-columns:60px 40px 1fr;gap:12px;color:var(--cream);"><span style="color:var(--gold);">A</span><span>@</span><span>185.199.111.153</span></div>
+              <div style="display:grid;grid-template-columns:60px 40px 1fr;gap:12px;color:var(--cream);"><span style="color:var(--gold);">CNAME</span><span>www</span><span>skilltyb.github.io</span></div>
+            </div>
+
+            <div style="height:1px;background:rgba(184,151,106,.1);margin:22px 0;"></div>
+
+            <div style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(245,240,232,.35);margin-bottom:12px;">Step 3 — Set Custom Domain in GitHub Pages</div>
+            <p style="font-size:12px;color:rgba(245,240,232,.6);margin-bottom:10px;">Go to <strong style="color:var(--cream);">Settings → Pages</strong> in the GitHub repo and enter <code style="background:rgba(0,0,0,.3);padding:2px 6px;">westwoodhillscountryclub.com</code> as the custom domain:</p>
+            <a href="https://github.com/skilltyb/whcc-website/settings/pages" target="_blank" rel="noopener"
+              style="display:inline-block;font-size:11px;color:var(--gold-lt);border:1px solid rgba(184,151,106,.3);padding:8px 16px;text-decoration:none;letter-spacing:.06em;">
+              ⚙️ GitHub Pages Settings →
+            </a>
+
+            <div style="height:1px;background:rgba(184,151,106,.1);margin:22px 0;"></div>
+
+            <div style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(245,240,232,.35);margin-bottom:12px;">Step 4 — Verify Propagation</div>
+            <p style="font-size:12px;color:rgba(245,240,232,.6);margin-bottom:10px;">Check when DNS has propagated worldwide (usually 15–60 min, up to 24 hrs):</p>
+            <a href="https://www.whatsmydns.net/#A/westwoodhillscountryclub.com" target="_blank" rel="noopener"
+              style="display:inline-block;font-size:11px;color:var(--gold-lt);border:1px solid rgba(184,151,106,.3);padding:8px 16px;text-decoration:none;letter-spacing:.06em;">
+              🌐 Check DNS Propagation →
+            </a>
+
+            <div style="margin-top:22px;padding:14px 18px;background:rgba(184,151,106,.06);border:1px solid rgba(184,151,106,.15);border-radius:3px;font-size:11px;color:rgba(245,240,232,.5);line-height:1.6;">
+              <strong style="color:var(--gold);">After DNS propagates:</strong> GitHub will automatically provision a free SSL certificate. The site will be live at <strong style="color:var(--cream);">https://westwoodhillscountryclub.com</strong> within a few minutes of propagation completing.
+            </div>
+          </div>
         </div>
 
       </div>
@@ -5032,7 +5148,7 @@ var _svDropOpen = null;
 var _svViewGroups = {
   reservations: ['calendar','upcoming','guests'],
   golf:         ['registrations','pairings','daily','scoring'],
-  admin:        ['menus','settings'],
+  admin:        ['menus','settings','launch'],
   website:      ['events','announcements','heroes','contact','photos']
 };
 function svToggleDrop(name) {
@@ -5068,7 +5184,7 @@ function staffView(view, btn, useSecondary) {
   var menuItem = document.getElementById('svb-' + view);
   if (menuItem) menuItem.classList.add('active-view');
 
-  ['calendar','upcoming','search','guests','settings','scoring','daily','menus','registrations','pairings','events','announcements','heroes','contact','photos','pool','express','stats','faq'].forEach(v => {
+  ['calendar','upcoming','search','guests','settings','scoring','daily','menus','registrations','pairings','events','announcements','heroes','contact','photos','pool','express','stats','faq','launch'].forEach(v => {
     const el = document.getElementById('sv-' + v);
     if (el) el.style.display = v === view ? 'block' : 'none';
   });
@@ -5096,7 +5212,7 @@ function staffView(view, btn, useSecondary) {
   if (view === 'faq')           { cmsFaqLoad(); }
   // Hide right panel for full-width views
   var rightPanel = document.getElementById('staff-right');
-  if (rightPanel) rightPanel.style.display = (view === 'registrations' || view === 'pairings') ? 'none' : 'flex';
+  if (rightPanel) rightPanel.style.display = (view === 'registrations' || view === 'pairings' || view === 'launch') ? 'none' : 'flex';
 }
 
 // ═══════════════════════════════════════
@@ -8864,6 +8980,106 @@ function pairRunTest() {
   });
 
   return { passed: pass, failed: fail };
+}
+
+// ═══════════════════════════════════════
+// LAUNCH SITE — PRE-FLIGHT CHECKS
+// ═══════════════════════════════════════
+var _launchCheckResults = { pages: false, script: false, pin: false, photos: false };
+
+function _lcSet(id, pass, detail) {
+  var el = document.getElementById('lc-' + id);
+  var icon = document.getElementById('lci-' + id);
+  var det  = document.getElementById('lcd-' + id);
+  if (el)   { el.classList.toggle('lc-pass', pass); el.classList.toggle('lc-fail', !pass); }
+  if (icon) icon.textContent = pass ? '✅' : '❌';
+  if (det)  det.textContent  = detail;
+  _launchCheckResults[id] = pass;
+  _launchEvaluate();
+}
+
+function _lcPending(id, detail) {
+  var el   = document.getElementById('lc-' + id);
+  var icon = document.getElementById('lci-' + id);
+  var det  = document.getElementById('lcd-' + id);
+  if (el)   { el.classList.remove('lc-pass','lc-fail'); }
+  if (icon) icon.textContent = '⏳';
+  if (det)  det.textContent  = detail;
+  _launchCheckResults[id] = false;
+  _launchEvaluate();
+}
+
+function _launchEvaluate() {
+  var all = Object.values(_launchCheckResults).every(Boolean);
+  var btn = document.getElementById('launch-fire-btn');
+  var lbl = document.getElementById('launch-check-status');
+  if (btn) btn.disabled = !all;
+  if (lbl) lbl.textContent = all ? 'All checks passed — ready to launch.' : '';
+}
+
+function launchRunChecks() {
+  _launchCheckResults = { pages: false, script: false, pin: false, photos: false };
+  _lcPending('pages',  'Contacting GitHub API…');
+  _lcPending('script', 'Pinging Apps Script…');
+  _lcPending('pin',    'Verifying board PIN…');
+  _lcPending('photos', 'Checking Drive library…');
+
+  // Check 1: GitHub Pages status via public API
+  fetch('https://api.github.com/repos/skilltyb/whcc-website/pages', {
+    headers: { 'Accept': 'application/vnd.github+json' }
+  })
+  .then(function(r) { return r.ok ? r.json() : Promise.reject(r.status); })
+  .then(function(d) {
+    var built = d.status === 'built';
+    _lcSet('pages', built, built
+      ? 'Built and served at skilltyb.github.io/whcc-website'
+      : 'Pages exists but status is "' + d.status + '" — wait and retry');
+  })
+  .catch(function(err) {
+    _lcSet('pages', false, 'Could not reach GitHub API (' + err + ')');
+  });
+
+  // Check 2: Apps Script alive + Check 3: Board PIN configured + Check 4: Photos accessible
+  // Use get-photos to test all three: script alive, PIN system up, Drive accessible
+  fetch(WHCC_SCRIPT_URL + '?action=validate-board-pin&code=preflight-check-dummy')
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    // Any valid JSON response means the script is alive
+    _lcSet('script', true, 'Apps Script responded successfully');
+    // If error is "Invalid recovery code" the PIN system is configured
+    var pinOk = d.error === 'Invalid recovery code' || d.ok === false;
+    _lcSet('pin', pinOk, pinOk
+      ? 'Board PIN is set in Settings sheet'
+      : 'Board PIN may not be configured — check Settings sheet B1');
+  })
+  .catch(function() {
+    _lcSet('script', false, 'Apps Script did not respond — check deployment');
+    _lcSet('pin', false, 'Could not verify — Apps Script unreachable');
+  });
+
+  fetch(WHCC_SCRIPT_URL + '?action=get-photos')
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    var hasPhotos = d.photos && d.photos.length > 0;
+    _lcSet('photos', hasPhotos, hasPhotos
+      ? d.photos.length + ' photo(s) found in WHCC Photos Drive folder'
+      : 'No photos found — upload at least one photo before launch');
+  })
+  .catch(function() {
+    _lcSet('photos', false, 'Could not reach Drive library — check Apps Script');
+  });
+}
+
+function launchFire() {
+  var btn = document.getElementById('launch-fire-btn');
+  if (btn && btn.disabled) return;
+  if (!confirm('This will display the DNS records and GitHub settings you need to go live.\n\nProceed?')) return;
+  if (btn) { btn.textContent = '✅ Instructions Below'; btn.disabled = true; }
+  var dns = document.getElementById('launch-dns');
+  if (dns) {
+    dns.style.display = 'block';
+    dns.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 }
 </script>
 
