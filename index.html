@@ -819,7 +819,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 .cf-i:focus,.cf-s:focus,.cf-t:focus{border-color:var(--gold)}
 .cf-t{resize:vertical;min-height:90px}
 .cf-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.map-ph{background:var(--forest);height:260px;display:flex;align-items:center;justify-content:center;color:rgba(184,151,106,.3);font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;margin-top:44px}
+.map-ph{background:var(--forest);height:120px;display:flex;align-items:center;justify-content:center;margin-top:44px;border-radius:2px;}
 
 /* ── RESPONSIVE ── */
 @media(max-width:1024px){
@@ -1463,7 +1463,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
               <option value="">Select a time</option>
               <!-- Hoover's times (default) -->
               <optgroup label="Evening" id="res-time-hoovers">
-                <option>5:00 PM</option><option>5:30 PM</option><option>6:00 PM</option><option>6:30 PM</option><option>7:00 PM</option><option>7:30 PM</option><option>8:00 PM</option><option>8:30 PM</option>
+                <option>5:00 PM</option><option>5:30 PM</option><option>6:00 PM</option><option>6:30 PM</option><option>7:00 PM</option><option>7:30 PM</option><option>8:00 PM</option>
               </optgroup>
               <!-- Westwood Grill times (hidden by default) -->
               <optgroup label="Lunch" id="res-time-grille-lunch" style="display:none;">
@@ -1588,47 +1588,58 @@ nav.staff-mode .nav-site-back{display:flex!important;}
   <div class="pool-split">
     <div class="pool-vis fade-up" data-wh-photo="pool_main"></div>
     <div class="pool-text fade-up d2">
-      <p class="eyebrow">The Facilities</p>
-      <h2 class="sec-title">More than <em>just a pool</em></h2>
-      <p class="sec-body full">Westwood Hills' aquatics complex is the premier summer destination for families in Poplar Bluff. With a main competition-size pool, a zero-entry children's area, and dedicated lap lanes, there's something for every swimmer. Sun decks, private cabanas, and a poolside snack bar make it easy to spend the whole day.</p>
-      <div class="pool-feats">
-        <div class="pf-item"><div class="pf-name">Main Pool</div><div class="pf-sub">25-yard competition size</div></div>
-        <div class="pf-item"><div class="pf-name">Zero-Entry Kids Area</div><div class="pf-sub">Splash features, waterfall</div></div>
-        <div class="pf-item"><div class="pf-name">Lap Lanes</div><div class="pf-sub">4 dedicated lap lanes</div></div>
-        <div class="pf-item"><div class="pf-name">Sun Decks</div><div class="pf-sub">Lounge chairs &amp; umbrellas</div></div>
-        <div class="pf-item"><div class="pf-name">Snack Bar</div><div class="pf-sub">Food &amp; beverages poolside</div></div>
-        <div class="pf-item"><div class="pf-name">Private Cabanas</div><div class="pf-sub">Reserve for the day</div></div>
+      <p class="eyebrow">Your summer, simplified</p>
+      <h2 class="sec-title">Where little ones <em>love to be</em></h2>
+      <p class="sec-body full">Grab your sunscreen and your littles — the Westwood Hills pool is the coolest spot in Poplar Bluff all summer long. With a professional lifeguard on duty and a welcoming, community atmosphere, it's the kind of place where kids make memories and moms finally get to exhale.</p>
+      <div class="pool-feats" id="pool-hours" style="margin-top:28px;">
+        <div class="pf-item"><div class="pf-name">Tuesday – Sunday</div><div class="pf-sub">Open 11:00 AM – 7:00 PM</div></div>
+        <div class="pf-item"><div class="pf-name">Memorial Day</div><div class="pf-sub">through Labor Day</div></div>
       </div>
     </div>
   </div>
 
-  <div class="section">
-    <p class="eyebrow fade-up">Swimming Programs</p>
-    <h2 class="sec-title fade-up d1">Learn, compete, <em>thrive</em></h2>
-    <div class="programs-grid">
-      <div class="prog-card fade-up d1"><span class="prog-age">Ages 3–6</span><h3 class="prog-name">Parent &amp; Tot</h3><p class="prog-desc">Gentle water introduction for our youngest members. Parent-accompanied classes that build water confidence in a safe, fun environment.</p></div>
-      <div class="prog-card fade-up d2"><span class="prog-age">Ages 5–12</span><h3 class="prog-name">Learn to Swim</h3><p class="prog-desc">Six progressive skill levels from beginner water acclimation through butterfly stroke mastery. Classes run in 2-week sessions all summer.</p></div>
-      <div class="prog-card fade-up d3"><span class="prog-age">Ages 8–18</span><h3 class="prog-name">Westwood Wahoos</h3><p class="prog-desc">Competitive swim team in the SEMO Swim League. Practice Mon–Fri mornings with regular dual meets throughout the summer.</p></div>
-      <div class="prog-card fade-up d1"><span class="prog-age">All Ages</span><h3 class="prog-name">Adult Lap Swim</h3><p class="prog-desc">Dedicated early-morning and evening lap swim sessions. Structured programming and open swim available throughout the week.</p></div>
-      <div class="prog-card fade-up d2"><span class="prog-age">Adults</span><h3 class="prog-name">Water Aerobics</h3><p class="prog-desc">Low-impact group fitness classes in the pool — great for cardio, flexibility, and strength. Offered multiple times per week.</p></div>
-      <div class="prog-card fade-up d3"><span class="prog-age">Ages 15+</span><h3 class="prog-name">Lifeguard Certification</h3><p class="prog-desc">American Red Cross lifeguard certification courses offered each spring. A great opportunity for teens to earn qualifications at the club.</p></div>
+  <!-- Family highlights -->
+  <div class="section" style="background:var(--sand);padding:80px 80px 60px;">
+    <p class="eyebrow fade-up" style="color:var(--forest)">A place to belong</p>
+    <h2 class="sec-title fade-up d1" style="color:var(--forest)">Everything a <em>summer should be</em></h2>
+    <div class="fade-up d2" style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:48px;">
+      <div style="text-align:center;padding:32px 24px;background:#fff;border-radius:8px;box-shadow:0 2px 16px rgba(0,0,0,.06);">
+        <div style="font-size:2rem;margin-bottom:12px;">☀️</div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--forest);margin:0 0 8px;">Endless Sunny Days</p>
+        <p style="font-size:.85rem;color:var(--muted-text);line-height:1.7;margin:0;">Six days a week of sparkling water, warm sun, and the kind of lazy afternoon every child deserves. Open Tuesday through Sunday all season long.</p>
+      </div>
+      <div style="text-align:center;padding:32px 24px;background:#fff;border-radius:8px;box-shadow:0 2px 16px rgba(0,0,0,.06);">
+        <div style="font-size:2rem;margin-bottom:12px;">🎉</div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--forest);margin:0 0 8px;">Private Pool Parties</p>
+        <p style="font-size:.85rem;color:var(--muted-text);line-height:1.7;margin:0;">Make your child's birthday unforgettable. Members can reserve the pool exclusively — call the Pro Shop at (573) 785-5253 to plan the perfect party.</p>
+      </div>
+      <div style="text-align:center;padding:32px 24px;background:#fff;border-radius:8px;box-shadow:0 2px 16px rgba(0,0,0,.06);">
+        <div style="font-size:2rem;margin-bottom:12px;">🍽️</div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--forest);margin:0 0 8px;">Dine Right Poolside</p>
+        <p style="font-size:.85rem;color:var(--muted-text);line-height:1.7;margin:0;">No packing a cooler. Enjoy fresh food and cold drinks from the Westwood Grill — all charged conveniently to your member account.</p>
+      </div>
+    </div>
+    <!-- Discreet pool policies link -->
+    <div class="fade-up d3" style="text-align:center;margin-top:48px;">
+      <button onclick="document.getElementById('pool-policies').style.display=document.getElementById('pool-policies').style.display==='none'?'block':'none'" style="background:none;border:none;color:var(--forest);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;opacity:.5;text-decoration:underline;text-underline-offset:4px;">Pool Policies</button>
+      <div id="pool-policies" style="display:none;max-width:680px;margin:28px auto 0;text-align:left;background:rgba(26,43,31,.06);border-radius:6px;padding:28px 32px;">
+        <p style="font-size:.82rem;color:var(--forest);line-height:1.8;margin:0 0 10px;"><strong>Lifeguard on duty</strong> Tuesday–Sunday, 11 AM–7 PM. Pool is closed when lifeguard is off duty or on break.</p>
+        <p style="font-size:.82rem;color:var(--forest);line-height:1.8;margin:0 0 10px;"><strong>Children under 12</strong> must be accompanied by a parent or adult at all times.</p>
+        <p style="font-size:.82rem;color:var(--forest);line-height:1.8;margin:0 0 10px;"><strong>Guest policy:</strong> Local guests (Butler &amp; surrounding counties) may swim Wednesdays with a $2 fee. Non-local guests may swim Tuesday–Sunday with a $2 fee. Grandchildren and nannies are always free.</p>
+        <p style="font-size:.82rem;color:var(--forest);line-height:1.8;margin:0 0 10px;"><strong>Pool rentals</strong> are available in 2-hour increments for $100 (up to 25 guests). Contact the Pro Shop for details.</p>
+        <p style="font-size:.82rem;color:var(--forest);line-height:1.8;margin:0;">All food and beverage must be purchased through the WHCC Restaurant. Bathing attire is not permitted in the main Clubhouse.</p>
+      </div>
     </div>
   </div>
 
-  <div class="section sand" id="pool-hours">
-    <p class="eyebrow fade-up">Pool Hours</p>
-    <h2 class="sec-title fade-up d1" id="pool-season-label">Open <em>Memorial Day</em> through Labor Day</h2>
-    <div class="ph-grid fade-up d2" id="pool-hours-grid">
-      <div class="ph-cell"><div class="ph-day">Monday</div><div class="ph-time">6–9 AM / 12–8 PM</div><div class="ph-note">Lap swim + Open swim</div></div>
-      <div class="ph-cell"><div class="ph-day">Tue – Thu</div><div class="ph-time">6–9 AM / 12–8 PM</div><div class="ph-note">Lap swim + Open swim</div></div>
-      <div class="ph-cell"><div class="ph-day">Friday</div><div class="ph-time">12–9 PM</div><div class="ph-note">Open swim all day</div></div>
-      <div class="ph-cell"><div class="ph-day">Sat &amp; Sun</div><div class="ph-time">10 AM – 9 PM</div><div class="ph-note">Full day open swim</div></div>
+  <!-- CTA -->
+  <div style="background:linear-gradient(135deg,#083050,#0d4a7a);padding:80px;text-align:center;">
+    <div class="fade-up">
+      <p class="eyebrow" style="color:rgba(100,180,240,.8)">Membership has its perks</p>
+      <h2 class="sec-title light">The pool is just <em>the beginning</em></h2>
+      <p class="sec-body full" style="color:rgba(245,240,232,.6);max-width:520px;margin:16px auto 36px;">Championship golf, exceptional dining, and a community that feels like family — discover what Westwood Hills membership means for yours.</p>
+      <button class="btn-p" onclick="navigate('membership')">Explore Membership</button>
     </div>
-  </div>
-
-  <div style="background:linear-gradient(135deg,#083050,#0d4a7a);padding:80px;display:flex;align-items:center;gap:64px;flex-wrap:wrap;">
-    <div class="fade-up"><p class="eyebrow" style="color:rgba(100,180,240,.8)">Westwood Wahoos</p><h2 class="sec-title light">Join the <em>swim team</em></h2><p class="sec-body full" style="color:rgba(245,240,232,.55)">The Westwood Wahoos compete in the Southeast Missouri Swim League, bringing home championships each summer. Registration opens each April.</p></div>
-    <div class="fade-up d2" style="flex-shrink:0;display:flex;flex-direction:column;gap:12px;"><button class="btn-p" onclick="navigate('about');setTimeout(function(){document.getElementById('contact').scrollIntoView({behavior:'smooth'})},400)">Register for Swim Team</button><button class="btn-g lt" onclick="document.getElementById('pool-hours').scrollIntoView({behavior:'smooth'})">View Swim Schedule</button></div>
   </div>
 
   <footer><div class="footer-top"><div><div class="footer-brand-logo"><div class="nav-emblem">WH</div><div class="footer-brand-text">Westwood Hills<br>Country Club<small>Est. 1936 · Poplar Bluff, MO</small></div></div><p class="footer-tagline">Southeast Missouri's premier private country club.</p></div><div><p class="fcol-title">Aquatics</p><ul class="flinks"><li><a onclick="navigate('aquatics')">Pool Complex</a></li><li><a onclick="navigate('aquatics')">Swim Programs</a></li><li><a onclick="navigate('aquatics')">Swim Team</a></li><li><a onclick="navigate('aquatics')">Hours</a></li></ul></div><div><p class="fcol-title">The Club</p><ul class="flinks"><li><a onclick="navigate('golf')">Golf</a></li><li><a onclick="navigate('dining')">Dining</a></li><li><a onclick="navigate('membership')">Membership</a></li></ul></div><div><p class="fcol-title">Contact</p><div class="fci"><strong>Clubhouse</strong>(573) 785-5253</div></div></div><div class="footer-bottom"><p class="fcopy">© 2026 Westwood Hills Country Club.</p><p class="fcopy">Poplar Bluff, Missouri · Est. 1936</p><p class="fcopy" style="margin-top:4px;"><a onclick="navigate('staff')" style="color:rgba(245,240,232,.35);cursor:pointer;text-decoration:none;font-size:10px;letter-spacing:.1em;">Staff Portal</a></p></div></footer>
@@ -1987,17 +1998,9 @@ nav.staff-mode .nav-site-back{display:flex!important;}
         <div id="cf-status" style="font-size:12px;margin-top:8px;display:none;"></div>
       </div>
     </div>
-    <div class="map-ph fade-up d2" style="padding:0;overflow:hidden;border-radius:2px;">
-  <iframe
-    src="https://maps.google.com/maps?q=1+Birdie+Ln,+Poplar+Bluff,+MO+63901&output=embed"
-    width="100%"
-    height="100%"
-    style="border:0;display:block;min-height:320px;"
-    allowfullscreen=""
-    loading="lazy"
-    referrerpolicy="no-referrer-when-downgrade"
-    title="Westwood Hills Country Club location map">
-  </iframe>
+    <div class="map-ph fade-up d2" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold);letter-spacing:.05em;">1 Birdie Lane</div>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:16px;color:rgba(184,151,106,.7);">Poplar Bluff, MO 63901</div>
 </div>
   </div>
 
@@ -3036,7 +3039,7 @@ var WH_SITE_DEFAULTS = {
     home:       { tag:'Poplar Bluff, Missouri',  title:'Where <em>legends</em> are made',               subtitle:'Southeast Missouri\u2019s finest private country club \u2014 18 championship holes, exceptional dining, and a community built over nine decades.', image:'images/hero-clubhouse.jpg' },
     golf:       { tag:'Championship Golf',       title:'18 Holes of <em>distinction</em>',              subtitle:'A classic parkland layout nestled in rolling terrain \u2014 challenging for low handicappers, enjoyable for every skill level.',                    image:'images/golf-carts-sunset.jpg' },
     dining:     { tag:'Fine Dining & More',      title:'Flavors as refined <em>as the game</em>',       subtitle:'From casual post-round bites at the Westwood Grill to an elevated evening at Hoover\u2019s \u2014 exceptional food is always on the menu.',      image:'images/dining-hero.jpg' },
-    aquatics:   { tag:'Aquatics Complex',        title:'Summer\u2019s <em>best address</em>',           subtitle:'A premier aquatics facility for members of all ages \u2014 competition pool, zero-entry kids area, and programming for the whole family.',          image:'images/pool-main.jpg' },
+    aquatics:   { tag:'Aquatics Complex',        title:'Summer\u2019s <em>best address</em>',           subtitle:'A premier aquatics facility for members of all ages \u2014 swimming, sunning, and splashing from Memorial Day through Labor Day.',                  image:'images/pool-main.jpg' },
     events:     { tag:'Events & Tournaments',    title:'Always something <em>to celebrate</em>',        subtitle:'From weekly golf socials to signature tournaments and private celebrations \u2014 Westwood Hills brings people together all year long.',             image:'images/events-hero.jpg' },
     membership: { tag:'Membership',             title:'Join a tradition <em>nearly 90 years deep</em>', subtitle:'Westwood Hills is more than a club \u2014 it\u2019s where Poplar Bluff\u2019s finest families have gathered for generations.',                    image:'images/membership-hero.jpg' },
     about:      { tag:'About Us',               title:'Nearly 90 years <em>of community</em>',          subtitle:'From a modest nine-hole layout in 1936 to the premier private club in Southeast Missouri \u2014 our story is one of growth, dedication, and community.', image:'images/about-hero.jpg' }
@@ -3904,7 +3907,17 @@ function getAllRegs() {
 }
 
 // ── NAVIGATION ──────────────────────────────────
-function navigate(page) {
+var _pageUrlMap = {
+  home: '/',
+  golf: '/golf',
+  dining: '/dining',
+  aquatics: '/aquatics',
+  events: '/events',
+  membership: '/membership',
+  about: '/about'
+};
+
+function navigate(page, skipPushState) {
   // Hide all pages
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   // Show target
@@ -3932,7 +3945,44 @@ function navigate(page) {
   if (page === 'events') setTimeout(archiveEventCards, 50);
   // Re-run fade observers
   setTimeout(initFades, 50);
+  // Update browser URL
+  if (!skipPushState && _pageUrlMap[page]) {
+    history.pushState({ page: page }, '', _pageUrlMap[page]);
+  }
 }
+
+// Handle browser back/forward
+window.addEventListener('popstate', function(e) {
+  var page = (e.state && e.state.page) || _urlToPage(location.pathname);
+  navigate(page, true);
+});
+
+function _urlToPage(path) {
+  for (var pg in _pageUrlMap) {
+    if (_pageUrlMap[pg] === path) return pg;
+  }
+  return 'home';
+}
+
+// On initial load, navigate to the page matching the current URL
+// Also handles GitHub Pages 404 redirect (path stored in sessionStorage by 404.html)
+(function() {
+  var redirect = sessionStorage.getItem('spa_redirect');
+  if (redirect) {
+    sessionStorage.removeItem('spa_redirect');
+    var pg = _urlToPage(redirect);
+    navigate(pg, true);
+    history.replaceState({ page: pg }, '', _pageUrlMap[pg] || '/');
+    return;
+  }
+  var initial = _urlToPage(location.pathname);
+  if (initial !== 'home') {
+    navigate(initial, true);
+    history.replaceState({ page: initial }, '', _pageUrlMap[initial]);
+  } else {
+    history.replaceState({ page: 'home' }, '', '/');
+  }
+})();
 
 // ── MOBILE NAV ──────────────────────────────────
 function toggleMobileNav() {
@@ -4099,8 +4149,8 @@ function isDateAvailable(year, month, day) {
   if (dt < today) return false;
 
   if (venue === 'grille') {
-    // Westwood Grill: open every day
-    return true;
+    // Westwood Grill: closed Mondays
+    return dow !== 1;
   }
 
   // Hoover's
@@ -5121,7 +5171,7 @@ async function saveSettings() { staffSettings.maxCovers = parseInt(document.getE
 function staffDateKey(y, m, d) { return y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0'); }
 function staffFormatDate(dk) { var p = dk.split('-').map(Number); var dt = new Date(p[0], p[1]-1, p[2]); return STAFF_DAYS[dt.getDay()] + ', ' + STAFF_MONTHS[p[1]-1].slice(0,3) + ' ' + p[2] + ', ' + p[0]; }
 function staffGetThirdSat(y, m) { var c = 0; for (var d = 1; d <= 31; d++) { var dt = new Date(y, m, d); if (dt.getMonth() !== m) break; if (dt.getDay() === 6) { c++; if (c === 3) return d; } } return null; }
-function staffIsService(y, m, d) { if (staffVenue === 'grille') return true; var dow = new Date(y, m, d).getDay(); return dow === 4 || dow === 5 || dow === 6; }
+function staffIsService(y, m, d) { var dow = new Date(y, m, d).getDay(); if (staffVenue === 'grille') return dow !== 1; return dow === 4 || dow === 5 || dow === 6; }
 function staffCoversForDate(dk) { return (staffData[dk] || []).filter(function(r) { return r.status !== 'cancelled'; }).reduce(function(s, r) { return s + (parseInt(r.partySize) || 2); }, 0); }
 function staffCountActive(dk) { return (staffData[dk] || []).filter(function(r) { return r.status !== 'cancelled'; }).length; }
 function staffGetMaxCovers() { return staffVenue === 'grille' ? (staffSettings.maxCoversGrille || 60) : staffSettings.maxCovers; }

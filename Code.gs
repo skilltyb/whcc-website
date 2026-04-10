@@ -357,6 +357,28 @@ function doGet(e) {
     return jsonResponse({ ok: false, error: 'Member not found. Check your member number or contact the Pro Shop.' });
   }
 
+  if (action === 'get-ops-data') {
+    var key = e.parameter.key || '';
+    if (!key) return jsonResponse({ error: 'missing key' });
+    var val = opsGet_(key);
+    return jsonResponse(val !== null ? val : []);
+  }
+
+  if (action === 'get-all-ops') {
+    var sh = getOpsSheet_();
+    var rows = sh.getDataRange().getValues();
+    var result = {};
+    for (var i = 1; i < rows.length; i++) {
+      try { result[String(rows[i][0])] = JSON.parse(rows[i][1]); } catch(e) {}
+    }
+    return jsonResponse(result);
+  }
+
+  if (action === 'get-live-scoring') {
+    var val = opsGet_('live_scoring');
+    return jsonResponse(val !== null ? val : {});
+  }
+
   return jsonResponse({ error: 'unknown action' });
 }
 
@@ -631,6 +653,17 @@ function doPost(e) {
     return jsonResponse({ ok: true });
   }
 
+  if (data.action === 'save-ops-data') {
+    if (!data.key) return jsonResponse({ ok: false, error: 'missing key' });
+    opsSave_(data.key, data.data);
+    return jsonResponse({ ok: true });
+  }
+
+  if (data.action === 'save-live-scoring') {
+    opsSave_('live_scoring', data);
+    return jsonResponse({ ok: true });
+  }
+
   // Default: save registration
   getRegSheet().appendRow([
     data.id, data.event, data.eventMeta, data.firstName, data.lastName,
@@ -638,6 +671,48 @@ function doPost(e) {
     data.ghin, data.notes, data.timestamp, data.source
   ]);
   return jsonResponse({ status: 'ok' });
+}
+
+// ── OPS DATA (generic key/value blob store) ───────────────────────────────────
+
+function getOpsSheet_() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName('Ops Data');
+  if (!sh) {
+    sh = ss.insertSheet('Ops Data');
+    sh.appendRow(['Key', 'Data', 'Updated']);
+    sh.setFrozenRows(1);
+    sh.getRange(1,1,1,3).setBackground('#1a4726').setFontColor('#f5f0e8').setFontWeight('bold');
+    sh.setColumnWidth(1, 180);
+    sh.setColumnWidth(2, 400);
+    sh.setColumnWidth(3, 160);
+  }
+  return sh;
+}
+
+function opsGet_(key) {
+  var sh = getOpsSheet_();
+  var rows = sh.getDataRange().getValues();
+  for (var i = 1; i < rows.length; i++) {
+    if (String(rows[i][0]) === key) {
+      try { return JSON.parse(rows[i][1]); } catch(e) { return null; }
+    }
+  }
+  return null;
+}
+
+function opsSave_(key, data) {
+  var sh = getOpsSheet_();
+  var rows = sh.getDataRange().getValues();
+  var json = JSON.stringify(data);
+  var now  = new Date().toISOString();
+  for (var i = 1; i < rows.length; i++) {
+    if (String(rows[i][0]) === key) {
+      sh.getRange(i + 1, 2, 1, 2).setValues([[json, now]]);
+      return;
+    }
+  }
+  sh.appendRow([key, json, now]);
 }
 
 // ── UTILITIES ─────────────────────────────────────────────────────────────────
