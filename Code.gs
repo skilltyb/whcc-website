@@ -263,10 +263,11 @@ function doGet(e) {
   }
 
   if (action === 'get-specials') {
-    var spSh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Specials');
-    if (!spSh || spSh.getLastRow() < 2) return jsonResponse({});
-    var val = spSh.getRange(2, 1).getValue();
-    return ContentService.createTextOutput(String(val)).setMimeType(ContentService.MimeType.JSON);
+    var gsSheet = getOrCreateSpecialsSheet_();
+    return jsonResponse({
+      weeklySpecial: getSpecialsValue_(gsSheet, 'weeklySpecial'),
+      fridayNight:   getSpecialsValue_(gsSheet, 'fridayNight')
+    });
   }
 
   if (action === 'get-conditions') {
@@ -567,15 +568,9 @@ function doPost(e) {
   }
 
   if (data.action === 'save-specials') {
-    var spSh = ss.getSheetByName('Specials');
-    if (!spSh) {
-      spSh = ss.insertSheet('Specials');
-      spSh.appendRow(['Data', 'Updated']);
-      spSh.setFrozenRows(1);
-    }
-    var spJson = JSON.stringify({ weeklySpecial: data.weeklySpecial || {}, fridayNight: data.fridayNight || {} });
-    if (spSh.getLastRow() < 2) spSh.appendRow([spJson, new Date().toISOString()]);
-    else spSh.getRange(2, 1, 1, 2).setValues([[spJson, new Date().toISOString()]]);
+    var ssSheet = getOrCreateSpecialsSheet_();
+    setSpecialsValue_(ssSheet, 'weeklySpecial', data.weeklySpecial || {});
+    setSpecialsValue_(ssSheet, 'fridayNight',   data.fridayNight   || {});
     return jsonResponse({ ok: true });
   }
 
@@ -741,4 +736,37 @@ function testEmail() {
     body: 'If you receive this, MailApp is working correctly.'
   });
   Logger.log('Send call completed.');
+}
+
+function getOrCreateSpecialsSheet_() {
+  var ss    = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName('Specials');
+  if (!sheet) {
+    sheet = ss.insertSheet('Specials');
+    sheet.appendRow(['Key', 'Value']);
+    sheet.setFrozenRows(1);
+  }
+  return sheet;
+}
+
+function setSpecialsValue_(sheet, key, value) {
+  var data = sheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (String(data[i][0]) === key) {
+      sheet.getRange(i + 1, 2).setValue(JSON.stringify(value));
+      return;
+    }
+  }
+  sheet.appendRow([key, JSON.stringify(value)]);
+}
+
+function getSpecialsValue_(sheet, key) {
+  var data = sheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (String(data[i][0]) === key) {
+      try { return JSON.parse(String(data[i][1])); }
+      catch(e) { return {}; }
+    }
+  }
+  return {};
 }

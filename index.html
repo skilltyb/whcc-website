@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="description" content="Westwood Hills Country Club — Poplar Bluff, Missouri's premier private country club since 1936. Championship golf, fine dining, aquatics, and family membership in Southeast Missouri." />
 <title>Westwood Hills Country Club — Poplar Bluff, Missouri</title>
 <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png" />
@@ -12,7 +12,7 @@
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script> -->
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:rgba(184,151,106,0.15)}
 :root{
   --forest:#1a2b1f;--deep:#111a14;--gold:#b8976a;--gold-lt:#d4b483;
   --cream:#f5f0e8;--sand:#e8dfc8;--mid:#2e4233;--text:#2a1f14;--muted:#7a6e5f;
@@ -21,7 +21,7 @@ html{scroll-behavior:smooth}
 body{font-family:'Raleway',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden}
 
 /* ── NAV ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:72px;background:rgba(17,26,20,0.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(184,151,106,0.2);transition:background .3s}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 48px;padding-left:max(48px,env(safe-area-inset-left));padding-right:max(48px,env(safe-area-inset-right));height:72px;background:rgba(17,26,20,0.96);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid rgba(184,151,106,0.2);transition:background .3s}
 .nav-logo{display:flex;align-items:center;gap:14px;text-decoration:none;cursor:pointer}
 .nav-emblem{width:42px;height:42px;border:1.5px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold);font-weight:600;flex-shrink:0}
 .nav-wordmark{font-family:'Cormorant Garamond',serif;color:var(--cream);font-size:14px;letter-spacing:.18em;text-transform:uppercase;line-height:1.3}
@@ -33,15 +33,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .nav-cta:hover{background:var(--gold);color:var(--deep)}
 .nav-bill-link{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(245,240,232,.5);text-decoration:none;margin-right:4px;transition:color .2s}
 .nav-bill-link:hover{color:var(--gold-lt)}
-.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;min-width:44px;min-height:44px;align-items:center;justify-content:center}
 .nav-hamburger span{display:block;width:22px;height:1.5px;background:var(--cream);transition:all .3s}
-.nav-mobile{display:none;position:fixed;top:72px;left:0;right:0;background:var(--deep);z-index:190;padding:24px 40px;border-bottom:1px solid rgba(184,151,106,.15)}
+.nav-mobile{display:none;position:fixed;top:72px;left:0;right:0;background:var(--deep);z-index:190;padding:24px 40px;padding-left:max(40px,env(safe-area-inset-left));padding-right:max(40px,env(safe-area-inset-right));padding-bottom:max(24px,env(safe-area-inset-bottom));border-bottom:1px solid rgba(184,151,106,.15)}
 .nav-mobile.open{display:block}
 .nav-mobile ul{list-style:none;display:flex;flex-direction:column;gap:18px}
 .nav-mobile a{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.8);text-decoration:none;cursor:pointer}
 
 /* ── PAGE WRAPPER ── */
-#app{padding-top:72px}
+#app{padding-top:72px;padding-top:max(72px,calc(72px + env(safe-area-inset-top)))}
 .page{display:none}.page.active{display:block}
 
 /* ── FADE TRANSITION ── */
@@ -119,7 +119,7 @@ footer{background:var(--deep);padding:80px 80px 40px}
 /* ══════════════════════════════════════════
    HOME PAGE
 ══════════════════════════════════════════ */
-.hero{position:relative;height:100vh;min-height:680px;display:flex;align-items:flex-end;overflow:hidden}
+.hero{position:relative;height:100vh;height:100svh;min-height:680px;display:flex;align-items:flex-end;overflow:hidden}
 .hero-bg{position:absolute;inset:0;
   background:
     linear-gradient(to bottom,rgba(17,26,20,.35) 0%,rgba(17,26,20,.15) 40%,rgba(17,26,20,.75) 100%),
@@ -333,7 +333,7 @@ footer{background:var(--deep);padding:80px 80px 40px}
 .hrf-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
 .hrf-group{display:flex;flex-direction:column;gap:6px}
 .hrf-label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
-.hrf-input,.hrf-select,.hrf-textarea{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(184,151,106,.2);color:var(--cream);padding:11px 14px;font-family:'Raleway',sans-serif;font-size:13px;outline:none;transition:border-color .2s}
+.hrf-input,.hrf-select,.hrf-textarea{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(184,151,106,.2);color:var(--cream);padding:11px 14px;font-family:'Raleway',sans-serif;font-size:13px;outline:none;transition:border-color .2s;-webkit-appearance:none;appearance:none}
 .hrf-input:focus,.hrf-select:focus,.hrf-textarea:focus{border-color:var(--gold)}
 .hrf-select option{background:var(--deep);color:var(--cream)}
 .hrf-textarea{resize:vertical;min-height:72px}
@@ -495,7 +495,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
   .staff-view-btn{padding:5px 10px;font-size:9px;letter-spacing:.08em}
   .sv-drop-btn{padding:5px 10px;font-size:9px;letter-spacing:.08em}
 }
-.staff-layout{display:flex;min-height:calc(100vh - 160px)}
+.staff-layout{display:flex;min-height:calc(100vh - 160px);min-height:calc(100svh - 160px)}
 .staff-left{flex:1 1 420px;padding:24px;border-right:1px solid rgba(184,151,106,.12);overflow:auto}
 .staff-right{flex:1 1 380px;padding:0;overflow:hidden;max-width:520px;display:flex;flex-direction:column;}
 .staff-right.preview-mode{max-width:none;flex:1 1 600px;}
@@ -897,9 +897,18 @@ nav.staff-mode .nav-site-back{display:flex!important;}
   .pool-feats{grid-template-columns:1fr}
   .course-specs{grid-template-columns:1fr}
 }
+/* iOS auto-zoom prevention: inputs must be ≥16px on mobile */
+@media(max-width:768px){
+  input,select,textarea,.hrf-input,.hrf-select,.hrf-textarea,.hrf-date-display{font-size:16px !important}
+}
+/* Respect reduced-motion preference */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  .marquee-inner{animation:none}
+}
 
 /* ── STAFF PIN MODAL ── */
-#staff-pin-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(17,26,20,0.97);backdrop-filter:blur(8px);align-items:center;justify-content:center;flex-direction:column}
+#staff-pin-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(17,26,20,0.97);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);align-items:center;justify-content:center;flex-direction:column}
 #staff-pin-overlay.active{display:flex}
 .pin-box{background:rgba(255,255,255,.04);border:1px solid rgba(184,151,106,.2);padding:48px 40px;max-width:360px;width:90%;text-align:center}
 .pin-title{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--cream);margin-bottom:6px}
@@ -913,7 +922,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 .pin-error{font-size:12px;color:#e07070;min-height:18px;margin-top:4px}
 
 /* ── STAFF TOAST ── */
-#staff-toast{position:fixed;bottom:24px;right:24px;z-index:600;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+#staff-toast{position:fixed;bottom:max(24px,env(safe-area-inset-bottom));right:max(24px,env(safe-area-inset-right));z-index:600;display:flex;flex-direction:column;gap:8px;pointer-events:none}
 .s-toast{background:var(--deep);border:1px solid rgba(184,151,106,.3);color:var(--cream);padding:12px 18px;font-size:12px;font-family:'Raleway',sans-serif;letter-spacing:.05em;animation:toastIn .25s ease,toastOut .3s ease 3.7s forwards;max-width:300px}
 .s-toast.error{border-color:rgba(224,112,112,.5);background:#1c0f0f}
 .s-toast.success{border-color:rgba(143,204,143,.4);background:#0f1a0f}
@@ -921,7 +930,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 @keyframes toastOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(4px)}}
 
 /* ── CONFIRM DIALOG ── */
-#staff-confirm{display:none;position:fixed;inset:0;z-index:450;background:rgba(17,26,20,.82);backdrop-filter:blur(4px);align-items:center;justify-content:center}
+#staff-confirm{display:none;position:fixed;inset:0;z-index:450;background:rgba(17,26,20,.82);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);align-items:center;justify-content:center}
 #staff-confirm.active{display:flex}
 .confirm-box{background:var(--deep);border:1px solid rgba(184,151,106,.25);padding:36px 32px;max-width:340px;width:90%;text-align:center}
 .confirm-title{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--cream);margin-bottom:10px}
@@ -934,15 +943,15 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 .confirm-btn.cancel-btn:hover{border-color:var(--gold);color:var(--gold)}
 
 /* ── EVENT REGISTRATION MODAL ── */
-.reg-overlay{position:fixed;inset:0;background:rgba(17,26,20,.75);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
-.reg-modal{background:var(--cream);width:100%;max-width:520px;max-height:90vh;overflow-y:auto;padding:48px 44px;position:relative}
+.reg-overlay{position:fixed;inset:0;background:rgba(17,26,20,.75);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.reg-modal{background:var(--cream);width:100%;max-width:520px;max-height:90vh;max-height:90svh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:48px 44px;position:relative}
 .reg-modal-close{position:absolute;top:16px;right:20px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted);line-height:1}
 .reg-modal-tag{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
 .reg-modal-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:400;color:var(--forest);margin-bottom:4px;line-height:1.1}
 .reg-modal-meta{font-size:12px;color:var(--muted);margin-bottom:28px}
 .reg-field{margin-bottom:16px}
 .reg-field label{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--forest);margin-bottom:6px;font-weight:600}
-.reg-field input,.reg-field select,.reg-field textarea{width:100%;border:1px solid rgba(26,43,31,.2);background:var(--cream);padding:10px 14px;font-family:'Raleway',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border .2s}
+.reg-field input,.reg-field select,.reg-field textarea{width:100%;border:1px solid rgba(26,43,31,.2);background:var(--cream);padding:10px 14px;font-family:'Raleway',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border .2s;-webkit-appearance:none;appearance:none}
 .reg-field input:focus,.reg-field select:focus,.reg-field textarea:focus{border-color:var(--gold)}
 .reg-field textarea{resize:vertical;min-height:80px}
 .reg-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -1672,24 +1681,24 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <!-- League schedules available in the Member App -->
     <div style="display:none;margin-top:40px;background:rgba(26,43,31,.5);border:1px solid rgba(184,151,106,.2);padding:24px 28px;" class="fade-up">
       <p class="eyebrow" style="margin-bottom:12px;">Men's League 2026</p>
-      <p style="font-size:13px;color:rgba(245,240,232,.6);margin-bottom:18px;">Every Saturday · 5:00 PM shotgun · May 9 – August 22 &nbsp;·&nbsp; 16 weeks</p>
+      <p style="font-size:13px;color:rgba(245,240,232,.6);margin-bottom:18px;">Every Thursday · 5:00 PM shotgun · May 7 – August 20 &nbsp;·&nbsp; 16 weeks</p>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;">
-        <a class="ml-week-link" data-date="2026-05-09" onclick="openRegModal('Men\'s League — May 9','May 9 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 9</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 1</div></a>
-        <a class="ml-week-link" data-date="2026-05-16" onclick="openRegModal('Men\'s League — May 16','May 16 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 16</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 2</div></a>
-        <a class="ml-week-link" data-date="2026-05-23" onclick="openRegModal('Men\'s League — May 23','May 23 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 23</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 3</div></a>
-        <a class="ml-week-link" data-date="2026-05-30" onclick="openRegModal('Men\'s League — May 30','May 30 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 30</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 4</div></a>
-        <a class="ml-week-link" data-date="2026-06-06" onclick="openRegModal('Men\'s League — Jun 6','Jun 6 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 6</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 5</div></a>
-        <a class="ml-week-link" data-date="2026-06-13" onclick="openRegModal('Men\'s League — Jun 13','Jun 13 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 13</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 6</div></a>
-        <a class="ml-week-link" data-date="2026-06-20" onclick="openRegModal('Men\'s League — Jun 20','Jun 20 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 20</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 7</div></a>
-        <a class="ml-week-link" data-date="2026-06-27" onclick="openRegModal('Men\'s League — Jun 27','Jun 27 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 27</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 8</div></a>
-        <a class="ml-week-link" data-date="2026-07-04" onclick="openRegModal('Men\'s League — Jul 4','Jul 4 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 4</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 9</div></a>
-        <a class="ml-week-link" data-date="2026-07-11" onclick="openRegModal('Men\'s League — Jul 11','Jul 11 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 11</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 10</div></a>
-        <a class="ml-week-link" data-date="2026-07-18" onclick="openRegModal('Men\'s League — Jul 18','Jul 18 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 18</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 11</div></a>
-        <a class="ml-week-link" data-date="2026-07-25" onclick="openRegModal('Men\'s League — Jul 25','Jul 25 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 25</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 12</div></a>
-        <a class="ml-week-link" data-date="2026-08-01" onclick="openRegModal('Men\'s League — Aug 1','Aug 1 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 1</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 13</div></a>
-        <a class="ml-week-link" data-date="2026-08-08" onclick="openRegModal('Men\'s League — Aug 8','Aug 8 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 8</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 14</div></a>
-        <a class="ml-week-link" data-date="2026-08-15" onclick="openRegModal('Men\'s League — Aug 15','Aug 15 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 15</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 15</div></a>
-        <a class="ml-week-link" data-date="2026-08-22" onclick="openRegModal('Men\'s League — Aug 22','Aug 22 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 22</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 16 — Final</div></a>
+        <a class="ml-week-link" data-date="2026-05-07" onclick="openRegModal('Men\'s League — May 7','May 7 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 7</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 1</div></a>
+        <a class="ml-week-link" data-date="2026-05-14" onclick="openRegModal('Men\'s League — May 14','May 14 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 14</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 2</div></a>
+        <a class="ml-week-link" data-date="2026-05-21" onclick="openRegModal('Men\'s League — May 21','May 21 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 21</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 3</div></a>
+        <a class="ml-week-link" data-date="2026-05-28" onclick="openRegModal('Men\'s League — May 28','May 28 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 28</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 4</div></a>
+        <a class="ml-week-link" data-date="2026-06-04" onclick="openRegModal('Men\'s League — Jun 4','Jun 4 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 4</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 5</div></a>
+        <a class="ml-week-link" data-date="2026-06-11" onclick="openRegModal('Men\'s League — Jun 11','Jun 11 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 11</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 6</div></a>
+        <a class="ml-week-link" data-date="2026-06-18" onclick="openRegModal('Men\'s League — Jun 18','Jun 18 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 18</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 7</div></a>
+        <a class="ml-week-link" data-date="2026-06-25" onclick="openRegModal('Men\'s League — Jun 25','Jun 25 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 25</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 8</div></a>
+        <a class="ml-week-link" data-date="2026-07-02" onclick="openRegModal('Men\'s League — Jul 2','Jul 2 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 2</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 9</div></a>
+        <a class="ml-week-link" data-date="2026-07-09" onclick="openRegModal('Men\'s League — Jul 9','Jul 9 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 9</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 10</div></a>
+        <a class="ml-week-link" data-date="2026-07-16" onclick="openRegModal('Men\'s League — Jul 16','Jul 16 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 16</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 11</div></a>
+        <a class="ml-week-link" data-date="2026-07-23" onclick="openRegModal('Men\'s League — Jul 23','Jul 23 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 23</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 12</div></a>
+        <a class="ml-week-link" data-date="2026-07-30" onclick="openRegModal('Men\'s League — Jul 30','Jul 30 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 30</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 13</div></a>
+        <a class="ml-week-link" data-date="2026-08-06" onclick="openRegModal('Men\'s League — Aug 6','Aug 6 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 6</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 14</div></a>
+        <a class="ml-week-link" data-date="2026-08-13" onclick="openRegModal('Men\'s League — Aug 13','Aug 13 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 13</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 15</div></a>
+        <a class="ml-week-link" data-date="2026-08-20" onclick="openRegModal('Men\'s League — Aug 20','Aug 20 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 20</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 16 — Final</div></a>
       </div>
     </div>
 
@@ -1763,7 +1772,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     </div>
 
     <div style="text-align:center;margin-top:32px;" class="fade-up">
-      <p style="font-size:12px;color:var(--muted);">Recurring events: <strong>Men's League</strong> (Saturdays) · <strong>Ladies Night</strong> (Tuesdays at 5:00 PM) · <strong>Hit &amp; Giggle</strong> (Wednesdays at 5:00 PM) · <strong>Friday Night Fights</strong> (Fridays at 5:00 PM)</p>
+      <p style="font-size:12px;color:var(--muted);">Recurring events: <strong>Men's League</strong> (Thursdays) · <strong>Ladies Night</strong> (Tuesdays at 5:00 PM) · <strong>Hit &amp; Giggle</strong> (Wednesdays at 5:00 PM) · <strong>Friday Night Fights</strong> (Fridays at 5:00 PM)</p>
       <p style="font-size:12px;color:var(--muted);margin-top:8px;"><a href="https://docs.google.com/spreadsheets/d/1ClR_iOZMuIKySrMSozBBO9JvI30j3E0oSND4kHOzXFQ/edit?usp=sharing" style="color:var(--gold);text-decoration:none;" target="_blank">View SEMO Cup Points Standings →</a></p>
     </div>
   </div>
@@ -2011,7 +2020,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
      STAFF DASHBOARD (hidden page)
 ════════════════════════════════════════ -->
 <div class="page" id="page-staff">
-  <div style="min-height:100vh;background:var(--deep);padding-top:72px;">
+  <div style="min-height:100vh;min-height:100svh;background:var(--deep);padding-top:72px;">
     <!-- Dashboard header -->
     <div class="staff-header">
       <div>
@@ -2970,6 +2979,23 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 
 </div><!-- end #app -->
 
+<script>
+// iOS private browsing & storage-blocked contexts: replace localStorage with in-memory fallback
+(function(){
+  try { localStorage.setItem('_t','1'); localStorage.removeItem('_t'); }
+  catch(e) {
+    var _m = {};
+    window.localStorage = {
+      getItem:    function(k){ return _m.hasOwnProperty(k) ? _m[k] : null; },
+      setItem:    function(k,v){ _m[k] = String(v); },
+      removeItem: function(k){ delete _m[k]; },
+      clear:      function(){ _m = {}; },
+      key:        function(i){ return Object.keys(_m)[i]||null; },
+      get length(){ return Object.keys(_m).length; }
+    };
+  }
+})();
+</script>
 <script>
 // ── localStorage shim for window.storage (Claude Agent SDK compatibility) ──
 window.storage = {
@@ -7223,10 +7249,12 @@ function staffPinShow(page) {
   pinUpdateDots();
   document.getElementById('pin-error').textContent = '';
   document.getElementById('staff-pin-overlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
 }
 
 function staffPinHide() {
   document.getElementById('staff-pin-overlay').classList.remove('active');
+  document.body.style.overflow = '';
 }
 
 function pinKey(k) {
