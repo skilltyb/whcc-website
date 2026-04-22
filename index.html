@@ -3933,14 +3933,21 @@ function getAllRegs() {
 }
 
 // ── NAVIGATION ──────────────────────────────────
+// Detect subdirectory base path so relative image URLs still resolve correctly
+// when deployed under a sub-path like /whcc-website/ on GitHub Pages.
+var _basePath = (function() {
+  var p = location.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '');
+  return p; // e.g. '/whcc-website' on GH Pages, '' on a root custom domain
+})();
+
 var _pageUrlMap = {
-  home: '/',
-  golf: '/golf',
-  dining: '/dining',
-  aquatics: '/aquatics',
-  events: '/events',
-  membership: '/membership',
-  about: '/about'
+  home:       _basePath + '/',
+  golf:       _basePath + '/golf',
+  dining:     _basePath + '/dining',
+  aquatics:   _basePath + '/aquatics',
+  events:     _basePath + '/events',
+  membership: _basePath + '/membership',
+  about:      _basePath + '/about'
 };
 
 function navigate(page, skipPushState) {
@@ -3998,7 +4005,7 @@ function _urlToPage(path) {
     sessionStorage.removeItem('spa_redirect');
     var pg = _urlToPage(redirect);
     navigate(pg, true);
-    history.replaceState({ page: pg }, '', _pageUrlMap[pg] || '/');
+    history.replaceState({ page: pg }, '', _pageUrlMap[pg] || _basePath + '/');
     return;
   }
   var initial = _urlToPage(location.pathname);
@@ -4006,7 +4013,7 @@ function _urlToPage(path) {
     navigate(initial, true);
     history.replaceState({ page: initial }, '', _pageUrlMap[initial]);
   } else {
-    history.replaceState({ page: 'home' }, '', '/');
+    history.replaceState({ page: 'home' }, '', _basePath + '/');
   }
 })();
 
