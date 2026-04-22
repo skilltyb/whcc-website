@@ -2703,6 +2703,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
                 <option value="General">General</option>
               </select>
               <button class="staff-add-btn" onclick="phLibLoad()">↻ Refresh</button>
+              <button class="staff-add-btn" onclick="phMakePublic()" id="ph-make-public-btn" title="One-time fix: set all Drive photos to Anyone with link can view">🔓 Make All Public</button>
             </div>
             <div id="ph-lib-status" style="font-size:12px;color:var(--muted);margin-bottom:12px;"></div>
             <div id="ph-lib-grid" class="ph-grid"></div>
@@ -6745,6 +6746,28 @@ function phLibLoad() {
       });
     })
     .catch(function() { status.textContent = 'Could not load photos.'; });
+}
+
+function phMakePublic() {
+  var btn = document.getElementById('ph-make-public-btn');
+  var status = document.getElementById('ph-lib-status');
+  if (!confirm('Set all Drive photos to "Anyone with link can view"? Do this once to fix thumbnails.')) return;
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Working…'; }
+  if (status) status.textContent = 'Making photos public…';
+  fetch(WHCC_SCRIPT_URL, {
+    method: 'POST', headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({ action: 'make-photos-public' })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    if (btn) { btn.disabled = false; btn.textContent = '🔓 Make All Public'; }
+    if (status) status.textContent = d.count != null ? '✓ ' + d.count + ' photos made public. Refreshing…' : 'Done. Refreshing…';
+    setTimeout(phLibLoad, 1200);
+  })
+  .catch(function() {
+    if (btn) { btn.disabled = false; btn.textContent = '🔓 Make All Public'; }
+    if (status) status.textContent = 'Error — is the script deployed with the new case?';
+  });
 }
 
 function phCopyUrl(url, btn) {
