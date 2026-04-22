@@ -6705,6 +6705,13 @@ function phCompressImage(file, callback) {
 // Legacy single-file helpers (used by phReplaceSlot / phAddToSection)
 function phClearUpload() { phClearQueue(); }
 
+function phThumbUrl(url) {
+  // Convert deprecated drive.google.com/uc?id= to thumbnail endpoint which still works
+  var m = (url || '').match(/[?&]id=([^&]+)/);
+  if (m) return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w400';
+  return url;
+}
+
 function phLibLoad() {
   var cat    = (document.getElementById('ph-lib-cat') || {}).value || '';
   var grid   = document.getElementById('ph-lib-grid');
@@ -6725,7 +6732,7 @@ function phLibLoad() {
         var card = document.createElement('div');
         card.className = 'ph-card';
         card.innerHTML =
-          '<img class="ph-card-img" src="' + p.url + '" loading="lazy" onerror="this.style.opacity=\'.2\'">' +
+          '<img class="ph-card-img" src="' + phThumbUrl(p.url) + '" loading="lazy" onerror="this.style.opacity=\'.2\'">' +
           '<div class="ph-card-body">' +
             '<div class="ph-card-cat">' + menuEsc(p.category) + '</div>' +
             '<div class="ph-card-name">' + menuEsc(p.name) + '</div>' +
