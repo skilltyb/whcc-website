@@ -3229,10 +3229,11 @@ function applySiteContent(sc) {
   var poolData = sc.pool || WH_SITE_DEFAULTS.pool;
   var poolLabel = document.getElementById('pool-season-label');
   if (poolLabel) poolLabel.innerHTML = 'Open <em>' + (poolData.season_label || 'Memorial Day through Labor Day') + '</em>';
-  var poolGrid = document.getElementById('pool-hours-grid');
+  var poolGrid = document.getElementById('pool-hours');
   if (poolGrid && poolData.hours && poolData.hours.length) {
     poolGrid.innerHTML = poolData.hours.map(function(h) {
-      return '<div class="ph-cell"><div class="ph-day">' + h.days + '</div><div class="ph-time">' + h.time + '</div><div class="ph-note">' + h.note + '</div></div>';
+      return '<div class="pf-item"><div class="pf-name">' + h.days + '</div>'
+           + '<div class="pf-sub">' + h.time + (h.note ? ' \u00b7 ' + h.note : '') + '</div></div>';
     }).join('');
   }
   // Express lunch
