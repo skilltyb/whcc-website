@@ -3,6 +3,13 @@
 <head>
 <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="description" content="Westwood Hills Country Club — Poplar Bluff, Missouri's premier private country club since 1936. Championship golf, fine dining, aquatics, and family membership in Southeast Missouri." />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Westwood Hills Country Club" />
+<meta property="og:title" content="Westwood Hills Country Club — Poplar Bluff, Missouri" />
+<meta property="og:description" content="Southeast Missouri's finest private country club — 18 championship holes, exceptional dining, and a community built over nine decades." />
+<meta property="og:image" content="https://skilltyb.github.io/whcc-website/images/hero-clubhouse.jpg" />
+<meta property="og:url" content="https://skilltyb.github.io/whcc-website/" />
+<meta name="twitter:card" content="summary_large_image" />
 <title>Westwood Hills Country Club — Poplar Bluff, Missouri</title>
 <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png" />
 <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16.png" />
@@ -3956,6 +3963,24 @@ function getAllRegs() {
 }
 
 // ── NAVIGATION ──────────────────────────────────
+// Per-page SEO titles and descriptions, updated dynamically on navigation.
+var _pageMeta = {
+  home:       { title: 'Westwood Hills Country Club — Poplar Bluff, Missouri',
+                desc:  'Southeast Missouri\'s finest private country club — 18 championship holes, exceptional dining, and a community built over nine decades.' },
+  golf:       { title: 'Golf — Westwood Hills Country Club',
+                desc:  '18-hole championship course in Poplar Bluff, Missouri. Junior programs, competitive leagues, and pristine playing conditions year-round.' },
+  dining:     { title: 'Dining — Westwood Hills Country Club',
+                desc:  'Fine dining at Hoover\'s and casual fare at the Westwood Grill. Exceptional food and hospitality for members and guests.' },
+  aquatics:   { title: 'Aquatics — Westwood Hills Country Club',
+                desc:  'Premier pool and aquatics programs at Westwood Hills Country Club in Poplar Bluff, Missouri.' },
+  events:     { title: 'Events — Westwood Hills Country Club',
+                desc:  'Member tournaments, social events, and signature gatherings at Westwood Hills Country Club.' },
+  membership: { title: 'Membership — Westwood Hills Country Club',
+                desc:  'Join Westwood Hills Country Club — golf, dining, aquatics, and community in Poplar Bluff, Missouri.' },
+  about:      { title: 'About — Westwood Hills Country Club',
+                desc:  'Founded in 1936, Westwood Hills Country Club has been the premier private club in Southeast Missouri for nearly nine decades.' }
+};
+
 // Detect subdirectory base path so relative image URLs still resolve correctly
 // when deployed under a sub-path like /whcc-website/ on GitHub Pages.
 var _basePath = (function() {
@@ -4005,6 +4030,19 @@ function navigate(page, skipPushState) {
   if (!skipPushState && _pageUrlMap[page]) {
     history.pushState({ page: page }, '', _pageUrlMap[page]);
   }
+  // Update page title, meta description, and OG tags for social sharing
+  var _m = _pageMeta[page];
+  if (_m) {
+    document.title = _m.title;
+    var _elDesc = document.querySelector('meta[name="description"]');
+    if (_elDesc) _elDesc.setAttribute('content', _m.desc);
+    var _ogTitle = document.querySelector('meta[property="og:title"]');
+    if (_ogTitle) _ogTitle.setAttribute('content', _m.title);
+    var _ogDesc = document.querySelector('meta[property="og:description"]');
+    if (_ogDesc) _ogDesc.setAttribute('content', _m.desc);
+    var _ogUrl = document.querySelector('meta[property="og:url"]');
+    if (_ogUrl) _ogUrl.setAttribute('content', 'https://skilltyb.github.io' + (_pageUrlMap[page] || _basePath + '/'));
+  }
 }
 
 // Handle browser back/forward
@@ -4012,6 +4050,19 @@ window.addEventListener('popstate', function(e) {
   var page = (e.state && e.state.page) || _urlToPage(location.pathname);
   navigate(page, true);
 });
+
+// Staff portal keyboard shortcut: type "staffportal" anywhere on the page
+// (ignored when focus is inside an input, textarea, or select)
+(function() {
+  var _seq = '', _TARGET = 'staffportal';
+  document.addEventListener('keydown', function(e) {
+    var tag = document.activeElement && document.activeElement.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' ||
+        (document.activeElement && document.activeElement.isContentEditable)) return;
+    _seq = (_seq + e.key).slice(-_TARGET.length);
+    if (_seq.toLowerCase() === _TARGET) { _seq = ''; navigate('staff'); }
+  });
+})();
 
 function _urlToPage(path) {
   for (var pg in _pageUrlMap) {
@@ -5894,8 +5945,22 @@ function staffResCard(r, idx, showDate) {
         var res = staffData[dk] && staffData[dk][i];
         if (res && res.email) {
           var venueName = (res.venue === 'grille') ? 'Westwood Grill' : "Hoover's";
-          var subject = 'Your reservation at Westwood Hills CC — ' + staffFormatDate(dk);
-          var body = 'Dear ' + res.firstName + ',\n\nThis is regarding your ' + venueName + ' reservation on ' + staffFormatDate(dk) + ' at ' + res.time + ' for a party of ' + res.partySize + '.\n\n';
+          var partyLabel = (parseInt(res.partySize) === 1) ? '1 guest' : res.partySize + ' guests';
+          var subject = 'Your ' + venueName + ' reservation — ' + staffFormatDate(dk);
+          var body = 'Dear ' + res.firstName + ',\n\n'
+            + 'We wanted to reach out regarding your upcoming reservation:\n\n'
+            + '  Venue:   ' + venueName + '\n'
+            + '  Date:    ' + staffFormatDate(dk) + '\n'
+            + '  Time:    ' + res.time + '\n'
+            + '  Party:   ' + partyLabel + '\n'
+            + (res.notes ? '  Notes:   ' + res.notes + '\n' : '')
+            + '\nIf you need to modify or cancel your reservation, please contact us at '
+            + '(573) 785-5656 or reply to this email.\n\n'
+            + 'We look forward to seeing you!\n\n'
+            + 'The Team at Westwood Hills Country Club\n'
+            + venueName + '\n'
+            + '1 Country Club Drive · Poplar Bluff, MO 63901\n'
+            + '(573) 785-5656';
           window.location.href = 'mailto:' + encodeURIComponent(res.email) + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
         }
       }

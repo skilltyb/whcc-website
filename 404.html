@@ -4,10 +4,14 @@
   <meta charset="utf-8">
   <title>Westwood Hills Country Club</title>
   <script>
-    // GitHub Pages SPA routing: redirect 404s back to index with the path encoded
+    // GitHub Pages SPA routing: redirect 404s back to index with the path encoded.
+    // For project sites (user.github.io/repo/), keep the first path segment so we
+    // land at /repo/ rather than the server root /.
     var path = location.pathname;
     sessionStorage.setItem('spa_redirect', path);
-    location.replace('/');
+    var segs = path.split('/').filter(Boolean);
+    var base = (segs.length > 1) ? '/' + segs[0] + '/' : '/';
+    location.replace(base);
   </script>
 </head>
 <body></body>
