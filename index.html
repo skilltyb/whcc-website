@@ -2103,7 +2103,11 @@ nav.staff-mode .nav-site-back{display:flex!important;}
         <div id="sv-upcoming" style="display:none;"></div>
         <!-- Search view -->
         <div id="sv-search" style="display:none;">
-          <input class="staff-search-input" id="staff-search-input" type="text" placeholder="Search by name, email, phone..." oninput="staffSearch()" />
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px;">
+            <input class="staff-search-input" id="staff-search-input" type="text" placeholder="Search by name, email, phone..." oninput="staffSearch()" style="flex:1;margin-bottom:0;" />
+            <button class="staff-mini-btn" onclick="staffSearchRefresh()" id="staff-search-refresh-btn" title="Pull latest reservations from Google Sheets" style="white-space:nowrap;">↻ Refresh</button>
+          </div>
+          <div id="staff-search-status" style="font-size:11px;color:rgba(245,240,232,.35);margin-bottom:10px;min-height:14px;"></div>
           <div id="staff-search-results"></div>
         </div>
         <!-- Guest Notes view -->
@@ -2228,11 +2232,11 @@ nav.staff-mode .nav-site-back{display:flex!important;}
             <div class="hrf-row">
               <div class="hrf-group">
                 <label class="hrf-label">Course Opens</label>
-                <input class="hrf-input" id="du-ed-opens" placeholder="e.g. 9:00 AM" />
+                <input class="hrf-input" id="du-ed-opens" placeholder="e.g. 9:00 AM" oninput="duUpdatePreview()" />
               </div>
               <div class="hrf-group">
                 <label class="hrf-label">Cart Path Rules</label>
-                <select class="hrf-select" id="du-ed-cart">
+                <select class="hrf-select" id="du-ed-cart" onchange="duUpdatePreview()">
                   <option value="Off Path">Off Path (full course)</option>
                   <option value="Cart Path Only">Cart Path Only</option>
                   <option value="90° Rule">90° Rule</option>
@@ -2243,7 +2247,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
             <div class="hrf-row">
               <div class="hrf-group">
                 <label class="hrf-label">Driving Range Status</label>
-                <select class="hrf-select" id="du-ed-range-status">
+                <select class="hrf-select" id="du-ed-range-status" onchange="duUpdatePreview()">
                   <option value="Open — Mats Only">Open — Mats Only</option>
                   <option value="Open — Grass Tees">Open — Grass Tees</option>
                   <option value="Open — Grass & Mats">Open — Grass & Mats</option>
@@ -2253,25 +2257,33 @@ nav.staff-mode .nav-site-back{display:flex!important;}
               </div>
               <div class="hrf-group">
                 <label class="hrf-label">Range Hours</label>
-                <input class="hrf-input" id="du-ed-range-hours" placeholder="e.g. 8:30 AM – 5:00 PM" />
+                <input class="hrf-input" id="du-ed-range-hours" placeholder="e.g. 8:30 AM – 5:00 PM" oninput="duUpdatePreview()" />
               </div>
             </div>
             <div class="hrf-row">
               <div class="hrf-group">
                 <label class="hrf-label">Putting Green</label>
-                <input class="hrf-input" id="du-ed-putting" placeholder="e.g. 9:00 AM – Dusk" />
+                <input class="hrf-input" id="du-ed-putting" placeholder="e.g. 9:00 AM – Dusk" oninput="duUpdatePreview()" />
               </div>
               <div class="hrf-group">
                 <label class="hrf-label">Pro Shop Hours</label>
-                <input class="hrf-input" id="du-ed-proshop" placeholder="e.g. 8:30 AM – 6:00 PM" />
+                <input class="hrf-input" id="du-ed-proshop" placeholder="e.g. 8:30 AM – 6:00 PM" oninput="duUpdatePreview()" />
               </div>
             </div>
             <div class="hrf-group" style="width:100%;margin-top:8px;">
               <label class="hrf-label">Special Notice (optional)</label>
-              <input class="hrf-input" id="du-ed-notice" placeholder="e.g. Frost delay until 10 AM, Cart path only holes 3-5, etc." />
+              <input class="hrf-input" id="du-ed-notice" placeholder="e.g. Frost delay until 10 AM, Cart path only holes 3-5, etc." oninput="duUpdatePreview()" />
             </div>
             <button class="btn-p" style="width:100%;margin-top:14px;" onclick="duAdminSave()">Update Home Page</button>
             <div id="du-admin-status" style="font-size:11px;color:#8fcc8f;margin-top:8px;display:none;"></div>
+          </div>
+
+          <!-- Live preview -->
+          <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-top:16px;">
+            <div class="staff-tag" style="margin-bottom:10px;">Preview — as seen on homepage</div>
+            <div id="du-preview" style="background:rgba(26,43,31,.6);border-radius:6px;padding:14px 16px;font-size:12px;color:rgba(245,240,232,.85);line-height:2;">
+              <em style="color:rgba(245,240,232,.3);">Fill in fields above to see preview…</em>
+            </div>
           </div>
 
           <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-top:16px;">
@@ -4759,28 +4771,58 @@ function smRestoreImgPreview(prefix, imageData) {
   }
 }
 function smSaveSpecials(){
-  var data=menuLoad();
-  data.weeklySpecial={active:document.getElementById('sm-ws-active').checked,
-    name:document.getElementById('sm-ws-name').value.trim(),
-    desc:document.getElementById('sm-ws-desc').value.trim(),
-    price:document.getElementById('sm-ws-price').value.trim(),
-    wine:document.getElementById('sm-ws-wine').value.trim(),
-    image:document.getElementById('sm-ws-img-data').value||''};
-  menuSave(data);
-  var st=document.getElementById('sm-ws-status');
-  if(st){st.textContent='Saved — dining page updated!';st.style.display='block';setTimeout(function(){st.style.display='none';},2500);}
+  var imgData = document.getElementById('sm-ws-img-data').value || '';
+  var doSave = function(imgUrl) {
+    var data = menuLoad();
+    data.weeklySpecial = { active: document.getElementById('sm-ws-active').checked,
+      name: document.getElementById('sm-ws-name').value.trim(),
+      desc: document.getElementById('sm-ws-desc').value.trim(),
+      price: document.getElementById('sm-ws-price').value.trim(),
+      wine: document.getElementById('sm-ws-wine').value.trim(),
+      image: imgUrl };
+    menuSave(data);
+    var st = document.getElementById('sm-ws-status');
+    if (st) { st.textContent = 'Saved — dining page updated!'; st.style.display = 'block'; setTimeout(function(){ st.style.display='none'; }, 2500); }
+  };
+  if (imgData.startsWith('data:')) {
+    staffToast('Uploading photo to Drive…', 'info');
+    fetch(WHCC_SCRIPT_URL, { method:'POST', headers:{'Content-Type':'text/plain'},
+      body: JSON.stringify({ action:'upload-photo', base64: imgData.split(',')[1],
+        mimeType: imgData.split(';')[0].split(':')[1] || 'image/jpeg',
+        filename: 'special-weekly-' + Date.now() + '.jpg', category: 'Dining' })
+    }).then(function(r){ return r.json(); }).then(function(d) {
+      var url = (d && d.ok) ? d.url : imgData;
+      if (d && d.ok) document.getElementById('sm-ws-img-data').value = url;
+      doSave(url);
+    }).catch(function(){ doSave(imgData); });
+  } else { doSave(imgData); }
 }
 function smSaveFriday(){
-  var data=menuLoad();
-  data.fridayNight={active:document.getElementById('sm-fn-active').checked,
-    name:document.getElementById('sm-fn-name').value.trim(),
-    desc:document.getElementById('sm-fn-desc').value.trim(),
-    price:document.getElementById('sm-fn-price').value.trim(),
-    wine:document.getElementById('sm-fn-wine').value.trim(),
-    image:document.getElementById('sm-fn-img-data').value||''};
-  menuSave(data);
-  var st=document.getElementById('sm-fn-status');
-  if(st){st.textContent='Saved — dining page updated!';st.style.display='block';setTimeout(function(){st.style.display='none';},2500);}
+  var imgData = document.getElementById('sm-fn-img-data').value || '';
+  var doSave = function(imgUrl) {
+    var data = menuLoad();
+    data.fridayNight = { active: document.getElementById('sm-fn-active').checked,
+      name: document.getElementById('sm-fn-name').value.trim(),
+      desc: document.getElementById('sm-fn-desc').value.trim(),
+      price: document.getElementById('sm-fn-price').value.trim(),
+      wine: document.getElementById('sm-fn-wine').value.trim(),
+      image: imgUrl };
+    menuSave(data);
+    var st = document.getElementById('sm-fn-status');
+    if (st) { st.textContent = 'Saved — dining page updated!'; st.style.display = 'block'; setTimeout(function(){ st.style.display='none'; }, 2500); }
+  };
+  if (imgData.startsWith('data:')) {
+    staffToast('Uploading photo to Drive…', 'info');
+    fetch(WHCC_SCRIPT_URL, { method:'POST', headers:{'Content-Type':'text/plain'},
+      body: JSON.stringify({ action:'upload-photo', base64: imgData.split(',')[1],
+        mimeType: imgData.split(';')[0].split(':')[1] || 'image/jpeg',
+        filename: 'special-friday-' + Date.now() + '.jpg', category: 'Dining' })
+    }).then(function(r){ return r.json(); }).then(function(d) {
+      var url = (d && d.ok) ? d.url : imgData;
+      if (d && d.ok) document.getElementById('sm-fn-img-data').value = url;
+      doSave(url);
+    }).catch(function(){ doSave(imgData); });
+  } else { doSave(imgData); }
 }
 function smRenderEditorLists(data){
   smRenderItemList('smh-tapas-list',data.hoovers.tapas,'hoovers.tapas',false,false);
@@ -4911,6 +4953,29 @@ async function duAdminLoad() {
   });
 }
 
+function duUpdatePreview() {
+  var prev = document.getElementById('du-preview');
+  if (!prev) return;
+  var opens   = document.getElementById('du-ed-opens') ? document.getElementById('du-ed-opens').value.trim() : '';
+  var cart    = document.getElementById('du-ed-cart') ? document.getElementById('du-ed-cart').value : '';
+  var range   = document.getElementById('du-ed-range-status') ? document.getElementById('du-ed-range-status').value : '';
+  var rangeH  = document.getElementById('du-ed-range-hours') ? document.getElementById('du-ed-range-hours').value.trim() : '';
+  var putting = document.getElementById('du-ed-putting') ? document.getElementById('du-ed-putting').value.trim() : '';
+  var proshop = document.getElementById('du-ed-proshop') ? document.getElementById('du-ed-proshop').value.trim() : '';
+  var notice  = document.getElementById('du-ed-notice') ? document.getElementById('du-ed-notice').value.trim() : '';
+  if (!opens && !cart && !range) { prev.innerHTML = '<em style="color:rgba(245,240,232,.3);">Fill in fields above to see preview…</em>'; return; }
+  var rows = [];
+  var row = function(label, val) { return val ? '<div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid rgba(184,151,106,.1);padding:5px 0;"><span style="color:rgba(245,240,232,.45);font-size:11px;letter-spacing:.06em;">' + label + '</span><span style="text-align:right;">' + val + '</span></div>' : ''; };
+  rows.push(row('COURSE OPENS', opens));
+  rows.push(row('CART RULES', cart));
+  rows.push(row('RANGE', range + (rangeH ? ' · ' + rangeH : '')));
+  rows.push(row('PUTTING GREEN', putting));
+  rows.push(row('PRO SHOP', proshop));
+  var html = rows.filter(Boolean).join('');
+  if (notice) html += '<div style="margin-top:10px;background:rgba(184,151,106,.1);border-left:3px solid var(--gold);padding:8px 10px;font-size:11px;color:var(--gold);">⚠ ' + notice + '</div>';
+  prev.innerHTML = html || '<em style="color:rgba(245,240,232,.3);">Fill in fields above to see preview…</em>';
+}
+
 async function duAdminSave() {
   var data = {
     courseOpens: document.getElementById('du-ed-opens').value.trim(),
@@ -4974,6 +5039,7 @@ function duPreset(type) {
     document.getElementById('du-ed-proshop').value = 'Closed';
     document.getElementById('du-ed-notice').value = 'Course closed today due to weather/maintenance.';
   }
+  duUpdatePreview();
 }
 
 // ════════════════════════════════════════════════════
@@ -5799,6 +5865,7 @@ function staffResCard(r, idx, showDate) {
   if (r.status === 'pending') html += '<button class="staff-mini-btn accent" data-action="confirm" data-idx="' + idx + '">Confirm</button>';
   if (r.status === 'confirmed') html += '<button class="staff-mini-btn" data-action="pending" data-idx="' + idx + '">Pending</button>';
   html += '<button class="staff-mini-btn" data-action="edit" data-idx="' + idx + '">Edit</button>';
+  if (r.email) html += '<button class="staff-mini-btn" data-action="email" data-idx="' + idx + '" title="Email ' + r.firstName + '">✉</button>';
   if (r.status !== 'cancelled') html += '<button class="staff-mini-btn danger" data-action="cancel" data-idx="' + idx + '">Cancel</button>';
   if (r.status === 'cancelled') html += '<button class="staff-mini-btn danger" data-action="delete" data-idx="' + idx + '">Delete</button>';
   html += '</div>';
@@ -5812,6 +5879,15 @@ function staffResCard(r, idx, showDate) {
       else if (action === 'cancel') staffConfirmCancelRes(dk, i);
       else if (action === 'delete') staffConfirmDelete(dk, i);
       else if (action === 'edit') staffStartEdit(dk, i);
+      else if (action === 'email') {
+        var res = staffData[dk] && staffData[dk][i];
+        if (res && res.email) {
+          var venueName = (res.venue === 'grille') ? 'Westwood Grill' : "Hoover's";
+          var subject = 'Your reservation at Westwood Hills CC — ' + staffFormatDate(dk);
+          var body = 'Dear ' + res.firstName + ',\n\nThis is regarding your ' + venueName + ' reservation on ' + staffFormatDate(dk) + ' at ' + res.time + ' for a party of ' + res.partySize + '.\n\n';
+          window.location.href = 'mailto:' + encodeURIComponent(res.email) + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+        }
+      }
     });
   });
   return card;
@@ -6123,6 +6199,35 @@ function staffSearch() {
   results.sort(function(a, b) { return a.dateKey.localeCompare(b.dateKey); });
   container.innerHTML = '<div style="font-size:11px;color:rgba(245,240,232,.4);margin-bottom:12px;">' + results.length + ' result' + (results.length !== 1 ? 's' : '') + '</div>';
   results.forEach(function(r) { container.appendChild(staffResCard(r, r.index, r.dateKey)); });
+}
+function staffSearchRefresh() {
+  var btn = document.getElementById('staff-search-refresh-btn');
+  var status = document.getElementById('staff-search-status');
+  if (btn) { btn.disabled = true; btn.textContent = '…'; }
+  if (status) status.textContent = 'Fetching latest from Google Sheets…';
+  WHCC_SYNC.fetchDining(function(rows, err) {
+    if (btn) { btn.disabled = false; btn.textContent = '↻ Refresh'; }
+    if (err || !rows) { if (status) status.textContent = 'Could not reach server. Showing cached data.'; return; }
+    var hoovers = {}, grille = {};
+    rows.forEach(function(row) {
+      var dateKey = String(row['Date'] || '').slice(0, 10);
+      if (!dateKey || dateKey.length < 10) return;
+      var v = String(row['Venue'] || '').toLowerCase();
+      var res = { id: row['ID']||String(Date.now()), firstName: row['First Name']||'', lastName: row['Last Name']||'',
+        email: row['Email']||'', phone: row['Phone']||'', partySize: row['Party Size']||'2',
+        member: row['Member']||'member', venue: v||'hoovers', time: row['Time Display']||row['Time']||'',
+        notes: row['Notes']||'', status: (row['Status']||'pending').toLowerCase(), createdAt: row['Submitted']||'' };
+      if (v === 'grille') { if (!grille[dateKey]) grille[dateKey]=[]; grille[dateKey].push(res); }
+      else { if (!hoovers[dateKey]) hoovers[dateKey]=[]; hoovers[dateKey].push(res); }
+    });
+    staffDataHoovers = hoovers; staffDataGrille = grille;
+    staffData = staffVenue === 'hoovers' ? staffDataHoovers : staffDataGrille;
+    try { window.storage.set('hoovers-reservations', JSON.stringify(hoovers)); } catch(e) {}
+    try { window.storage.set('grille-reservations', JSON.stringify(grille)); } catch(e) {}
+    var total = rows.length;
+    if (status) status.textContent = '✓ Synced ' + total + ' reservation' + (total !== 1 ? 's' : '') + ' from Sheets.';
+    staffSearch();
+  });
 }
 
 // ── STATS ──
@@ -7004,6 +7109,7 @@ function phAssignFromLibrary(key, url) {
   if (!sc.photos) sc.photos = {};
   sc.photos[key] = url;
   localStorage.setItem('wh_site_content', JSON.stringify(sc));
+  WHCC_SYNC.saveSiteContent(sc, function() {});
   document.querySelectorAll('[data-wh-photo="' + key + '"]').forEach(function(el) {
     if (el.tagName === 'IMG') el.src = url;
     else el.style.setProperty('--wh-bg', 'url(' + url + ')');
