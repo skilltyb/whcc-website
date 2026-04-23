@@ -2162,6 +2162,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
               <button class="staff-add-btn" onclick="staffChangePin()" style="margin-bottom:0;">Save PIN</button>
             </div>
             <div id="pin-change-msg" style="font-size:12px;margin-top:8px;min-height:16px;"></div>
+            <div style="margin-top:10px;font-size:10px;color:rgba(245,240,232,.25);line-height:1.6;">⚠ PIN changes apply to this device only. To update the PIN on all devices, edit the PIN column in the <strong style="color:rgba(245,240,232,.35);">App Users</strong> tab of the Google Sheet. Use the Board Recovery Code if you get locked out.</div>
           </div>
         </div>
 
@@ -2191,24 +2192,34 @@ nav.staff-mode .nav-site-back{display:flex!important;}
               <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#b8976a;margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid rgba(184,151,106,.15);">Golf Genius Portal URLs</div>
               <div style="font-size:10px;color:rgba(245,240,232,.25);margin-bottom:12px;">Paste the URL for each portal page you want to display. Leave blank to hide that tab. In Golf Genius: open the event portal → navigate to the page → copy the URL from your browser.</div>
               <div class="hrf-group" style="margin-bottom:8px;">
-                <label class="hrf-label">Tee Sheet URL</label>
-                <input class="hrf-input" id="ls-admin-url-teesheet" placeholder="https://www.golfgenius.com/pages/..." />
+                <label class="hrf-label" style="display:flex;justify-content:space-between;"><span>Tee Sheet URL</span><a id="ls-test-teesheet" href="#" target="_blank" style="display:none;font-size:10px;color:var(--gold);text-decoration:none;letter-spacing:.05em;">🔗 Open</a></label>
+                <input class="hrf-input" id="ls-admin-url-teesheet" placeholder="https://www.golfgenius.com/pages/..." oninput="lsUpdateTestLinks()" />
               </div>
               <div class="hrf-group" style="margin-bottom:8px;">
-                <label class="hrf-label">Pairings / Groupings URL</label>
-                <input class="hrf-input" id="ls-admin-url-pairings" placeholder="https://www.golfgenius.com/pages/..." />
+                <label class="hrf-label" style="display:flex;justify-content:space-between;"><span>Pairings / Groupings URL</span><a id="ls-test-pairings" href="#" target="_blank" style="display:none;font-size:10px;color:var(--gold);text-decoration:none;letter-spacing:.05em;">🔗 Open</a></label>
+                <input class="hrf-input" id="ls-admin-url-pairings" placeholder="https://www.golfgenius.com/pages/..." oninput="lsUpdateTestLinks()" />
               </div>
               <div class="hrf-group" style="margin-bottom:8px;">
-                <label class="hrf-label">Live Leaderboard URL</label>
-                <input class="hrf-input" id="ls-admin-url-leaderboard" placeholder="https://www.golfgenius.com/pages/..." />
+                <label class="hrf-label" style="display:flex;justify-content:space-between;"><span>Live Leaderboard URL</span><a id="ls-test-leaderboard" href="#" target="_blank" style="display:none;font-size:10px;color:var(--gold);text-decoration:none;letter-spacing:.05em;">🔗 Open</a></label>
+                <input class="hrf-input" id="ls-admin-url-leaderboard" placeholder="https://www.golfgenius.com/pages/..." oninput="lsUpdateTestLinks()" />
               </div>
               <div class="hrf-group" style="margin-bottom:8px;">
-                <label class="hrf-label">Results URL</label>
-                <input class="hrf-input" id="ls-admin-url-results" placeholder="https://www.golfgenius.com/pages/..." />
+                <label class="hrf-label" style="display:flex;justify-content:space-between;"><span>Results URL</span><a id="ls-test-results" href="#" target="_blank" style="display:none;font-size:10px;color:var(--gold);text-decoration:none;letter-spacing:.05em;">🔗 Open</a></label>
+                <input class="hrf-input" id="ls-admin-url-results" placeholder="https://www.golfgenius.com/pages/..." oninput="lsUpdateTestLinks()" />
               </div>
             </div>
             <button class="btn-p" style="width:100%;margin-top:10px;" onclick="lsAdminSave()">Save &amp; Go Live</button>
             <div id="ls-admin-status" style="font-size:11px;color:#8fcc8f;margin-top:8px;display:none;"></div>
+            <!-- Portal preview card -->
+            <div id="ls-admin-preview" style="display:none;margin-top:14px;border:1px solid rgba(184,151,106,.2);border-radius:6px;overflow:hidden;">
+              <div style="background:rgba(184,151,106,.08);padding:8px 12px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);">Preview — Golf page portal card</div>
+              <div style="padding:12px 14px;">
+                <div id="ls-preview-name" style="font-family:'Cormorant Garamond',serif;font-size:16px;color:#f5f0e8;margin-bottom:2px;"></div>
+                <div id="ls-preview-date" style="font-size:11px;color:rgba(245,240,232,.4);margin-bottom:10px;"></div>
+                <div id="ls-preview-tabs" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+                <div style="font-size:10px;color:rgba(245,240,232,.25);margin-top:10px;">Tab labels match what members see on the Golf page. Click 🔗 Open above to verify each URL before going live.</div>
+              </div>
+            </div>
           </div>
 
           <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;">
@@ -6287,6 +6298,32 @@ function lsAdminToggle() {
   document.getElementById('ls-admin-fields').style.display = val === 'yes' ? 'block' : 'none';
 }
 
+function lsUpdateTestLinks() {
+  var fields = { teesheet: 'ls-admin-url-teesheet', pairings: 'ls-admin-url-pairings', leaderboard: 'ls-admin-url-leaderboard', results: 'ls-admin-url-results' };
+  Object.keys(fields).forEach(function(key) {
+    var val = (document.getElementById(fields[key]) || {}).value || '';
+    var link = document.getElementById('ls-test-' + key);
+    if (!link) return;
+    if (val.trim()) { link.href = val.trim(); link.style.display = 'inline'; }
+    else { link.style.display = 'none'; }
+  });
+}
+
+function lsRenderPreview() {
+  var prev = document.getElementById('ls-admin-preview');
+  if (!prev) return;
+  if (!lsConfig.active) { prev.style.display = 'none'; return; }
+  var pageLabels = { teesheet: '📋 Tee Sheet', pairings: '👥 Pairings', leaderboard: '🏆 Leaderboard', results: '📊 Results' };
+  var tabs = Object.keys(lsConfig.pages || {}).filter(function(k) { return lsConfig.pages[k]; });
+  if (tabs.length === 0) { prev.style.display = 'none'; return; }
+  document.getElementById('ls-preview-name').textContent = lsConfig.eventName || 'Tournament';
+  document.getElementById('ls-preview-date').textContent = lsConfig.eventDate || '';
+  document.getElementById('ls-preview-tabs').innerHTML = tabs.map(function(k) {
+    return '<span style="padding:5px 10px;background:rgba(184,151,106,.15);border:1px solid rgba(184,151,106,.3);border-radius:3px;font-size:10px;color:var(--gold);letter-spacing:.06em;">' + (pageLabels[k] || k) + '</span>';
+  }).join('');
+  prev.style.display = 'block';
+}
+
 async function lsAdminSave() {
   lsConfig.active = document.getElementById('ls-admin-active').value === 'yes';
   lsConfig.eventName = document.getElementById('ls-admin-name').value.trim();
@@ -6305,7 +6342,7 @@ async function lsAdminSave() {
     status.style.display = 'block';
     var pageCount = Object.keys(lsConfig.pages).length;
     if (lsConfig.active && pageCount > 0) {
-      status.textContent = '✓ Live — ' + pageCount + ' portal page' + (pageCount > 1 ? 's' : '') + ' now visible on the Golf page.';
+      status.textContent = '✓ Live — ' + pageCount + ' portal tab' + (pageCount > 1 ? 's' : '') + ' now visible on the Golf page.';
     } else if (lsConfig.active) {
       status.style.color = '#d4b483';
       status.textContent = '⚠ Tournament is active but no portal URLs entered. Add at least one URL above.';
@@ -6315,6 +6352,7 @@ async function lsAdminSave() {
     setTimeout(function() { status.style.display = 'none'; status.style.color = '#8fcc8f'; }, 5000);
   } catch(e) {}
   WHCC_SYNC.saveLiveScoring(lsConfig, function() {});
+  lsRenderPreview();
 }
 
 function lsAdminRenderPast() {
@@ -7541,14 +7579,18 @@ function boardSetPin() {
   var pin1   = (document.getElementById('board-pin1').value || '').trim();
   var pin2   = (document.getElementById('board-pin2').value || '').trim();
   var errEl  = document.getElementById('board-pin-error');
-  if (!/^\d{4}$/.test(pin1)) { errEl.textContent = 'PIN must be exactly 4 digits.'; return; }
-  if (pin1 !== pin2)          { errEl.textContent = 'PINs do not match.'; return; }
+  if (!/^\d{4}$/.test(pin1)) { errEl.style.color = '#e07070'; errEl.textContent = 'PIN must be exactly 4 digits.'; return; }
+  if (pin1 !== pin2)          { errEl.style.color = '#e07070'; errEl.textContent = 'PINs do not match.'; return; }
   localStorage.setItem('staff-pin', pin1);
-  staffAuthed = true;
-  staffPinHide();
-  boardOverrideCancel();
-  _origNavigate(_pinTarget || 'staff');
-  initStaffDashboard();
+  errEl.style.color = '#8fcc8f';
+  errEl.textContent = '✓ PIN set! Logging you in…';
+  setTimeout(function() {
+    staffAuthed = true;
+    staffPinHide();
+    boardOverrideCancel();
+    _origNavigate(_pinTarget || 'staff');
+    initStaffDashboard();
+  }, 1000);
 }
 
 document.addEventListener('keydown', function(e) {
