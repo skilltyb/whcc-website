@@ -1149,7 +1149,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
         <button class="btn-g" style="width:100%" onclick="navigate('membership')">Inquire Now</button>
       </div>
       <div class="mem-card feat fade-up d2">
-        <div class="mem-badge">Great Value</div>
+        <div class="mem-badge">Featured</div>
         <div class="mem-type">Under 35</div><div class="mem-name">Junior<br>Executive</div>
         <p class="mem-desc">All the benefits of full membership at a reduced rate — designed for younger members building their careers and families.</p>
         <ul class="mem-feats"><li class="mem-feat">All golf privileges</li><li class="mem-feat">Full club access</li><li class="mem-feat">Reduced initiation</li><li class="mem-feat">Ages 18–34</li></ul>
@@ -4107,7 +4107,7 @@ window.addEventListener('scroll', () => {
 function initFades() {
   const obs = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.08, rootMargin: '0px 0px -28px 0px' });
+  }, { threshold: 0.05, rootMargin: '0px 0px 160px 0px' });
   document.querySelectorAll('#page-' + currentPage() + ' .fade-up:not(.visible)').forEach(el => obs.observe(el));
 }
 function currentPage() {
