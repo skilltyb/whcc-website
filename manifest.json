@@ -1,0 +1,25 @@
+{
+  "name": "Westwood Hills Country Club",
+  "short_name": "Westwood Hills",
+  "description": "Southeast Missouri's premier private country club — golf, dining, aquatics, and events.",
+  "start_url": "/whcc-website/",
+  "scope": "/whcc-website/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#1a2b1f",
+  "background_color": "#1a2b1f",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

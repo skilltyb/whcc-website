@@ -14,6 +14,8 @@
 <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png" />
 <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16.png" />
 <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192.png" />
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#1a2b1f" />
 <!-- Google Analytics — replace G-XXXXXXXXXX with your Measurement ID -->
 <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script> -->
@@ -9583,5 +9585,12 @@ function launchFire() {
   </div>
 </div>
 
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+</script>
 </body>
 </html>
