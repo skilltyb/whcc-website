@@ -9403,26 +9403,30 @@ function tsRenderSheet() {
       '<th>Hole</th><th>Group</th><th>Players</th>' + rHeaders +
     '</tr></thead><tbody>' +
     teeSheet.map(function(entry) {
-      var playersHtml = entry.team.players.map(function(tp) {
+      // Support both website format {team:{id,players:[{player:{name}}]}} and mobile format {id,players:[{name}]}
+      var teamId   = (entry.team ? entry.team.id : entry.id) || '';
+      var rawPlayers = entry.team ? entry.team.players : (entry.players || []);
+      var playersHtml = rawPlayers.map(function(tp) {
+        var name = tp.player ? tp.player.name : (tp.name || '—');
         return '<div style="padding:2px 0;">' +
-          '<span style="font-size:14px;color:var(--cream);font-weight:500;">' + pairEsc(tp.player.name) + '</span>' +
+          '<span style="font-size:14px;color:var(--cream);font-weight:500;">' + pairEsc(name) + '</span>' +
         '</div>';
       }).join('');
       var scoreCells = '';
       if (showScore) {
         for (var r = 1; r < teeRound; r++) {
-          var v = teeScores['r' + r + '_t' + entry.team.id];
+          var v = teeScores['r' + r + '_t' + teamId];
           scoreCells += '<td style="text-align:center;font-size:13px;">' +
             (v !== undefined ? v : '<span style="color:rgba(245,240,232,.2);">—</span>') + '</td>';
         }
-        var cum = tsCumScore(entry.team.id, teeRound - 1);
+        var cum = tsCumScore(teamId, teeRound - 1);
         scoreCells += '<td style="text-align:center;font-size:14px;font-weight:600;color:var(--gold-lt);">' +
           (cum !== null ? cum : '<span style="color:rgba(245,240,232,.2);">—</span>') + '</td>';
       }
       return '<tr>' +
         '<td class="ts-time">' + entry.teeTime + '</td>' +
         '<td class="ts-hole">' + (teeConfig.format === 'shotgun' ? 'Hole ' : '#') + entry.hole + '</td>' +
-        '<td class="ts-group">Group ' + entry.team.id + '</td>' +
+        '<td class="ts-group">Group ' + teamId + '</td>' +
         '<td>' + playersHtml + '</td>' + scoreCells +
       '</tr>';
     }).join('') +
@@ -9461,24 +9465,31 @@ function tsPrint() {
       '<th>Hole</th><th>Group</th><th>Players</th><th>Comb. HCP</th>' + rHeaders +
     '</tr></thead><tbody>' +
     teeSheet.map(function(entry) {
-      var combHcp = Math.round(entry.team.players.reduce(function(s, tp) { return s + (tp.player.hcap || 0); }, 0) * 10) / 10;
-      var players = entry.team.players.map(function(tp) {
-        var hcapLabel = (tp.player.hcap !== undefined && tp.player.hcap !== '') ? ' <span style="font-size:9px;color:#888;">(HCP ' + tp.player.hcap + ')</span>' : '';
-        return '<div style="padding:1px 0;">' + pairEsc(tp.player.name) + hcapLabel + '</div>';
+      var teamId     = (entry.team ? entry.team.id : entry.id) || '';
+      var rawPlayers = entry.team ? entry.team.players : (entry.players || []);
+      var combHcp = Math.round(rawPlayers.reduce(function(s, tp) {
+        var hcp = tp.player ? (tp.player.hcap || 0) : (tp.hcap || 0);
+        return s + hcp;
+      }, 0) * 10) / 10;
+      var players = rawPlayers.map(function(tp) {
+        var name = tp.player ? tp.player.name : (tp.name || '—');
+        var hcap = tp.player ? tp.player.hcap : tp.hcap;
+        var hcapLabel = (hcap !== undefined && hcap !== '') ? ' <span style="font-size:9px;color:#888;">(HCP ' + hcap + ')</span>' : '';
+        return '<div style="padding:1px 0;">' + pairEsc(name) + hcapLabel + '</div>';
       }).join('');
       var scoreCells = '';
       if (showScore) {
         for (var r = 1; r < teeRound; r++) {
-          var v = teeScores['r' + r + '_t' + entry.team.id];
+          var v = teeScores['r' + r + '_t' + teamId];
           scoreCells += '<td class="sc">' + (v !== undefined ? v : '—') + '</td>';
         }
-        var cum = tsCumScore(entry.team.id, teeRound - 1);
+        var cum = tsCumScore(teamId, teeRound - 1);
         scoreCells += '<td class="tot">' + (cum !== null ? cum : '—') + '</td>';
       }
       return '<tr>' +
         '<td class="tt">' + entry.teeTime + '</td>' +
         '<td>' + (teeConfig.format === 'shotgun' ? 'Hole ' : '#') + entry.hole + '</td>' +
-        '<td>Group ' + entry.team.id + '</td>' +
+        '<td>Group ' + teamId + '</td>' +
         '<td>' + players + '</td>' +
         '<td style="text-align:center;font-size:11px;color:#666;">' + combHcp + '</td>' + scoreCells +
       '</tr>';
