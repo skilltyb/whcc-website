@@ -2038,8 +2038,9 @@ nav.staff-mode .nav-site-back{display:flex!important;}
       <div class="staff-views">
         <!-- Reservations dropdown -->
         <div class="sv-dropdown">
-          <button class="sv-drop-btn has-active" id="sv-drop-reservations" onclick="svToggleDrop('reservations')">Reservations ▾</button>
+          <button class="sv-drop-btn has-active" id="sv-drop-reservations" onclick="svToggleDrop('reservations')">Reservations ▾<span id="res-pending-badge" style="display:none;margin-left:5px;background:#d4b483;color:#1a2b1f;font-size:9px;font-weight:700;border-radius:8px;padding:1px 5px;vertical-align:middle;"></span></button>
           <div class="sv-drop-menu" id="sv-menu-reservations">
+            <button id="svb-today" onclick="staffView('today');svCloseDrop()">Today</button>
             <button class="active-view" id="svb-calendar" onclick="staffView('calendar');svCloseDrop()">Calendar</button>
             <button id="svb-upcoming" onclick="staffView('upcoming');svCloseDrop()">Upcoming</button>
             <button id="svb-guests" onclick="staffView('guests');svCloseDrop()">Guest Notes</button>
@@ -2108,6 +2109,8 @@ nav.staff-mode .nav-site-back{display:flex!important;}
             <span><span class="staff-dot" style="background:transparent;border:1px solid #d4b483;"></span>3rd Sat</span>
           </div>
         </div>
+        <!-- Today dashboard view -->
+        <div id="sv-today" style="display:none;"></div>
         <!-- Upcoming view -->
         <div id="sv-upcoming" style="display:none;"></div>
         <!-- Search view -->
@@ -2168,10 +2171,10 @@ nav.staff-mode .nav-site-back{display:flex!important;}
                 <label class="hrf-label">Confirm PIN</label>
                 <input class="hrf-input" id="setting-pin-confirm" type="password" maxlength="4" pattern="[0-9]{4}" placeholder="••••" inputmode="numeric" />
               </div>
-              <button class="staff-add-btn" onclick="staffChangePin()" style="margin-bottom:0;">Save PIN</button>
+              <button class="staff-add-btn" onclick="staffChangePin()" style="margin-bottom:0;">Save &amp; Sync PIN</button>
             </div>
             <div id="pin-change-msg" style="font-size:12px;margin-top:8px;min-height:16px;"></div>
-            <div style="margin-top:10px;font-size:10px;color:rgba(245,240,232,.25);line-height:1.6;">⚠ PIN changes apply to this device only. To update the PIN on all devices, edit the PIN column in the <strong style="color:rgba(245,240,232,.35);">App Users</strong> tab of the Google Sheet. Use the Board Recovery Code if you get locked out.</div>
+            <div style="margin-top:10px;font-size:10px;color:rgba(245,240,232,.25);line-height:1.6;">PIN is saved to this device and synced to the Google Sheet so all staff devices pick it up automatically. Use the Board Recovery Code if you get locked out.</div>
           </div>
         </div>
 
@@ -5004,6 +5007,7 @@ async function duAdminLoad() {
   document.getElementById('du-ed-proshop').value = data.proShop || '';
   document.getElementById('du-ed-notice').value = data.notice || '';
   document.getElementById('du-admin-status').style.display = 'none';
+  duUpdatePreview();
   // Fetch latest from Apps Script and refresh fields if newer
   WHCC_SYNC.fetchConditions(function(remote, err) {
     if (!remote || err || typeof remote !== 'object') return;
@@ -5015,6 +5019,7 @@ async function duAdminLoad() {
     document.getElementById('du-ed-putting').value      = remote.puttingGreen || '';
     document.getElementById('du-ed-proshop').value      = remote.proShop     || '';
     document.getElementById('du-ed-notice').value       = remote.notice      || '';
+    duUpdatePreview();
   });
 }
 
@@ -5342,6 +5347,20 @@ function staffGetMaxCovers() { return staffVenue === 'grille' ? (staffSettings.m
 function staffCapPct(dk) { return Math.min(100, Math.round(staffCoversForDate(dk) / staffGetMaxCovers() * 100)); }
 function staffGetTimes() { return staffVenue === 'grille' ? GRILLE_TIMES : STAFF_TIMES; }
 
+// ── PENDING BADGE ──
+function staffUpdatePendingBadge() {
+  var badge = document.getElementById('res-pending-badge');
+  if (!badge) return;
+  var count = 0;
+  [staffDataHoovers, staffDataGrille].forEach(function(dataset) {
+    Object.values(dataset).forEach(function(list) {
+      list.forEach(function(r) { if (r.status === 'pending') count++; });
+    });
+  });
+  if (count > 0) { badge.textContent = count; badge.style.display = 'inline'; }
+  else { badge.style.display = 'none'; }
+}
+
 // ── VENUE SWITCHING ──
 function staffSwitchVenue(venue, btn) {
   staffSaveData(); // persist current venue's data before switching
@@ -5363,7 +5382,7 @@ function staffSwitchVenue(venue, btn) {
 // ── DROPDOWN NAV ──
 var _svDropOpen = null;
 var _svViewGroups = {
-  reservations: ['calendar','upcoming','guests'],
+  reservations: ['today','calendar','upcoming','guests'],
   golf:         ['registrations','pairings','daily','scoring'],
   admin:        ['menus','settings','launch'],
   website:      ['events','announcements','heroes','contact','photos']
@@ -5401,7 +5420,7 @@ function staffView(view, btn, useSecondary) {
   var menuItem = document.getElementById('svb-' + view);
   if (menuItem) menuItem.classList.add('active-view');
 
-  ['calendar','upcoming','search','guests','settings','scoring','daily','menus','registrations','pairings','events','announcements','heroes','contact','photos','pool','express','stats','faq','launch'].forEach(v => {
+  ['today','calendar','upcoming','search','guests','settings','scoring','daily','menus','registrations','pairings','events','announcements','heroes','contact','photos','pool','express','stats','faq','launch'].forEach(v => {
     const el = document.getElementById('sv-' + v);
     if (el) el.style.display = v === view ? 'block' : 'none';
   });
@@ -5410,6 +5429,7 @@ function staffView(view, btn, useSecondary) {
   document.getElementById('staff-form').style.display = 'none';
   document.getElementById('staff-wl-form').style.display = 'none';
   document.getElementById('staff-detail-empty').style.display = (view === 'calendar') ? 'block' : 'none';
+  if (view === 'today')    staffRenderToday();
   if (view === 'calendar') staffRenderCal();
   if (view === 'upcoming') staffRenderUpcoming();
   if (view === 'guests') guestRenderList();
@@ -5860,7 +5880,7 @@ function staffRenderCal() {
       const badge = document.createElement('div'); badge.className = 'staff-cal-day-badge';
       badge.style.background = pct >= 90 ? '#6a3030' : pct >= 60 ? '#5a4520' : '#2a4030';
       badge.style.color = pct >= 90 ? '#ff9999' : pct >= 60 ? '#d4b483' : '#8fcc8f';
-      badge.textContent = covers + '/' + staffSettings.maxCovers;
+      badge.textContent = covers + '/' + staffGetMaxCovers();
       cell.appendChild(badge);
     }
     grid.appendChild(cell);
@@ -5978,6 +5998,7 @@ function staffUpdateStatus(dk, i, status) {
   staffSaveData();
   if (id) WHCC_SYNC.updateDiningStatus(id, status, function() {});
   staffSelectDate(dk);
+  staffUpdatePendingBadge();
 }
 function staffDeleteRes(dk, i) { var id = staffData[dk][i] && staffData[dk][i].id; staffData[dk].splice(i, 1); if (staffData[dk].length === 0) delete staffData[dk]; staffSaveData(); if (id) WHCC_SYNC.deleteDining(id, function() {}); staffSelectDate(dk); }
 
@@ -6248,21 +6269,123 @@ function staffPrintNight() {
 }
 
 // ── UPCOMING ──
-function staffRenderUpcoming() {
+// ── TODAY DASHBOARD ──
+function staffRenderToday() {
+  var container = document.getElementById('sv-today');
+  if (!container) return;
+  var now = new Date(); now.setHours(0,0,0,0);
+  var dk = staffDateKey(now.getFullYear(), now.getMonth(), now.getDate());
+  var dayLabel = STAFF_DAYS[now.getDay()] + ', ' + STAFF_MONTHS[now.getMonth()].slice(0,3) + ' ' + now.getDate();
+
+  // Count pending across both venues
+  var pendingH = 0, pendingG = 0;
+  Object.values(staffDataHoovers).forEach(function(list) { list.forEach(function(r) { if (r.status === 'pending') pendingH++; }); });
+  Object.values(staffDataGrille).forEach(function(list) { list.forEach(function(r) { if (r.status === 'pending') pendingG++; }); });
+  var pendingTotal = pendingH + pendingG;
+
+  // Today's covers for both venues
+  var coversH = 0, coversG = 0;
+  (staffDataHoovers[dk] || []).forEach(function(r) { if (r.status !== 'cancelled') coversH += parseInt(r.partySize) || 2; });
+  (staffDataGrille[dk] || []).forEach(function(r) { if (r.status !== 'cancelled') coversG += parseInt(r.partySize) || 2; });
+  var maxH = staffSettings.maxCovers || 40;
+  var maxG = staffSettings.maxCoversGrille || 60;
+  var pctH = Math.min(100, Math.round(coversH / maxH * 100));
+  var pctG = Math.min(100, Math.round(coversG / maxG * 100));
+
+  var statCard = function(label, val, sub, barPct, barColor) {
+    var bar = barPct !== undefined ? '<div style="height:3px;background:rgba(245,240,232,.08);border-radius:2px;margin-top:8px;"><div style="height:3px;background:' + barColor + ';border-radius:2px;width:' + barPct + '%;transition:width .4s;"></div></div>' : '';
+    return '<div style="background:rgba(26,43,31,.5);border:1px solid rgba(184,151,106,.12);padding:14px 16px;flex:1;min-width:120px;">' +
+      '<div style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(184,151,106,.6);margin-bottom:6px;">' + label + '</div>' +
+      '<div style="font-size:24px;font-weight:700;color:#f5f0e8;line-height:1;">' + val + '</div>' +
+      '<div style="font-size:11px;color:rgba(245,240,232,.35);margin-top:3px;">' + sub + '</div>' + bar +
+    '</div>';
+  };
+
+  var html = '<div style="font-family:\'Cormorant Garamond\',serif;font-size:20px;color:#f5f0e8;margin-bottom:2px;">Today <em style="color:#d4b483;">' + dayLabel + '</em></div>';
+  html += '<div style="font-size:11px;color:rgba(245,240,232,.35);margin-bottom:16px;">Morning dashboard — covers & pending across both venues</div>';
+
+  // Stat cards row
+  html += '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;">';
+  html += statCard("Hoover's Today", coversH + '/' + maxH, 'covers booked', pctH, pctH >= 90 ? '#cc6666' : pctH >= 60 ? '#d4b483' : '#8fcc8f');
+  html += statCard('Westwood Grill Today', coversG + '/' + maxG, 'covers booked', pctG, pctG >= 90 ? '#cc6666' : pctG >= 60 ? '#d4b483' : '#8fcc8f');
+  html += statCard('Pending', pendingTotal, pendingH + ' Hoover\'s · ' + pendingG + ' Grill');
+  html += '</div>';
+
+  // Today's reservations at current venue
+  var todayRes = staffData[dk] || [];
+  var activeToday = todayRes.filter(function(r) { return r.status !== 'cancelled'; });
+  html += '<div style="font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:rgba(184,151,106,.6);margin-bottom:10px;">' + (staffVenue === 'hoovers' ? "Hoover's" : 'Westwood Grill') + ' — Today\'s Reservations (' + activeToday.length + ')</div>';
+
+  container.innerHTML = html;
+  if (activeToday.length === 0) {
+    container.innerHTML += '<div style="color:rgba(245,240,232,.3);font-style:italic;font-size:13px;">No reservations at this venue today.</div>';
+  } else {
+    var resContainer = document.createElement('div');
+    activeToday.forEach(function(r) { resContainer.appendChild(staffResCard(r, todayRes.indexOf(r), dk)); });
+    container.appendChild(resContainer);
+  }
+
+  // Pending items note
+  if (pendingTotal > 0) {
+    container.innerHTML += '<div style="margin-top:20px;padding:12px 14px;background:rgba(90,69,32,.2);border:1px solid rgba(212,180,131,.2);font-size:12px;color:#d4b483;">⚠ ' + pendingTotal + ' pending reservation' + (pendingTotal !== 1 ? 's' : '') + ' need confirmation. Use Reservations → Upcoming to review.</div>';
+  }
+}
+
+var _upcomingDays = 7;
+var _upcomingBothVenues = true;
+function staffRenderUpcoming(days, both) {
+  if (days !== undefined) _upcomingDays = days;
+  if (both !== undefined) _upcomingBothVenues = both;
   var container = document.getElementById('sv-upcoming');
   var now = new Date(); now.setHours(0,0,0,0);
-  var end = new Date(now); end.setDate(end.getDate() + 30);
+  var end = new Date(now); end.setDate(end.getDate() + _upcomingDays);
   var items = [];
-  Object.entries(staffData).forEach(function(pair) {
-    var dk = pair[0], list = pair[1];
-    var p = dk.split('-').map(Number); var dt = new Date(p[0], p[1]-1, p[2]);
-    if (dt >= now && dt <= end) list.forEach(function(r, i) { if (r.status !== 'cancelled') items.push(Object.assign({}, r, { dateKey: dk, index: i })); });
+  var datasets = _upcomingBothVenues ? [{data: staffDataHoovers, venue: 'hoovers'}, {data: staffDataGrille, venue: 'grille'}] : [{data: staffData, venue: staffVenue}];
+  datasets.forEach(function(ds) {
+    Object.entries(ds.data).forEach(function(pair) {
+      var dk = pair[0], list = pair[1];
+      var p = dk.split('-').map(Number); var dt = new Date(p[0], p[1]-1, p[2]);
+      if (dt >= now && dt <= end) list.forEach(function(r, i) { if (r.status !== 'cancelled') items.push(Object.assign({}, r, { dateKey: dk, index: i, _venue: ds.venue })); });
+    });
   });
-  items.sort(function(a, b) { return a.dateKey.localeCompare(b.dateKey) || a.time.localeCompare(b.time); });
-  container.innerHTML = '<div style="font-family:\'Cormorant Garamond\',serif;font-size:18px;color:#f5f0e8;margin-bottom:4px;">Upcoming <em style="color:#d4b483;">30 Days</em></div><div style="font-size:11px;color:rgba(245,240,232,.4);margin-bottom:16px;">' + items.length + ' reservation' + (items.length !== 1 ? 's' : '') + '</div>';
+  items.sort(function(a, b) { return a.dateKey.localeCompare(b.dateKey) || (a.time||'').localeCompare(b.time||''); });
+  var dayLabel = _upcomingDays === 7 ? '7 Days' : _upcomingDays === 14 ? '14 Days' : '30 Days';
+  var toggleHtml =
+    '<div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;">' +
+      '<button class="staff-mini-btn' + (_upcomingDays===7?' accent':'') + '" onclick="staffRenderUpcoming(7)">7 days</button>' +
+      '<button class="staff-mini-btn' + (_upcomingDays===14?' accent':'') + '" onclick="staffRenderUpcoming(14)">14 days</button>' +
+      '<button class="staff-mini-btn' + (_upcomingDays===30?' accent':'') + '" onclick="staffRenderUpcoming(30)">30 days</button>' +
+      '<span style="width:1px;background:rgba(184,151,106,.2);margin:0 4px;"></span>' +
+      '<button class="staff-mini-btn' + (_upcomingBothVenues?' accent':'') + '" onclick="staffRenderUpcoming(undefined,true)">Both venues</button>' +
+      '<button class="staff-mini-btn' + (!_upcomingBothVenues?' accent':'') + '" onclick="staffRenderUpcoming(undefined,false)">This venue</button>' +
+    '</div>';
+  container.innerHTML = '<div style="font-family:\'Cormorant Garamond\',serif;font-size:18px;color:#f5f0e8;margin-bottom:4px;">Upcoming <em style="color:#d4b483;">' + dayLabel + '</em></div><div style="font-size:11px;color:rgba(245,240,232,.4);margin-bottom:10px;">' + items.length + ' reservation' + (items.length !== 1 ? 's' : '') + (_upcomingBothVenues ? ' — both venues' : '') + '</div>' + toggleHtml;
   if (items.length === 0) { container.innerHTML += '<div style="color:rgba(245,240,232,.3);font-style:italic;">No upcoming reservations.</div>'; return; }
   var lastDate = '';
-  items.forEach(function(r) { if (r.dateKey !== lastDate) { var d = document.createElement('div'); d.className = 'staff-upcoming-date'; d.textContent = staffFormatDate(r.dateKey); container.appendChild(d); lastDate = r.dateKey; } container.appendChild(staffResCard(r, r.index, r.dateKey)); });
+  items.forEach(function(r) {
+    if (r.dateKey !== lastDate) {
+      var d = document.createElement('div'); d.className = 'staff-upcoming-date';
+      d.textContent = staffFormatDate(r.dateKey);
+      container.appendChild(d);
+      lastDate = r.dateKey;
+    }
+    if (_upcomingBothVenues) {
+      var venueLbl = document.createElement('div');
+      venueLbl.style.cssText = 'font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(184,151,106,.5);margin:2px 0 4px;';
+      venueLbl.textContent = r._venue === 'grille' ? 'Westwood Grill' : "Hoover's";
+      container.appendChild(venueLbl);
+    }
+    var savedVenue = staffVenue;
+    if (_upcomingBothVenues && r._venue !== staffVenue) {
+      staffVenue = r._venue;
+      staffData = r._venue === 'hoovers' ? staffDataHoovers : staffDataGrille;
+    }
+    container.appendChild(staffResCard(r, r.index, r.dateKey));
+    if (_upcomingBothVenues && r._venue !== savedVenue) {
+      staffVenue = savedVenue;
+      staffData = savedVenue === 'hoovers' ? staffDataHoovers : staffDataGrille;
+    }
+  });
 }
 
 // ── SEARCH ──
@@ -6486,22 +6609,33 @@ function cmsEvLoad() {
   cmsEvRenderList(sc.events || []);
 }
 
+var _CMS_EV_MONTHS = {jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+function cmsEvIsPast(ev) {
+  if (!ev.year || !ev.month || !ev.day) return false;
+  var mKey = (ev.month||'').toLowerCase().slice(0,3);
+  var mNum = _CMS_EV_MONTHS[mKey];
+  if (mNum === undefined) return false;
+  var evDate = new Date(parseInt(ev.year), mNum, parseInt(ev.day));
+  var today = new Date(); today.setHours(0,0,0,0);
+  return evDate < today;
+}
 function cmsEvRenderList(events) {
   var list = document.getElementById('cms-ev-list');
   if (!list) return;
   if (!events.length) { list.innerHTML = '<div style="color:var(--muted);font-style:italic;">No events yet.</div>'; return; }
-  var typeColors = { golf:'#2a5030', tournament:'#4a2e10', social:'#1a3a4a', aquatics:'#0a2a3a' };
   list.innerHTML = events.map(function(ev, i) {
     var active = ev.active !== false;
-    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:rgba(26,43,31,.35);border:1px solid rgba(184,151,106,.12);margin-bottom:8px;">' +
+    var past = cmsEvIsPast(ev);
+    var rowOpacity = past ? 'opacity:.45;' : '';
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:rgba(26,43,31,.35);border:1px solid rgba(184,151,106,.12);margin-bottom:8px;' + rowOpacity + '">' +
       '<div style="display:flex;align-items:center;gap:12px;">' +
         '<div style="text-align:center;min-width:48px;background:rgba(184,151,106,.1);padding:4px 8px;">' +
           '<div style="font-size:10px;color:var(--gold);letter-spacing:.08em;">' + (ev.month||'') + '</div>' +
           '<div style="font-size:18px;color:#f5f0e8;font-weight:700;line-height:1;">' + (ev.day||'') + '</div>' +
         '</div>' +
         '<div>' +
-          '<div style="font-size:13px;color:#f5f0e8;font-weight:600;">' + (ev.name||'') + '</div>' +
-          '<div style="font-size:11px;color:var(--muted);margin-top:2px;">' + (ev.type||'golf') + (active ? '' : ' · <span style="color:#cc8888;">Hidden</span>') + '</div>' +
+          '<div style="font-size:13px;color:#f5f0e8;font-weight:600;">' + (ev.name||'') + (ev.time ? '<span style="font-size:11px;font-weight:400;color:rgba(245,240,232,.5);margin-left:6px;">· ' + ev.time + '</span>' : '') + '</div>' +
+          '<div style="font-size:11px;color:var(--muted);margin-top:2px;">' + (ev.type||'golf') + (past ? ' · <span style="color:#cc8888;">Past</span>' : '') + (active ? '' : ' · <span style="color:#cc8888;">Hidden</span>') + '</div>' +
         '</div>' +
       '</div>' +
       '<div style="display:flex;gap:6px;">' +
@@ -6523,10 +6657,11 @@ function cmsEvShowForm(ev) {
   form.style.display = 'block';
   form.innerHTML =
     '<div style="font-size:13px;color:var(--gold);margin-bottom:14px;font-weight:600;">' + (_cmsEvEditIdx === null ? 'New Event' : 'Edit Event') + '</div>' +
-    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:10px;">' +
       '<div><label class="hrf-label">Month</label><input class="hrf-input" id="cef-month" value="' + menuEsc(ev.month||'') + '" placeholder="Apr" /></div>' +
       '<div><label class="hrf-label">Day</label><input class="hrf-input" id="cef-day" value="' + menuEsc(ev.day||'') + '" placeholder="18" /></div>' +
       '<div><label class="hrf-label">Year</label><input class="hrf-input" id="cef-year" value="' + menuEsc(ev.year||'2026') + '" placeholder="2026" /></div>' +
+      '<div><label class="hrf-label">Time (optional)</label><input class="hrf-input" id="cef-time" value="' + menuEsc(ev.time||'') + '" placeholder="1:00 PM" /></div>' +
     '</div>' +
     '<div style="margin-bottom:10px;"><label class="hrf-label">Event Name</label><input class="hrf-input" id="cef-name" value="' + menuEsc(ev.name||'') + '" placeholder="e.g. Spring Scramble" /></div>' +
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">' +
@@ -6555,6 +6690,7 @@ function cmsEvSaveForm() {
     year:     document.getElementById('cef-year').value.trim() || '2026',
     type:     document.getElementById('cef-type').value,
     detail:   document.getElementById('cef-detail').value.trim(),
+    time:     document.getElementById('cef-time') ? document.getElementById('cef-time').value.trim() : '',
     cta:      document.getElementById('cef-cta').value.trim() || 'Sign Up',
     regMeta:  document.getElementById('cef-month').value.trim() + ' ' + document.getElementById('cef-day').value.trim() + ', ' + document.getElementById('cef-year').value.trim(),
     featured: document.getElementById('cef-featured').checked,
@@ -6951,10 +7087,11 @@ function phLibLoad() {
         var card = document.createElement('div');
         card.className = 'ph-card';
         card.innerHTML =
-          '<img class="ph-card-img" src="' + phThumbUrl(p.url) + '" loading="lazy" onerror="this.style.opacity=\'.2\'">' +
+          '<img class="ph-card-img" src="' + phThumbUrl(p.url) + '" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.querySelector(\'.ph-card-no-thumb\').style.display=\'flex\'">' +
           '<div class="ph-card-body">' +
+            '<div class="ph-card-no-thumb" style="display:none;align-items:center;justify-content:center;height:90px;background:rgba(26,43,31,.6);color:rgba(184,151,106,.4);font-size:28px;border-bottom:1px solid rgba(184,151,106,.1);" title="Photo not public — click Make Public below">🔒</div>' +
             '<div class="ph-card-cat">' + menuEsc(p.category) + '</div>' +
-            '<div class="ph-card-name">' + menuEsc(p.name) + '</div>' +
+            '<div class="ph-card-name" title="' + menuEsc(p.name) + '">' + menuEsc(p.name.length > 24 ? p.name.slice(0,22) + '…' : p.name) + '</div>' +
             '<div class="ph-card-btns">' +
               '<button class="ph-card-btn" onclick="phCopyUrl(\'' + p.url + '\',this)">Copy URL</button>' +
               '<button class="ph-card-btn del" onclick="phDelete(\'' + p.id + '\',this)">Delete</button>' +
@@ -7469,7 +7606,7 @@ function cmsFaqSave() {
 }
 
 // ── INIT ──
-function initStaffDashboard() { staffLoadData().then(function() { staffRenderCal(); staffRenderStats(); }); }
+function initStaffDashboard() { staffLoadData().then(function() { staffRenderCal(); staffRenderStats(); staffUpdatePendingBadge(); staffRenderToday(); }); }
 
 // ── STAFF AUTH ──
 var staffAuthed = false;
@@ -7597,9 +7734,20 @@ function staffChangePin() {
   localStorage.setItem('staff-pin', np);
   document.getElementById('setting-pin-new').value = '';
   document.getElementById('setting-pin-confirm').value = '';
-  msg.style.color = '#8fcc8f';
-  msg.textContent = 'PIN updated successfully.';
-  setTimeout(function() { msg.textContent = ''; }, 3000);
+  msg.style.color = '#d4b483';
+  msg.textContent = 'Syncing…';
+  // Sync to Apps Script so all devices pick up the new PIN
+  if (WHCC_SYNC && WHCC_SYNC.savePin) {
+    WHCC_SYNC.savePin(np, function(ok, err) {
+      msg.style.color = ok ? '#8fcc8f' : '#d4b483';
+      msg.textContent = ok ? '✓ PIN updated and synced to all devices.' : '✓ PIN saved locally. Could not sync to sheet — update manually if needed.';
+      setTimeout(function() { msg.textContent = ''; }, 4000);
+    });
+  } else {
+    msg.style.color = '#8fcc8f';
+    msg.textContent = '✓ PIN updated on this device.';
+    setTimeout(function() { msg.textContent = ''; }, 3000);
+  }
 }
 
 // ── BOARD OVERRIDE ──
