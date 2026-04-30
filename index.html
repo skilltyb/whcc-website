@@ -3869,7 +3869,11 @@ function evToggleArchive() {
 }
 
 // Auto-sync counts from Sheet in background on every page load
-document.addEventListener('DOMContentLoaded', function() { WHCC_SYNC.fetchCounts(); whInitSiteContent(); });
+document.addEventListener('DOMContentLoaded', function() {
+  // Seed default staff PIN if none has been set
+  if (!localStorage.getItem('staff-pin')) { localStorage.setItem('staff-pin', '1936'); }
+  WHCC_SYNC.fetchCounts(); whInitSiteContent();
+});
 
 function openRegModal(eventTitle, eventMeta, isTeam) {
   var info = getEventInfo(eventTitle);
