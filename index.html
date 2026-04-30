@@ -2071,6 +2071,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
             <button id="svb-today" onclick="staffView('today');svCloseDrop()">Today</button>
             <button class="active-view" id="svb-calendar" onclick="staffView('calendar');svCloseDrop()">Calendar</button>
             <button id="svb-upcoming" onclick="staffView('upcoming');svCloseDrop()">Upcoming</button>
+            <button id="svb-pending" onclick="staffView('pending');svCloseDrop()">Pending</button>
             <button id="svb-guests" onclick="staffView('guests');svCloseDrop()">Guest Notes</button>
           </div>
         </div>
@@ -2143,6 +2144,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
         <div id="sv-today" style="display:none;"></div>
         <!-- Upcoming view -->
         <div id="sv-upcoming" style="display:none;"></div>
+        <div id="sv-pending" style="display:none;"></div>
         <!-- Search view -->
         <div id="sv-search" style="display:none;">
           <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px;">
@@ -5626,7 +5628,7 @@ function staffSwitchVenue(venue, btn) {
 // ── DROPDOWN NAV ──
 var _svDropOpen = null;
 var _svViewGroups = {
-  reservations: ['today','calendar','upcoming','guests'],
+  reservations: ['today','calendar','upcoming','pending','guests'],
   golf:         ['registrations','pairings','daily','scoring','lessons'],
   admin:        ['menus','settings','launch'],
   website:      ['events','announcements','heroes','contact','photos','pool','express','stats','faq','probio']
@@ -5664,7 +5666,7 @@ function staffView(view, btn, useSecondary) {
   var menuItem = document.getElementById('svb-' + view);
   if (menuItem) menuItem.classList.add('active-view');
 
-  ['today','calendar','upcoming','search','guests','settings','scoring','daily','menus','registrations','pairings','lessons','events','announcements','heroes','contact','photos','pool','express','stats','faq','probio','launch'].forEach(v => {
+  ['today','calendar','upcoming','pending','search','guests','settings','scoring','daily','menus','registrations','pairings','lessons','events','announcements','heroes','contact','photos','pool','express','stats','faq','probio','launch'].forEach(v => {
     const el = document.getElementById('sv-' + v);
     if (el) el.style.display = v === view ? 'block' : 'none';
   });
@@ -5676,6 +5678,7 @@ function staffView(view, btn, useSecondary) {
   if (view === 'today')    staffRenderToday();
   if (view === 'calendar') staffRenderCal();
   if (view === 'upcoming') staffRenderUpcoming();
+  if (view === 'pending')  staffRenderPending();
   if (view === 'guests') guestRenderList();
   if (view === 'scoring') lsAdminLoad();
   if (view === 'daily') duAdminLoad();
@@ -6573,8 +6576,97 @@ function staffRenderToday() {
 
   // Pending items note
   if (pendingTotal > 0) {
-    container.innerHTML += '<div style="margin-top:20px;padding:12px 14px;background:rgba(90,69,32,.2);border:1px solid rgba(212,180,131,.2);font-size:12px;color:#d4b483;">⚠ ' + pendingTotal + ' pending reservation' + (pendingTotal !== 1 ? 's' : '') + ' need confirmation. Use Reservations → Upcoming to review.</div>';
+    container.innerHTML += '<div style="margin-top:20px;padding:12px 14px;background:rgba(90,69,32,.2);border:1px solid rgba(212,180,131,.2);font-size:12px;color:#d4b483;cursor:pointer;" onclick="staffView(\'pending\')">' +
+      '⚠ ' + pendingTotal + ' pending reservation' + (pendingTotal !== 1 ? 's' : '') + ' need confirmation — <u>view all pending →</u></div>';
   }
+}
+
+function staffRenderPending() {
+  var container = document.getElementById('sv-pending');
+  if (!container) return;
+
+  // Collect all pending from both venues
+  var items = [];
+  [{data: staffDataHoovers, venue: 'hoovers'}, {data: staffDataGrille, venue: 'grille'}].forEach(function(ds) {
+    Object.entries(ds.data).forEach(function(pair) {
+      var dk = pair[0], list = pair[1];
+      list.forEach(function(r, i) {
+        if (r.status === 'pending') items.push(Object.assign({}, r, { dateKey: dk, index: i, _venue: ds.venue }));
+      });
+    });
+  });
+  items.sort(function(a, b) { return a.dateKey.localeCompare(b.dateKey) || (a.time||'').localeCompare(b.time||''); });
+
+  var pastCount    = items.filter(function(r) { var d = new Date(r.dateKey + 'T00:00:00'); d.setHours(0,0,0,0); var t = new Date(); t.setHours(0,0,0,0); return d < t; }).length;
+  var upcomingCount = items.length - pastCount;
+
+  container.innerHTML =
+    '<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:16px;">' +
+      '<div>' +
+        '<div style="font-family:\'Cormorant Garamond\',serif;font-size:20px;color:#f5f0e8;">Pending <em style="color:#d4b483;">Reservations</em></div>' +
+        '<div style="font-size:11px;color:rgba(245,240,232,.4);margin-top:2px;">' +
+          (items.length === 0 ? 'All caught up — nothing pending.' :
+            items.length + ' unconfirmed · ' + upcomingCount + ' upcoming' + (pastCount > 0 ? ' · <span style="color:#e07070;">' + pastCount + ' past</span>' : '')) +
+        '</div>' +
+      '</div>' +
+      '<div style="display:flex;gap:6px;flex-wrap:wrap;">' +
+        '<button class="staff-mini-btn" onclick="staffRenderPending()">↻ Refresh</button>' +
+        (items.length > 0 ? '<button class="staff-mini-btn accent" onclick="staffConfirmAllPending()">✓ Confirm All</button>' : '') +
+      '</div>' +
+    '</div>';
+
+  if (items.length === 0) {
+    container.innerHTML += '<div style="color:rgba(245,240,232,.3);font-style:italic;font-size:13px;padding:20px 0;">No pending reservations across either venue.</div>';
+    return;
+  }
+
+  var lastDate = '';
+  items.forEach(function(r) {
+    var now = new Date(); now.setHours(0,0,0,0);
+    var rDate = new Date(r.dateKey + 'T00:00:00'); rDate.setHours(0,0,0,0);
+    var isPast = rDate < now;
+
+    if (r.dateKey !== lastDate) {
+      var dateEl = document.createElement('div');
+      dateEl.className = 'staff-upcoming-date';
+      dateEl.style.cssText += (isPast ? 'color:rgba(224,112,112,.6);' : '');
+      dateEl.textContent = staffFormatDate(r.dateKey) + (isPast ? '  (past)' : '');
+      container.appendChild(dateEl);
+      lastDate = r.dateKey;
+    }
+
+    var venueLbl = document.createElement('div');
+    venueLbl.style.cssText = 'font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(184,151,106,.5);margin:2px 0 4px;';
+    venueLbl.textContent = r._venue === 'grille' ? 'Westwood Grill' : "Hoover's";
+    container.appendChild(venueLbl);
+
+    var savedVenue = staffVenue;
+    if (r._venue !== staffVenue) {
+      staffVenue = r._venue;
+      staffData  = r._venue === 'hoovers' ? staffDataHoovers : staffDataGrille;
+    }
+    container.appendChild(staffResCard(r, r.index, r.dateKey));
+    if (r._venue !== savedVenue) {
+      staffVenue = savedVenue;
+      staffData  = savedVenue === 'hoovers' ? staffDataHoovers : staffDataGrille;
+    }
+  });
+}
+
+function staffConfirmAllPending() {
+  if (!confirm('Confirm all pending reservations across both venues?')) return;
+  var changed = 0;
+  [staffDataHoovers, staffDataGrille].forEach(function(dataset) {
+    Object.values(dataset).forEach(function(list) {
+      list.forEach(function(r) { if (r.status === 'pending') { r.status = 'confirmed'; changed++; } });
+    });
+  });
+  if (!changed) return;
+  staffData = staffVenue === 'hoovers' ? staffDataHoovers : staffDataGrille;
+  staffSaveData();
+  staffUpdatePendingBadge();
+  staffRenderPending();
+  staffToast(changed + ' reservation' + (changed !== 1 ? 's' : '') + ' confirmed.', 'success');
 }
 
 var _upcomingDays = 7;
