@@ -1191,7 +1191,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
         <h2 class="sec-title">Built for every <em>player</em></h2>
         <p class="sec-body full">Nestled in the rolling terrain of Southeast Missouri, our 18-hole championship layout is equal parts entertaining and challenging. Don't let the scorecard yardages fool you — Westwood Hills is well protected with strategic bunkering, ample trees, and Five par 3s that rank among the toughest holes on the course keep every round honest.</p>
         <p class="sec-body full">Practice facilities offer a full-length driving range, short game pitching and chipping area up to 50 yards, and a putting green that mimics course conditions daily.</p>
-        <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:4px;"><button class="btn-p">Contact the Pro Shop</button><a href="images/scorecard.jpg" download="WHCC-Scorecard.jpg" class="btn-g" style="text-decoration:none;display:inline-flex;align-items:center;">Download Scorecard</a><a href="images/pinsheet.jpg" download="WHCC-PinSheet.jpg" class="btn-g" style="text-decoration:none;display:inline-flex;align-items:center;">Download Pin Sheet</a></div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:4px;"><button class="btn-p" onclick="navigate('contact')">Contact the Pro Shop</button><button id="golf-dl-scorecard" class="btn-g" onclick="golfDownload('scorecard')">Download Scorecard</button><button id="golf-dl-pinsheet" class="btn-g" onclick="golfDownload('pinsheet')">Download Pin Sheet</button></div>
       </div>
       <div class="tee-box fade-up d2">
         <p class="tee-title">Tee Options</p>
@@ -1290,6 +1290,34 @@ nav.staff-mode .nav-site-back{display:flex!important;}
       <div class="feat-card fade-up d1"><div class="feat-icon">🎓</div><h3 class="feat-name">Lessons &amp; Clinics</h3><p class="feat-desc">PGA professionals on staff for private lessons, group clinics, and custom improvement programs for all ages.</p></div>
       <div class="feat-card fade-up d2"><div class="feat-icon">🛒</div><h3 class="feat-name">Golf Cars</h3><p class="feat-desc">Fleet of modern electric golf cars available for all rounds. Pull carts for those who prefer to walk.</p></div>
       <div class="feat-card fade-up d3"><div class="feat-icon">🏆</div><h3 class="feat-name">Pro Shop</h3><p class="feat-desc">Premium equipment, branded apparel, custom fitting, and club repair.</p></div>
+    </div>
+  </div>
+
+  <!-- ── MEET THE PRO ── -->
+  <div id="golf-meet-pro" class="section" style="display:none;">
+    <div class="course-split" style="align-items:center;">
+      <div id="golf-pro-photo-wrap" class="fade-up" style="display:none;">
+        <img id="golf-pro-photo" src="" alt="Head Golf Professional" style="width:100%;max-width:320px;border-radius:4px;object-fit:cover;aspect-ratio:3/4;display:block;">
+      </div>
+      <div class="fade-up d1">
+        <p class="eyebrow" id="golf-pro-eyebrow">Your Golf Professional</p>
+        <h2 class="sec-title" id="golf-pro-name-heading">Meet the <em>Pro</em></h2>
+        <p style="font-size:13px;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;margin-bottom:16px;" id="golf-pro-title-line"></p>
+        <p class="sec-body full" id="golf-pro-bio"></p>
+        <div id="golf-pro-contact-row" style="display:none;margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+          <span id="golf-pro-email-badge" style="font-size:13px;color:var(--cream);"></span>
+        </div>
+        <div id="golf-pro-lesson-details" style="margin-top:20px;padding:16px;background:rgba(26,43,31,.6);border-left:3px solid var(--gold);border-radius:0 4px 4px 0;">
+          <div style="font-size:10px;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">Lessons &amp; Instruction</div>
+          <div style="font-size:13px;color:rgba(245,240,232,.75);margin-bottom:6px;" id="golf-pro-lesson-types"></div>
+          <div id="golf-pro-rates-row" style="display:none;font-size:12px;color:rgba(245,240,232,.5);margin-bottom:4px;"></div>
+          <div style="font-size:12px;color:rgba(245,240,232,.5);" id="golf-pro-days-display"></div>
+        </div>
+        <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;">
+          <button class="btn-p" onclick="openLessonModal()">Request a Lesson</button>
+          <button class="btn-g" onclick="navigate('contact')">Contact Pro Shop</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -2054,6 +2082,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
             <button id="svb-pairings" onclick="staffView('pairings');svCloseDrop()">Pairings</button>
             <button id="svb-daily" onclick="staffView('daily');svCloseDrop()">Daily Sheet</button>
             <button id="svb-scoring" onclick="staffView('scoring');svCloseDrop()">Scoring</button>
+            <button id="svb-lessons" onclick="staffView('lessons');svCloseDrop()">Lesson Requests</button>
           </div>
         </div>
         <!-- Search standalone -->
@@ -2080,6 +2109,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
             <button id="svb-express"       onclick="staffView('express');svCloseDrop()">Express Lunch</button>
             <button id="svb-stats"         onclick="staffView('stats');svCloseDrop()">Club Statistics</button>
             <button id="svb-faq"           onclick="staffView('faq');svCloseDrop()">Membership FAQ</button>
+            <button id="svb-probio"        onclick="staffView('probio');svCloseDrop()">Pro &amp; Lessons</button>
           </div>
         </div>
         <span style="width:1px;background:rgba(184,151,106,.2);margin:0 4px;align-self:stretch;"></span>
@@ -2297,6 +2327,17 @@ nav.staff-mode .nav-site-back{display:flex!important;}
               <label class="hrf-label">Special Notice (optional)</label>
               <input class="hrf-input" id="du-ed-notice" placeholder="e.g. Frost delay until 10 AM, Cart path only holes 3-5, etc." oninput="duUpdatePreview()" />
             </div>
+            <div style="margin-top:14px;padding:12px;background:rgba(184,151,106,.06);border:1px solid rgba(184,151,106,.15);border-radius:4px;">
+              <div style="font-size:10px;color:rgba(245,240,232,.45);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;">Golf Page Downloads</div>
+              <div class="hrf-group" style="margin-bottom:8px;">
+                <label class="hrf-label">Scorecard URL (leave blank to use default)</label>
+                <input class="hrf-input" id="du-ed-scorecard-url" placeholder="https://drive.google.com/… or images/scorecard.jpg" />
+              </div>
+              <div class="hrf-group">
+                <label class="hrf-label">Pin Sheet URL (leave blank to use default)</label>
+                <input class="hrf-input" id="du-ed-pinsheet-url" placeholder="https://drive.google.com/… or images/pinsheet.jpg" />
+              </div>
+            </div>
             <button class="btn-p" style="width:100%;margin-top:14px;" onclick="duAdminSave()">Update Home Page</button>
             <div id="du-admin-status" style="font-size:11px;color:#8fcc8f;margin-top:8px;display:none;"></div>
           </div>
@@ -2319,6 +2360,18 @@ nav.staff-mode .nav-site-back{display:flex!important;}
               <button class="staff-mini-btn danger" onclick="duPreset('closed')">Course Closed</button>
             </div>
           </div>
+        </div>
+
+        <!-- Lesson Requests view -->
+        <div id="sv-lessons" style="display:none;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
+            <div>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:#f5f0e8;">Lesson <em style="color:#d4b483;">Requests</em></div>
+              <div style="font-size:11px;color:rgba(245,240,232,.4);margin-top:2px;">Member requests submitted through the Golf page.</div>
+            </div>
+            <button class="staff-mini-btn" onclick="staffViewLessons()">↻ Refresh</button>
+          </div>
+          <div id="sv-lessons-list"></div>
         </div>
 
         <!-- Menus view -->
@@ -2813,6 +2866,29 @@ nav.staff-mode .nav-site-back{display:flex!important;}
           <div id="cms-faq-status" style="display:none;color:#8fcc8f;font-size:12px;margin-top:8px;"></div>
         </div>
 
+        <!-- PRO BIO / LESSONS EDITOR -->
+        <div id="sv-probio" style="display:none;">
+          <div class="staff-section-header" style="margin-bottom:16px;">
+            <div class="staff-tag">Pro &amp; Lessons</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;">Manage the "Meet the Pro" section on the Golf page. Leave Name blank to hide the section.</div>
+          </div>
+          <div style="display:grid;gap:12px;max-width:560px;">
+            <div class="hrf-row" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <div class="hrf-group"><label class="hrf-label">Pro Name</label><input class="hrf-input" id="cms-pro-name" placeholder="e.g. Tyler Evans" /></div>
+              <div class="hrf-group"><label class="hrf-label">Title / Credentials</label><input class="hrf-input" id="cms-pro-title" placeholder="Head Golf Professional" /></div>
+            </div>
+            <div class="hrf-group"><label class="hrf-label">Bio (shown on Golf page)</label><textarea class="hrf-input" id="cms-pro-bio" rows="4" placeholder="A brief professional bio…" style="height:auto;resize:vertical;"></textarea></div>
+            <div class="hrf-group"><label class="hrf-label">Photo URL</label><input class="hrf-input" id="cms-pro-photo" placeholder="https://… or leave blank" /></div>
+            <div class="hrf-group"><label class="hrf-label">Email Address</label><input class="hrf-input" id="cms-pro-email" type="email" placeholder="pro@westwoodhillscc.com" /></div>
+            <div style="color:rgba(245,240,232,.5);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-top:4px;padding-bottom:4px;border-bottom:1px solid rgba(184,151,106,.1);">Lesson Details</div>
+            <div class="hrf-group"><label class="hrf-label">Lesson Types Offered</label><input class="hrf-input" id="cms-pro-lesson-types" placeholder="Private Lessons · Group Clinics · Junior Programs" /></div>
+            <div class="hrf-group"><label class="hrf-label">Rates (optional)</label><input class="hrf-input" id="cms-pro-rates" placeholder="e.g. Private $75/hr · Group $30/person" /></div>
+            <div class="hrf-group"><label class="hrf-label">Available Days</label><input class="hrf-input" id="cms-pro-days" placeholder="Mon – Fri · Call Pro Shop to schedule" /></div>
+          </div>
+          <button class="btn-p" style="margin-top:20px;width:100%;max-width:560px;" onclick="cmsProBioSave()">Save Pro &amp; Lessons</button>
+          <div id="cms-probio-status" style="display:none;color:#8fcc8f;font-size:12px;margin-top:8px;"></div>
+        </div>
+
         <!-- ── LAUNCH SITE ── -->
         <div id="sv-launch" style="display:none;max-width:720px;">
           <div style="background:linear-gradient(160deg,#0a0404 0%,#1a0606 100%);border:1px solid rgba(220,60,60,.45);border-radius:6px;overflow:hidden;font-family:monospace;">
@@ -3150,6 +3226,16 @@ var WH_SITE_DEFAULTS = {
     { q: 'Can I upgrade my membership later?',    a: 'Absolutely. Members may upgrade at any time, subject to availability. Downgrades are permitted with 30 days\u2019 written notice.' },
     { q: 'Is the club open year-round?',          a: 'The golf course and clubhouse are open year-round, weather permitting. The aquatics complex operates Memorial Day through Labor Day.' }
   ],
+  proBio: {
+    name:          '',
+    title:         'Head Golf Professional',
+    bio:           '',
+    photoUrl:      '',
+    email:         '',
+    lessonTypes:   'Private Lessons · Group Clinics · Junior Programs · Playing Lessons',
+    rates:         '',
+    availableDays: 'Mon – Fri · Call Pro Shop to schedule'
+  },
   photos: {
     hero_home:        'images/hero-clubhouse.jpg',
     hero_golf:        'images/golf-carts-sunset.jpg',
@@ -3265,6 +3351,59 @@ function applySiteContent(sc) {
       return '<div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">' + item.q + ' <span class="faq-icon">+</span></div><div class="faq-a">' + item.a + '</div></div>';
     }).join('');
   }
+  // Pro Bio — Meet the Pro section on Golf page
+  renderProBio(sc.proBio || WH_SITE_DEFAULTS.proBio || {});
+}
+
+function renderProBio(pb) {
+  var section = document.getElementById('golf-meet-pro');
+  if (!section) return;
+  // Only show section if a name is set
+  if (!pb || !pb.name) { section.style.display = 'none'; return; }
+  section.style.display = 'block';
+  var nameEl = document.getElementById('golf-pro-name-heading');
+  if (nameEl) nameEl.innerHTML = 'Meet <em>' + pb.name + '</em>';
+  var titleEl = document.getElementById('golf-pro-title-line');
+  if (titleEl) titleEl.textContent = pb.title || 'Head Golf Professional';
+  var bioEl = document.getElementById('golf-pro-bio');
+  if (bioEl) bioEl.textContent = pb.bio || '';
+  // Photo
+  var photoWrap = document.getElementById('golf-pro-photo-wrap');
+  var photoImg = document.getElementById('golf-pro-photo');
+  if (photoWrap && photoImg) {
+    if (pb.photoUrl) {
+      photoImg.src = pb.photoUrl;
+      photoImg.alt = pb.name || 'Head Golf Professional';
+      photoWrap.style.display = 'block';
+    } else {
+      photoWrap.style.display = 'none';
+    }
+  }
+  // Email
+  var contactRow = document.getElementById('golf-pro-contact-row');
+  var emailBadge = document.getElementById('golf-pro-email-badge');
+  if (contactRow && emailBadge) {
+    if (pb.email) {
+      emailBadge.innerHTML = '✉ <a href="mailto:' + pb.email + '" style="color:var(--gold);text-decoration:none;">' + pb.email + '</a>';
+      contactRow.style.display = 'flex';
+    } else {
+      contactRow.style.display = 'none';
+    }
+  }
+  // Lesson details
+  var lessonTypes = document.getElementById('golf-pro-lesson-types');
+  if (lessonTypes) lessonTypes.textContent = pb.lessonTypes || 'Private Lessons · Group Clinics · Junior Programs';
+  var ratesRow = document.getElementById('golf-pro-rates-row');
+  if (ratesRow) {
+    if (pb.rates) {
+      ratesRow.style.display = 'block';
+      ratesRow.textContent = '💵 ' + pb.rates;
+    } else {
+      ratesRow.style.display = 'none';
+    }
+  }
+  var daysDisplay = document.getElementById('golf-pro-days-display');
+  if (daysDisplay) daysDisplay.textContent = '📅 ' + (pb.availableDays || 'Call Pro Shop to schedule');
 }
 
 function renderEventsGrid(events) {
@@ -3803,6 +3942,60 @@ function closeRegModal() {
   currentRegEvent = null;
 }
 
+// ── LESSON REQUEST MODAL ─────────────────────────────────────────────────────
+function openLessonModal() {
+  document.getElementById('lesson-overlay').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  document.getElementById('lesson-form-wrap').style.display = 'block';
+  document.getElementById('lesson-success').style.display = 'none';
+  document.getElementById('lesson-error').style.display = 'none';
+  document.getElementById('lesson-submit-btn').textContent = 'Send Request';
+  document.getElementById('lesson-submit-btn').disabled = false;
+}
+
+function closeLessonModal() {
+  document.getElementById('lesson-overlay').style.display = 'none';
+  document.body.style.overflow = '';
+  ['lesson-fname','lesson-lname','lesson-phone','lesson-email','lesson-days','lesson-notes'].forEach(function(id){
+    var el = document.getElementById(id); if(el) el.value = '';
+  });
+}
+
+function submitLessonForm(e) {
+  e.preventDefault();
+  var btn = document.getElementById('lesson-submit-btn');
+  var errEl = document.getElementById('lesson-error');
+  errEl.style.display = 'none';
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+
+  var req = {
+    firstName:    document.getElementById('lesson-fname').value.trim(),
+    lastName:     document.getElementById('lesson-lname').value.trim(),
+    phone:        document.getElementById('lesson-phone').value.trim(),
+    email:        document.getElementById('lesson-email').value.trim(),
+    lessonType:   document.getElementById('lesson-type').value,
+    skillLevel:   document.getElementById('lesson-skill').value,
+    preferredDays:document.getElementById('lesson-days').value.trim(),
+    notes:        document.getElementById('lesson-notes').value.trim(),
+    timestamp:    new Date().toISOString(),
+    source:       'website'
+  };
+
+  // Save to localStorage
+  try {
+    var all = JSON.parse(localStorage.getItem('wh_lesson_requests') || '[]');
+    req.id = Date.now().toString();
+    all.push(req);
+    localStorage.setItem('wh_lesson_requests', JSON.stringify(all));
+  } catch(e2) {}
+
+  btn.textContent = 'Send Request';
+  btn.disabled = false;
+  document.getElementById('lesson-form-wrap').style.display = 'none';
+  document.getElementById('lesson-success').style.display = 'block';
+}
+
 function openMemberInquiry(membershipType) {
   navigate('about');
   setTimeout(function() {
@@ -3926,6 +4119,38 @@ function submitRegForm(e) {
     source: 'website'
   };
 
+  // HCP validation
+  if (reg.ghin !== '') {
+    var hcp = parseFloat(reg.ghin);
+    if (isNaN(hcp) || hcp < 0 || hcp > 54) {
+      errEl.textContent = 'Handicap Index must be between 0.0 and 54.0 (e.g. 8.4). Please check your entry.';
+      errEl.style.display = 'block';
+      btn.textContent = 'Complete Registration';
+      btn.disabled = false;
+      return;
+    }
+  }
+
+  // Duplicate detection
+  try {
+    var existingRegs = JSON.parse(localStorage.getItem('wh_registrations') || '[]');
+    var evtTitle = (reg.event || '').toLowerCase();
+    var isDup = existingRegs.some(function(r) {
+      if ((r.event || '').toLowerCase() !== evtTitle) return false;
+      var sameName = ((r.firstName || '') + ' ' + (r.lastName || '')).trim().toLowerCase() ===
+                     ((reg.firstName || '') + ' ' + (reg.lastName || '')).trim().toLowerCase();
+      var sameEmail = reg.email && r.email && r.email.toLowerCase() === reg.email.toLowerCase();
+      return sameName || sameEmail;
+    });
+    if (isDup) {
+      errEl.textContent = 'You appear to be already registered for this event. Contact the Pro Shop at (573) 785-8211 if you need to make changes.';
+      errEl.style.display = 'block';
+      btn.textContent = 'Complete Registration';
+      btn.disabled = false;
+      return;
+    }
+  } catch(e2) {}
+
   // Save to localStorage first (always works, good for demos)
   saveRegLocal(reg);
 
@@ -4030,6 +4255,8 @@ function navigate(page, skipPushState) {
   document.getElementById('mobile-nav').classList.remove('open');
   // Archive past events when showing events page
   if (page === 'events') setTimeout(archiveEventCards, 50);
+  // Update download links on golf page
+  if (page === 'golf') setTimeout(golfUpdateDownloadLinks, 50);
   // Re-run fade observers
   setTimeout(initFades, 50);
   // Update browser URL
@@ -5006,6 +5233,10 @@ async function duAdminLoad() {
   document.getElementById('du-ed-putting').value = data.puttingGreen || '';
   document.getElementById('du-ed-proshop').value = data.proShop || '';
   document.getElementById('du-ed-notice').value = data.notice || '';
+  var scEl = document.getElementById('du-ed-scorecard-url');
+  var psEl = document.getElementById('du-ed-pinsheet-url');
+  if (scEl) scEl.value = data.scorecardUrl || '';
+  if (psEl) psEl.value = data.pinSheetUrl || '';
   document.getElementById('du-admin-status').style.display = 'none';
   duUpdatePreview();
   // Fetch latest from Apps Script and refresh fields if newer
@@ -5019,6 +5250,10 @@ async function duAdminLoad() {
     document.getElementById('du-ed-putting').value      = remote.puttingGreen || '';
     document.getElementById('du-ed-proshop').value      = remote.proShop     || '';
     document.getElementById('du-ed-notice').value       = remote.notice      || '';
+    var scElR = document.getElementById('du-ed-scorecard-url');
+    var psElR = document.getElementById('du-ed-pinsheet-url');
+    if (scElR && remote.scorecardUrl !== undefined) scElR.value = remote.scorecardUrl || '';
+    if (psElR && remote.pinSheetUrl  !== undefined) psElR.value = remote.pinSheetUrl  || '';
     duUpdatePreview();
   });
 }
@@ -5047,6 +5282,8 @@ function duUpdatePreview() {
 }
 
 async function duAdminSave() {
+  var scEl = document.getElementById('du-ed-scorecard-url');
+  var psEl = document.getElementById('du-ed-pinsheet-url');
   var data = {
     courseOpens: document.getElementById('du-ed-opens').value.trim(),
     cartRules: document.getElementById('du-ed-cart').value,
@@ -5055,8 +5292,11 @@ async function duAdminSave() {
     puttingGreen: document.getElementById('du-ed-putting').value.trim(),
     proShop: document.getElementById('du-ed-proshop').value.trim(),
     notice: document.getElementById('du-ed-notice').value.trim(),
+    scorecardUrl: scEl ? scEl.value.trim() : '',
+    pinSheetUrl: psEl ? psEl.value.trim() : '',
     updatedAt: new Date().toISOString()
   };
+  golfUpdateDownloadLinks(data);
   try {
     await window.storage.set('daily-update', JSON.stringify(data));
     var status = document.getElementById('du-admin-status');
@@ -5383,9 +5623,9 @@ function staffSwitchVenue(venue, btn) {
 var _svDropOpen = null;
 var _svViewGroups = {
   reservations: ['today','calendar','upcoming','guests'],
-  golf:         ['registrations','pairings','daily','scoring'],
+  golf:         ['registrations','pairings','daily','scoring','lessons'],
   admin:        ['menus','settings','launch'],
-  website:      ['events','announcements','heroes','contact','photos']
+  website:      ['events','announcements','heroes','contact','photos','pool','express','stats','faq','probio']
 };
 function svToggleDrop(name) {
   if (_svDropOpen && _svDropOpen !== name) svCloseDrop();
@@ -5420,7 +5660,7 @@ function staffView(view, btn, useSecondary) {
   var menuItem = document.getElementById('svb-' + view);
   if (menuItem) menuItem.classList.add('active-view');
 
-  ['today','calendar','upcoming','search','guests','settings','scoring','daily','menus','registrations','pairings','events','announcements','heroes','contact','photos','pool','express','stats','faq','launch'].forEach(v => {
+  ['today','calendar','upcoming','search','guests','settings','scoring','daily','menus','registrations','pairings','lessons','events','announcements','heroes','contact','photos','pool','express','stats','faq','probio','launch'].forEach(v => {
     const el = document.getElementById('sv-' + v);
     if (el) el.style.display = v === view ? 'block' : 'none';
   });
@@ -5447,6 +5687,8 @@ function staffView(view, btn, useSecondary) {
   if (view === 'express')       { cmsExpressLoad(); }
   if (view === 'stats')         { cmsStatsLoad(); }
   if (view === 'faq')           { cmsFaqLoad(); }
+  if (view === 'probio')        { cmsProBioLoad(); }
+  if (view === 'lessons')       { staffViewLessons(); }
   if (view === 'launch')        { _launchStartClock(); }
   // Hide right panel for full-width views
   var rightPanel = document.getElementById('staff-right');
@@ -7605,6 +7847,73 @@ function cmsFaqSave() {
   cmsSave(sc, 'cms-faq-status');
 }
 
+// ── LESSON REQUESTS ──────────────────────────────────────────
+function staffViewLessons() {
+  var list = document.getElementById('sv-lessons-list');
+  if (!list) return;
+  var all = [];
+  try { all = JSON.parse(localStorage.getItem('wh_lesson_requests') || '[]'); } catch(e) {}
+  if (!all.length) {
+    list.innerHTML = '<div style="color:rgba(245,240,232,.35);font-size:13px;padding:20px 0;">No lesson requests yet. Members submit requests via the Golf page.</div>';
+    return;
+  }
+  all = all.slice().reverse(); // newest first
+  var typeLabels = { private:'Private (1-on-1)', playing:'Playing Lesson', group:'Group Clinic', junior:'Junior Program', other:'Other' };
+  var skillLabels = { beginner:'Beginner', intermediate:'Intermediate', low:'Low Handicap', junior:'Junior' };
+  list.innerHTML = all.map(function(r) {
+    var d = r.timestamp ? new Date(r.timestamp).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '';
+    return '<div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);border-radius:4px;padding:12px 16px;margin-bottom:10px;">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px;margin-bottom:8px;">' +
+        '<div style="font-weight:600;font-size:14px;color:var(--cream);">' + (r.firstName || '') + ' ' + (r.lastName || '') + '</div>' +
+        '<div style="font-size:10px;color:rgba(245,240,232,.35);">' + d + '</div>' +
+      '</div>' +
+      '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">' +
+        '<span style="font-size:10px;background:rgba(184,151,106,.15);border:1px solid rgba(184,151,106,.2);border-radius:10px;padding:2px 8px;color:var(--gold);">' + (typeLabels[r.lessonType] || r.lessonType || '—') + '</span>' +
+        '<span style="font-size:10px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.12);border-radius:10px;padding:2px 8px;color:rgba(245,240,232,.5);">' + (skillLabels[r.skillLevel] || r.skillLevel || '') + '</span>' +
+      '</div>' +
+      '<div style="font-size:12px;color:rgba(245,240,232,.6);line-height:1.6;">' +
+        (r.phone ? '📞 ' + r.phone + (r.email ? ' &nbsp;·&nbsp; ' : '') : '') +
+        (r.email ? '✉ ' + r.email : '') +
+      '</div>' +
+      (r.preferredDays ? '<div style="font-size:12px;color:rgba(245,240,232,.5);margin-top:4px;">📅 ' + r.preferredDays + '</div>' : '') +
+      (r.notes ? '<div style="font-size:12px;color:rgba(245,240,232,.55);margin-top:6px;padding:6px 8px;background:rgba(255,255,255,.02);border-radius:3px;">' + r.notes + '</div>' : '') +
+    '</div>';
+  }).join('');
+}
+
+// ── PRO BIO ──────────────────────────────────────────────────
+
+function cmsProBioLoad() {
+  var sc = cmsGetContent();
+  var pb = sc.proBio || WH_SITE_DEFAULTS.proBio || {};
+  document.getElementById('cms-pro-name').value         = pb.name         || '';
+  document.getElementById('cms-pro-title').value        = pb.title        || '';
+  document.getElementById('cms-pro-bio').value          = pb.bio          || '';
+  document.getElementById('cms-pro-photo').value        = pb.photoUrl     || '';
+  document.getElementById('cms-pro-email').value        = pb.email        || '';
+  document.getElementById('cms-pro-lesson-types').value = pb.lessonTypes  || '';
+  document.getElementById('cms-pro-rates').value        = pb.rates        || '';
+  document.getElementById('cms-pro-days').value         = pb.availableDays|| '';
+}
+
+function cmsProBioSave() {
+  var sc = cmsGetContent();
+  sc.proBio = {
+    name:          document.getElementById('cms-pro-name').value.trim(),
+    title:         document.getElementById('cms-pro-title').value.trim(),
+    bio:           document.getElementById('cms-pro-bio').value.trim(),
+    photoUrl:      document.getElementById('cms-pro-photo').value.trim(),
+    email:         document.getElementById('cms-pro-email').value.trim(),
+    lessonTypes:   document.getElementById('cms-pro-lesson-types').value.trim(),
+    rates:         document.getElementById('cms-pro-rates').value.trim(),
+    availableDays: document.getElementById('cms-pro-days').value.trim()
+  };
+  cmsSave(sc, 'cms-probio-status');
+  renderProBio(sc.proBio);
+  var st = document.getElementById('cms-probio-status');
+  if (st) { st.style.display='block'; st.textContent='✓ Pro bio updated on the Golf page.'; setTimeout(function(){ st.style.display='none'; }, 4000); }
+}
+
 // ── INIT ──
 function initStaffDashboard() { staffLoadData().then(function() { staffRenderCal(); staffRenderStats(); staffUpdatePendingBadge(); staffRenderToday(); }); }
 
@@ -9053,11 +9362,13 @@ function tsPrint() {
     '</div>' +
     '<table><thead><tr>' +
       '<th>' + (teeConfig.format === 'shotgun' ? 'Start' : 'Tee Time') + '</th>' +
-      '<th>Hole</th><th>Group</th><th>Players</th>' + rHeaders +
+      '<th>Hole</th><th>Group</th><th>Players</th><th>Comb. HCP</th>' + rHeaders +
     '</tr></thead><tbody>' +
     teeSheet.map(function(entry) {
+      var combHcp = Math.round(entry.team.players.reduce(function(s, tp) { return s + (tp.player.hcap || 0); }, 0) * 10) / 10;
       var players = entry.team.players.map(function(tp) {
-        return '<div>' + pairEsc(tp.player.name) + '</div>';
+        var hcapLabel = (tp.player.hcap !== undefined && tp.player.hcap !== '') ? ' <span style="font-size:9px;color:#888;">(HCP ' + tp.player.hcap + ')</span>' : '';
+        return '<div style="padding:1px 0;">' + pairEsc(tp.player.name) + hcapLabel + '</div>';
       }).join('');
       var scoreCells = '';
       if (showScore) {
@@ -9072,7 +9383,8 @@ function tsPrint() {
         '<td class="tt">' + entry.teeTime + '</td>' +
         '<td>' + (teeConfig.format === 'shotgun' ? 'Hole ' : '#') + entry.hole + '</td>' +
         '<td>Group ' + entry.team.id + '</td>' +
-        '<td>' + players + '</td>' + scoreCells +
+        '<td>' + players + '</td>' +
+        '<td style="text-align:center;font-size:11px;color:#666;">' + combHcp + '</td>' + scoreCells +
       '</tr>';
     }).join('') +
     '</tbody></table></body></html>';
@@ -9082,6 +9394,25 @@ function tsPrint() {
   w.document.close();
   w.focus();
   setTimeout(function(){ w.print(); }, 500);
+}
+
+function golfDownload(type) {
+  var data = {};
+  try { data = JSON.parse(localStorage.getItem('daily-update') || '{}'); } catch(e) {}
+  var url = type === 'pinsheet'
+    ? (data.pinSheetUrl  || 'images/pinsheet.jpg')
+    : (data.scorecardUrl || 'images/scorecard.jpg');
+  window.open(url, '_blank');
+}
+
+function golfUpdateDownloadLinks(data) {
+  if (!data) {
+    try { data = JSON.parse(localStorage.getItem('daily-update') || '{}'); } catch(e) { data = {}; }
+  }
+  var scBtn = document.getElementById('golf-dl-scorecard');
+  var psBtn = document.getElementById('golf-dl-pinsheet');
+  if (scBtn) scBtn.title = data.scorecardUrl ? 'Opens: ' + data.scorecardUrl : 'Default scorecard';
+  if (psBtn) psBtn.title = data.pinSheetUrl  ? 'Opens: ' + data.pinSheetUrl  : 'Default pin sheet';
 }
 
 function pairEsc(s) {
@@ -9717,7 +10048,7 @@ function launchFire() {
           <div class="reg-field"><label>Team / Partner Name</label><input type="text" id="reg-partner" placeholder="e.g. John Doe"/></div>
           <div class="reg-field"><label>Players in Group</label><select id="reg-players"><option value="1">1 Player</option><option value="2" selected>2 Players</option><option value="3">3 Players</option><option value="4">4 Players</option></select></div>
         </div>
-        <div class="reg-row"><div class="reg-field"><label>Member #</label><input type="text" id="reg-membernum" placeholder="Optional"/></div><div class="reg-field"><label>GHIN #</label><input type="text" id="reg-ghin" placeholder="Optional — handicap index"/></div></div>
+        <div class="reg-row"><div class="reg-field"><label>Member #</label><input type="text" id="reg-membernum" placeholder="Optional"/></div><div class="reg-field"><label>Handicap Index</label><input type="number" id="reg-ghin" min="0" max="54" step="0.1" placeholder="e.g. 8.4"/></div></div>
         <div class="reg-field"><label>Notes / Special Requests</label><textarea id="reg-notes" placeholder="Dietary needs, tee time preference, etc."></textarea></div>
         <div class="reg-error" id="reg-error"></div>
         <button type="submit" class="btn-p" style="width:100%;margin-top:8px" id="reg-submit-btn">Complete Registration</button>
@@ -9729,6 +10060,60 @@ function launchFire() {
       <div class="reg-success-title">You're registered!</div>
       <p class="reg-success-body" id="reg-success-body"></p>
       <button class="btn-g" style="margin-top:20px" onclick="closeRegModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ LESSON REQUEST MODAL ═══ -->
+<div class="reg-overlay" id="lesson-overlay" style="display:none" onclick="if(event.target===this)closeLessonModal()">
+  <div class="reg-modal">
+    <button class="reg-modal-close" onclick="closeLessonModal()">×</button>
+    <div id="lesson-form-wrap">
+      <p class="reg-modal-tag">Instruction</p>
+      <h2 class="reg-modal-title">Request a Lesson</h2>
+      <p class="reg-modal-meta" style="margin-bottom:20px;">Complete this form and the Pro Shop will reach out to schedule your session.</p>
+      <form onsubmit="submitLessonForm(event)">
+        <div class="reg-row">
+          <div class="reg-field"><label>First Name *</label><input type="text" id="lesson-fname" required placeholder="Jane"/></div>
+          <div class="reg-field"><label>Last Name *</label><input type="text" id="lesson-lname" required placeholder="Smith"/></div>
+        </div>
+        <div class="reg-row">
+          <div class="reg-field"><label>Phone *</label><input type="tel" id="lesson-phone" required placeholder="(573) 555-0000"/></div>
+          <div class="reg-field"><label>Email</label><input type="email" id="lesson-email" placeholder="jane@email.com"/></div>
+        </div>
+        <div class="reg-row">
+          <div class="reg-field">
+            <label>Lesson Type</label>
+            <select id="lesson-type">
+              <option value="private">Private Lesson (1-on-1)</option>
+              <option value="playing">Playing Lesson (on course)</option>
+              <option value="group">Group Clinic</option>
+              <option value="junior">Junior Program</option>
+              <option value="other">Other / Not Sure</option>
+            </select>
+          </div>
+          <div class="reg-field">
+            <label>Skill Level</label>
+            <select id="lesson-skill">
+              <option value="beginner">Beginner</option>
+              <option value="intermediate">Intermediate (10–20 HCP)</option>
+              <option value="low">Low Handicap (under 10)</option>
+              <option value="junior">Junior (under 18)</option>
+            </select>
+          </div>
+        </div>
+        <div class="reg-field"><label>Preferred Days / Times</label><input type="text" id="lesson-days" placeholder="e.g. Weekday mornings, Saturday afternoons"/></div>
+        <div class="reg-field"><label>What would you like to work on?</label><textarea id="lesson-notes" placeholder="e.g. Full swing, short game, course management, first time golfer…"></textarea></div>
+        <div class="reg-error" id="lesson-error"></div>
+        <button type="submit" class="btn-p" style="width:100%;margin-top:8px" id="lesson-submit-btn">Send Request</button>
+        <p style="font-size:11px;color:var(--muted);margin-top:12px;text-align:center">Pro Shop will confirm within 24 hours · (573) 785-8211</p>
+      </form>
+    </div>
+    <div class="reg-success" id="lesson-success" style="display:none">
+      <div class="reg-success-icon">🏌️</div>
+      <div class="reg-success-title">Request Received!</div>
+      <p class="reg-success-body">The Pro Shop will reach out to schedule your lesson. We look forward to working with you!</p>
+      <button class="btn-g" style="margin-top:20px" onclick="closeLessonModal()">Close</button>
     </div>
   </div>
 </div>
