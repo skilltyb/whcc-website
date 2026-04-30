@@ -5536,17 +5536,17 @@ async function staffLoadData() {
       var v = String(row['Venue'] || '').toLowerCase();
       var res = {
         id:        row['ID']           || String(Date.now()),
-        firstName: row['First Name']   || '',
-        lastName:  row['Last Name']    || '',
-        email:     row['Email']        || '',
-        phone:     row['Phone']        || '',
-        partySize: row['Party Size']   || '2',
+        firstName: row['First Name']   || (row['name'] ? row['name'].split(' ')[0] : '') || '',
+        lastName:  row['Last Name']    || (row['name'] ? row['name'].split(' ').slice(1).join(' ') : '') || '',
+        email:     row['Email']        || row['email'] || '',
+        phone:     row['Phone']        || row['phone'] || '',
+        partySize: row['Party Size']   || row['party'] || '2',
         member:    row['Member']       || 'member',
         venue:     v                   || 'hoovers',
-        time:      row['Time Display'] || row['Time'] || '',
-        notes:     row['Notes']        || '',
+        time:      row['Time Display'] || row['timeDisplay'] || row['Time'] || '',
+        notes:     row['Notes']        || row['note'] || '',
         status:    (row['Status'] || 'pending').toLowerCase(),
-        createdAt: row['Submitted']    || ''
+        createdAt: row['Submitted']    || row['createdAt'] || ''
       };
       if (v === 'grille') {
         if (!grille[dateKey]) grille[dateKey] = [];
