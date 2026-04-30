@@ -3280,9 +3280,9 @@ function applySiteContent(sc) {
       // Text content — find ph-content inside the page hero
       var pageEl = document.getElementById('page-' + p);
       if (!pageEl) return;
-      var tag   = pageEl.querySelector('.ph-tag');
-      var title = pageEl.querySelector('.ph-title');
-      var sub   = pageEl.querySelector('.ph-sub');
+      var tag   = pageEl.querySelector('.ph-tag')   || pageEl.querySelector('.hero-tag');
+      var title = pageEl.querySelector('.ph-title') || pageEl.querySelector('.hero-title');
+      var sub   = pageEl.querySelector('.ph-sub')   || pageEl.querySelector('.hero-sub');
       if (tag   && h.tag)      tag.textContent   = h.tag;
       if (title && h.title)    title.innerHTML    = h.title;
       if (sub   && h.subtitle) sub.textContent    = h.subtitle;
