@@ -59,7 +59,7 @@ function setupAppUsers() {
   if (sh.getLastRow() < 2) {
     sh.appendRow(['sctr1217@gmail.com','4827','staff','General Manager','General Manager','','','']);
   }
-  Logger.log('Done — App Users sheet ready.');
+  Logger.log('Done - App Users sheet ready.');
 }
 
 // ── HELPERS ───────────────────────────────────────────────────────────────────
@@ -288,6 +288,23 @@ function doGet(e) {
     return ContentService.createTextOutput(String(scSh.getRange(2, 1).getValue())).setMimeType(ContentService.MimeType.JSON);
   }
 
+  if (action === 'get-lessons') {
+    var lSh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Lesson Requests');
+    if (!lSh || lSh.getLastRow() <= 1) return jsonResponse([]);
+    var vals = lSh.getDataRange().getValues();
+    var hdrs = vals[0];
+    var result = [];
+    for (var i = 1; i < vals.length; i++) {
+      var obj = {};
+      for (var j = 0; j < hdrs.length; j++) {
+        var v = vals[i][j];
+        obj[hdrs[j]] = (v instanceof Date) ? v.toISOString() : String(v === null || v === undefined ? '' : v);
+      }
+      result.push(obj);
+    }
+    return jsonResponse(result);
+  }
+
   if (action === 'validate-login') {
     var loginEmail = (e.parameter.email || '').toLowerCase().trim();
     var loginPin   = (e.parameter.pin   || '').trim();
@@ -365,6 +382,21 @@ function doGet(e) {
     return jsonResponse(val !== null ? val : []);
   }
 
+  if (action === 'get-waitlist') {
+    var val = opsGet_('waitlist');
+    return jsonResponse(val !== null ? val : []);
+  }
+
+  if (action === 'get-guest-notes') {
+    var val = opsGet_('guest_notes');
+    return jsonResponse(val !== null ? val : []);
+  }
+
+  if (action === 'get-pairings') {
+    var val = opsGet_('pairings');
+    return jsonResponse(val !== null ? val : {});
+  }
+
   if (action === 'get-all-ops') {
     var sh = getOpsSheet_();
     var rows = sh.getDataRange().getValues();
@@ -401,7 +433,7 @@ function doPost(e) {
       if (data.email) {
         MailApp.sendEmail({
           to: data.email,
-          subject: 'We received your message — Westwood Hills Country Club',
+          subject: 'We received your message - Westwood Hills Country Club',
           htmlBody:
             '<div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;color:#222;">' +
             '<div style="background:#1a2b1f;padding:24px 32px;">' +
@@ -420,7 +452,7 @@ function doPost(e) {
       }
       MailApp.sendEmail({
         to: 'sctr1217@gmail.com',
-        subject: 'New Contact Inquiry: ' + data.subject + ' — ' + data.name,
+        subject: 'New Contact Inquiry: ' + data.subject + ' - ' + data.name,
         body: 'New contact form submission:\n\n' +
           'Name: '    + data.name    + '\n' +
           'Email: '   + data.email   + '\n' +
@@ -656,6 +688,157 @@ function doPost(e) {
 
   if (data.action === 'save-live-scoring') {
     opsSave_('live_scoring', data);
+    return jsonResponse({ ok: true });
+  }
+
+  if (data.action === 'save-lesson') {
+    var lSh = ss.getSheetByName('Lesson Requests');
+    if (!lSh) {
+      lSh = ss.insertSheet('Lesson Requests');
+      lSh.appendRow(['ID','First Name','Last Name','Phone','Email','Lesson Type','Skill Level','Preferred Days','Notes','Status','Source','Submitted']);
+      lSh.setFrozenRows(1);
+      lSh.getRange(1,1,1,12).setBackground('#1a4726').setFontColor('#f5f0e8').setFontWeight('bold');
+    }
+    var lessonId = data.id || Utilities.getUuid();
+    lSh.appendRow([
+      lessonId,
+      data.firstName   || '',
+      data.lastName    || '',
+      data.phone       || '',
+      data.email       || '',
+      data.lessonType  || '',
+      data.skillLevel  || '',
+      data.preferredDays || '',
+      data.notes       || '',
+      'New',
+      data.source      || 'website',
+      data.timestamp   || new Date().toISOString()
+    ]);
+    try {
+      var proEmail = data.proEmail || '';
+      var notifyAddrs = ['sctr1217@gmail.com'];
+      if (proEmail) notifyAddrs.push(proEmail);
+      var typeMap = { private:'Private (1-on-1)', playing:'Playing Lesson', group:'Group Clinic', junior:'Junior Program', other:'Other' };
+      var skillMap = { beginner:'Beginner', intermediate:'Intermediate', low:'Low Handicap', junior:'Junior' };
+      MailApp.sendEmail({
+        to: notifyAddrs.join(','),
+        subject: 'New Lesson Request: ' + data.firstName + ' ' + data.lastName + ' - ' + (typeMap[data.lessonType] || data.lessonType || 'Lesson'),
+        body: 'New lesson request submitted:\n\n' +
+          'Name: '          + data.firstName + ' ' + data.lastName + '\n' +
+          'Phone: '         + (data.phone || '-') + '\n' +
+          'Email: '         + (data.email || '-') + '\n' +
+          'Lesson Type: '   + (typeMap[data.lessonType] || data.lessonType || '-') + '\n' +
+          'Skill Level: '   + (skillMap[data.skillLevel] || data.skillLevel || '-') + '\n' +
+          'Preferred Days: '+ (data.preferredDays || '-') + '\n' +
+          'Notes: '         + (data.notes || '-') + '\n\n' +
+          'Submitted: ' + (data.timestamp || '')
+      });
+      if (data.email) {
+        MailApp.sendEmail({
+          to: data.email,
+          subject: 'Lesson Request Received - Westwood Hills Country Club',
+          htmlBody:
+            '<div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;color:#222;">' +
+            '<div style="background:#1a2b1f;padding:24px 32px;">' +
+              '<p style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:22px;color:#b8976a;margin:0;">Westwood Hills Country Club</p>' +
+              '<p style="color:rgba(245,240,232,.6);font-size:12px;margin:4px 0 0;">Golf Pro Shop · Poplar Bluff, Missouri</p>' +
+            '</div>' +
+            '<div style="padding:28px 32px;background:#fff;">' +
+              '<p>Dear ' + data.firstName + ',</p>' +
+              '<p>We\'ve received your lesson request! Our golf professional will be in touch within one business day to schedule your session.</p>' +
+              '<p><strong>Your request:</strong><br>' +
+              'Lesson type: ' + (typeMap[data.lessonType] || data.lessonType || '-') + '<br>' +
+              (data.preferredDays ? 'Preferred days: ' + data.preferredDays + '<br>' : '') +
+              (data.notes ? 'Notes: ' + data.notes : '') +
+              '</p>' +
+              '<p>In the meantime, feel free to call the pro shop at <a href="tel:+15737858211">(573) 785-8211</a>.</p>' +
+              '<p style="margin-top:28px;">Warm regards,<br><strong>Westwood Hills Country Club Pro Shop</strong></p>' +
+            '</div>' +
+            '</div>'
+        });
+      }
+    } catch(mailErr) {
+      Logger.log('MailApp error (lesson): ' + mailErr.toString());
+    }
+    return jsonResponse({ ok: true, id: lessonId });
+  }
+
+  if (data.action === 'update-lesson-status') {
+    var lSh2 = ss.getSheetByName('Lesson Requests');
+    if (!lSh2) return jsonResponse({ ok: false, error: 'sheet not found' });
+    var lRows = lSh2.getDataRange().getValues();
+    var lHdr  = lRows[0];
+    var lId   = lHdr.indexOf('ID');
+    var lStat = lHdr.indexOf('Status');
+    if (lId < 0 || lStat < 0) return jsonResponse({ ok: false, error: 'columns missing' });
+    for (var li = 1; li < lRows.length; li++) {
+      if (String(lRows[li][lId]) === String(data.id)) {
+        lSh2.getRange(li + 1, lStat + 1).setValue(data.status || 'New');
+        return jsonResponse({ ok: true });
+      }
+    }
+    return jsonResponse({ ok: false, error: 'not found' });
+  }
+
+  if (data.action === 'delete-dining') {
+    var dDel = getOrCreateDiningSheet();
+    var dDelRows = dDel.getDataRange().getValues();
+    var dDelHdr  = dDelRows[0];
+    var dDelId   = dDelHdr.indexOf('ID');
+    if (dDelId >= 0) {
+      for (var ddi = 1; ddi < dDelRows.length; ddi++) {
+        if (String(dDelRows[ddi][dDelId]) === String(data.id)) {
+          dDel.deleteRow(ddi + 1);
+          return jsonResponse({ ok: true });
+        }
+      }
+    }
+    return jsonResponse({ ok: false, error: 'not found' });
+  }
+
+  if (data.action === 'update-dining-full') {
+    var dFull = getOrCreateDiningSheet();
+    var dFRows = dFull.getDataRange().getValues();
+    var dFHdr  = dFRows[0];
+    var dFId   = dFHdr.indexOf('ID');
+    if (dFId < 0) return jsonResponse({ ok: false, error: 'no ID column' });
+    var dFUpdates = {
+      'Date':         data.date        || '',
+      'Time':         data.time24      || '',
+      'Time Display': data.timeDisplay || data.time24 || '',
+      'First Name':   data.firstName   || '',
+      'Last Name':    data.lastName    || '',
+      'Email':        data.email       || '',
+      'Phone':        data.phone       || '',
+      'Party Size':   data.party       || 1,
+      'Member':       data.member      || '',
+      'Venue':        data.venue       || '',
+      'Notes':        data.note        || '',
+      'Status':       data.status      || 'Pending'
+    };
+    for (var dfi = 1; dfi < dFRows.length; dfi++) {
+      if (String(dFRows[dfi][dFId]) !== String(data.id)) continue;
+      for (var col in dFUpdates) {
+        var ci = dFHdr.indexOf(col);
+        if (ci >= 0) dFull.getRange(dfi + 1, ci + 1).setValue(dFUpdates[col]);
+      }
+      return jsonResponse({ ok: true });
+    }
+    return jsonResponse({ ok: false, error: 'not found' });
+  }
+
+  if (data.action === 'save-waitlist') {
+    opsSave_('waitlist', data.data);
+    return jsonResponse({ ok: true });
+  }
+
+  if (data.action === 'save-guest-notes') {
+    opsSave_('guest_notes', data.data);
+    return jsonResponse({ ok: true });
+  }
+
+  if (data.action === 'save-pairings') {
+    opsSave_('pairings', data.data);
     return jsonResponse({ ok: true });
   }
 
