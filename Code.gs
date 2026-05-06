@@ -412,6 +412,11 @@ function doGet(e) {
     return jsonResponse(val !== null ? val : {});
   }
 
+  if (action === 'get-pin') {
+    var pinVal = opsGet_('staff_pin');
+    return jsonResponse(pinVal !== null ? { pin: pinVal } : { pin: null });
+  }
+
   return jsonResponse({ error: 'unknown action' });
 }
 
@@ -839,6 +844,12 @@ function doPost(e) {
 
   if (data.action === 'save-pairings') {
     opsSave_('pairings', data.data);
+    return jsonResponse({ ok: true });
+  }
+
+  if (data.action === 'save-pin') {
+    if (!data.pin || !/^\d{4}$/.test(String(data.pin))) return jsonResponse({ ok: false, error: 'invalid pin' });
+    opsSave_('staff_pin', String(data.pin));
     return jsonResponse({ ok: true });
   }
 

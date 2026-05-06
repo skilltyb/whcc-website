@@ -3824,6 +3824,23 @@ var WHCC_SYNC = {
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
   },
+
+  // ── STAFF PIN SYNC ──
+  savePin: function(pin, cb) {
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'save-pin', pin: pin })
+    }).then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d && d.ok, null); })
+      .catch(function(e){ if (cb) cb(false, e); });
+  },
+  fetchPin: function(cb) {
+    fetch(WHCC_SCRIPT_URL + '?action=get-pin')
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d && d.pin ? d.pin : null, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
 };
 
 // ── EVENT ARCHIVING ──────────────────────────────────────────────────────────
@@ -8083,7 +8100,15 @@ function cmsProBioSave() {
 }
 
 // ── INIT ──
-function initStaffDashboard() { staffLoadData().then(function() { staffRenderCal(); staffRenderStats(); staffUpdatePendingBadge(); staffRenderToday(); }); }
+function initStaffDashboard() {
+  staffLoadData().then(function() { staffRenderCal(); staffRenderStats(); staffUpdatePendingBadge(); staffRenderToday(); });
+  // Pull PIN from Sheets so all devices share the same PIN
+  WHCC_SYNC.fetchPin(function(remotePin) {
+    if (remotePin && /^\d{4}$/.test(remotePin)) {
+      localStorage.setItem('staff-pin', remotePin);
+    }
+  });
+}
 
 // ── STAFF AUTH ──
 var staffAuthed = false;
