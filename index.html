@@ -3673,6 +3673,21 @@ var WHCC_SYNC = {
   },
 
   // ── DINING RESERVATION SYNC ──
+  saveLessonRequest: function(req, cb) {
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(Object.assign({ action: 'lesson-request' }, req))
+    }).then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+  fetchLessonRequests: function(cb) {
+    fetch(WHCC_SCRIPT_URL + '?action=get-lessons')
+      .then(function(r){ return r.json(); })
+      .then(function(rows){ if (cb) cb(rows, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
   saveDiningReservation: function(res, cb) {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
@@ -3972,14 +3987,32 @@ function submitLessonForm(e) {
   var btn = document.getElementById('lesson-submit-btn');
   var errEl = document.getElementById('lesson-error');
   errEl.style.display = 'none';
+
+  var firstName = document.getElementById('lesson-fname').value.trim();
+  var lastName  = document.getElementById('lesson-lname').value.trim();
+  var phone     = document.getElementById('lesson-phone').value.trim();
+  var email     = document.getElementById('lesson-email').value.trim();
+
+  if (!firstName || !lastName) {
+    errEl.textContent = 'Please enter your first and last name.';
+    errEl.style.display = 'block';
+    return;
+  }
+  if (!phone && !email) {
+    errEl.textContent = 'Please provide a phone number or email so we can reach you.';
+    errEl.style.display = 'block';
+    return;
+  }
+
   btn.textContent = 'Sending…';
   btn.disabled = true;
 
   var req = {
-    firstName:    document.getElementById('lesson-fname').value.trim(),
-    lastName:     document.getElementById('lesson-lname').value.trim(),
-    phone:        document.getElementById('lesson-phone').value.trim(),
-    email:        document.getElementById('lesson-email').value.trim(),
+    id:           Date.now().toString(),
+    firstName:    firstName,
+    lastName:     lastName,
+    phone:        phone,
+    email:        email,
     lessonType:   document.getElementById('lesson-type').value,
     skillLevel:   document.getElementById('lesson-skill').value,
     preferredDays:document.getElementById('lesson-days').value.trim(),
@@ -3991,10 +4024,12 @@ function submitLessonForm(e) {
   // Save to localStorage
   try {
     var all = JSON.parse(localStorage.getItem('wh_lesson_requests') || '[]');
-    req.id = Date.now().toString();
     all.push(req);
     localStorage.setItem('wh_lesson_requests', JSON.stringify(all));
   } catch(e2) {}
+
+  // Sync to Sheets
+  WHCC_SYNC.saveLessonRequest(req, function() {});
 
   btn.textContent = 'Send Request';
   btn.disabled = false;
@@ -4688,12 +4723,24 @@ async function submitReservation() {
   // Show confirmation
   const venueName = venue === 'grille' ? 'The Westwood Grill' : "Hoover's";
   const dateText = document.getElementById('res-date-text').textContent;
-  document.getElementById('res-conf-detail').innerHTML =
-    '<strong>' + firstName + ' ' + lastName + '</strong><br>' +
-    venueName + '<br>' +
-    dateText + ' at ' + time + '<br>' +
-    'Party of ' + (partySize.replace(/[^0-9+]/g, '') || partySize) +
-    (member === 'nonmember' ? '<br><span style="color:#d4b483;">Non-Member Guest</span>' : '');
+  const confEl = document.getElementById('res-conf-detail');
+  confEl.innerHTML = '';
+  const strong = document.createElement('strong');
+  strong.textContent = firstName + ' ' + lastName;
+  confEl.appendChild(strong);
+  confEl.appendChild(document.createElement('br'));
+  confEl.appendChild(document.createTextNode(venueName));
+  confEl.appendChild(document.createElement('br'));
+  confEl.appendChild(document.createTextNode(dateText + ' at ' + time));
+  confEl.appendChild(document.createElement('br'));
+  confEl.appendChild(document.createTextNode('Party of ' + (partySize.replace(/[^0-9+]/g, '') || partySize)));
+  if (member === 'nonmember') {
+    confEl.appendChild(document.createElement('br'));
+    const span = document.createElement('span');
+    span.style.color = '#d4b483';
+    span.textContent = 'Non-Member Guest';
+    confEl.appendChild(span);
+  }
 
   document.getElementById('res-form-fields').style.display = 'none';
   document.getElementById('res-confirmation').style.display = 'block';
@@ -6998,7 +7045,7 @@ function cmsEvShowForm(ev) {
     '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:10px;">' +
       '<div><label class="hrf-label">Month</label><input class="hrf-input" id="cef-month" value="' + menuEsc(ev.month||'') + '" placeholder="Apr" /></div>' +
       '<div><label class="hrf-label">Day</label><input class="hrf-input" id="cef-day" value="' + menuEsc(ev.day||'') + '" placeholder="18" /></div>' +
-      '<div><label class="hrf-label">Year</label><input class="hrf-input" id="cef-year" value="' + menuEsc(ev.year||'2026') + '" placeholder="2026" /></div>' +
+      '<div><label class="hrf-label">Year</label><input class="hrf-input" id="cef-year" value="' + menuEsc(ev.year||String(new Date().getFullYear())) + '" placeholder="' + new Date().getFullYear() + '" /></div>' +
       '<div><label class="hrf-label">Time (optional)</label><input class="hrf-input" id="cef-time" value="' + menuEsc(ev.time||'') + '" placeholder="1:00 PM" /></div>' +
     '</div>' +
     '<div style="margin-bottom:10px;"><label class="hrf-label">Event Name</label><input class="hrf-input" id="cef-name" value="' + menuEsc(ev.name||'') + '" placeholder="e.g. Spring Scramble" /></div>' +
@@ -7944,37 +7991,77 @@ function cmsFaqSave() {
 }
 
 // ── LESSON REQUESTS ──────────────────────────────────────────
-function staffViewLessons() {
+function staffRenderLessons(all) {
   var list = document.getElementById('sv-lessons-list');
   if (!list) return;
-  var all = [];
-  try { all = JSON.parse(localStorage.getItem('wh_lesson_requests') || '[]'); } catch(e) {}
   if (!all.length) {
     list.innerHTML = '<div style="color:rgba(245,240,232,.35);font-size:13px;padding:20px 0;">No lesson requests yet. Members submit requests via the Golf page.</div>';
     return;
   }
-  all = all.slice().reverse(); // newest first
   var typeLabels = { private:'Private (1-on-1)', playing:'Playing Lesson', group:'Group Clinic', junior:'Junior Program', other:'Other' };
   var skillLabels = { beginner:'Beginner', intermediate:'Intermediate', low:'Low Handicap', junior:'Junior' };
+  function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
   list.innerHTML = all.map(function(r) {
-    var d = r.timestamp ? new Date(r.timestamp).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '';
+    var ts = r.timestamp || r['Submitted'] || '';
+    var d = ts ? new Date(ts).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '';
+    var fn = esc(r.firstName || r['First Name'] || '');
+    var ln = esc(r.lastName  || r['Last Name']  || '');
+    var ph = esc(r.phone     || r['Phone']      || '');
+    var em = esc(r.email     || r['Email']      || '');
+    var lt = r.lessonType    || r['Lesson Type']   || '';
+    var sl = r.skillLevel    || r['Skill Level']   || '';
+    var pd = esc(r.preferredDays || r['Preferred Days'] || '');
+    var nt = esc(r.notes     || r['Notes']      || '');
     return '<div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);border-radius:4px;padding:12px 16px;margin-bottom:10px;">' +
       '<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px;margin-bottom:8px;">' +
-        '<div style="font-weight:600;font-size:14px;color:var(--cream);">' + (r.firstName || '') + ' ' + (r.lastName || '') + '</div>' +
+        '<div style="font-weight:600;font-size:14px;color:var(--cream);">' + fn + ' ' + ln + '</div>' +
         '<div style="font-size:10px;color:rgba(245,240,232,.35);">' + d + '</div>' +
       '</div>' +
       '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">' +
-        '<span style="font-size:10px;background:rgba(184,151,106,.15);border:1px solid rgba(184,151,106,.2);border-radius:10px;padding:2px 8px;color:var(--gold);">' + (typeLabels[r.lessonType] || r.lessonType || '—') + '</span>' +
-        '<span style="font-size:10px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.12);border-radius:10px;padding:2px 8px;color:rgba(245,240,232,.5);">' + (skillLabels[r.skillLevel] || r.skillLevel || '') + '</span>' +
+        '<span style="font-size:10px;background:rgba(184,151,106,.15);border:1px solid rgba(184,151,106,.2);border-radius:10px;padding:2px 8px;color:var(--gold);">' + esc(typeLabels[lt] || lt || '—') + '</span>' +
+        '<span style="font-size:10px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.12);border-radius:10px;padding:2px 8px;color:rgba(245,240,232,.5);">' + esc(skillLabels[sl] || sl || '') + '</span>' +
       '</div>' +
       '<div style="font-size:12px;color:rgba(245,240,232,.6);line-height:1.6;">' +
-        (r.phone ? '📞 ' + r.phone + (r.email ? ' &nbsp;·&nbsp; ' : '') : '') +
-        (r.email ? '✉ ' + r.email : '') +
+        (ph ? '📞 ' + ph + (em ? ' &nbsp;·&nbsp; ' : '') : '') +
+        (em ? '✉ ' + em : '') +
       '</div>' +
-      (r.preferredDays ? '<div style="font-size:12px;color:rgba(245,240,232,.5);margin-top:4px;">📅 ' + r.preferredDays + '</div>' : '') +
-      (r.notes ? '<div style="font-size:12px;color:rgba(245,240,232,.55);margin-top:6px;padding:6px 8px;background:rgba(255,255,255,.02);border-radius:3px;">' + r.notes + '</div>' : '') +
+      (pd ? '<div style="font-size:12px;color:rgba(245,240,232,.5);margin-top:4px;">📅 ' + pd + '</div>' : '') +
+      (nt ? '<div style="font-size:12px;color:rgba(245,240,232,.55);margin-top:6px;padding:6px 8px;background:rgba(255,255,255,.02);border-radius:3px;">' + nt + '</div>' : '') +
     '</div>';
   }).join('');
+}
+
+function staffViewLessons() {
+  var list = document.getElementById('sv-lessons-list');
+  if (!list) return;
+  var local = [];
+  try { local = JSON.parse(localStorage.getItem('wh_lesson_requests') || '[]'); } catch(e) {}
+  staffRenderLessons(local.slice().reverse());
+
+  WHCC_SYNC.fetchLessonRequests(function(rows, err) {
+    if (!rows || err) return;
+    // Normalise Sheets rows to match local format, dedupe by id
+    var localIds = new Set(local.map(function(r) { return r.id; }));
+    var remote = rows.filter(function(r) { return !localIds.has(r['ID']); }).map(function(r) {
+      return {
+        id:           r['ID'],
+        firstName:    r['First Name'],
+        lastName:     r['Last Name'],
+        phone:        r['Phone'],
+        email:        r['Email'],
+        lessonType:   r['Lesson Type'],
+        skillLevel:   r['Skill Level'],
+        preferredDays:r['Preferred Days'],
+        notes:        r['Notes'],
+        timestamp:    r['Submitted'],
+        source:       r['Source']
+      };
+    });
+    var merged = remote.concat(local).sort(function(a,b) {
+      return new Date(b.timestamp||0) - new Date(a.timestamp||0);
+    });
+    staffRenderLessons(merged);
+  });
 }
 
 // ── PRO BIO ──────────────────────────────────────────────────

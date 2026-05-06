@@ -96,6 +96,27 @@ function getTeeSheet() {
   return sh;
 }
 
+function getOrCreateLessonSheet() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName('Lesson Requests');
+  var HEADERS = ['ID','First Name','Last Name','Email','Phone',
+                 'Lesson Type','Skill Level','Preferred Days','Notes','Source','Submitted'];
+  if (!sheet) {
+    sheet = ss.insertSheet('Lesson Requests');
+    sheet.appendRow(HEADERS);
+    sheet.setFrozenRows(1);
+    return sheet;
+  }
+  var existing = sheet.getRange(1, 1, 1, Math.max(1, sheet.getLastColumn())).getValues()[0];
+  HEADERS.forEach(function(h) {
+    if (existing.indexOf(h) === -1) {
+      sheet.getRange(1, sheet.getLastColumn() + 1).setValue(h);
+      existing.push(h);
+    }
+  });
+  return sheet;
+}
+
 function getOrCreateDiningSheet() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName('Dining Reservations');
@@ -380,6 +401,26 @@ function doGet(e) {
     return jsonResponse(val !== null ? val : {});
   }
 
+  if (action === 'get-lessons') {
+    var lSheet = getOrCreateLessonSheet();
+    if (lSheet.getLastRow() <= 1) return jsonResponse([]);
+    var vals = lSheet.getDataRange().getValues();
+    var hdrs = vals[0];
+    var tz   = Session.getScriptTimeZone();
+    var result = [];
+    for (var i = 1; i < vals.length; i++) {
+      var obj = {};
+      for (var j = 0; j < hdrs.length; j++) {
+        var v = vals[i][j];
+        obj[hdrs[j]] = (v instanceof Date)
+          ? Utilities.formatDate(v, tz, 'yyyy-MM-dd\'T\'HH:mm:ss\'Z\'')
+          : String(v === null || v === undefined ? '' : v);
+      }
+      result.push(obj);
+    }
+    return jsonResponse(result);
+  }
+
   return jsonResponse({ error: 'unknown action' });
 }
 
@@ -525,6 +566,26 @@ function doPost(e) {
       }
     }
     return jsonResponse({ status: 'ok' });
+  }
+
+  if (data.action === 'lesson-request') {
+    var lSheet = getOrCreateLessonSheet();
+    var lHdrs = lSheet.getRange(1, 1, 1, lSheet.getLastColumn()).getValues()[0];
+    var lRow = new Array(lHdrs.length).fill('');
+    function setL(name, val) { var i = lHdrs.indexOf(name); if (i >= 0) lRow[i] = val || ''; }
+    setL('ID',            data.id           || Utilities.getUuid());
+    setL('First Name',    data.firstName    || '');
+    setL('Last Name',     data.lastName     || '');
+    setL('Email',         data.email        || '');
+    setL('Phone',         data.phone        || '');
+    setL('Lesson Type',   data.lessonType   || '');
+    setL('Skill Level',   data.skillLevel   || '');
+    setL('Preferred Days',data.preferredDays|| '');
+    setL('Notes',         data.notes        || '');
+    setL('Source',        data.source       || 'website');
+    setL('Submitted',     data.timestamp    || new Date().toISOString());
+    lSheet.appendRow(lRow);
+    return jsonResponse({ ok: true });
   }
 
   if (data.action === 'dining-reservation') {
