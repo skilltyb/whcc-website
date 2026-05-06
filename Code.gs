@@ -716,7 +716,7 @@ function doPost(e) {
     ]);
     try {
       var proEmail = data.proEmail || '';
-      var notifyAddrs = ['sctr1217@gmail.com'];
+      var notifyAddrs = ['sctr1217@gmail.com', 'mfiehtner@westwoodhillscountryclub.com'];
       if (proEmail) notifyAddrs.push(proEmail);
       var typeMap = { private:'Private (1-on-1)', playing:'Playing Lesson', group:'Group Clinic', junior:'Junior Program', other:'Other' };
       var skillMap = { beginner:'Beginner', intermediate:'Intermediate', low:'Low Handicap', junior:'Junior' };
