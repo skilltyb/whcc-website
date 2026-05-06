@@ -456,7 +456,7 @@ function doPost(e) {
         });
       }
       MailApp.sendEmail({
-        to: 'sctr1217@gmail.com',
+        to: 'sctr1217@gmail.com,mfiehtner@westwoodhillscountryclub.com',
         subject: 'New Contact Inquiry: ' + data.subject + ' - ' + data.name,
         body: 'New contact form submission:\n\n' +
           'Name: '    + data.name    + '\n' +
@@ -585,6 +585,27 @@ function doPost(e) {
     setCol('Source',       data.source      || 'website');
     setCol('Submitted',    data.submitted   || new Date().toISOString());
     dSheet.appendRow(row);
+    try {
+      var venueName = data.venue === 'grille' ? 'Westwood Grill' : "Hoover's Bar & Grille";
+      var guestName = (data.firstName || '') + ' ' + (data.lastName || '');
+      MailApp.sendEmail({
+        to: 'sctr1217@gmail.com,mfiehtner@westwoodhillscountryclub.com',
+        subject: 'New Dining Reservation: ' + guestName.trim() + ' - ' + venueName + ' ' + (data.date || ''),
+        body: 'New dining reservation submitted:\n\n' +
+          'Name: '       + guestName.trim() + '\n' +
+          'Venue: '      + venueName + '\n' +
+          'Date: '       + (data.date || '-') + '\n' +
+          'Time: '       + (data.timeDisplay || data.time24 || '-') + '\n' +
+          'Party Size: ' + (data.party || '-') + '\n' +
+          'Phone: '      + (data.phone || '-') + '\n' +
+          'Email: '      + (data.email || '-') + '\n' +
+          'Member: '     + (data.member || '-') + '\n' +
+          'Notes: '      + (data.note || '-') + '\n\n' +
+          'Submitted: '  + (data.submitted || new Date().toISOString())
+      });
+    } catch(mailErr) {
+      Logger.log('MailApp error (dining): ' + mailErr.toString());
+    }
     return jsonResponse({ ok: true });
   }
 

@@ -8300,6 +8300,7 @@ function boardSetPin() {
   if (!/^\d{4}$/.test(pin1)) { errEl.style.color = '#e07070'; errEl.textContent = 'PIN must be exactly 4 digits.'; return; }
   if (pin1 !== pin2)          { errEl.style.color = '#e07070'; errEl.textContent = 'PINs do not match.'; return; }
   localStorage.setItem('staff-pin', pin1);
+  WHCC_SYNC.savePin(pin1, function() {});
   errEl.style.color = '#8fcc8f';
   errEl.textContent = '✓ PIN set! Logging you in…';
   setTimeout(function() {
