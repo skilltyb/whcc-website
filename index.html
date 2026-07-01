@@ -4192,6 +4192,15 @@ function submitRegForm(e) {
     }
   } catch(e2) {}
 
+  // Require at least one contact method so the Pro Shop can confirm
+  if (!reg.email && !reg.phone) {
+    errEl.textContent = 'Please provide an email address or phone number so we can confirm your registration.';
+    errEl.style.display = 'block';
+    btn.textContent = 'Complete Registration';
+    btn.disabled = false;
+    return;
+  }
+
   // Save to localStorage first (always works, good for demos)
   saveRegLocal(reg);
 
@@ -6289,6 +6298,7 @@ function staffResCard(r, idx, showDate) {
 }
 
 function staffUpdateStatus(dk, i, status) {
+  if (!staffData[dk] || !staffData[dk][i]) return;
   var id = staffData[dk][i].id;
   staffData[dk][i].status = status;
   staffSaveData();
@@ -6313,6 +6323,7 @@ function staffShowForm() {
 }
 
 function staffStartEdit(dk, i) {
+  if (!staffData[dk] || !staffData[dk][i]) return;
   staffSelDate = dk; staffEditIdx = i; var r = staffData[dk][i];
   document.getElementById('staff-form-label').textContent = 'Edit Reservation';
   document.getElementById('staff-form-date-label').textContent = staffFormatDate(dk);
@@ -6492,7 +6503,9 @@ function guestShowAdd() {
 }
 
 function guestStartEdit(key) {
-  var g = staffGuestNotes[key]; guestEditIdx = key;
+  var g = staffGuestNotes[key];
+  if (!g) return;
+  guestEditIdx = key;
   document.getElementById('guest-form-label').textContent = 'Edit Guest Note';
   document.getElementById('gn-fname').value = g.firstName || ''; document.getElementById('gn-lname').value = g.lastName || '';
   document.getElementById('gn-notes').value = g.notes || ''; document.getElementById('gn-tags').value = g.tags || '';
