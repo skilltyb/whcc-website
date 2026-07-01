@@ -3474,6 +3474,24 @@ function whInitSiteContent() {
     var cached = JSON.parse(localStorage.getItem('wh_site_content') || 'null');
     if (cached && cached.events) { WH_SITE_CONTENT = cached; applySiteContent(cached); }
   } catch(e) {}
+
+  // Poll every 5 minutes so conditions, menus, and site content stay current
+  // without requiring a page reload when staff makes changes in the Sheet
+  if (window._contentSyncInterval) clearInterval(window._contentSyncInterval);
+  window._contentSyncInterval = setInterval(function() {
+    WHCC_SYNC.fetchConditions(function(remote, err) {
+      if (!remote || err) return;
+      try { localStorage.setItem('wh_conditions', JSON.stringify(remote)); } catch(e) {}
+      if (window.renderConditionsUI) renderConditionsUI(remote);
+    });
+    menuFetch();
+    WHCC_SYNC.fetchSiteContent(function(remote, err) {
+      if (!remote || err || typeof remote !== 'object' || !remote.events) return;
+      WH_SITE_CONTENT = remote;
+      try { localStorage.setItem('wh_site_content', JSON.stringify(remote)); } catch(e) {}
+      applySiteContent(remote);
+    });
+  }, 5 * 60 * 1000);
 }
 
 // ═══════════════════════════════════════
@@ -8111,7 +8129,18 @@ function cmsProBioSave() {
 }
 
 // ── INIT ──
-function initStaffDashboard() { staffLoadData().then(function() { staffRenderCal(); staffRenderStats(); staffUpdatePendingBadge(); staffRenderToday(); }); }
+function initStaffDashboard() {
+  staffLoadData().then(function() { staffRenderCal(); staffRenderStats(); staffUpdatePendingBadge(); staffRenderToday(); });
+  // Poll every 3 minutes so sheet edits (reservation changes, new lesson requests) appear without reload
+  if (window._staffSyncInterval) clearInterval(window._staffSyncInterval);
+  window._staffSyncInterval = setInterval(function() {
+    staffLoadData().then(function() { staffRenderCal(); staffRenderStats(); staffUpdatePendingBadge(); staffRenderToday(); });
+    WHCC_SYNC.fetchLessonRequests(function(rows, err) {
+      if (!rows || err) return;
+      try { localStorage.setItem('wh_lesson_requests_remote', JSON.stringify(rows)); } catch(e) {}
+    });
+  }, 3 * 60 * 1000);
+}
 
 // ── STAFF AUTH ──
 var staffAuthed = false;

@@ -401,6 +401,18 @@ function doGet(e) {
     return jsonResponse(val !== null ? val : {});
   }
 
+  if (action === 'get-waitlist') {
+    return jsonResponse(opsGet_('waitlist') || []);
+  }
+
+  if (action === 'get-guest-notes') {
+    return jsonResponse(opsGet_('guest_notes') || {});
+  }
+
+  if (action === 'get-pairings') {
+    return jsonResponse(opsGet_('pairings') || {});
+  }
+
   if (action === 'get-lessons') {
     var lSheet = getOrCreateLessonSheet();
     if (lSheet.getLastRow() <= 1) return jsonResponse([]);
@@ -717,6 +729,66 @@ function doPost(e) {
 
   if (data.action === 'save-live-scoring') {
     opsSave_('live_scoring', data);
+    return jsonResponse({ ok: true });
+  }
+
+  if (data.action === 'delete-dining') {
+    var ddSh = getOrCreateDiningSheet();
+    var ddRows = ddSh.getDataRange().getValues();
+    var ddHdr = ddRows[0];
+    var ddIdCol = ddHdr.indexOf('ID');
+    if (ddIdCol >= 0) {
+      for (var ddi = ddRows.length - 1; ddi >= 1; ddi--) {
+        if (String(ddRows[ddi][ddIdCol]) === String(data.id)) {
+          ddSh.deleteRow(ddi + 1);
+          return jsonResponse({ ok: true });
+        }
+      }
+    }
+    return jsonResponse({ ok: false, error: 'not found' });
+  }
+
+  if (data.action === 'update-dining-full') {
+    var udfSh = getOrCreateDiningSheet();
+    var udfRows = udfSh.getDataRange().getValues();
+    var udfHdr = udfRows[0];
+    var udfIdCol = udfHdr.indexOf('ID');
+    if (udfIdCol >= 0) {
+      for (var udfi = 1; udfi < udfRows.length; udfi++) {
+        if (String(udfRows[udfi][udfIdCol]) === String(data.id)) {
+          var udfRow = udfi + 1;
+          function udfSet(name, val) { var ci = udfHdr.indexOf(name); if (ci >= 0) udfSh.getRange(udfRow, ci + 1).setValue(val || ''); }
+          udfSet('Date',         data.date        || '');
+          udfSet('Time',         data.time24      || '');
+          udfSet('Time Display', data.timeDisplay || '');
+          udfSet('First Name',   data.firstName   || '');
+          udfSet('Last Name',    data.lastName    || '');
+          udfSet('Email',        data.email       || '');
+          udfSet('Phone',        data.phone       || '');
+          udfSet('Party Size',   data.party       || '');
+          udfSet('Member',       data.member      || '');
+          udfSet('Venue',        data.venue       || '');
+          udfSet('Notes',        data.note        || '');
+          udfSet('Status',       data.status      || 'Pending');
+          return jsonResponse({ ok: true });
+        }
+      }
+    }
+    return jsonResponse({ ok: false, error: 'not found' });
+  }
+
+  if (data.action === 'save-waitlist') {
+    opsSave_('waitlist', data.data);
+    return jsonResponse({ ok: true });
+  }
+
+  if (data.action === 'save-guest-notes') {
+    opsSave_('guest_notes', data.data);
+    return jsonResponse({ ok: true });
+  }
+
+  if (data.action === 'save-pairings') {
+    opsSave_('pairings', data.data);
     return jsonResponse({ ok: true });
   }
 
