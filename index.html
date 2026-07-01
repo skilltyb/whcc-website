@@ -3418,13 +3418,20 @@ function renderEventsGrid(events) {
     var delay = delays[i % 3];
     var nameEsc = (ev.name || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
     var metaEsc = (ev.regMeta || '').replace(/'/g, "\\'");
+    var isFullReg = ev.type === 'tournament' || ev.type === 'golf';
+    var evDateStr = (ev.month||'') + ' ' + (ev.day||'') + ', ' + (ev.year||'2026');
+    var evDateEsc = evDateStr.replace(/'/g, "\\'");
+    var ctaLabel  = ev.cta || (isFullReg ? 'Sign Up' : "I'm Attending");
+    var ctaOnclick = isFullReg
+      ? "openRegModal('" + nameEsc + "','" + metaEsc + "',false)"
+      : "openRsvpModal('" + nameEsc + "','" + evDateEsc + "')";
     return '<div class="ev-card fade-up ' + delay + '">' +
       '<div class="ev-card-top">' +
         '<div class="ev-card-date"><span class="ecd-mo">' + (ev.month||'') + '</span><span class="ecd-d">' + (ev.day||'') + '</span><span class="ecd-y">' + (ev.year||'2026') + '</span></div>' +
         '<span class="ev-type ' + typeClass + '">' + typeClass.charAt(0).toUpperCase() + typeClass.slice(1) + '</span>' +
       '</div>' +
       '<div class="ev-card-body"><div class="ev-card-name">' + (ev.name||'') + '</div><div class="ev-card-detail">' + (ev.detail||'') + '</div></div>' +
-      '<div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal(\'' + nameEsc + '\',\'' + metaEsc + '\',' + (ev.type==='tournament'||ev.type==='golf'?'false':'false') + ')" style="cursor:pointer">' + (ev.cta||'Sign Up') + ' \u2192</a></div>' +
+      '<div class="ev-card-footer"><a class="ev-cta" onclick="' + ctaOnclick + '" style="cursor:pointer">' + ctaLabel + ' \u2192</a></div>' +
     '</div>';
   }).join('');
 }
@@ -3979,6 +3986,72 @@ function closeRegModal() {
     var el = document.getElementById(id); if(el) el.value = '';
   });
   currentRegEvent = null;
+}
+
+// ── EVENT RSVP MODAL ─────────────────────────────────────────────────────────
+var _rsvpEventName = '';
+var _rsvpEventDate = '';
+
+function openRsvpModal(evtName, evtDate) {
+  _rsvpEventName = evtName || '';
+  _rsvpEventDate = evtDate || '';
+  document.getElementById('rsvp-event-title').textContent = _rsvpEventName;
+  document.getElementById('rsvp-event-date').textContent  = _rsvpEventDate;
+  document.getElementById('rsvp-form-wrap').style.display  = 'block';
+  document.getElementById('rsvp-success').style.display    = 'none';
+  document.getElementById('rsvp-error').textContent        = '';
+  document.getElementById('rsvp-overlay').style.display    = 'flex';
+  document.body.style.overflow = 'hidden';
+  var fn = document.getElementById('rsvp-fname'); if (fn) fn.focus();
+}
+
+function closeRsvpModal() {
+  document.getElementById('rsvp-overlay').style.display = 'none';
+  document.body.style.overflow = '';
+  ['rsvp-fname','rsvp-lname','rsvp-email','rsvp-phone'].forEach(function(id) {
+    var el = document.getElementById(id); if (el) el.value = '';
+  });
+}
+
+function submitEventRsvp(e) {
+  e.preventDefault();
+  var fname  = (document.getElementById('rsvp-fname').value  || '').trim();
+  var lname  = (document.getElementById('rsvp-lname').value  || '').trim();
+  var email  = (document.getElementById('rsvp-email').value  || '').trim();
+  var phone  = (document.getElementById('rsvp-phone').value  || '').trim();
+  var errEl  = document.getElementById('rsvp-error');
+  var btn    = document.getElementById('rsvp-submit-btn');
+  errEl.textContent = '';
+  if (!fname) { errEl.textContent = 'Please enter your first name.'; return; }
+  if (!email) { errEl.textContent = 'Please enter your email address.'; return; }
+  btn.disabled = true; btn.textContent = 'Submitting…';
+  fetch(WHCC_SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({
+      action: 'event-rsvp',
+      eventName: _rsvpEventName,
+      eventDate: _rsvpEventDate,
+      firstName: fname, lastName: lname,
+      email: email, phone: phone,
+      submitted: new Date().toISOString()
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    btn.disabled = false; btn.textContent = "I'm Attending";
+    if (d && d.ok) {
+      document.getElementById('rsvp-form-wrap').style.display = 'none';
+      document.getElementById('rsvp-success-body').textContent = "We've got you down for " + _rsvpEventName + ". A confirmation email is on its way.";
+      document.getElementById('rsvp-success').style.display = 'block';
+    } else {
+      errEl.textContent = 'Something went wrong — please try again or call (573) 785-5253.';
+    }
+  })
+  .catch(function() {
+    btn.disabled = false; btn.textContent = "I'm Attending";
+    errEl.textContent = 'Unable to submit — please call (573) 785-5253.';
+  });
 }
 
 // ── LESSON REQUEST MODAL ─────────────────────────────────────────────────────
@@ -10301,6 +10374,37 @@ function launchFire() {
       <div class="reg-success-title">You're registered!</div>
       <p class="reg-success-body" id="reg-success-body"></p>
       <button class="btn-g" style="margin-top:20px" onclick="closeRegModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ EVENT RSVP MODAL ═══ -->
+<div class="reg-overlay" id="rsvp-overlay" style="display:none" onclick="if(event.target===this)closeRsvpModal()">
+  <div class="reg-modal">
+    <button class="reg-modal-close" onclick="closeRsvpModal()">×</button>
+    <div id="rsvp-form-wrap">
+      <p class="reg-modal-tag">Event RSVP</p>
+      <h2 class="reg-modal-title" id="rsvp-event-title">Event Name</h2>
+      <p class="reg-modal-meta" id="rsvp-event-date"></p>
+      <form onsubmit="submitEventRsvp(event)">
+        <div class="reg-row">
+          <div class="reg-field"><label>First Name *</label><input type="text" id="rsvp-fname" required placeholder="Jane"/></div>
+          <div class="reg-field"><label>Last Name *</label><input type="text" id="rsvp-lname" required placeholder="Smith"/></div>
+        </div>
+        <div class="reg-row">
+          <div class="reg-field"><label>Email *</label><input type="email" id="rsvp-email" required placeholder="jane@email.com"/></div>
+          <div class="reg-field"><label>Phone</label><input type="tel" id="rsvp-phone" placeholder="(573) 555-0000"/></div>
+        </div>
+        <div class="reg-error" id="rsvp-error"></div>
+        <button type="submit" class="btn-p" style="width:100%;margin-top:8px" id="rsvp-submit-btn">I'm Attending</button>
+        <p style="font-size:11px;color:var(--muted);margin-top:12px;text-align:center">You'll receive a confirmation email · (573) 785-5253</p>
+      </form>
+    </div>
+    <div class="reg-success" id="rsvp-success" style="display:none">
+      <div class="reg-success-icon">✓</div>
+      <div class="reg-success-title">You're on the list!</div>
+      <p class="reg-success-body" id="rsvp-success-body"></p>
+      <button class="btn-g" style="margin-top:20px" onclick="closeRsvpModal()">Close</button>
     </div>
   </div>
 </div>
