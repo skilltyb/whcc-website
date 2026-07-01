@@ -2,22 +2,10 @@
 nul
 
 # Raw source photos in root only (large, not needed for deployment)
+/*.jpg
 /*.JPG
-/PXL_*.jpg
-/465*.jpg
-/488*.jpg
-/489*.jpg
-/490*.jpg
-/491*.jpg
-/494*.jpg
-/498*.jpg
-/502*.jpg
-/505*.jpg
-/511*.jpg
-/540*.jpg
-/548*.jpg
-/557*.jpg
-/559*.jpg
+/*.jpeg
+/*.JPEG
 
 # Python
 __pycache__/
