@@ -4047,12 +4047,17 @@ function submitLessonForm(e) {
   } catch(e2) {}
 
   // Sync to Sheets
-  WHCC_SYNC.saveLessonRequest(req, function() {});
-
-  btn.textContent = 'Send Request';
-  btn.disabled = false;
-  document.getElementById('lesson-form-wrap').style.display = 'none';
-  document.getElementById('lesson-success').style.display = 'block';
+  WHCC_SYNC.saveLessonRequest(req, function(d, err) {
+    btn.textContent = 'Send Request';
+    btn.disabled = false;
+    if (err || !d || !d.ok) {
+      errEl.textContent = 'Could not send your request. Please try again.';
+      errEl.style.display = 'block';
+      return;
+    }
+    document.getElementById('lesson-form-wrap').style.display = 'none';
+    document.getElementById('lesson-success').style.display = 'block';
+  });
 }
 
 function openMemberInquiry(membershipType) {
@@ -6324,7 +6329,7 @@ function staffUpdateStatus(dk, i, status) {
   staffSelectDate(dk);
   staffUpdatePendingBadge();
 }
-function staffDeleteRes(dk, i) { var id = staffData[dk][i] && staffData[dk][i].id; staffData[dk].splice(i, 1); if (staffData[dk].length === 0) delete staffData[dk]; staffSaveData(); if (id) WHCC_SYNC.deleteDining(id, function() {}); staffSelectDate(dk); }
+function staffDeleteRes(dk, i) { if (!staffData[dk] || !staffData[dk][i]) return; var id = staffData[dk][i].id; staffData[dk].splice(i, 1); if (staffData[dk].length === 0) delete staffData[dk]; staffSaveData(); if (id) WHCC_SYNC.deleteDining(id, function() {}); staffSelectDate(dk); }
 
 // ── ADD/EDIT FORM ──
 function staffShowForm() {
@@ -8072,7 +8077,7 @@ function staffViewLessons() {
   WHCC_SYNC.fetchLessonRequests(function(rows, err) {
     if (!rows || err) return;
     // Normalise Sheets rows to match local format, dedupe by id
-    var localIds = new Set(local.map(function(r) { return r.id; }));
+    var localIds = new Set(local.map(function(r) { return r['ID'] || r.id; }));
     var remote = rows.filter(function(r) { return !localIds.has(r['ID']); }).map(function(r) {
       return {
         id:           r['ID'],
