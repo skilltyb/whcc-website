@@ -417,6 +417,47 @@ function doGet(e) {
     return jsonResponse(pinVal !== null ? { pin: pinVal } : { pin: null });
   }
 
+  if (action === 'cancel-dining') {
+    var cancelId = e.parameter.id || '';
+    var htmlMsg  = 'No reservation ID was provided.';
+    if (cancelId) {
+      var cdss = SpreadsheetApp.getActiveSpreadsheet();
+      var cdSh = cdss.getSheetByName('Dining Reservations');
+      if (cdSh) {
+        var cdVals = cdSh.getDataRange().getValues();
+        var cdHdrs = cdVals[0];
+        var cdIdC  = cdHdrs.indexOf('ID');
+        var cdStC  = cdHdrs.indexOf('Status');
+        var cdFound = false;
+        for (var cdi = 1; cdi < cdVals.length; cdi++) {
+          if (String(cdVals[cdi][cdIdC]) === cancelId) {
+            cdFound = true;
+            if (String(cdVals[cdi][cdStC]) === 'Cancelled') {
+              htmlMsg = 'This reservation has already been cancelled.';
+            } else {
+              cdSh.getRange(cdi + 1, cdStC + 1).setValue('Cancelled');
+              htmlMsg = 'Your reservation has been cancelled. We hope to see you soon.';
+            }
+            break;
+          }
+        }
+        if (!cdFound) htmlMsg = 'Reservation not found. It may have already been removed.';
+      }
+    }
+    return ContentService.createTextOutput(
+      '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
+      '<title>Westwood Hills Country Club</title></head>' +
+      '<body style="font-family:Georgia,serif;text-align:center;padding:60px 20px;max-width:480px;margin:0 auto;color:#222;">' +
+      '<div style="background:#1a2b1f;padding:20px 32px;margin-bottom:32px;">' +
+        '<p style="font-size:20px;color:#b8976a;margin:0;">Westwood Hills Country Club</p>' +
+        '<p style="color:rgba(245,240,232,.6);font-size:12px;margin:4px 0 0;">Poplar Bluff, Missouri</p>' +
+      '</div>' +
+      '<p style="font-size:18px;margin-bottom:16px;">' + htmlMsg + '</p>' +
+      '<p style="color:#666;font-size:14px;">For assistance, call <a href="tel:+15737855253" style="color:#1a2b1f;">(573) 785-5253</a>.</p>' +
+      '</body></html>'
+    ).setMimeType(ContentService.MimeType.HTML);
+  }
+
   return jsonResponse({ error: 'unknown action' });
 }
 
@@ -434,26 +475,56 @@ function doPost(e) {
       sh.setFrozenRows(1);
     }
     sh.appendRow([data.submitted || data.timestamp || new Date().toISOString(), data.name, data.email, data.phone, data.subject, data.message, 'New']);
+    var isMembershipInquiry = data.subject && data.subject.toLowerCase().indexOf('membership') >= 0;
     try {
       if (data.email) {
-        MailApp.sendEmail({
-          to: data.email,
-          subject: 'We received your message - Westwood Hills Country Club',
-          htmlBody:
-            '<div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;color:#222;">' +
-            '<div style="background:#1a2b1f;padding:24px 32px;">' +
-              '<p style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:22px;color:#b8976a;margin:0;">Westwood Hills Country Club</p>' +
-              '<p style="color:rgba(245,240,232,.6);font-size:12px;margin:4px 0 0;">Poplar Bluff, Missouri</p>' +
-            '</div>' +
-            '<div style="padding:28px 32px;background:#fff;">' +
-              '<p>Dear ' + data.name + ',</p>' +
-              '<p>Thank you for reaching out to Westwood Hills Country Club. We have received your inquiry and a member of our team will be in touch soon.</p>' +
-              '<p><strong>Your message:</strong><br><em>' + data.message + '</em></p>' +
-              '<p>In the meantime, feel free to call us at <a href="tel:+15737855253">(573) 785-5253</a> or visit us at the club.</p>' +
-              '<p style="margin-top:28px;">Warm regards,<br><strong>Westwood Hills Country Club</strong><br>Poplar Bluff, Missouri</p>' +
-            '</div>' +
-            '</div>'
-        });
+        if (isMembershipInquiry) {
+          MailApp.sendEmail({
+            to: data.email,
+            subject: 'Thank you for your interest — Westwood Hills Country Club',
+            htmlBody:
+              '<div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;color:#222;">' +
+              '<div style="background:#1a2b1f;padding:24px 32px;">' +
+                '<p style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:22px;color:#b8976a;margin:0;">Westwood Hills Country Club</p>' +
+                '<p style="color:rgba(245,240,232,.6);font-size:12px;margin:4px 0 0;">Poplar Bluff, Missouri</p>' +
+              '</div>' +
+              '<div style="padding:28px 32px;background:#fff;">' +
+                '<p>Dear ' + data.name + ',</p>' +
+                '<p>Thank you for your interest in Westwood Hills Country Club membership. We\'re delighted you\'re considering joining our community.</p>' +
+                '<p>A member of our staff will be in touch shortly to answer your questions. If you\'d like, we\'d love to schedule a personal tour and a complimentary round of golf — no obligation required.</p>' +
+                '<p>Here\'s a quick look at what membership includes:</p>' +
+                '<ul style="padding-left:20px;line-height:1.9;">' +
+                  '<li>Unlimited golf on our championship course, seven days a week</li>' +
+                  '<li>Full aquatics complex for the whole family all summer</li>' +
+                  '<li>Exclusive dining at Hoover\'s Restaurant and the Westwood Grill</li>' +
+                  '<li>Access to all club events, leagues, and tournaments</li>' +
+                  '<li>A close-knit community of about 200 member families</li>' +
+                '</ul>' +
+                '<p style="font-size:13px;color:#666;margin-top:20px;">If you have immediate questions, call us at <a href="tel:+15737855253">(573) 785-5253</a>.</p>' +
+                '<p style="margin-top:28px;">Warm regards,<br><strong>Westwood Hills Country Club</strong><br>Poplar Bluff, Missouri</p>' +
+              '</div>' +
+              '</div>'
+          });
+        } else {
+          MailApp.sendEmail({
+            to: data.email,
+            subject: 'We received your message — Westwood Hills Country Club',
+            htmlBody:
+              '<div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;color:#222;">' +
+              '<div style="background:#1a2b1f;padding:24px 32px;">' +
+                '<p style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:22px;color:#b8976a;margin:0;">Westwood Hills Country Club</p>' +
+                '<p style="color:rgba(245,240,232,.6);font-size:12px;margin:4px 0 0;">Poplar Bluff, Missouri</p>' +
+              '</div>' +
+              '<div style="padding:28px 32px;background:#fff;">' +
+                '<p>Dear ' + data.name + ',</p>' +
+                '<p>Thank you for reaching out to Westwood Hills Country Club. We have received your inquiry and a member of our team will be in touch soon.</p>' +
+                '<p><strong>Your message:</strong><br><em>' + data.message + '</em></p>' +
+                '<p>In the meantime, feel free to call us at <a href="tel:+15737855253">(573) 785-5253</a> or visit us at the club.</p>' +
+                '<p style="margin-top:28px;">Warm regards,<br><strong>Westwood Hills Country Club</strong><br>Poplar Bluff, Missouri</p>' +
+              '</div>' +
+              '</div>'
+          });
+        }
       }
       MailApp.sendEmail({
         to: 'sctr1217@gmail.com,mfiehtner@westwoodhillscountryclub.com',
@@ -564,6 +635,26 @@ function doPost(e) {
     return jsonResponse({ status: 'ok' });
   }
 
+  if (data.action === 'lesson-request') {
+    var lSheet = getOrCreateLessonSheet();
+    var lHdrs = lSheet.getRange(1, 1, 1, lSheet.getLastColumn()).getValues()[0];
+    var lRow = new Array(lHdrs.length).fill('');
+    function setL(name, val) { var i = lHdrs.indexOf(name); if (i >= 0) lRow[i] = val || ''; }
+    setL('ID',            data.id           || Utilities.getUuid());
+    setL('First Name',    data.firstName    || '');
+    setL('Last Name',     data.lastName     || '');
+    setL('Email',         data.email        || '');
+    setL('Phone',         data.phone        || '');
+    setL('Lesson Type',   data.lessonType   || '');
+    setL('Skill Level',   data.skillLevel   || '');
+    setL('Preferred Days',data.preferredDays|| '');
+    setL('Notes',         data.notes        || '');
+    setL('Source',        data.source       || 'website');
+    setL('Submitted',     data.timestamp    || new Date().toISOString());
+    lSheet.appendRow(lRow);
+    return jsonResponse({ ok: true });
+  }
+
   if (data.action === 'dining-reservation') {
     var dSheet = getOrCreateDiningSheet();
     var hdrs = dSheet.getRange(1, 1, 1, dSheet.getLastColumn()).getValues()[0];
@@ -586,25 +677,58 @@ function doPost(e) {
     setCol('Submitted',    data.submitted   || new Date().toISOString());
     dSheet.appendRow(row);
     try {
-      var venueName = data.venue === 'grille' ? 'Westwood Grill' : "Hoover's Bar & Grille";
-      var guestName = (data.firstName || '') + ' ' + (data.lastName || '');
+      var resId      = row[hdrs.indexOf('ID')];
+      var guestEmail = data.email || '';
+      var guestFirst = data.firstName || (data.name ? data.name.split(' ')[0] : '') || 'Guest';
+      var scriptUrl  = ScriptApp.getService().getUrl();
+      var cancelUrl  = scriptUrl + '?action=cancel-dining&id=' + encodeURIComponent(resId);
+      var venueStr   = data.venue || 'Dining Room';
+      var dateStr    = data.date  || '';
+      var timeStr    = data.timeDisplay || data.time24 || '';
+      var partyNum   = String(data.party || 1);
+      if (guestEmail) {
+        MailApp.sendEmail({
+          to: guestEmail,
+          subject: 'Your dining reservation — Westwood Hills Country Club',
+          htmlBody:
+            '<div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;color:#222;">' +
+            '<div style="background:#1a2b1f;padding:24px 32px;">' +
+              '<p style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:22px;color:#b8976a;margin:0;">Westwood Hills Country Club</p>' +
+              '<p style="color:rgba(245,240,232,.6);font-size:12px;margin:4px 0 0;">Poplar Bluff, Missouri</p>' +
+            '</div>' +
+            '<div style="padding:28px 32px;background:#fff;">' +
+              '<p>Dear ' + guestFirst + ',</p>' +
+              '<p>Thank you — we\'ve received your reservation request for <strong>' + venueStr + '</strong>. Here\'s a summary:</p>' +
+              '<table style="border-collapse:collapse;width:100%;margin:16px 0;">' +
+                '<tr><td style="padding:9px 12px;background:#f5f0e8;font-weight:600;width:38%;border-bottom:1px solid #e8e0d4;">Venue</td><td style="padding:9px 12px;border-bottom:1px solid #e8e0d4;">' + venueStr + '</td></tr>' +
+                '<tr><td style="padding:9px 12px;background:#f5f0e8;font-weight:600;border-bottom:1px solid #e8e0d4;">Date</td><td style="padding:9px 12px;border-bottom:1px solid #e8e0d4;">' + dateStr + '</td></tr>' +
+                '<tr><td style="padding:9px 12px;background:#f5f0e8;font-weight:600;border-bottom:1px solid #e8e0d4;">Time</td><td style="padding:9px 12px;border-bottom:1px solid #e8e0d4;">' + timeStr + '</td></tr>' +
+                '<tr><td style="padding:9px 12px;background:#f5f0e8;font-weight:600;">Party Size</td><td style="padding:9px 12px;">' + partyNum + ' ' + (partyNum === '1' ? 'guest' : 'guests') + '</td></tr>' +
+              '</table>' +
+              '<p style="font-size:13px;color:#666;">Your reservation is pending confirmation. We\'ll confirm by phone or email within 24 hours. For same-day reservations, please call <a href="tel:+15737855253">(573) 785-5253</a>.</p>' +
+              '<p style="margin-top:20px;"><a href="' + cancelUrl + '" style="color:#999;font-size:12px;">Need to cancel? Click here.</a></p>' +
+              '<p style="margin-top:28px;">We look forward to seeing you,<br><strong>Westwood Hills Country Club</strong><br>Poplar Bluff, Missouri</p>' +
+            '</div>' +
+            '</div>'
+        });
+      }
       MailApp.sendEmail({
         to: 'sctr1217@gmail.com,mfiehtner@westwoodhillscountryclub.com',
-        subject: 'New Dining Reservation: ' + guestName.trim() + ' - ' + venueName + ' ' + (data.date || ''),
-        body: 'New dining reservation submitted:\n\n' +
-          'Name: '       + guestName.trim() + '\n' +
-          'Venue: '      + venueName + '\n' +
-          'Date: '       + (data.date || '-') + '\n' +
-          'Time: '       + (data.timeDisplay || data.time24 || '-') + '\n' +
-          'Party Size: ' + (data.party || '-') + '\n' +
-          'Phone: '      + (data.phone || '-') + '\n' +
-          'Email: '      + (data.email || '-') + '\n' +
-          'Member: '     + (data.member || '-') + '\n' +
-          'Notes: '      + (data.note || '-') + '\n\n' +
-          'Submitted: '  + (data.submitted || new Date().toISOString())
+        subject: 'New Dining Reservation: ' + guestFirst + ' ' + (data.lastName || '') + ' — ' + dateStr + ' ' + timeStr,
+        body: 'New dining reservation request:\n\n' +
+          'Name: '   + guestFirst + ' ' + (data.lastName || '') + '\n' +
+          'Email: '  + guestEmail             + '\n' +
+          'Phone: '  + (data.phone || '')     + '\n' +
+          'Venue: '  + venueStr               + '\n' +
+          'Date: '   + dateStr                + '\n' +
+          'Time: '   + timeStr                + '\n' +
+          'Party: '  + partyNum               + '\n' +
+          'Member: ' + (data.member || '')    + '\n' +
+          'Notes: '  + (data.note   || '')    + '\n\n' +
+          'Manage reservations in the staff portal.'
       });
-    } catch(mailErr) {
-      Logger.log('MailApp error (dining): ' + mailErr.toString());
+    } catch(dMailErr) {
+      Logger.log('Dining email error: ' + dMailErr.toString());
     }
     return jsonResponse({ ok: true });
   }
@@ -623,6 +747,54 @@ function doPost(e) {
       }
     }
     return jsonResponse({ ok: false, error: 'not found' });
+  }
+
+  if (data.action === 'event-rsvp') {
+    var rsvpSh = getOrCreateEventRsvpSheet_();
+    var rsvpId = Utilities.getUuid();
+    rsvpSh.appendRow([
+      rsvpId,
+      new Date().toISOString(),
+      data.eventName  || '',
+      data.eventDate  || '',
+      data.firstName  || '',
+      data.lastName   || '',
+      data.email      || '',
+      data.phone      || ''
+    ]);
+    try {
+      var rEmail = data.email || '';
+      var rFirst = data.firstName || 'Guest';
+      var rEvt   = data.eventName || 'the event';
+      var rDate  = data.eventDate || '';
+      if (rEmail) {
+        MailApp.sendEmail({
+          to: rEmail,
+          subject: 'You\'re attending ' + rEvt + ' — Westwood Hills Country Club',
+          htmlBody:
+            '<div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;color:#222;">' +
+            '<div style="background:#1a2b1f;padding:24px 32px;">' +
+              '<p style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:22px;color:#b8976a;margin:0;">Westwood Hills Country Club</p>' +
+              '<p style="color:rgba(245,240,232,.6);font-size:12px;margin:4px 0 0;">Poplar Bluff, Missouri</p>' +
+            '</div>' +
+            '<div style="padding:28px 32px;background:#fff;">' +
+              '<p>Dear ' + rFirst + ',</p>' +
+              '<p>We\'ve noted your RSVP for <strong>' + rEvt + '</strong>' + (rDate ? ' on <strong>' + rDate + '</strong>' : '') + '. We look forward to seeing you there!</p>' +
+              '<p style="font-size:13px;color:#666;">Questions? Call us at <a href="tel:+15737855253">(573) 785-5253</a> or stop by the club.</p>' +
+              '<p style="margin-top:28px;">See you soon,<br><strong>Westwood Hills Country Club</strong><br>Poplar Bluff, Missouri</p>' +
+            '</div>' +
+            '</div>'
+        });
+      }
+      MailApp.sendEmail({
+        to: 'sctr1217@gmail.com',
+        subject: 'New Event RSVP: ' + rFirst + ' ' + (data.lastName || '') + ' → ' + rEvt,
+        body: 'New event RSVP:\n\nEvent: ' + rEvt + '\nDate: ' + rDate + '\n\nName: ' + rFirst + ' ' + (data.lastName || '') + '\nEmail: ' + rEmail + '\nPhone: ' + (data.phone || '')
+      });
+    } catch(rMailErr) {
+      Logger.log('RSVP email error: ' + rMailErr.toString());
+    }
+    return jsonResponse({ ok: true });
   }
 
   if (data.action === 'save-specials') {
@@ -984,4 +1156,122 @@ function getSpecialsValue_(sheet, key) {
     }
   }
   return {};
+}
+
+function getOrCreateEventRsvpSheet_() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName('Event RSVPs');
+  if (!sh) {
+    sh = ss.insertSheet('Event RSVPs');
+    sh.appendRow(['ID','Timestamp','Event Name','Event Date','First Name','Last Name','Email','Phone']);
+    sh.setFrozenRows(1);
+  }
+  return sh;
+}
+
+// Run this once from the Apps Script editor to enable daily reminder emails.
+function setupDailyReminders() {
+  ScriptApp.getProjectTriggers().forEach(function(t) {
+    if (t.getHandlerFunction() === 'sendDailyReminders') ScriptApp.deleteTrigger(t);
+  });
+  ScriptApp.newTrigger('sendDailyReminders')
+    .timeBased().everyDays(1).atHour(9).create();
+  Logger.log('Daily reminder trigger created — runs at 9 AM each day.');
+}
+
+// Sends reminder emails for dining reservations and event RSVPs happening tomorrow.
+function sendDailyReminders() {
+  var ss       = SpreadsheetApp.getActiveSpreadsheet();
+  var tz       = Session.getScriptTimeZone();
+  var tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  var tomorrowStr = Utilities.formatDate(tomorrow, tz, 'yyyy-MM-dd');
+  var tomorrowDisp = Utilities.formatDate(tomorrow, tz, 'MMMM d, yyyy');
+
+  // Dining reservation reminders
+  var dSh = ss.getSheetByName('Dining Reservations');
+  if (dSh) {
+    var dVals = dSh.getDataRange().getValues();
+    var dHdrs = dVals[0];
+    var dDateC  = dHdrs.indexOf('Date');
+    var dStatC  = dHdrs.indexOf('Status');
+    var dEmailC = dHdrs.indexOf('Email');
+    var dFnC    = dHdrs.indexOf('First Name');
+    var dVenC   = dHdrs.indexOf('Venue');
+    var dTimeC  = dHdrs.indexOf('Time Display');
+    var dPartyC = dHdrs.indexOf('Party Size');
+    for (var di = 1; di < dVals.length; di++) {
+      var dDate   = String(dVals[di][dDateC] || '').slice(0, 10);
+      var dStatus = String(dVals[di][dStatC] || '');
+      if (dDate !== tomorrowStr) continue;
+      if (dStatus === 'Cancelled') continue;
+      var dEmail = String(dVals[di][dEmailC] || '');
+      if (!dEmail) continue;
+      var dFirst = String(dVals[di][dFnC]    || 'Guest');
+      var dVen   = String(dVals[di][dVenC]   || 'Dining Room');
+      var dTime  = String(dVals[di][dTimeC]  || '');
+      var dParty = String(dVals[di][dPartyC] || '');
+      try {
+        MailApp.sendEmail({
+          to: dEmail,
+          subject: 'Reminder: your dining reservation tomorrow — Westwood Hills',
+          htmlBody:
+            '<div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;color:#222;">' +
+            '<div style="background:#1a2b1f;padding:24px 32px;">' +
+              '<p style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:22px;color:#b8976a;margin:0;">Westwood Hills Country Club</p>' +
+              '<p style="color:rgba(245,240,232,.6);font-size:12px;margin:4px 0 0;">Poplar Bluff, Missouri</p>' +
+            '</div>' +
+            '<div style="padding:28px 32px;background:#fff;">' +
+              '<p>Hi ' + dFirst + ',</p>' +
+              '<p>Just a reminder — you have a dining reservation at <strong>' + dVen + '</strong> tomorrow, <strong>' + tomorrowDisp + '</strong>' + (dTime ? ' at ' + dTime : '') + (dParty ? ' for ' + dParty + (dParty === '1' ? ' guest' : ' guests') : '') + '.</p>' +
+              '<p style="font-size:13px;color:#666;">Need to change or cancel? Call us at <a href="tel:+15737855253">(573) 785-5253</a>.</p>' +
+              '<p style="margin-top:28px;">See you tomorrow,<br><strong>Westwood Hills Country Club</strong></p>' +
+            '</div>' +
+            '</div>'
+        });
+      } catch(e) { Logger.log('Dining reminder error: ' + e.toString()); }
+    }
+  }
+
+  // Event RSVP reminders
+  var rSh = ss.getSheetByName('Event RSVPs');
+  if (rSh) {
+    var rVals = rSh.getDataRange().getValues();
+    var rHdrs = rVals[0];
+    var rEvtC   = rHdrs.indexOf('Event Name');
+    var rDateC  = rHdrs.indexOf('Event Date');
+    var rEmailC = rHdrs.indexOf('Email');
+    var rFnC    = rHdrs.indexOf('First Name');
+    for (var ri = 1; ri < rVals.length; ri++) {
+      var rDateRaw = String(rVals[ri][rDateC] || '');
+      var rEmail   = String(rVals[ri][rEmailC] || '');
+      if (!rEmail) continue;
+      // Try to parse the stored date and compare to tomorrow
+      var parsed = new Date(rDateRaw);
+      if (isNaN(parsed.getTime())) continue;
+      var parsedStr = Utilities.formatDate(parsed, tz, 'yyyy-MM-dd');
+      if (parsedStr !== tomorrowStr) continue;
+      var rEvt   = String(rVals[ri][rEvtC] || 'the event');
+      var rFirst = String(rVals[ri][rFnC]  || 'Guest');
+      try {
+        MailApp.sendEmail({
+          to: rEmail,
+          subject: 'Reminder: ' + rEvt + ' is tomorrow — Westwood Hills',
+          htmlBody:
+            '<div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;color:#222;">' +
+            '<div style="background:#1a2b1f;padding:24px 32px;">' +
+              '<p style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:22px;color:#b8976a;margin:0;">Westwood Hills Country Club</p>' +
+              '<p style="color:rgba(245,240,232,.6);font-size:12px;margin:4px 0 0;">Poplar Bluff, Missouri</p>' +
+            '</div>' +
+            '<div style="padding:28px 32px;background:#fff;">' +
+              '<p>Hi ' + rFirst + ',</p>' +
+              '<p>Just a reminder — <strong>' + rEvt + '</strong> is tomorrow, <strong>' + tomorrowDisp + '</strong>. We hope to see you there!</p>' +
+              '<p style="font-size:13px;color:#666;">Questions? Call us at <a href="tel:+15737855253">(573) 785-5253</a>.</p>' +
+              '<p style="margin-top:28px;">See you tomorrow,<br><strong>Westwood Hills Country Club</strong></p>' +
+            '</div>' +
+            '</div>'
+        });
+      } catch(e) { Logger.log('Event reminder error: ' + e.toString()); }
+    }
+  }
 }

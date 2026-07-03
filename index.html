@@ -3418,13 +3418,20 @@ function renderEventsGrid(events) {
     var delay = delays[i % 3];
     var nameEsc = (ev.name || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
     var metaEsc = (ev.regMeta || '').replace(/'/g, "\\'");
+    var isFullReg = ev.type === 'tournament' || ev.type === 'golf';
+    var evDateStr = (ev.month||'') + ' ' + (ev.day||'') + ', ' + (ev.year||'2026');
+    var evDateEsc = evDateStr.replace(/'/g, "\\'");
+    var ctaLabel  = ev.cta || (isFullReg ? 'Sign Up' : "I'm Attending");
+    var ctaOnclick = isFullReg
+      ? "openRegModal('" + nameEsc + "','" + metaEsc + "',false)"
+      : "openRsvpModal('" + nameEsc + "','" + evDateEsc + "')";
     return '<div class="ev-card fade-up ' + delay + '">' +
       '<div class="ev-card-top">' +
         '<div class="ev-card-date"><span class="ecd-mo">' + (ev.month||'') + '</span><span class="ecd-d">' + (ev.day||'') + '</span><span class="ecd-y">' + (ev.year||'2026') + '</span></div>' +
         '<span class="ev-type ' + typeClass + '">' + typeClass.charAt(0).toUpperCase() + typeClass.slice(1) + '</span>' +
       '</div>' +
       '<div class="ev-card-body"><div class="ev-card-name">' + (ev.name||'') + '</div><div class="ev-card-detail">' + (ev.detail||'') + '</div></div>' +
-      '<div class="ev-card-footer"><a class="ev-cta" onclick="openRegModal(\'' + nameEsc + '\',\'' + metaEsc + '\',' + (ev.type==='tournament'||ev.type==='golf'?'false':'false') + ')" style="cursor:pointer">' + (ev.cta||'Sign Up') + ' \u2192</a></div>' +
+      '<div class="ev-card-footer"><a class="ev-cta" onclick="' + ctaOnclick + '" style="cursor:pointer">' + ctaLabel + ' \u2192</a></div>' +
     '</div>';
   }).join('');
 }
@@ -3474,6 +3481,24 @@ function whInitSiteContent() {
     var cached = JSON.parse(localStorage.getItem('wh_site_content') || 'null');
     if (cached && cached.events) { WH_SITE_CONTENT = cached; applySiteContent(cached); }
   } catch(e) {}
+
+  // Poll every 5 minutes so conditions, menus, and site content stay current
+  // without requiring a page reload when staff makes changes in the Sheet
+  if (window._contentSyncInterval) clearInterval(window._contentSyncInterval);
+  window._contentSyncInterval = setInterval(function() {
+    WHCC_SYNC.fetchConditions(function(remote, err) {
+      if (!remote || err) return;
+      try { localStorage.setItem('wh_conditions', JSON.stringify(remote)); } catch(e) {}
+      if (window.renderConditionsUI) renderConditionsUI(remote);
+    });
+    menuFetch();
+    WHCC_SYNC.fetchSiteContent(function(remote, err) {
+      if (!remote || err || typeof remote !== 'object' || !remote.events) return;
+      WH_SITE_CONTENT = remote;
+      try { localStorage.setItem('wh_site_content', JSON.stringify(remote)); } catch(e) {}
+      applySiteContent(remote);
+    });
+  }, 5 * 60 * 1000);
 }
 
 // ═══════════════════════════════════════
@@ -3991,6 +4016,72 @@ function closeRegModal() {
   currentRegEvent = null;
 }
 
+// ── EVENT RSVP MODAL ─────────────────────────────────────────────────────────
+var _rsvpEventName = '';
+var _rsvpEventDate = '';
+
+function openRsvpModal(evtName, evtDate) {
+  _rsvpEventName = evtName || '';
+  _rsvpEventDate = evtDate || '';
+  document.getElementById('rsvp-event-title').textContent = _rsvpEventName;
+  document.getElementById('rsvp-event-date').textContent  = _rsvpEventDate;
+  document.getElementById('rsvp-form-wrap').style.display  = 'block';
+  document.getElementById('rsvp-success').style.display    = 'none';
+  document.getElementById('rsvp-error').textContent        = '';
+  document.getElementById('rsvp-overlay').style.display    = 'flex';
+  document.body.style.overflow = 'hidden';
+  var fn = document.getElementById('rsvp-fname'); if (fn) fn.focus();
+}
+
+function closeRsvpModal() {
+  document.getElementById('rsvp-overlay').style.display = 'none';
+  document.body.style.overflow = '';
+  ['rsvp-fname','rsvp-lname','rsvp-email','rsvp-phone'].forEach(function(id) {
+    var el = document.getElementById(id); if (el) el.value = '';
+  });
+}
+
+function submitEventRsvp(e) {
+  e.preventDefault();
+  var fname  = (document.getElementById('rsvp-fname').value  || '').trim();
+  var lname  = (document.getElementById('rsvp-lname').value  || '').trim();
+  var email  = (document.getElementById('rsvp-email').value  || '').trim();
+  var phone  = (document.getElementById('rsvp-phone').value  || '').trim();
+  var errEl  = document.getElementById('rsvp-error');
+  var btn    = document.getElementById('rsvp-submit-btn');
+  errEl.textContent = '';
+  if (!fname) { errEl.textContent = 'Please enter your first name.'; return; }
+  if (!email) { errEl.textContent = 'Please enter your email address.'; return; }
+  btn.disabled = true; btn.textContent = 'Submitting…';
+  fetch(WHCC_SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({
+      action: 'event-rsvp',
+      eventName: _rsvpEventName,
+      eventDate: _rsvpEventDate,
+      firstName: fname, lastName: lname,
+      email: email, phone: phone,
+      submitted: new Date().toISOString()
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    btn.disabled = false; btn.textContent = "I'm Attending";
+    if (d && d.ok) {
+      document.getElementById('rsvp-form-wrap').style.display = 'none';
+      document.getElementById('rsvp-success-body').textContent = "We've got you down for " + _rsvpEventName + ". A confirmation email is on its way.";
+      document.getElementById('rsvp-success').style.display = 'block';
+    } else {
+      errEl.textContent = 'Something went wrong — please try again or call (573) 785-5253.';
+    }
+  })
+  .catch(function() {
+    btn.disabled = false; btn.textContent = "I'm Attending";
+    errEl.textContent = 'Unable to submit — please call (573) 785-5253.';
+  });
+}
+
 // ── LESSON REQUEST MODAL ─────────────────────────────────────────────────────
 function openLessonModal() {
   document.getElementById('lesson-overlay').style.display = 'flex';
@@ -4015,14 +4106,32 @@ function submitLessonForm(e) {
   var btn = document.getElementById('lesson-submit-btn');
   var errEl = document.getElementById('lesson-error');
   errEl.style.display = 'none';
+
+  var firstName = document.getElementById('lesson-fname').value.trim();
+  var lastName  = document.getElementById('lesson-lname').value.trim();
+  var phone     = document.getElementById('lesson-phone').value.trim();
+  var email     = document.getElementById('lesson-email').value.trim();
+
+  if (!firstName || !lastName) {
+    errEl.textContent = 'Please enter your first and last name.';
+    errEl.style.display = 'block';
+    return;
+  }
+  if (!phone && !email) {
+    errEl.textContent = 'Please provide a phone number or email so we can reach you.';
+    errEl.style.display = 'block';
+    return;
+  }
+
   btn.textContent = 'Sending…';
   btn.disabled = true;
 
   var req = {
-    firstName:    document.getElementById('lesson-fname').value.trim(),
-    lastName:     document.getElementById('lesson-lname').value.trim(),
-    phone:        document.getElementById('lesson-phone').value.trim(),
-    email:        document.getElementById('lesson-email').value.trim(),
+    id:           Date.now().toString(),
+    firstName:    firstName,
+    lastName:     lastName,
+    phone:        phone,
+    email:        email,
     lessonType:   document.getElementById('lesson-type').value,
     skillLevel:   document.getElementById('lesson-skill').value,
     preferredDays:document.getElementById('lesson-days').value.trim(),
@@ -4041,12 +4150,17 @@ function submitLessonForm(e) {
   } catch(e2) {}
 
   // Send to Google Sheets + trigger email notification
-  WHCC_SYNC.saveLesson(req, function() {});
-
-  btn.textContent = 'Send Request';
-  btn.disabled = false;
-  document.getElementById('lesson-form-wrap').style.display = 'none';
-  document.getElementById('lesson-success').style.display = 'block';
+  WHCC_SYNC.saveLesson(req, function(d, err) {
+    btn.textContent = 'Send Request';
+    btn.disabled = false;
+    if (err || !d || !d.ok) {
+      errEl.textContent = 'Could not send your request. Please try again.';
+      errEl.style.display = 'block';
+      return;
+    }
+    document.getElementById('lesson-form-wrap').style.display = 'none';
+    document.getElementById('lesson-success').style.display = 'block';
+  });
 }
 
 function openMemberInquiry(membershipType) {
@@ -4203,6 +4317,15 @@ function submitRegForm(e) {
       return;
     }
   } catch(e2) {}
+
+  // Require at least one contact method so the Pro Shop can confirm
+  if (!reg.email && !reg.phone) {
+    errEl.textContent = 'Please provide an email address or phone number so we can confirm your registration.';
+    errEl.style.display = 'block';
+    btn.textContent = 'Complete Registration';
+    btn.disabled = false;
+    return;
+  }
 
   // Save to localStorage first (always works, good for demos)
   saveRegLocal(reg);
@@ -4735,12 +4858,24 @@ async function submitReservation() {
   // Show confirmation
   const venueName = venue === 'grille' ? 'The Westwood Grill' : "Hoover's";
   const dateText = document.getElementById('res-date-text').textContent;
-  document.getElementById('res-conf-detail').innerHTML =
-    '<strong>' + firstName + ' ' + lastName + '</strong><br>' +
-    venueName + '<br>' +
-    dateText + ' at ' + time + '<br>' +
-    'Party of ' + (partySize.replace(/[^0-9+]/g, '') || partySize) +
-    (member === 'nonmember' ? '<br><span style="color:#d4b483;">Non-Member Guest</span>' : '');
+  const confEl = document.getElementById('res-conf-detail');
+  confEl.innerHTML = '';
+  const strong = document.createElement('strong');
+  strong.textContent = firstName + ' ' + lastName;
+  confEl.appendChild(strong);
+  confEl.appendChild(document.createElement('br'));
+  confEl.appendChild(document.createTextNode(venueName));
+  confEl.appendChild(document.createElement('br'));
+  confEl.appendChild(document.createTextNode(dateText + ' at ' + time));
+  confEl.appendChild(document.createElement('br'));
+  confEl.appendChild(document.createTextNode('Party of ' + (partySize.replace(/[^0-9+]/g, '') || partySize)));
+  if (member === 'nonmember') {
+    confEl.appendChild(document.createElement('br'));
+    const span = document.createElement('span');
+    span.style.color = '#d4b483';
+    span.textContent = 'Non-Member Guest';
+    confEl.appendChild(span);
+  }
 
   document.getElementById('res-form-fields').style.display = 'none';
   document.getElementById('res-confirmation').style.display = 'block';
@@ -6289,6 +6424,7 @@ function staffResCard(r, idx, showDate) {
 }
 
 function staffUpdateStatus(dk, i, status) {
+  if (!staffData[dk] || !staffData[dk][i]) return;
   var id = staffData[dk][i].id;
   staffData[dk][i].status = status;
   staffSaveData();
@@ -6296,7 +6432,7 @@ function staffUpdateStatus(dk, i, status) {
   staffSelectDate(dk);
   staffUpdatePendingBadge();
 }
-function staffDeleteRes(dk, i) { var id = staffData[dk][i] && staffData[dk][i].id; staffData[dk].splice(i, 1); if (staffData[dk].length === 0) delete staffData[dk]; staffSaveData(); if (id) WHCC_SYNC.deleteDining(id, function() {}); staffSelectDate(dk); }
+function staffDeleteRes(dk, i) { if (!staffData[dk] || !staffData[dk][i]) return; var id = staffData[dk][i].id; staffData[dk].splice(i, 1); if (staffData[dk].length === 0) delete staffData[dk]; staffSaveData(); if (id) WHCC_SYNC.deleteDining(id, function() {}); staffSelectDate(dk); }
 
 // ── ADD/EDIT FORM ──
 function staffShowForm() {
@@ -6313,6 +6449,7 @@ function staffShowForm() {
 }
 
 function staffStartEdit(dk, i) {
+  if (!staffData[dk] || !staffData[dk][i]) return;
   staffSelDate = dk; staffEditIdx = i; var r = staffData[dk][i];
   document.getElementById('staff-form-label').textContent = 'Edit Reservation';
   document.getElementById('staff-form-date-label').textContent = staffFormatDate(dk);
@@ -6492,7 +6629,9 @@ function guestShowAdd() {
 }
 
 function guestStartEdit(key) {
-  var g = staffGuestNotes[key]; guestEditIdx = key;
+  var g = staffGuestNotes[key];
+  if (!g) return;
+  guestEditIdx = key;
   document.getElementById('guest-form-label').textContent = 'Edit Guest Note';
   document.getElementById('gn-fname').value = g.firstName || ''; document.getElementById('gn-lname').value = g.lastName || '';
   document.getElementById('gn-notes').value = g.notes || ''; document.getElementById('gn-tags').value = g.tags || '';
@@ -7045,7 +7184,7 @@ function cmsEvShowForm(ev) {
     '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:10px;">' +
       '<div><label class="hrf-label">Month</label><input class="hrf-input" id="cef-month" value="' + menuEsc(ev.month||'') + '" placeholder="Apr" /></div>' +
       '<div><label class="hrf-label">Day</label><input class="hrf-input" id="cef-day" value="' + menuEsc(ev.day||'') + '" placeholder="18" /></div>' +
-      '<div><label class="hrf-label">Year</label><input class="hrf-input" id="cef-year" value="' + menuEsc(ev.year||'2026') + '" placeholder="2026" /></div>' +
+      '<div><label class="hrf-label">Year</label><input class="hrf-input" id="cef-year" value="' + menuEsc(ev.year||String(new Date().getFullYear())) + '" placeholder="' + new Date().getFullYear() + '" /></div>' +
       '<div><label class="hrf-label">Time (optional)</label><input class="hrf-input" id="cef-time" value="' + menuEsc(ev.time||'') + '" placeholder="1:00 PM" /></div>' +
     '</div>' +
     '<div style="margin-bottom:10px;"><label class="hrf-label">Event Name</label><input class="hrf-input" id="cef-name" value="' + menuEsc(ev.name||'') + '" placeholder="e.g. Spring Scramble" /></div>' +
@@ -7991,71 +8130,56 @@ function cmsFaqSave() {
 }
 
 // ── LESSON REQUESTS ──────────────────────────────────────────
-function staffViewLessons() {
+function staffRenderLessons(all) {
   var list = document.getElementById('sv-lessons-list');
   if (!list) return;
-  list.innerHTML = '<div style="color:rgba(245,240,232,.35);font-size:13px;padding:16px 0;">Loading…</div>';
-
-  function renderLessonList(all) {
-    if (!all.length) {
-      list.innerHTML = '<div style="color:rgba(245,240,232,.35);font-size:13px;padding:20px 0;">No lesson requests yet. Members submit requests via the Golf page.</div>';
-      return;
-    }
-    all = all.slice().reverse(); // newest first
-    var typeLabels = { private:'Private (1-on-1)', playing:'Playing Lesson', group:'Group Clinic', junior:'Junior Program', other:'Other' };
-    var skillLabels = { beginner:'Beginner', intermediate:'Intermediate', low:'Low Handicap', junior:'Junior' };
-    var statusColors = { New:'#d4b483', Contacted:'#8fcc8f', Booked:'#6baacc', Closed:'rgba(245,240,232,.3)' };
-    list.innerHTML = all.map(function(r, idx) {
-      var rawTs = r.timestamp || r['Submitted'] || '';
-      var d = rawTs ? new Date(rawTs).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '';
-      var firstName = r.firstName || r['First Name'] || '';
-      var lastName  = r.lastName  || r['Last Name']  || '';
-      var phone     = r.phone     || r['Phone']      || '';
-      var email     = r.email     || r['Email']      || '';
-      var lessonType  = r.lessonType  || r['Lesson Type']  || '';
-      var skillLevel  = r.skillLevel  || r['Skill Level']  || '';
-      var prefDays    = r.preferredDays || r['Preferred Days'] || '';
-      var notes       = r.notes    || r['Notes']     || '';
-      var status      = r.status   || r['Status']    || 'New';
-      var id          = r.id       || r['ID']        || '';
-      var statusColor = statusColors[status] || statusColors.New;
-      return '<div id="lesson-card-' + idx + '" style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);border-radius:4px;padding:12px 16px;margin-bottom:10px;">' +
-        '<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px;margin-bottom:8px;">' +
-          '<div style="font-weight:600;font-size:14px;color:var(--cream);">' + firstName + ' ' + lastName + '</div>' +
-          '<div style="display:flex;align-items:center;gap:8px;">' +
-            '<span style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:' + statusColor + ';border:1px solid ' + statusColor + ';padding:2px 7px;border-radius:10px;">' + status + '</span>' +
-            '<span style="font-size:10px;color:rgba(245,240,232,.3);">' + d + '</span>' +
-          '</div>' +
-        '</div>' +
-        '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">' +
-          '<span style="font-size:10px;background:rgba(184,151,106,.15);border:1px solid rgba(184,151,106,.2);border-radius:10px;padding:2px 8px;color:var(--gold);">' + (typeLabels[lessonType] || lessonType || '—') + '</span>' +
-          (skillLevel ? '<span style="font-size:10px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.12);border-radius:10px;padding:2px 8px;color:rgba(245,240,232,.5);">' + (skillLabels[skillLevel] || skillLevel) + '</span>' : '') +
-        '</div>' +
-        '<div style="font-size:12px;color:rgba(245,240,232,.6);line-height:1.6;">' +
-          (phone ? '📞 <a href="tel:' + phone.replace(/\D/g,'') + '" style="color:inherit;">' + phone + '</a>' + (email ? ' &nbsp;·&nbsp; ' : '') : '') +
-          (email ? '✉ <a href="mailto:' + email + '" style="color:inherit;">' + email + '</a>' : '') +
-        '</div>' +
-        (prefDays ? '<div style="font-size:12px;color:rgba(245,240,232,.5);margin-top:4px;">📅 ' + prefDays + '</div>' : '') +
-        (notes ? '<div style="font-size:12px;color:rgba(245,240,232,.55);margin-top:6px;padding:6px 8px;background:rgba(255,255,255,.02);border-radius:3px;">' + notes + '</div>' : '') +
-        (id && status !== 'Closed' ? '<div style="margin-top:8px;display:flex;gap:5px;border-top:1px solid rgba(184,151,106,.08);padding-top:8px;">' +
-          (status !== 'Contacted' ? '<button class="staff-mini-btn accent" onclick="lessonMarkStatus(\'' + id + '\',' + idx + ',\'Contacted\')">Mark Contacted</button>' : '') +
-          (status !== 'Booked' ? '<button class="staff-mini-btn" onclick="lessonMarkStatus(\'' + id + '\',' + idx + ',\'Booked\')">Mark Booked</button>' : '') +
-          '<button class="staff-mini-btn" style="margin-left:auto;" onclick="lessonMarkStatus(\'' + id + '\',' + idx + ',\'Closed\')">Dismiss</button>' +
-        '</div>' : '') +
-      '</div>';
-    }).join('');
+  if (!all.length) {
+    list.innerHTML = '<div style="color:rgba(245,240,232,.35);font-size:13px;padding:20px 0;">No lesson requests yet. Members submit requests via the Golf page.</div>';
+    return;
   }
-
-  // Try Sheets first, fall back to localStorage
-  WHCC_SYNC.fetchLessons(function(rows, err) {
-    if (rows && Array.isArray(rows) && rows.length) {
-      renderLessonList(rows);
-    } else {
-      var local = [];
-      try { local = JSON.parse(localStorage.getItem('wh_lesson_requests') || '[]'); } catch(e) {}
-      renderLessonList(local);
-    }
-  });
+  var typeLabels = { private:'Private (1-on-1)', playing:'Playing Lesson', group:'Group Clinic', junior:'Junior Program', other:'Other' };
+  var skillLabels = { beginner:'Beginner', intermediate:'Intermediate', low:'Low Handicap', junior:'Junior' };
+  var statusColors = { New:'#d4b483', Contacted:'#8fcc8f', Booked:'#6baacc', Closed:'rgba(245,240,232,.3)' };
+  function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  list.innerHTML = all.map(function(r, idx) {
+    var ts = r.timestamp || r['Submitted'] || '';
+    var d = ts ? new Date(ts).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '';
+    var fn = esc(r.firstName || r['First Name'] || '');
+    var ln = esc(r.lastName  || r['Last Name']  || '');
+    var ph = esc(r.phone     || r['Phone']      || '');
+    var em = esc(r.email     || r['Email']      || '');
+    var lt = r.lessonType    || r['Lesson Type']   || '';
+    var sl = r.skillLevel    || r['Skill Level']   || '';
+    var pd = esc(r.preferredDays || r['Preferred Days'] || '');
+    var nt = esc(r.notes     || r['Notes']      || '');
+    var status = r.status || r['Status'] || 'New';
+    var id     = r.id     || r['ID']     || '';
+    var statusColor = statusColors[status] || statusColors.New;
+    return '<div id="lesson-card-' + idx + '" style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);border-radius:4px;padding:12px 16px;margin-bottom:10px;">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px;margin-bottom:8px;">' +
+        '<div style="font-weight:600;font-size:14px;color:var(--cream);">' + fn + ' ' + ln + '</div>' +
+        '<div style="display:flex;align-items:center;gap:8px;">' +
+          '<span style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:' + statusColor + ';border:1px solid ' + statusColor + ';padding:2px 7px;border-radius:10px;">' + esc(status) + '</span>' +
+          '<span style="font-size:10px;color:rgba(245,240,232,.3);">' + d + '</span>' +
+        '</div>' +
+      '</div>' +
+      '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">' +
+        '<span style="font-size:10px;background:rgba(184,151,106,.15);border:1px solid rgba(184,151,106,.2);border-radius:10px;padding:2px 8px;color:var(--gold);">' + esc(typeLabels[lt] || lt || '—') + '</span>' +
+        (sl ? '<span style="font-size:10px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.12);border-radius:10px;padding:2px 8px;color:rgba(245,240,232,.5);">' + esc(skillLabels[sl] || sl) + '</span>' : '') +
+      '</div>' +
+      '<div style="font-size:12px;color:rgba(245,240,232,.6);line-height:1.6;">' +
+        (ph ? '📞 <a href="tel:' + ph.replace(/\D/g,'') + '" style="color:inherit;">' + ph + '</a>' + (em ? ' &nbsp;·&nbsp; ' : '') : '') +
+        (em ? '✉ <a href="mailto:' + em + '" style="color:inherit;">' + em + '</a>' : '') +
+      '</div>' +
+      (pd ? '<div style="font-size:12px;color:rgba(245,240,232,.5);margin-top:4px;">📅 ' + pd + '</div>' : '') +
+      (nt ? '<div style="font-size:12px;color:rgba(245,240,232,.55);margin-top:6px;padding:6px 8px;background:rgba(255,255,255,.02);border-radius:3px;">' + nt + '</div>' : '') +
+      (id && status !== 'Closed' ? '<div style="margin-top:8px;display:flex;gap:5px;border-top:1px solid rgba(184,151,106,.08);padding-top:8px;">' +
+        (status !== 'Contacted' ? '<button class="staff-mini-btn accent" onclick="lessonMarkStatus(\'' + id + '\',' + idx + ',\'Contacted\')">Mark Contacted</button>' : '') +
+        (status !== 'Booked' ? '<button class="staff-mini-btn" onclick="lessonMarkStatus(\'' + id + '\',' + idx + ',\'Booked\')">Mark Booked</button>' : '') +
+        '<button class="staff-mini-btn" style="margin-left:auto;" onclick="lessonMarkStatus(\'' + id + '\',' + idx + ',\'Closed\')">Dismiss</button>' +
+      '</div>' : '') +
+    '</div>';
+  }).join('');
 }
 
 function lessonMarkStatus(id, idx, status) {
@@ -8063,6 +8187,40 @@ function lessonMarkStatus(id, idx, status) {
   if (card) card.style.opacity = '0.5';
   WHCC_SYNC.updateLessonStatus(id, status, function(res) {
     staffViewLessons();
+  });
+}
+
+function staffViewLessons() {
+  var list = document.getElementById('sv-lessons-list');
+  if (!list) return;
+  var local = [];
+  try { local = JSON.parse(localStorage.getItem('wh_lesson_requests') || '[]'); } catch(e) {}
+  staffRenderLessons(local.slice().reverse());
+
+  WHCC_SYNC.fetchLessons(function(rows, err) {
+    if (!rows || err) return;
+    // Normalise Sheets rows to match local format, dedupe by id
+    var localIds = new Set(local.map(function(r) { return r['ID'] || r.id; }));
+    var remote = rows.filter(function(r) { return !localIds.has(r['ID']); }).map(function(r) {
+      return {
+        id:           r['ID'],
+        firstName:    r['First Name'],
+        lastName:     r['Last Name'],
+        phone:        r['Phone'],
+        email:        r['Email'],
+        lessonType:   r['Lesson Type'],
+        skillLevel:   r['Skill Level'],
+        preferredDays:r['Preferred Days'],
+        notes:        r['Notes'],
+        status:       r['Status'],
+        timestamp:    r['Submitted'],
+        source:       r['Source']
+      };
+    });
+    var merged = remote.concat(local).sort(function(a,b) {
+      return new Date(b.timestamp||0) - new Date(a.timestamp||0);
+    });
+    staffRenderLessons(merged);
   });
 }
 
@@ -8108,6 +8266,16 @@ function initStaffDashboard() {
       localStorage.setItem('staff-pin', remotePin);
     }
   });
+
+  // Poll every 3 minutes so sheet edits (reservation changes, new lesson requests) appear without reload
+  if (window._staffSyncInterval) clearInterval(window._staffSyncInterval);
+  window._staffSyncInterval = setInterval(function() {
+    staffLoadData().then(function() { staffRenderCal(); staffRenderStats(); staffUpdatePendingBadge(); staffRenderToday(); });
+    WHCC_SYNC.fetchLessons(function(rows, err) {
+      if (!rows || err) return;
+      try { localStorage.setItem('wh_lesson_requests_remote', JSON.stringify(rows)); } catch(e) {}
+    });
+  }, 3 * 60 * 1000);
 }
 
 // ── STAFF AUTH ──
@@ -10265,6 +10433,37 @@ function launchFire() {
       <div class="reg-success-title">You're registered!</div>
       <p class="reg-success-body" id="reg-success-body"></p>
       <button class="btn-g" style="margin-top:20px" onclick="closeRegModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ EVENT RSVP MODAL ═══ -->
+<div class="reg-overlay" id="rsvp-overlay" style="display:none" onclick="if(event.target===this)closeRsvpModal()">
+  <div class="reg-modal">
+    <button class="reg-modal-close" onclick="closeRsvpModal()">×</button>
+    <div id="rsvp-form-wrap">
+      <p class="reg-modal-tag">Event RSVP</p>
+      <h2 class="reg-modal-title" id="rsvp-event-title">Event Name</h2>
+      <p class="reg-modal-meta" id="rsvp-event-date"></p>
+      <form onsubmit="submitEventRsvp(event)">
+        <div class="reg-row">
+          <div class="reg-field"><label>First Name *</label><input type="text" id="rsvp-fname" required placeholder="Jane"/></div>
+          <div class="reg-field"><label>Last Name *</label><input type="text" id="rsvp-lname" required placeholder="Smith"/></div>
+        </div>
+        <div class="reg-row">
+          <div class="reg-field"><label>Email *</label><input type="email" id="rsvp-email" required placeholder="jane@email.com"/></div>
+          <div class="reg-field"><label>Phone</label><input type="tel" id="rsvp-phone" placeholder="(573) 555-0000"/></div>
+        </div>
+        <div class="reg-error" id="rsvp-error"></div>
+        <button type="submit" class="btn-p" style="width:100%;margin-top:8px" id="rsvp-submit-btn">I'm Attending</button>
+        <p style="font-size:11px;color:var(--muted);margin-top:12px;text-align:center">You'll receive a confirmation email · (573) 785-5253</p>
+      </form>
+    </div>
+    <div class="reg-success" id="rsvp-success" style="display:none">
+      <div class="reg-success-icon">✓</div>
+      <div class="reg-success-title">You're on the list!</div>
+      <p class="reg-success-body" id="rsvp-success-body"></p>
+      <button class="btn-g" style="margin-top:20px" onclick="closeRsvpModal()">Close</button>
     </div>
   </div>
 </div>
