@@ -3698,21 +3698,6 @@ var WHCC_SYNC = {
   },
 
   // ── DINING RESERVATION SYNC ──
-  saveLessonRequest: function(req, cb) {
-    fetch(WHCC_SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(Object.assign({ action: 'lesson-request' }, req))
-    }).then(function(r){ return r.json(); })
-      .then(function(d){ if (cb) cb(d, null); })
-      .catch(function(e){ if (cb) cb(null, e); });
-  },
-  fetchLessonRequests: function(cb) {
-    fetch(WHCC_SCRIPT_URL + '?action=get-lessons')
-      .then(function(r){ return r.json(); })
-      .then(function(rows){ if (cb) cb(rows, null); })
-      .catch(function(e){ if (cb) cb(null, e); });
-  },
   saveDiningReservation: function(res, cb) {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
@@ -3822,6 +3807,32 @@ var WHCC_SYNC = {
       .catch(function(e){ if (cb) cb(null, e); });
   },
 
+  // ── LESSON REQUEST SYNC ──
+  saveLesson: function(req, cb) {
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(Object.assign({ action: 'save-lesson' }, req))
+    }).then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+  fetchLessons: function(cb) {
+    fetch(WHCC_SCRIPT_URL + '?action=get-lessons')
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+  updateLessonStatus: function(id, status, cb) {
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'update-lesson-status', id: id, status: status })
+    }).then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+
   // ── SITE CONTENT CMS SYNC ──
   saveSiteContent: function(data, cb) {
     fetch(WHCC_SCRIPT_URL, {
@@ -3836,6 +3847,23 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL + '?action=get-site-content')
       .then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+
+  // ── STAFF PIN SYNC ──
+  savePin: function(pin, cb) {
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'save-pin', pin: pin })
+    }).then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d && d.ok, null); })
+      .catch(function(e){ if (cb) cb(false, e); });
+  },
+  fetchPin: function(cb) {
+    fetch(WHCC_SCRIPT_URL + '?action=get-pin')
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d && d.pin ? d.pin : null, null); })
       .catch(function(e){ if (cb) cb(null, e); });
   },
 };
@@ -4112,15 +4140,17 @@ function submitLessonForm(e) {
     source:       'website'
   };
 
-  // Save to localStorage
+  req.id = Date.now().toString();
+
+  // Save to localStorage for offline access
   try {
     var all = JSON.parse(localStorage.getItem('wh_lesson_requests') || '[]');
     all.push(req);
     localStorage.setItem('wh_lesson_requests', JSON.stringify(all));
   } catch(e2) {}
 
-  // Sync to Sheets
-  WHCC_SYNC.saveLessonRequest(req, function(d, err) {
+  // Send to Google Sheets + trigger email notification
+  WHCC_SYNC.saveLesson(req, function(d, err) {
     btn.textContent = 'Send Request';
     btn.disabled = false;
     if (err || !d || !d.ok) {
@@ -8109,8 +8139,9 @@ function staffRenderLessons(all) {
   }
   var typeLabels = { private:'Private (1-on-1)', playing:'Playing Lesson', group:'Group Clinic', junior:'Junior Program', other:'Other' };
   var skillLabels = { beginner:'Beginner', intermediate:'Intermediate', low:'Low Handicap', junior:'Junior' };
+  var statusColors = { New:'#d4b483', Contacted:'#8fcc8f', Booked:'#6baacc', Closed:'rgba(245,240,232,.3)' };
   function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-  list.innerHTML = all.map(function(r) {
+  list.innerHTML = all.map(function(r, idx) {
     var ts = r.timestamp || r['Submitted'] || '';
     var d = ts ? new Date(ts).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '';
     var fn = esc(r.firstName || r['First Name'] || '');
@@ -8121,23 +8152,42 @@ function staffRenderLessons(all) {
     var sl = r.skillLevel    || r['Skill Level']   || '';
     var pd = esc(r.preferredDays || r['Preferred Days'] || '');
     var nt = esc(r.notes     || r['Notes']      || '');
-    return '<div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);border-radius:4px;padding:12px 16px;margin-bottom:10px;">' +
+    var status = r.status || r['Status'] || 'New';
+    var id     = r.id     || r['ID']     || '';
+    var statusColor = statusColors[status] || statusColors.New;
+    return '<div id="lesson-card-' + idx + '" style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);border-radius:4px;padding:12px 16px;margin-bottom:10px;">' +
       '<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px;margin-bottom:8px;">' +
         '<div style="font-weight:600;font-size:14px;color:var(--cream);">' + fn + ' ' + ln + '</div>' +
-        '<div style="font-size:10px;color:rgba(245,240,232,.35);">' + d + '</div>' +
+        '<div style="display:flex;align-items:center;gap:8px;">' +
+          '<span style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:' + statusColor + ';border:1px solid ' + statusColor + ';padding:2px 7px;border-radius:10px;">' + esc(status) + '</span>' +
+          '<span style="font-size:10px;color:rgba(245,240,232,.3);">' + d + '</span>' +
+        '</div>' +
       '</div>' +
       '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">' +
         '<span style="font-size:10px;background:rgba(184,151,106,.15);border:1px solid rgba(184,151,106,.2);border-radius:10px;padding:2px 8px;color:var(--gold);">' + esc(typeLabels[lt] || lt || '—') + '</span>' +
-        '<span style="font-size:10px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.12);border-radius:10px;padding:2px 8px;color:rgba(245,240,232,.5);">' + esc(skillLabels[sl] || sl || '') + '</span>' +
+        (sl ? '<span style="font-size:10px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.12);border-radius:10px;padding:2px 8px;color:rgba(245,240,232,.5);">' + esc(skillLabels[sl] || sl) + '</span>' : '') +
       '</div>' +
       '<div style="font-size:12px;color:rgba(245,240,232,.6);line-height:1.6;">' +
-        (ph ? '📞 ' + ph + (em ? ' &nbsp;·&nbsp; ' : '') : '') +
-        (em ? '✉ ' + em : '') +
+        (ph ? '📞 <a href="tel:' + ph.replace(/\D/g,'') + '" style="color:inherit;">' + ph + '</a>' + (em ? ' &nbsp;·&nbsp; ' : '') : '') +
+        (em ? '✉ <a href="mailto:' + em + '" style="color:inherit;">' + em + '</a>' : '') +
       '</div>' +
       (pd ? '<div style="font-size:12px;color:rgba(245,240,232,.5);margin-top:4px;">📅 ' + pd + '</div>' : '') +
       (nt ? '<div style="font-size:12px;color:rgba(245,240,232,.55);margin-top:6px;padding:6px 8px;background:rgba(255,255,255,.02);border-radius:3px;">' + nt + '</div>' : '') +
+      (id && status !== 'Closed' ? '<div style="margin-top:8px;display:flex;gap:5px;border-top:1px solid rgba(184,151,106,.08);padding-top:8px;">' +
+        (status !== 'Contacted' ? '<button class="staff-mini-btn accent" onclick="lessonMarkStatus(\'' + id + '\',' + idx + ',\'Contacted\')">Mark Contacted</button>' : '') +
+        (status !== 'Booked' ? '<button class="staff-mini-btn" onclick="lessonMarkStatus(\'' + id + '\',' + idx + ',\'Booked\')">Mark Booked</button>' : '') +
+        '<button class="staff-mini-btn" style="margin-left:auto;" onclick="lessonMarkStatus(\'' + id + '\',' + idx + ',\'Closed\')">Dismiss</button>' +
+      '</div>' : '') +
     '</div>';
   }).join('');
+}
+
+function lessonMarkStatus(id, idx, status) {
+  var card = document.getElementById('lesson-card-' + idx);
+  if (card) card.style.opacity = '0.5';
+  WHCC_SYNC.updateLessonStatus(id, status, function(res) {
+    staffViewLessons();
+  });
 }
 
 function staffViewLessons() {
@@ -8147,7 +8197,7 @@ function staffViewLessons() {
   try { local = JSON.parse(localStorage.getItem('wh_lesson_requests') || '[]'); } catch(e) {}
   staffRenderLessons(local.slice().reverse());
 
-  WHCC_SYNC.fetchLessonRequests(function(rows, err) {
+  WHCC_SYNC.fetchLessons(function(rows, err) {
     if (!rows || err) return;
     // Normalise Sheets rows to match local format, dedupe by id
     var localIds = new Set(local.map(function(r) { return r['ID'] || r.id; }));
@@ -8162,6 +8212,7 @@ function staffViewLessons() {
         skillLevel:   r['Skill Level'],
         preferredDays:r['Preferred Days'],
         notes:        r['Notes'],
+        status:       r['Status'],
         timestamp:    r['Submitted'],
         source:       r['Source']
       };
@@ -8209,11 +8260,18 @@ function cmsProBioSave() {
 // ── INIT ──
 function initStaffDashboard() {
   staffLoadData().then(function() { staffRenderCal(); staffRenderStats(); staffUpdatePendingBadge(); staffRenderToday(); });
+  // Pull PIN from Sheets so all devices share the same PIN
+  WHCC_SYNC.fetchPin(function(remotePin) {
+    if (remotePin && /^\d{4}$/.test(remotePin)) {
+      localStorage.setItem('staff-pin', remotePin);
+    }
+  });
+
   // Poll every 3 minutes so sheet edits (reservation changes, new lesson requests) appear without reload
   if (window._staffSyncInterval) clearInterval(window._staffSyncInterval);
   window._staffSyncInterval = setInterval(function() {
     staffLoadData().then(function() { staffRenderCal(); staffRenderStats(); staffUpdatePendingBadge(); staffRenderToday(); });
-    WHCC_SYNC.fetchLessonRequests(function(rows, err) {
+    WHCC_SYNC.fetchLessons(function(rows, err) {
       if (!rows || err) return;
       try { localStorage.setItem('wh_lesson_requests_remote', JSON.stringify(rows)); } catch(e) {}
     });
@@ -8410,6 +8468,7 @@ function boardSetPin() {
   if (!/^\d{4}$/.test(pin1)) { errEl.style.color = '#e07070'; errEl.textContent = 'PIN must be exactly 4 digits.'; return; }
   if (pin1 !== pin2)          { errEl.style.color = '#e07070'; errEl.textContent = 'PINs do not match.'; return; }
   localStorage.setItem('staff-pin', pin1);
+  WHCC_SYNC.savePin(pin1, function() {});
   errEl.style.color = '#8fcc8f';
   errEl.textContent = '✓ PIN set! Logging you in…';
   setTimeout(function() {
