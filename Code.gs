@@ -122,6 +122,13 @@ function diningDateStr_(v) {
   return String(v || '').slice(0, 10);
 }
 
+function venueDisplay_(v) {
+  var key = String(v || '').toLowerCase();
+  if (key === 'grille' || key === 'grill') return 'Westwood Grill';
+  if (key === 'hoovers') return "Hoover's Bar & Grille";
+  return v ? String(v) : 'Dining Room';
+}
+
 function diningNormStatus_(s) {
   if (!s) return 'Pending';
   var t = String(s).trim();
@@ -444,7 +451,8 @@ function doGet(e) {
         if (!cdFound) htmlMsg = 'Reservation not found. It may have already been removed.';
       }
     }
-    return ContentService.createTextOutput(
+    // ContentService has no HTML mime type — HtmlService is required to render a page
+    return HtmlService.createHtmlOutput(
       '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
       '<title>Westwood Hills Country Club</title></head>' +
       '<body style="font-family:Georgia,serif;text-align:center;padding:60px 20px;max-width:480px;margin:0 auto;color:#222;">' +
@@ -455,7 +463,7 @@ function doGet(e) {
       '<p style="font-size:18px;margin-bottom:16px;">' + htmlMsg + '</p>' +
       '<p style="color:#666;font-size:14px;">For assistance, call <a href="tel:+15737855253" style="color:#1a2b1f;">(573) 785-5253</a>.</p>' +
       '</body></html>'
-    ).setMimeType(ContentService.MimeType.HTML);
+    );
   }
 
   return jsonResponse({ error: 'unknown action' });
@@ -682,7 +690,7 @@ function doPost(e) {
       var guestFirst = data.firstName || (data.name ? data.name.split(' ')[0] : '') || 'Guest';
       var scriptUrl  = ScriptApp.getService().getUrl();
       var cancelUrl  = scriptUrl + '?action=cancel-dining&id=' + encodeURIComponent(resId);
-      var venueStr   = data.venue || 'Dining Room';
+      var venueStr   = venueDisplay_(data.venue);
       var dateStr    = data.date  || '';
       var timeStr    = data.timeDisplay || data.time24 || '';
       var partyNum   = String(data.party || 1);
@@ -890,28 +898,40 @@ function doPost(e) {
   }
 
   if (data.action === 'save-lesson') {
+    var LESSON_HEADERS = ['ID','First Name','Last Name','Phone','Email','Lesson Type','Skill Level','Preferred Days','Notes','Status','Source','Submitted'];
     var lSh = ss.getSheetByName('Lesson Requests');
     if (!lSh) {
       lSh = ss.insertSheet('Lesson Requests');
-      lSh.appendRow(['ID','First Name','Last Name','Phone','Email','Lesson Type','Skill Level','Preferred Days','Notes','Status','Source','Submitted']);
+      lSh.appendRow(LESSON_HEADERS);
       lSh.setFrozenRows(1);
-      lSh.getRange(1,1,1,12).setBackground('#1a4726').setFontColor('#f5f0e8').setFontWeight('bold');
+      lSh.getRange(1,1,1,LESSON_HEADERS.length).setBackground('#1a4726').setFontColor('#f5f0e8').setFontWeight('bold');
     }
+    // The sheet may pre-date this code with a different column order (older
+    // deployments auto-created it Email-before-Phone with no Status column),
+    // so write by header name and add any missing headers first.
+    var lHdrs = lSh.getRange(1, 1, 1, Math.max(1, lSh.getLastColumn())).getValues()[0];
+    LESSON_HEADERS.forEach(function(h) {
+      if (lHdrs.indexOf(h) === -1) {
+        lSh.getRange(1, lHdrs.length + 1).setValue(h);
+        lHdrs.push(h);
+      }
+    });
     var lessonId = data.id || Utilities.getUuid();
-    lSh.appendRow([
-      lessonId,
-      data.firstName   || '',
-      data.lastName    || '',
-      data.phone       || '',
-      data.email       || '',
-      data.lessonType  || '',
-      data.skillLevel  || '',
-      data.preferredDays || '',
-      data.notes       || '',
-      'New',
-      data.source      || 'website',
-      data.timestamp   || new Date().toISOString()
-    ]);
+    var lRow = new Array(lHdrs.length).fill('');
+    function setLes(name, val) { var i = lHdrs.indexOf(name); if (i >= 0) lRow[i] = val; }
+    setLes('ID',             lessonId);
+    setLes('First Name',     data.firstName     || '');
+    setLes('Last Name',      data.lastName      || '');
+    setLes('Phone',          data.phone         || '');
+    setLes('Email',          data.email         || '');
+    setLes('Lesson Type',    data.lessonType    || '');
+    setLes('Skill Level',    data.skillLevel    || '');
+    setLes('Preferred Days', data.preferredDays || '');
+    setLes('Notes',          data.notes         || '');
+    setLes('Status',         'New');
+    setLes('Source',         data.source        || 'website');
+    setLes('Submitted',      data.timestamp     || new Date().toISOString());
+    lSh.appendRow(lRow);
     try {
       var proEmail = data.proEmail || '';
       var notifyAddrs = ['sctr1217@gmail.com', 'mfiehtner@westwoodhillscountryclub.com'];
@@ -967,8 +987,12 @@ function doPost(e) {
     var lRows = lSh2.getDataRange().getValues();
     var lHdr  = lRows[0];
     var lId   = lHdr.indexOf('ID');
+    if (lId < 0) return jsonResponse({ ok: false, error: 'columns missing' });
     var lStat = lHdr.indexOf('Status');
-    if (lId < 0 || lStat < 0) return jsonResponse({ ok: false, error: 'columns missing' });
+    if (lStat < 0) {
+      lSh2.getRange(1, lHdr.length + 1).setValue('Status');
+      lStat = lHdr.length;
+    }
     for (var li = 1; li < lRows.length; li++) {
       if (String(lRows[li][lId]) === String(data.id)) {
         lSh2.getRange(li + 1, lStat + 1).setValue(data.status || 'New');
@@ -1201,14 +1225,14 @@ function sendDailyReminders() {
     var dTimeC  = dHdrs.indexOf('Time Display');
     var dPartyC = dHdrs.indexOf('Party Size');
     for (var di = 1; di < dVals.length; di++) {
-      var dDate   = String(dVals[di][dDateC] || '').slice(0, 10);
+      var dDate   = diningDateStr_(dVals[di][dDateC]);
       var dStatus = String(dVals[di][dStatC] || '');
       if (dDate !== tomorrowStr) continue;
       if (dStatus === 'Cancelled') continue;
       var dEmail = String(dVals[di][dEmailC] || '');
       if (!dEmail) continue;
       var dFirst = String(dVals[di][dFnC]    || 'Guest');
-      var dVen   = String(dVals[di][dVenC]   || 'Dining Room');
+      var dVen   = venueDisplay_(dVals[di][dVenC]);
       var dTime  = String(dVals[di][dTimeC]  || '');
       var dParty = String(dVals[di][dPartyC] || '');
       try {

@@ -8199,9 +8199,10 @@ function staffViewLessons() {
 
   WHCC_SYNC.fetchLessons(function(rows, err) {
     if (!rows || err) return;
-    // Normalise Sheets rows to match local format, dedupe by id
-    var localIds = new Set(local.map(function(r) { return r['ID'] || r.id; }));
-    var remote = rows.filter(function(r) { return !localIds.has(r['ID']); }).map(function(r) {
+    // Normalise Sheets rows to match local format, dedupe by id.
+    // Sheets is authoritative (it carries staff status updates), so remote
+    // rows win and local copies only fill in requests not yet synced.
+    var remote = rows.map(function(r) {
       return {
         id:           r['ID'],
         firstName:    r['First Name'],
@@ -8217,7 +8218,9 @@ function staffViewLessons() {
         source:       r['Source']
       };
     });
-    var merged = remote.concat(local).sort(function(a,b) {
+    var remoteIds = new Set(remote.map(function(r) { return String(r.id || ''); }));
+    var localOnly = local.filter(function(r) { return !remoteIds.has(String(r.id || r['ID'] || '')); });
+    var merged = remote.concat(localOnly).sort(function(a,b) {
       return new Date(b.timestamp||0) - new Date(a.timestamp||0);
     });
     staffRenderLessons(merged);
