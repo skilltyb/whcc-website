@@ -12,6 +12,12 @@
       "runtimeExecutable": "python",
       "runtimeArgs": ["-c", "import os,http.server; os.chdir('C:\\\\Users\\\\sctr1\\\\whcc-mobile'); http.server.test(HandlerClass=http.server.SimpleHTTPRequestHandler,port=int(os.environ.get('PORT',3001)),bind='127.0.0.1')"],
       "port": 3001
+    },
+    {
+      "name": "Cookbook",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-c", "import os,http.server; os.chdir('C:\\\\Users\\\\sctr1\\\\Downloads'); http.server.test(HandlerClass=http.server.SimpleHTTPRequestHandler,port=int(os.environ.get('PORT',3002)),bind='127.0.0.1')"],
+      "port": 3002
     }
   ]
 }

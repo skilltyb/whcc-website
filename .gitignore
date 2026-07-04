@@ -13,3 +13,9 @@ __pycache__/
 
 # Claude internals
 .claude/settings.local.json
+
+# Local working documents — repo deploys to a public site, keep these out
+/WHCC-Board-Presentation-*.pptx
+/WHCC-Board-Presentation-*.odp
+/DG_Auto_SEO_Report.pdf
+/dg_auto_seo_report.py
