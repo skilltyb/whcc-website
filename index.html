@@ -3851,19 +3851,22 @@ var WHCC_SYNC = {
   },
 
   // ── STAFF PIN SYNC ──
-  savePin: function(pin, cb) {
+  savePin: function(pin, auth, cb) {
+    var payload = { action: 'save-pin', pin: pin };
+    if (auth && auth.current)   payload.current   = auth.current;
+    if (auth && auth.boardCode) payload.boardCode = auth.boardCode;
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'save-pin', pin: pin })
+      body: JSON.stringify(payload)
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d && d.ok, null); })
       .catch(function(e){ if (cb) cb(false, e); });
   },
-  fetchPin: function(cb) {
-    fetch(WHCC_SCRIPT_URL + '?action=get-pin')
+  validatePin: function(pin, cb) {
+    fetch(WHCC_SCRIPT_URL + '?action=validate-staff-pin&pin=' + encodeURIComponent(pin))
       .then(function(r){ return r.json(); })
-      .then(function(d){ if (cb) cb(d && d.pin ? d.pin : null, null); })
+      .then(function(d){ if (cb) cb(d || null, null); })
       .catch(function(e){ if (cb) cb(null, e); });
   },
 };
@@ -8263,12 +8266,6 @@ function cmsProBioSave() {
 // ── INIT ──
 function initStaffDashboard() {
   staffLoadData().then(function() { staffRenderCal(); staffRenderStats(); staffUpdatePendingBadge(); staffRenderToday(); });
-  // Pull PIN from Sheets so all devices share the same PIN
-  WHCC_SYNC.fetchPin(function(remotePin) {
-    if (remotePin && /^\d{4}$/.test(remotePin)) {
-      localStorage.setItem('staff-pin', remotePin);
-    }
-  });
 
   // Poll every 3 minutes so sheet edits (reservation changes, new lesson requests) appear without reload
   if (window._staffSyncInterval) clearInterval(window._staffSyncInterval);
@@ -8283,6 +8280,7 @@ function initStaffDashboard() {
 
 // ── STAFF AUTH ──
 var staffAuthed = false;
+var _staffSessionPin = ''; // PIN that authenticated this session; sent as proof when changing it
 var _pinBuffer = '';
 var _pinTarget = null;
 var _pinSetupStep = 0; // 0=normal, 1=create new, 2=confirm new
@@ -8293,17 +8291,12 @@ function staffPinShow(page) {
   _pinTarget = page;
   _pinSetupStep = 0;
   _pinSetupFirst = '';
-  var hasPin = !!localStorage.getItem('staff-pin');
+  // Always open in login mode — create mode is only offered when the server
+  // confirms no PIN exists anywhere (see pinSubmit), never per-device.
   var titleEl = document.getElementById('pin-title');
   var subEl   = document.getElementById('pin-sub');
-  if (!hasPin) {
-    _pinSetupStep = 1;
-    if (titleEl) titleEl.textContent = 'Create Staff PIN';
-    if (subEl)   subEl.textContent   = 'Enter a new 4-digit PIN for staff access';
-  } else {
-    if (titleEl) titleEl.textContent = 'Staff Portal';
-    if (subEl)   subEl.textContent   = 'Westwood Hills Country Club';
-  }
+  if (titleEl) titleEl.textContent = 'Staff Portal';
+  if (subEl)   subEl.textContent   = 'Westwood Hills Country Club';
   pinUpdateDots();
   document.getElementById('pin-error').textContent = '';
   document.getElementById('staff-pin-overlay').classList.add('active');
@@ -8348,12 +8341,26 @@ function pinSubmit() {
   }
   if (_pinSetupStep === 2) {
     if (_pinBuffer === _pinSetupFirst) {
-      localStorage.setItem('staff-pin', _pinBuffer);
-      _pinSetupStep = 0;
-      staffAuthed = true;
-      staffPinHide();
-      _origNavigate(_pinTarget || 'staff');
-      initStaffDashboard();
+      // The server only accepts this while no PIN exists at all
+      var newPin = _pinBuffer;
+      errEl.textContent = 'Saving…';
+      WHCC_SYNC.savePin(newPin, {}, function(ok) {
+        if (ok) {
+          localStorage.setItem('staff-pin', newPin);
+          _staffSessionPin = newPin;
+          _pinSetupStep = 0;
+          staffAuthed = true;
+          staffPinHide();
+          _origNavigate(_pinTarget || 'staff');
+          initStaffDashboard();
+        } else {
+          errEl.textContent = 'Could not save — a PIN may already exist. Use Board Override.';
+          _pinBuffer = ''; _pinSetupFirst = ''; _pinSetupStep = 0;
+          if (titleEl) titleEl.textContent = 'Staff Portal';
+          if (subEl)   subEl.textContent   = 'Westwood Hills Country Club';
+          setTimeout(pinUpdateDots, 0);
+        }
+      });
     } else {
       errEl.textContent = 'PINs did not match. Start over.';
       _pinBuffer = ''; _pinSetupFirst = ''; _pinSetupStep = 1;
@@ -8363,18 +8370,49 @@ function pinSubmit() {
     }
     return;
   }
-  // Normal login
-  var stored = localStorage.getItem('staff-pin');
-  if (stored && _pinBuffer === stored) {
-    staffAuthed = true;
-    staffPinHide();
-    _origNavigate(_pinTarget || 'staff');
-    initStaffDashboard();
-  } else {
+  // Normal login — verify against the server-stored PIN, never a local copy alone
+  var entered = _pinBuffer;
+  errEl.textContent = 'Checking…';
+  WHCC_SYNC.validatePin(entered, function(res) {
+    if (res && res.ok) {
+      _staffSessionPin = entered;
+      localStorage.setItem('staff-pin', entered); // offline fallback copy
+      staffAuthed = true;
+      staffPinHide();
+      _origNavigate(_pinTarget || 'staff');
+      initStaffDashboard();
+      return;
+    }
+    if (res && res.set === false) {
+      // No PIN configured anywhere yet — first-time setup
+      _pinSetupStep = 1;
+      _pinBuffer = '';
+      if (titleEl) titleEl.textContent = 'Create Staff PIN';
+      if (subEl)   subEl.textContent   = 'No PIN exists yet — enter a new 4-digit PIN';
+      errEl.textContent = '';
+      pinUpdateDots();
+      return;
+    }
+    if (!res) {
+      // Server unreachable — allow the last PIN that logged in on this device
+      var stored = localStorage.getItem('staff-pin');
+      if (stored && entered === stored) {
+        _staffSessionPin = entered;
+        staffAuthed = true;
+        staffPinHide();
+        _origNavigate(_pinTarget || 'staff');
+        initStaffDashboard();
+      } else {
+        errEl.textContent = 'Offline — cannot verify PIN. Reconnect and try again.';
+        _pinBuffer = '';
+        setTimeout(pinUpdateDots, 0);
+      }
+      return;
+    }
     errEl.textContent = 'Incorrect PIN. Try again.';
     _pinBuffer = '';
     setTimeout(pinUpdateDots, 0);
-  }
+  });
 }
 
 // ── RIGHT PANEL TABS ──
@@ -8404,23 +8442,23 @@ function staffChangePin() {
   var msg = document.getElementById('pin-change-msg');
   if (!/^\d{4}$/.test(np)) { msg.style.color = '#e07070'; msg.textContent = 'PIN must be exactly 4 digits.'; return; }
   if (np !== cp) { msg.style.color = '#e07070'; msg.textContent = 'PINs do not match.'; return; }
-  localStorage.setItem('staff-pin', np);
-  document.getElementById('setting-pin-new').value = '';
-  document.getElementById('setting-pin-confirm').value = '';
   msg.style.color = '#d4b483';
   msg.textContent = 'Syncing…';
-  // Sync to Apps Script so all devices pick up the new PIN
-  if (WHCC_SYNC && WHCC_SYNC.savePin) {
-    WHCC_SYNC.savePin(np, function(ok, err) {
-      msg.style.color = ok ? '#8fcc8f' : '#d4b483';
-      msg.textContent = ok ? '✓ PIN updated and synced to all devices.' : '✓ PIN saved locally. Could not sync to sheet — update manually if needed.';
-      setTimeout(function() { msg.textContent = ''; }, 4000);
-    });
-  } else {
-    msg.style.color = '#8fcc8f';
-    msg.textContent = '✓ PIN updated on this device.';
-    setTimeout(function() { msg.textContent = ''; }, 3000);
-  }
+  // The server requires the current PIN as proof — only persist on success
+  WHCC_SYNC.savePin(np, { current: _staffSessionPin }, function(ok) {
+    if (ok) {
+      localStorage.setItem('staff-pin', np);
+      _staffSessionPin = np;
+      document.getElementById('setting-pin-new').value = '';
+      document.getElementById('setting-pin-confirm').value = '';
+      msg.style.color = '#8fcc8f';
+      msg.textContent = '✓ PIN updated and synced to all devices.';
+    } else {
+      msg.style.color = '#e07070';
+      msg.textContent = 'Could not update PIN — check your connection and try again.';
+    }
+    setTimeout(function() { msg.textContent = ''; }, 4000);
+  });
 }
 
 // ── BOARD OVERRIDE ──
@@ -8470,17 +8508,28 @@ function boardSetPin() {
   var errEl  = document.getElementById('board-pin-error');
   if (!/^\d{4}$/.test(pin1)) { errEl.style.color = '#e07070'; errEl.textContent = 'PIN must be exactly 4 digits.'; return; }
   if (pin1 !== pin2)          { errEl.style.color = '#e07070'; errEl.textContent = 'PINs do not match.'; return; }
-  localStorage.setItem('staff-pin', pin1);
-  WHCC_SYNC.savePin(pin1, function() {});
-  errEl.style.color = '#8fcc8f';
-  errEl.textContent = '✓ PIN set! Logging you in…';
-  setTimeout(function() {
-    staffAuthed = true;
-    staffPinHide();
-    boardOverrideCancel();
-    _origNavigate(_pinTarget || 'staff');
-    initStaffDashboard();
-  }, 1000);
+  errEl.style.color = '#d4b483';
+  errEl.textContent = 'Saving…';
+  // The recovery code authorizes the server-side PIN reset
+  var boardCode = (document.getElementById('board-code-input').value || '').trim();
+  WHCC_SYNC.savePin(pin1, { boardCode: boardCode }, function(ok) {
+    if (!ok) {
+      errEl.style.color = '#e07070';
+      errEl.textContent = 'Could not save PIN — check your connection and try again.';
+      return;
+    }
+    localStorage.setItem('staff-pin', pin1);
+    _staffSessionPin = pin1;
+    errEl.style.color = '#8fcc8f';
+    errEl.textContent = '✓ PIN set! Logging you in…';
+    setTimeout(function() {
+      staffAuthed = true;
+      staffPinHide();
+      boardOverrideCancel();
+      _origNavigate(_pinTarget || 'staff');
+      initStaffDashboard();
+    }, 600);
+  });
 }
 
 document.addEventListener('keydown', function(e) {

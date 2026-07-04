@@ -385,6 +385,7 @@ function doGet(e) {
   if (action === 'get-ops-data') {
     var key = e.parameter.key || '';
     if (!key) return jsonResponse({ error: 'missing key' });
+    if (key === 'staff_pin') return jsonResponse({ error: 'forbidden' });
     var val = opsGet_(key);
     return jsonResponse(val !== null ? val : []);
   }
@@ -411,6 +412,7 @@ function doGet(e) {
     for (var i = 1; i < rows.length; i++) {
       try { result[String(rows[i][0])] = JSON.parse(rows[i][1]); } catch(e) {}
     }
+    delete result['staff_pin'];
     return jsonResponse(result);
   }
 
@@ -419,9 +421,64 @@ function doGet(e) {
     return jsonResponse(val !== null ? val : {});
   }
 
-  if (action === 'get-pin') {
-    var pinVal = opsGet_('staff_pin');
-    return jsonResponse(pinVal !== null ? { pin: pinVal } : { pin: null });
+  // The PIN itself is never returned — clients send a candidate and get ok/fail.
+  if (action === 'validate-staff-pin') {
+    var candidate = String(e.parameter.pin || '').trim();
+    var storedPin = opsGet_('staff_pin');
+    if (storedPin === null || storedPin === '') return jsonResponse({ ok: false, set: false });
+    return jsonResponse({ ok: candidate !== '' && candidate === String(storedPin), set: true });
+  }
+
+  if (action === 'get-regs') {
+    // Mobile app variant of 'all' — includes the column aliases the app reads
+    var grSh   = getRegSheet();
+    var grVals = grSh.getDataRange().getValues();
+    if (grVals.length <= 1) return jsonResponse([]);
+    var grHdrs = grVals[0];
+    var grOut  = [];
+    for (var gri = 1; gri < grVals.length; gri++) {
+      var grObj = {};
+      for (var grj = 0; grj < grHdrs.length; grj++) {
+        grObj[grHdrs[grj]] = String(grVals[gri][grj] === null || grVals[gri][grj] === undefined ? '' : grVals[gri][grj]);
+      }
+      if (!grObj['First Name'] && !grObj['Last Name']) continue;
+      if (grObj['Partner/Team'] === undefined) grObj['Partner/Team'] = grObj['Partner'] || '';
+      if (grObj['GHIN'] === undefined) grObj['GHIN'] = grObj['GHIN Handicap'] || '';
+      grOut.push(grObj);
+    }
+    return jsonResponse(grOut);
+  }
+
+  if (action === 'get-members') {
+    // Mobile member directory — display-shaped objects, PINs never included
+    var gmSh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Members');
+    if (!gmSh || gmSh.getLastRow() < 2) return jsonResponse([]);
+    var gmVals = gmSh.getDataRange().getValues();
+    var gmHdr  = gmVals[0];
+    var gmNum  = gmHdr.indexOf('Member Number');
+    var gmFn   = gmHdr.indexOf('First Name');
+    var gmLn   = gmHdr.indexOf('Last Name');
+    var gmEm   = gmHdr.indexOf('Email');
+    var gmMem  = gmHdr.indexOf('Membership');
+    var gmHcp  = gmHdr.indexOf('Handicap');
+    var gmPh   = gmHdr.indexOf('Phone');
+    var gmOut  = [];
+    for (var gmi = 1; gmi < gmVals.length; gmi++) {
+      var gmName = ((gmFn >= 0 ? String(gmVals[gmi][gmFn] || '') : '') + ' ' +
+                    (gmLn >= 0 ? String(gmVals[gmi][gmLn] || '') : '')).trim();
+      var gmN = gmNum >= 0 ? String(gmVals[gmi][gmNum] || '') : '';
+      var gmE = gmEm  >= 0 ? String(gmVals[gmi][gmEm]  || '') : '';
+      if (!gmName && !gmN && !gmE) continue;
+      gmOut.push({
+        name:       gmName,
+        number:     gmN,
+        email:      gmE,
+        phone:      gmPh  >= 0 ? String(gmVals[gmi][gmPh]  || '') : '',
+        membership: gmMem >= 0 ? String(gmVals[gmi][gmMem] || '') : '',
+        handicap:   gmHcp >= 0 ? String(gmVals[gmi][gmHcp] || '') : ''
+      });
+    }
+    return jsonResponse(gmOut);
   }
 
   if (action === 'cancel-dining') {
@@ -575,6 +632,28 @@ function doPost(e) {
     }
   }
 
+  if (data.action === 'make-photos-public') {
+    try {
+      var mpFolders = DriveApp.getFoldersByName('WHCC Photos');
+      if (!mpFolders.hasNext()) return jsonResponse({ ok: true, count: 0 });
+      var mpRoot  = mpFolders.next();
+      var mpCount = 0;
+      function shareAll(folder) {
+        var fs = folder.getFiles();
+        while (fs.hasNext()) {
+          fs.next().setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+          mpCount++;
+        }
+      }
+      shareAll(mpRoot);
+      var mpSubs = mpRoot.getFolders();
+      while (mpSubs.hasNext()) shareAll(mpSubs.next());
+      return jsonResponse({ ok: true, count: mpCount });
+    } catch(err) {
+      return jsonResponse({ ok: false, error: err.toString() });
+    }
+  }
+
   if (data.action === 'delete-photo') {
     try {
       DriveApp.getFileById(data.fileId).setTrashed(true);
@@ -582,17 +661,6 @@ function doPost(e) {
     } catch(err) {
       return jsonResponse({ ok: false, error: err.toString() });
     }
-  }
-
-  if (data.action === 'clear-test') {
-    var sh = getRegSheet();
-    var rows = sh.getDataRange().getValues();
-    var toDelete = [];
-    for (var i = rows.length - 1; i >= 1; i--) {
-      if (String(rows[i][13]).toLowerCase() === 'website') toDelete.push(i + 1);
-    }
-    toDelete.forEach(function(r){ sh.deleteRow(r); });
-    return jsonResponse({ status: 'cleared' });
   }
 
   if (data.action === 'delete') {
@@ -1066,11 +1134,55 @@ function doPost(e) {
 
   if (data.action === 'save-pin') {
     if (!data.pin || !/^\d{4}$/.test(String(data.pin))) return jsonResponse({ ok: false, error: 'invalid pin' });
+    // Changing the PIN requires the current PIN or the Board recovery code;
+    // setting it is open only while no PIN exists at all.
+    var existingPin = opsGet_('staff_pin');
+    var pinAuthorized = existingPin === null || existingPin === '' ||
+                        String(data.current || '') === String(existingPin);
+    if (!pinAuthorized && data.boardCode) {
+      var setSh = ss.getSheetByName('Settings');
+      var recovery = setSh ? String(setSh.getRange('B1').getValue()).trim() : '';
+      pinAuthorized = recovery !== '' && String(data.boardCode).trim() === recovery;
+    }
+    if (!pinAuthorized) return jsonResponse({ ok: false, error: 'not authorized' });
     opsSave_('staff_pin', String(data.pin));
     return jsonResponse({ ok: true });
   }
 
-  // Default: save registration
+  if (data.action === 'send-dining-confirm') {
+    // The dining-reservation handler already emails the guest their confirmation.
+    // Acknowledge so the mobile app's follow-up call doesn't hit the fallback below.
+    return jsonResponse({ ok: true });
+  }
+
+  if (data.action === 'save-league-reg') {
+    var lg = data.data || {};
+    var LEAGUE_HEADERS = ['Timestamp','League','Member','Email','Team','Notes'];
+    var lgSh = ss.getSheetByName('League Regs');
+    if (!lgSh) {
+      lgSh = ss.insertSheet('League Regs');
+      lgSh.appendRow(LEAGUE_HEADERS);
+      lgSh.setFrozenRows(1);
+      lgSh.getRange(1,1,1,LEAGUE_HEADERS.length).setBackground('#1a4726').setFontColor('#f5f0e8').setFontWeight('bold');
+    }
+    var lgHdrs = lgSh.getRange(1, 1, 1, Math.max(1, lgSh.getLastColumn())).getValues()[0];
+    var lgRow = new Array(lgHdrs.length).fill('');
+    function setLg(name, val) { var i = lgHdrs.indexOf(name); if (i >= 0) lgRow[i] = val || ''; }
+    setLg('Timestamp', new Date().toISOString());
+    setLg('League', lg.league || '');
+    setLg('Member', lg.member || lg.name || '');
+    setLg('Email',  lg.email  || '');
+    setLg('Team',   lg.team   || '');
+    setLg('Notes',  lg.notes  || '');
+    lgSh.appendRow(lgRow);
+    return jsonResponse({ ok: true });
+  }
+
+  // Unrecognized actions must not fall through to the registration append —
+  // that silently writes junk rows and makes the caller believe it succeeded.
+  if (data.action) return jsonResponse({ error: 'unknown action: ' + data.action });
+
+  // Default: save registration (event signups post their fields with no action key)
   getRegSheet().appendRow([
     data.id, data.event, data.eventMeta, data.firstName, data.lastName,
     data.email, data.phone, data.partner, data.players, data.memberNum,
