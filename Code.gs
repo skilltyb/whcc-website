@@ -62,6 +62,35 @@ function setupAppUsers() {
   Logger.log('Done - App Users sheet ready.');
 }
 
+// Run this ONCE from the Apps Script editor (select it in the function
+// dropdown, click Run) to wipe test/demo data before going live for real
+// members. Clears data rows but keeps headers and sheet structure intact —
+// nothing is deleted from Drive, and Sheets version history (File > Version
+// history) can still recover anything if needed.
+function clearTestAndDemoData() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheetsToClear = [
+    'Registrations', 'Dining Reservations', 'Tee Sheets',
+    'St. Pattys', 'Ladies Opening', 'Ozark Inv', 'Spring 2-Man', 'Ladies Sweet',
+    'Masters Dinner', 'Couples', 'Ladies Inv', 'Mules Inv', 'MGA Draft',
+    'Mens Opening', '4th of July', 'Member-Guest', 'Club Champ', 'Ladies Champ',
+    'Fall 2-Man', 'Senior', 'Closing Day', 'Halloween'
+  ];
+  var cleared = [];
+  sheetsToClear.forEach(function(name) {
+    var sh = ss.getSheetByName(name);
+    if (!sh) return;
+    var lastRow = sh.getLastRow();
+    if (lastRow > 1) {
+      sh.getRange(2, 1, lastRow - 1, sh.getLastColumn()).clearContent();
+      cleared.push(name + ' (' + (lastRow - 1) + ' rows)');
+    }
+  });
+  var msg = cleared.length ? cleared.join('\n') : 'Nothing to clear — all target sheets were already empty.';
+  Logger.log('Cleared: ' + msg);
+  SpreadsheetApp.getUi().alert('Cleared test/demo data from:\n\n' + msg);
+}
+
 // ── HELPERS ───────────────────────────────────────────────────────────────────
 
 // Sheets that are never the registration store, even though some of them
