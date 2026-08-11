@@ -64,13 +64,28 @@ function setupAppUsers() {
 
 // ── HELPERS ───────────────────────────────────────────────────────────────────
 
+// Sheets that are never the registration store, even though some of them
+// (Event RSVPs, Lesson Requests, Members) also happen to have a 'First Name'
+// column — the header-sniffing fallback below must skip these or it can grab
+// the wrong sheet. This was a live bug: whichever of these sheets sorts
+// earliest in tab order was silently absorbing every new event registration,
+// while ?action=counts / ?action=all read from it too — both returning empty
+// because that sheet only ever had its header row, so real signups vanished
+// into it invisibly instead of reaching the real "Registrations" sheet.
+var NON_REG_SHEETS_ = ['Tee Sheets', 'Dining Reservations', 'Dashboard', 'Event RSVPs',
+  'Lesson Requests', 'Ops Data', 'Site Content', 'Menus', 'Conditions',
+  'Contact Inquiries', 'App Users', 'Settings', 'Members', 'Specials', 'League Regs'];
+
 function getRegSheet() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
+  // The real registration store is always named exactly this — check it
+  // directly instead of trusting tab order + header-guessing.
+  var named = ss.getSheetByName('Registrations');
+  if (named) return named;
   var sheets = ss.getSheets();
   for (var i = 0; i < sheets.length; i++) {
     var name = sheets[i].getName();
-    if (name === 'Tee Sheets') continue;
-    if (name === 'Dining Reservations') continue;
+    if (NON_REG_SHEETS_.indexOf(name) !== -1) continue;
     if (sheets[i].getLastRow() < 1) continue;
     var headers = sheets[i].getRange(1, 1, 1, Math.max(1, sheets[i].getLastColumn())).getValues()[0];
     for (var j = 0; j < headers.length; j++) {
@@ -78,7 +93,7 @@ function getRegSheet() {
     }
   }
   for (var i = 0; i < sheets.length; i++) {
-    if (sheets[i].getName() !== 'Tee Sheets' && sheets[i].getName() !== 'Dining Reservations') return sheets[i];
+    if (NON_REG_SHEETS_.indexOf(sheets[i].getName()) === -1) return sheets[i];
   }
   return ss.getActiveSheet();
 }
