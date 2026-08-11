@@ -139,6 +139,76 @@ function jsonResponse(data) {
   return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);
 }
 
+// Google Sheets treats a cell value starting with =, +, -, or @ as a formula.
+// Prefix such values with an apostrophe so they land as inert text instead of
+// executing when a staff member opens the sheet (spreadsheet/formula injection).
+function sanitizeCell_(v) {
+  if (v === null || v === undefined) return v;
+  var s = String(v);
+  if (/^[=+\-@]/.test(s)) return "'" + s;
+  return v;
+}
+
+function sanitizeRow_(arr) {
+  return arr.map(sanitizeCell_);
+}
+
+// Escape user-supplied text before it's interpolated into an email htmlBody,
+// so a visitor can't inject arbitrary HTML/links into mail sent from the
+// club's account (e.g. into the auto-reply sent back to their own address).
+function escapeHtml_(v) {
+  return String(v === null || v === undefined ? '' : v)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+// Server-side gate for staff-only mutating actions. The frontend's PIN check
+// (validate-staff-pin) only gates the UI — without this, anyone could call a
+// staff action directly (e.g. from the browser console) with no credentials
+// at all. Callers must send the staff PIN as data.staffPin.
+function requireStaffAuth_(data) {
+  var stored = opsGet_('staff_pin');
+  return stored !== null && stored !== '' && String(data.staffPin || '') === String(stored);
+}
+
+// Confirms a Drive file lives inside the WHCC Photos folder tree (root or
+// one category folder below it) before an action is allowed to touch it.
+function isWhccPhotoFile_(file) {
+  var parents = file.getParents();
+  while (parents.hasNext()) {
+    var parent = parents.next();
+    if (parent.getName() === 'WHCC Photos') return true;
+    var grandparents = parent.getParents();
+    while (grandparents.hasNext()) {
+      if (grandparents.next().getName() === 'WHCC Photos') return true;
+    }
+  }
+  return false;
+}
+
+// Rate limiting for PIN guesses. Apps Script web apps don't expose the
+// caller's IP, so this is a global (not per-caller) lockout — after
+// PIN_MAX_FAILURES wrong guesses within the window, ALL callers are locked
+// out until it expires. That's a real tradeoff (one attacker can lock out
+// legitimate staff), but it still turns brute-forcing a 4-digit PIN from
+// "10,000 instant requests" into "10 requests per 15 minutes" — a ~250x
+// slowdown — which is the actual goal here.
+var PIN_MAX_FAILURES = 10;
+var PIN_LOCKOUT_SECONDS = 900; // 15 minutes
+
+function pinRateLimited_(key) {
+  var count = parseInt(CacheService.getScriptCache().get(key) || '0', 10);
+  return count >= PIN_MAX_FAILURES;
+}
+function recordPinFailure_(key) {
+  var cache = CacheService.getScriptCache();
+  var count = parseInt(cache.get(key) || '0', 10);
+  cache.put(key, String(count + 1), PIN_LOCKOUT_SECONDS);
+}
+function clearPinFailures_(key) {
+  CacheService.getScriptCache().remove(key);
+}
+
 // ── GET ───────────────────────────────────────────────────────────────────────
 
 function doGet(e) {
@@ -171,6 +241,7 @@ function doGet(e) {
   }
 
   if (action === 'validate-board-pin') {
+    if (pinRateLimited_('boardpin_fail')) return jsonResponse({ ok: false, error: 'Too many attempts. Try again later.', locked: true });
     var code = e.parameter.code || '';
     if (!code) return jsonResponse({ ok: false, error: 'No code provided' });
     try {
@@ -179,8 +250,10 @@ function doGet(e) {
       if (!sh) return jsonResponse({ ok: false, error: 'Settings sheet not found' });
       var storedCode = sh.getRange('B1').getValue().toString().trim();
       if (storedCode && code === storedCode) {
+        clearPinFailures_('boardpin_fail');
         return jsonResponse({ ok: true });
       } else {
+        recordPinFailure_('boardpin_fail');
         return jsonResponse({ ok: false, error: 'Invalid recovery code' });
       }
     } catch(err) {
@@ -225,6 +298,7 @@ function doGet(e) {
   }
 
   if (action === 'get-teesheets') {
+    if (!requireStaffAuth_(e.parameter)) return jsonResponse({ error: 'Not authorized.' });
     var sh   = getTeeSheet();
     var vals = sh.getDataRange().getValues();
     if (vals.length <= 1) return jsonResponse([]);
@@ -245,6 +319,7 @@ function doGet(e) {
   }
 
   if (action === 'get-dining') {
+    if (!requireStaffAuth_(e.parameter)) return jsonResponse({ error: 'Not authorized.' });
     var dSheet = getOrCreateDiningSheet();
     if (dSheet.getLastRow() <= 1) return jsonResponse([]);
     var vals = dSheet.getDataRange().getValues();
@@ -296,6 +371,7 @@ function doGet(e) {
   }
 
   if (action === 'get-lessons') {
+    if (!requireStaffAuth_(e.parameter)) return jsonResponse({ error: 'Not authorized.' });
     var lSh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Lesson Requests');
     if (!lSh || lSh.getLastRow() <= 1) return jsonResponse([]);
     var vals = lSh.getDataRange().getValues();
@@ -316,6 +392,10 @@ function doGet(e) {
     var loginEmail = (e.parameter.email || '').toLowerCase().trim();
     var loginPin   = (e.parameter.pin   || '').trim();
     if (!loginEmail || !loginPin) return jsonResponse({ ok: false, error: 'missing fields' });
+    // Rate-limit per email (not globally) so brute-forcing one member's PIN
+    // doesn't also lock every other member out of logging in.
+    var loginRlKey = 'login_fail_' + loginEmail;
+    if (pinRateLimited_(loginRlKey)) return jsonResponse({ ok: false, error: 'Too many attempts. Try again later.', locked: true });
     var authSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('App Users');
     if (!authSheet) {
       authSheet = SpreadsheetApp.getActiveSpreadsheet().insertSheet('App Users');
@@ -336,6 +416,7 @@ function doGet(e) {
     for (var ai = 1; ai < authRows.length; ai++) {
       var row = authRows[ai];
       if (String(row[aEmail]).toLowerCase().trim() === loginEmail && String(row[aPin]).trim() === loginPin) {
+        clearPinFailures_(loginRlKey);
         var role = String(row[aRole] || 'member').toLowerCase();
         var acct = { role: role, name: String(row[aName] || '') };
         if (role === 'staff') {
@@ -348,6 +429,7 @@ function doGet(e) {
         return jsonResponse({ ok: true, account: acct });
       }
     }
+    recordPinFailure_(loginRlKey);
     return jsonResponse({ ok: false, error: 'invalid credentials' });
   }
 
@@ -383,6 +465,10 @@ function doGet(e) {
   }
 
   if (action === 'get-ops-data') {
+    // Generic key/value read over the same store as get-waitlist/get-guest-notes/
+    // get-pairings/get-live-scoring/get-all-ops — without auth here, those
+    // endpoints' checks are trivially bypassed via ?action=get-ops-data&key=waitlist.
+    if (!requireStaffAuth_(e.parameter)) return jsonResponse({ error: 'Not authorized.' });
     var key = e.parameter.key || '';
     if (!key) return jsonResponse({ error: 'missing key' });
     if (key === 'staff_pin') return jsonResponse({ error: 'forbidden' });
@@ -390,22 +476,32 @@ function doGet(e) {
     return jsonResponse(val !== null ? val : []);
   }
 
+  // These four return internal staff-only operational data (waitlists, guest
+  // notes, pairing rosters, live-scoring config) — gated below. Note a GET
+  // query param is a weaker proof than the POST-body pattern used elsewhere
+  // (it can land in server/proxy logs), but the actual site now calls the
+  // POST equivalents of these four (see doPost) instead of these GET routes;
+  // these are kept only for backward compatibility with any older caller.
   if (action === 'get-waitlist') {
+    if (!requireStaffAuth_(e.parameter)) return jsonResponse({ error: 'Not authorized.' });
     var val = opsGet_('waitlist');
     return jsonResponse(val !== null ? val : []);
   }
 
   if (action === 'get-guest-notes') {
+    if (!requireStaffAuth_(e.parameter)) return jsonResponse({ error: 'Not authorized.' });
     var val = opsGet_('guest_notes');
     return jsonResponse(val !== null ? val : []);
   }
 
   if (action === 'get-pairings') {
+    if (!requireStaffAuth_(e.parameter)) return jsonResponse({ error: 'Not authorized.' });
     var val = opsGet_('pairings');
     return jsonResponse(val !== null ? val : {});
   }
 
   if (action === 'get-all-ops') {
+    if (!requireStaffAuth_(e.parameter)) return jsonResponse({ error: 'Not authorized.' });
     var sh = getOpsSheet_();
     var rows = sh.getDataRange().getValues();
     var result = {};
@@ -417,16 +513,20 @@ function doGet(e) {
   }
 
   if (action === 'get-live-scoring') {
+    if (!requireStaffAuth_(e.parameter)) return jsonResponse({ error: 'Not authorized.' });
     var val = opsGet_('live_scoring');
     return jsonResponse(val !== null ? val : {});
   }
 
   // The PIN itself is never returned — clients send a candidate and get ok/fail.
   if (action === 'validate-staff-pin') {
+    if (pinRateLimited_('staffpin_fail')) return jsonResponse({ ok: false, error: 'Too many attempts. Try again later.', locked: true });
     var candidate = String(e.parameter.pin || '').trim();
     var storedPin = opsGet_('staff_pin');
     if (storedPin === null || storedPin === '') return jsonResponse({ ok: false, set: false });
-    return jsonResponse({ ok: candidate !== '' && candidate === String(storedPin), set: true });
+    var pinMatch = candidate !== '' && candidate === String(storedPin);
+    if (pinMatch) clearPinFailures_('staffpin_fail'); else recordPinFailure_('staffpin_fail');
+    return jsonResponse({ ok: pinMatch, set: true });
   }
 
   if (action === 'get-regs') {
@@ -539,7 +639,7 @@ function doPost(e) {
       sh.appendRow(['Timestamp','Name','Email','Phone','Subject','Message','Status']);
       sh.setFrozenRows(1);
     }
-    sh.appendRow([data.submitted || data.timestamp || new Date().toISOString(), data.name, data.email, data.phone, data.subject, data.message, 'New']);
+    sh.appendRow(sanitizeRow_([data.submitted || data.timestamp || new Date().toISOString(), data.name, data.email, data.phone, data.subject, data.message, 'New']));
     var isMembershipInquiry = data.subject && data.subject.toLowerCase().indexOf('membership') >= 0;
     try {
       if (data.email) {
@@ -554,7 +654,7 @@ function doPost(e) {
                 '<p style="color:rgba(245,240,232,.6);font-size:12px;margin:4px 0 0;">Poplar Bluff, Missouri</p>' +
               '</div>' +
               '<div style="padding:28px 32px;background:#fff;">' +
-                '<p>Dear ' + data.name + ',</p>' +
+                '<p>Dear ' + escapeHtml_(data.name) + ',</p>' +
                 '<p>Thank you for your interest in Westwood Hills Country Club membership. We\'re delighted you\'re considering joining our community.</p>' +
                 '<p>A member of our staff will be in touch shortly to answer your questions. If you\'d like, we\'d love to schedule a personal tour and a complimentary round of golf — no obligation required.</p>' +
                 '<p>Here\'s a quick look at what membership includes:</p>' +
@@ -581,9 +681,9 @@ function doPost(e) {
                 '<p style="color:rgba(245,240,232,.6);font-size:12px;margin:4px 0 0;">Poplar Bluff, Missouri</p>' +
               '</div>' +
               '<div style="padding:28px 32px;background:#fff;">' +
-                '<p>Dear ' + data.name + ',</p>' +
+                '<p>Dear ' + escapeHtml_(data.name) + ',</p>' +
                 '<p>Thank you for reaching out to Westwood Hills Country Club. We have received your inquiry and a member of our team will be in touch soon.</p>' +
-                '<p><strong>Your message:</strong><br><em>' + data.message + '</em></p>' +
+                '<p><strong>Your message:</strong><br><em>' + escapeHtml_(data.message) + '</em></p>' +
                 '<p>In the meantime, feel free to call us at <a href="tel:+15737855253">(573) 785-5253</a> or visit us at the club.</p>' +
                 '<p style="margin-top:28px;">Warm regards,<br><strong>Westwood Hills Country Club</strong><br>Poplar Bluff, Missouri</p>' +
               '</div>' +
@@ -608,7 +708,41 @@ function doPost(e) {
     return jsonResponse({ status: 'ok' });
   }
 
+  // The PIN itself is never returned — clients send a candidate and get ok/fail.
+  // POST body is used (rather than a GET query param) so the PIN doesn't end up in server/proxy access logs.
+  if (data.action === 'validate-staff-pin') {
+    if (pinRateLimited_('staffpin_fail')) return jsonResponse({ ok: false, error: 'Too many attempts. Try again later.', locked: true });
+    var pinCandidate = String(data.pin || '').trim();
+    var storedStaffPin = opsGet_('staff_pin');
+    if (storedStaffPin === null || storedStaffPin === '') return jsonResponse({ ok: false, set: false });
+    var pinCandidateMatch = pinCandidate !== '' && pinCandidate === String(storedStaffPin);
+    if (pinCandidateMatch) clearPinFailures_('staffpin_fail'); else recordPinFailure_('staffpin_fail');
+    return jsonResponse({ ok: pinCandidateMatch, set: true });
+  }
+
+  if (data.action === 'validate-board-pin') {
+    if (pinRateLimited_('boardpin_fail')) return jsonResponse({ ok: false, error: 'Too many attempts. Try again later.', locked: true });
+    var recoveryCode = data.code || '';
+    if (!recoveryCode) return jsonResponse({ ok: false, error: 'No code provided' });
+    try {
+      var vbpSs = SpreadsheetApp.getActiveSpreadsheet();
+      var vbpSh = vbpSs.getSheetByName('Settings');
+      if (!vbpSh) return jsonResponse({ ok: false, error: 'Settings sheet not found' });
+      var vbpStoredCode = vbpSh.getRange('B1').getValue().toString().trim();
+      if (vbpStoredCode && recoveryCode === vbpStoredCode) {
+        clearPinFailures_('boardpin_fail');
+        return jsonResponse({ ok: true });
+      } else {
+        recordPinFailure_('boardpin_fail');
+        return jsonResponse({ ok: false, error: 'Invalid recovery code' });
+      }
+    } catch(err) {
+      return jsonResponse({ ok: false, error: err.toString() });
+    }
+  }
+
   if (data.action === 'upload-photo') {
+    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     try {
       var folders = DriveApp.getFoldersByName('WHCC Photos');
       var root = folders.hasNext() ? folders.next() : DriveApp.createFolder('WHCC Photos');
@@ -633,6 +767,7 @@ function doPost(e) {
   }
 
   if (data.action === 'make-photos-public') {
+    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     try {
       var mpFolders = DriveApp.getFoldersByName('WHCC Photos');
       if (!mpFolders.hasNext()) return jsonResponse({ ok: true, count: 0 });
@@ -655,8 +790,15 @@ function doPost(e) {
   }
 
   if (data.action === 'delete-photo') {
+    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     try {
-      DriveApp.getFileById(data.fileId).setTrashed(true);
+      var dpFile = DriveApp.getFileById(data.fileId);
+      // The script runs as the site owner's Drive account, so without this
+      // check a staff-PIN holder could trash any file ID they can obtain —
+      // not just club photos. Confirm the file actually lives under the
+      // WHCC Photos folder tree before trashing it.
+      if (!isWhccPhotoFile_(dpFile)) return jsonResponse({ ok: false, error: 'Not authorized.' });
+      dpFile.setTrashed(true);
       return jsonResponse({ ok: true });
     } catch(err) {
       return jsonResponse({ ok: false, error: err.toString() });
@@ -664,6 +806,7 @@ function doPost(e) {
   }
 
   if (data.action === 'delete') {
+    if (!requireStaffAuth_(data)) return jsonResponse({ status: 'not authorized' });
     var sh = getRegSheet();
     var rows = sh.getDataRange().getValues();
     for (var i = 1; i < rows.length; i++) {
@@ -673,42 +816,52 @@ function doPost(e) {
   }
 
   if (data.action === 'save-teesheet') {
-    var sh = getTeeSheet();
-    var rows = sh.getDataRange().getValues();
-    var found = -1;
-    for (var i = 1; i < rows.length; i++) {
-      if (rows[i][0] === data.event && String(rows[i][1]) === String(data.round)) { found = i + 1; break; }
-    }
-    var rowData = [data.event, data.round, data.date,
-                   JSON.stringify(data.config || {}),
-                   JSON.stringify(data.groups || []),
-                   new Date().toISOString()];
-    if (found > 0) sh.getRange(found, 1, 1, 6).setValues([rowData]);
-    else           sh.appendRow(rowData);
-    return jsonResponse({ status: 'ok' });
+    if (!requireStaffAuth_(data)) return jsonResponse({ status: 'not authorized' });
+    var teeLock = LockService.getScriptLock();
+    try { teeLock.waitLock(10000); } catch (teeLockErr) { return jsonResponse({ status: 'busy' }); }
+    try {
+      var sh = getTeeSheet();
+      var rows = sh.getDataRange().getValues();
+      var found = -1;
+      for (var i = 1; i < rows.length; i++) {
+        if (rows[i][0] === data.event && String(rows[i][1]) === String(data.round)) { found = i + 1; break; }
+      }
+      var rowData = sanitizeRow_([data.event, data.round, data.date,
+                     JSON.stringify(data.config || {}),
+                     JSON.stringify(data.groups || []),
+                     new Date().toISOString()]);
+      if (found > 0) sh.getRange(found, 1, 1, 6).setValues([rowData]);
+      else           sh.appendRow(rowData);
+      return jsonResponse({ status: 'ok' });
+    } finally { teeLock.releaseLock(); }
   }
 
   if (data.action === 'save-scores') {
-    var sh = getTeeSheet();
-    var rows = sh.getDataRange().getValues();
-    for (var i = 1; i < rows.length; i++) {
-      if (rows[i][0] === data.event && String(rows[i][1]) === String(data.round)) {
-        var groups = JSON.parse(rows[i][4] || '[]');
-        (data.scores || []).forEach(function(upd) {
-          for (var j = 0; j < groups.length; j++) {
-            if (String(groups[j].id) === String(upd.groupId)) {
-              if (!groups[j].scores) groups[j].scores = {};
-              groups[j].scores['r' + data.round] = upd.score;
-              break;
+    if (!requireStaffAuth_(data)) return jsonResponse({ status: 'not authorized' });
+    var scoreLock = LockService.getScriptLock();
+    try { scoreLock.waitLock(10000); } catch (scoreLockErr) { return jsonResponse({ status: 'busy' }); }
+    try {
+      var sh = getTeeSheet();
+      var rows = sh.getDataRange().getValues();
+      for (var i = 1; i < rows.length; i++) {
+        if (rows[i][0] === data.event && String(rows[i][1]) === String(data.round)) {
+          var groups = JSON.parse(rows[i][4] || '[]');
+          (data.scores || []).forEach(function(upd) {
+            for (var j = 0; j < groups.length; j++) {
+              if (String(groups[j].id) === String(upd.groupId)) {
+                if (!groups[j].scores) groups[j].scores = {};
+                groups[j].scores['r' + data.round] = upd.score;
+                break;
+              }
             }
-          }
-        });
-        sh.getRange(i + 1, 5).setValue(JSON.stringify(groups));
-        sh.getRange(i + 1, 6).setValue(new Date().toISOString());
-        break;
+          });
+          sh.getRange(i + 1, 5).setValue(JSON.stringify(groups));
+          sh.getRange(i + 1, 6).setValue(new Date().toISOString());
+          break;
+        }
       }
-    }
-    return jsonResponse({ status: 'ok' });
+      return jsonResponse({ status: 'ok' });
+    } finally { scoreLock.releaseLock(); }
   }
 
   if (data.action === 'lesson-request') {
@@ -727,7 +880,7 @@ function doPost(e) {
     setL('Notes',         data.notes        || '');
     setL('Source',        data.source       || 'website');
     setL('Submitted',     data.timestamp    || new Date().toISOString());
-    lSheet.appendRow(lRow);
+    lSheet.appendRow(sanitizeRow_(lRow));
     return jsonResponse({ ok: true });
   }
 
@@ -736,7 +889,11 @@ function doPost(e) {
     var hdrs = dSheet.getRange(1, 1, 1, dSheet.getLastColumn()).getValues()[0];
     var row = new Array(hdrs.length).fill('');
     function setCol(name, val) { var i = hdrs.indexOf(name); if (i >= 0) row[i] = val || ''; }
-    setCol('ID',           data.id         || Utilities.getUuid());
+    // Always generate the ID server-side (never trust the client's) — this ID
+    // is embedded in the unauthenticated cancel-dining link, and the frontend
+    // was sending a predictable Date.now() timestamp, letting anyone brute-force
+    // nearby IDs and cancel other members' reservations.
+    setCol('ID',           Utilities.getUuid());
     setCol('Date',         data.date        || '');
     setCol('Time',         data.time24      || '');
     setCol('Time Display', data.timeDisplay || data.time24 || '');
@@ -751,6 +908,7 @@ function doPost(e) {
     setCol('Status',       'Pending');
     setCol('Source',       data.source      || 'website');
     setCol('Submitted',    data.submitted   || new Date().toISOString());
+    row = sanitizeRow_(row);
     dSheet.appendRow(row);
     try {
       var resId      = row[hdrs.indexOf('ID')];
@@ -773,12 +931,12 @@ function doPost(e) {
               '<p style="color:rgba(245,240,232,.6);font-size:12px;margin:4px 0 0;">Poplar Bluff, Missouri</p>' +
             '</div>' +
             '<div style="padding:28px 32px;background:#fff;">' +
-              '<p>Dear ' + guestFirst + ',</p>' +
-              '<p>Thank you — we\'ve received your reservation request for <strong>' + venueStr + '</strong>. Here\'s a summary:</p>' +
+              '<p>Dear ' + escapeHtml_(guestFirst) + ',</p>' +
+              '<p>Thank you — we\'ve received your reservation request for <strong>' + escapeHtml_(venueStr) + '</strong>. Here\'s a summary:</p>' +
               '<table style="border-collapse:collapse;width:100%;margin:16px 0;">' +
-                '<tr><td style="padding:9px 12px;background:#f5f0e8;font-weight:600;width:38%;border-bottom:1px solid #e8e0d4;">Venue</td><td style="padding:9px 12px;border-bottom:1px solid #e8e0d4;">' + venueStr + '</td></tr>' +
-                '<tr><td style="padding:9px 12px;background:#f5f0e8;font-weight:600;border-bottom:1px solid #e8e0d4;">Date</td><td style="padding:9px 12px;border-bottom:1px solid #e8e0d4;">' + dateStr + '</td></tr>' +
-                '<tr><td style="padding:9px 12px;background:#f5f0e8;font-weight:600;border-bottom:1px solid #e8e0d4;">Time</td><td style="padding:9px 12px;border-bottom:1px solid #e8e0d4;">' + timeStr + '</td></tr>' +
+                '<tr><td style="padding:9px 12px;background:#f5f0e8;font-weight:600;width:38%;border-bottom:1px solid #e8e0d4;">Venue</td><td style="padding:9px 12px;border-bottom:1px solid #e8e0d4;">' + escapeHtml_(venueStr) + '</td></tr>' +
+                '<tr><td style="padding:9px 12px;background:#f5f0e8;font-weight:600;border-bottom:1px solid #e8e0d4;">Date</td><td style="padding:9px 12px;border-bottom:1px solid #e8e0d4;">' + escapeHtml_(dateStr) + '</td></tr>' +
+                '<tr><td style="padding:9px 12px;background:#f5f0e8;font-weight:600;border-bottom:1px solid #e8e0d4;">Time</td><td style="padding:9px 12px;border-bottom:1px solid #e8e0d4;">' + escapeHtml_(timeStr) + '</td></tr>' +
                 '<tr><td style="padding:9px 12px;background:#f5f0e8;font-weight:600;">Party Size</td><td style="padding:9px 12px;">' + partyNum + ' ' + (partyNum === '1' ? 'guest' : 'guests') + '</td></tr>' +
               '</table>' +
               '<p style="font-size:13px;color:#666;">Your reservation is pending confirmation. We\'ll confirm by phone or email within 24 hours. For same-day reservations, please call <a href="tel:+15737855253">(573) 785-5253</a>.</p>' +
@@ -810,6 +968,7 @@ function doPost(e) {
   }
 
   if (data.action === 'update-dining') {
+    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     var dSheet2 = getOrCreateDiningSheet();
     var dRows   = dSheet2.getDataRange().getValues();
     var dHdr    = dRows[0];
@@ -828,7 +987,7 @@ function doPost(e) {
   if (data.action === 'event-rsvp') {
     var rsvpSh = getOrCreateEventRsvpSheet_();
     var rsvpId = Utilities.getUuid();
-    rsvpSh.appendRow([
+    rsvpSh.appendRow(sanitizeRow_([
       rsvpId,
       new Date().toISOString(),
       data.eventName  || '',
@@ -837,7 +996,7 @@ function doPost(e) {
       data.lastName   || '',
       data.email      || '',
       data.phone      || ''
-    ]);
+    ]));
     try {
       var rEmail = data.email || '';
       var rFirst = data.firstName || 'Guest';
@@ -854,8 +1013,8 @@ function doPost(e) {
               '<p style="color:rgba(245,240,232,.6);font-size:12px;margin:4px 0 0;">Poplar Bluff, Missouri</p>' +
             '</div>' +
             '<div style="padding:28px 32px;background:#fff;">' +
-              '<p>Dear ' + rFirst + ',</p>' +
-              '<p>We\'ve noted your RSVP for <strong>' + rEvt + '</strong>' + (rDate ? ' on <strong>' + rDate + '</strong>' : '') + '. We look forward to seeing you there!</p>' +
+              '<p>Dear ' + escapeHtml_(rFirst) + ',</p>' +
+              '<p>We\'ve noted your RSVP for <strong>' + escapeHtml_(rEvt) + '</strong>' + (rDate ? ' on <strong>' + escapeHtml_(rDate) + '</strong>' : '') + '. We look forward to seeing you there!</p>' +
               '<p style="font-size:13px;color:#666;">Questions? Call us at <a href="tel:+15737855253">(573) 785-5253</a> or stop by the club.</p>' +
               '<p style="margin-top:28px;">See you soon,<br><strong>Westwood Hills Country Club</strong><br>Poplar Bluff, Missouri</p>' +
             '</div>' +
@@ -874,6 +1033,7 @@ function doPost(e) {
   }
 
   if (data.action === 'save-specials') {
+    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     var ssSheet = getOrCreateSpecialsSheet_();
     setSpecialsValue_(ssSheet, 'weeklySpecial', data.weeklySpecial || {});
     setSpecialsValue_(ssSheet, 'fridayNight',   data.fridayNight   || {});
@@ -881,37 +1041,53 @@ function doPost(e) {
   }
 
   if (data.action === 'save-conditions') {
-    var cSh = ss.getSheetByName('Conditions');
-    if (!cSh) { cSh = ss.insertSheet('Conditions'); cSh.appendRow(['Data','Updated']); cSh.setFrozenRows(1); }
-    var cJson = JSON.stringify(data.data || {});
-    if (cSh.getLastRow() < 2) cSh.appendRow([cJson, new Date().toISOString()]);
-    else cSh.getRange(2, 1, 1, 2).setValues([[cJson, new Date().toISOString()]]);
-    return jsonResponse({ ok: true });
+    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
+    var condLock = LockService.getScriptLock();
+    try { condLock.waitLock(10000); } catch (condLockErr) { return jsonResponse({ ok: false, error: 'busy' }); }
+    try {
+      var cSh = ss.getSheetByName('Conditions');
+      if (!cSh) { cSh = ss.insertSheet('Conditions'); cSh.appendRow(['Data','Updated']); cSh.setFrozenRows(1); }
+      var cJson = JSON.stringify(data.data || {});
+      if (cSh.getLastRow() < 2) cSh.appendRow([cJson, new Date().toISOString()]);
+      else cSh.getRange(2, 1, 1, 2).setValues([[cJson, new Date().toISOString()]]);
+      return jsonResponse({ ok: true });
+    } finally { condLock.releaseLock(); }
   }
 
   if (data.action === 'save-menus') {
-    var mSh = ss.getSheetByName('Menus');
-    if (!mSh) { mSh = ss.insertSheet('Menus'); mSh.appendRow(['Data','Updated']); mSh.setFrozenRows(1); }
-    var mJson = JSON.stringify(data.data || {});
-    if (mSh.getLastRow() < 2) mSh.appendRow([mJson, new Date().toISOString()]);
-    else mSh.getRange(2, 1, 1, 2).setValues([[mJson, new Date().toISOString()]]);
-    return jsonResponse({ ok: true });
+    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
+    var menuLock = LockService.getScriptLock();
+    try { menuLock.waitLock(10000); } catch (menuLockErr) { return jsonResponse({ ok: false, error: 'busy' }); }
+    try {
+      var mSh = ss.getSheetByName('Menus');
+      if (!mSh) { mSh = ss.insertSheet('Menus'); mSh.appendRow(['Data','Updated']); mSh.setFrozenRows(1); }
+      var mJson = JSON.stringify(data.data || {});
+      if (mSh.getLastRow() < 2) mSh.appendRow([mJson, new Date().toISOString()]);
+      else mSh.getRange(2, 1, 1, 2).setValues([[mJson, new Date().toISOString()]]);
+      return jsonResponse({ ok: true });
+    } finally { menuLock.releaseLock(); }
   }
 
   if (data.action === 'save-site-content') {
-    var scSh = ss.getSheetByName('Site Content');
-    if (!scSh) { scSh = ss.insertSheet('Site Content'); scSh.appendRow(['Data','Updated']); scSh.setFrozenRows(1); }
-    var scJson = JSON.stringify(data.data || {});
-    if (scSh.getLastRow() < 2) scSh.appendRow([scJson, new Date().toISOString()]);
-    else scSh.getRange(2, 1, 1, 2).setValues([[scJson, new Date().toISOString()]]);
-    return jsonResponse({ ok: true });
+    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
+    var scLock = LockService.getScriptLock();
+    try { scLock.waitLock(10000); } catch (scLockErr) { return jsonResponse({ ok: false, error: 'busy' }); }
+    try {
+      var scSh = ss.getSheetByName('Site Content');
+      if (!scSh) { scSh = ss.insertSheet('Site Content'); scSh.appendRow(['Data','Updated']); scSh.setFrozenRows(1); }
+      var scJson = JSON.stringify(data.data || {});
+      if (scSh.getLastRow() < 2) scSh.appendRow([scJson, new Date().toISOString()]);
+      else scSh.getRange(2, 1, 1, 2).setValues([[scJson, new Date().toISOString()]]);
+      return jsonResponse({ ok: true });
+    } finally { scLock.releaseLock(); }
   }
 
   if (data.action === 'create-pin') {
     var email     = (data.email     || '').toLowerCase().trim();
     var memberNum = (data.memberNum || '').trim();
+    var lastName  = (data.lastName  || '').trim().toLowerCase();
     var pin       = (data.pin       || '').trim();
-    if (!email || !memberNum || !/^\d{4}$/.test(pin))
+    if (!email || !memberNum || !lastName || !/^\d{4}$/.test(pin))
       return jsonResponse({ ok: false, error: 'Invalid request.' });
     var mSh = ss.getSheetByName('Members');
     if (!mSh) return jsonResponse({ ok: false, error: 'Members list not configured.' });
@@ -926,13 +1102,15 @@ function doPost(e) {
     var memberRow = null;
     var storedNum = '';
     for (var i = 1; i < mRows.length; i++) {
-      if (normMemberNum_(mRows[i][cNum]) === inputNum) {
+      // Require both member number AND last name to match — member numbers are
+      // predictable/sequential, so number alone isn't proof of identity.
+      if (normMemberNum_(mRows[i][cNum]) === inputNum && String(mRows[i][cLast] || '').trim().toLowerCase() === lastName) {
         memberRow = mRows[i];
         storedNum = String(mRows[i][cNum] || '').trim();
         break;
       }
     }
-    if (!memberRow) return jsonResponse({ ok: false, error: 'Member not found.' });
+    if (!memberRow) return jsonResponse({ ok: false, error: 'Member not found. Check your member number and last name.' });
     var auSh = ss.getSheetByName('App Users');
     if (!auSh) {
       auSh = ss.insertSheet('App Users');
@@ -950,17 +1128,20 @@ function doPost(e) {
         return jsonResponse({ ok: false, error: 'An account already exists for this member. Use Forgot your PIN or contact the Pro Shop.' });
     }
     var fullName = (String(memberRow[cFirst] || '') + ' ' + String(memberRow[cLast] || '')).trim();
-    auSh.appendRow([email, pin, 'member', fullName, '', storedNum, String(memberRow[cMem] || ''), String(memberRow[cHcp] || '')]);
+    auSh.appendRow(sanitizeRow_([email, pin, 'member', fullName, '', storedNum, String(memberRow[cMem] || ''), String(memberRow[cHcp] || '')]));
     return jsonResponse({ ok: true });
   }
 
   if (data.action === 'save-ops-data') {
+    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     if (!data.key) return jsonResponse({ ok: false, error: 'missing key' });
+    if (data.key === 'staff_pin') return jsonResponse({ ok: false, error: 'forbidden' });
     opsSave_(data.key, data.data);
     return jsonResponse({ ok: true });
   }
 
   if (data.action === 'save-live-scoring') {
+    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     opsSave_('live_scoring', data);
     return jsonResponse({ ok: true });
   }
@@ -999,7 +1180,7 @@ function doPost(e) {
     setLes('Status',         'New');
     setLes('Source',         data.source        || 'website');
     setLes('Submitted',      data.timestamp     || new Date().toISOString());
-    lSh.appendRow(lRow);
+    lSh.appendRow(sanitizeRow_(lRow));
     try {
       var proEmail = data.proEmail || '';
       var notifyAddrs = ['sctr1217@gmail.com', 'mfiehtner@westwoodhillscountryclub.com'];
@@ -1030,12 +1211,12 @@ function doPost(e) {
               '<p style="color:rgba(245,240,232,.6);font-size:12px;margin:4px 0 0;">Golf Pro Shop · Poplar Bluff, Missouri</p>' +
             '</div>' +
             '<div style="padding:28px 32px;background:#fff;">' +
-              '<p>Dear ' + data.firstName + ',</p>' +
+              '<p>Dear ' + escapeHtml_(data.firstName) + ',</p>' +
               '<p>We\'ve received your lesson request! Our golf professional will be in touch within one business day to schedule your session.</p>' +
               '<p><strong>Your request:</strong><br>' +
-              'Lesson type: ' + (typeMap[data.lessonType] || data.lessonType || '-') + '<br>' +
-              (data.preferredDays ? 'Preferred days: ' + data.preferredDays + '<br>' : '') +
-              (data.notes ? 'Notes: ' + data.notes : '') +
+              'Lesson type: ' + escapeHtml_(typeMap[data.lessonType] || data.lessonType || '-') + '<br>' +
+              (data.preferredDays ? 'Preferred days: ' + escapeHtml_(data.preferredDays) + '<br>' : '') +
+              (data.notes ? 'Notes: ' + escapeHtml_(data.notes) : '') +
               '</p>' +
               '<p>In the meantime, feel free to call the pro shop at <a href="tel:+15737858211">(573) 785-8211</a>.</p>' +
               '<p style="margin-top:28px;">Warm regards,<br><strong>Westwood Hills Country Club Pro Shop</strong></p>' +
@@ -1050,6 +1231,7 @@ function doPost(e) {
   }
 
   if (data.action === 'update-lesson-status') {
+    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     var lSh2 = ss.getSheetByName('Lesson Requests');
     if (!lSh2) return jsonResponse({ ok: false, error: 'sheet not found' });
     var lRows = lSh2.getDataRange().getValues();
@@ -1071,6 +1253,7 @@ function doPost(e) {
   }
 
   if (data.action === 'delete-dining') {
+    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     var dDel = getOrCreateDiningSheet();
     var dDelRows = dDel.getDataRange().getValues();
     var dDelHdr  = dDelRows[0];
@@ -1087,6 +1270,7 @@ function doPost(e) {
   }
 
   if (data.action === 'update-dining-full') {
+    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     var dFull = getOrCreateDiningSheet();
     var dFRows = dFull.getDataRange().getValues();
     var dFHdr  = dFRows[0];
@@ -1110,7 +1294,7 @@ function doPost(e) {
       if (String(dFRows[dfi][dFId]) !== String(data.id)) continue;
       for (var col in dFUpdates) {
         var ci = dFHdr.indexOf(col);
-        if (ci >= 0) dFull.getRange(dfi + 1, ci + 1).setValue(dFUpdates[col]);
+        if (ci >= 0) dFull.getRange(dfi + 1, ci + 1).setValue(sanitizeCell_(dFUpdates[col]));
       }
       return jsonResponse({ ok: true });
     }
@@ -1118,21 +1302,117 @@ function doPost(e) {
   }
 
   if (data.action === 'save-waitlist') {
+    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     opsSave_('waitlist', data.data);
     return jsonResponse({ ok: true });
   }
 
   if (data.action === 'save-guest-notes') {
+    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     opsSave_('guest_notes', data.data);
     return jsonResponse({ ok: true });
   }
 
   if (data.action === 'save-pairings') {
+    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     opsSave_('pairings', data.data);
     return jsonResponse({ ok: true });
   }
 
+  // POST variants of staff-only reads (mirrors the GET actions of the same
+  // name below in doGet) so the staff PIN travels in the POST body instead
+  // of a URL query string, matching validate-staff-pin/validate-board-pin.
+  if (data.action === 'get-waitlist') {
+    if (!requireStaffAuth_(data)) return jsonResponse({ error: 'Not authorized.' });
+    var val = opsGet_('waitlist');
+    return jsonResponse(val !== null ? val : []);
+  }
+
+  if (data.action === 'get-guest-notes') {
+    if (!requireStaffAuth_(data)) return jsonResponse({ error: 'Not authorized.' });
+    var val = opsGet_('guest_notes');
+    return jsonResponse(val !== null ? val : []);
+  }
+
+  if (data.action === 'get-pairings') {
+    if (!requireStaffAuth_(data)) return jsonResponse({ error: 'Not authorized.' });
+    var val = opsGet_('pairings');
+    return jsonResponse(val !== null ? val : {});
+  }
+
+  if (data.action === 'get-live-scoring') {
+    if (!requireStaffAuth_(data)) return jsonResponse({ error: 'Not authorized.' });
+    var val = opsGet_('live_scoring');
+    return jsonResponse(val !== null ? val : {});
+  }
+
+  if (data.action === 'get-teesheets') {
+    if (!requireStaffAuth_(data)) return jsonResponse({ error: 'Not authorized.' });
+    var gtsSh   = getTeeSheet();
+    var gtsVals = gtsSh.getDataRange().getValues();
+    if (gtsVals.length <= 1) return jsonResponse([]);
+    var gtsEventFilter = data.event || '';
+    var gtsResult = [];
+    for (var gtsi = 1; gtsi < gtsVals.length; gtsi++) {
+      if (gtsEventFilter && String(gtsVals[gtsi][0]) !== gtsEventFilter) continue;
+      gtsResult.push({
+        event:   String(gtsVals[gtsi][0]),
+        round:   String(gtsVals[gtsi][1]),
+        date:    String(gtsVals[gtsi][2]),
+        config:  gtsVals[gtsi][3] ? JSON.parse(gtsVals[gtsi][3]) : {},
+        groups:  gtsVals[gtsi][4] ? JSON.parse(gtsVals[gtsi][4]) : [],
+        savedAt: String(gtsVals[gtsi][5])
+      });
+    }
+    return jsonResponse(gtsResult);
+  }
+
+  if (data.action === 'get-dining') {
+    if (!requireStaffAuth_(data)) return jsonResponse({ error: 'Not authorized.' });
+    var gdSheet = getOrCreateDiningSheet();
+    if (gdSheet.getLastRow() <= 1) return jsonResponse([]);
+    var gdVals = gdSheet.getDataRange().getValues();
+    var gdHdrs = gdVals[0];
+    var gdTz   = Session.getScriptTimeZone();
+    var gdResult = [];
+    for (var gdi = 1; gdi < gdVals.length; gdi++) {
+      var gdObj = {};
+      for (var gdj = 0; gdj < gdHdrs.length; gdj++) {
+        var gdV = gdVals[gdi][gdj];
+        var gdH = gdHdrs[gdj];
+        if (gdV instanceof Date) {
+          gdObj[gdH] = (gdH === 'Time' || gdH === 'Time Display')
+            ? Utilities.formatDate(gdV, gdTz, 'h:mm a')
+            : Utilities.formatDate(gdV, gdTz, 'yyyy-MM-dd');
+        } else {
+          gdObj[gdH] = String(gdV === null || gdV === undefined ? '' : gdV);
+        }
+      }
+      gdResult.push(gdObj);
+    }
+    return jsonResponse(gdResult);
+  }
+
+  if (data.action === 'get-lessons') {
+    if (!requireStaffAuth_(data)) return jsonResponse({ error: 'Not authorized.' });
+    var glSh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Lesson Requests');
+    if (!glSh || glSh.getLastRow() <= 1) return jsonResponse([]);
+    var glVals = glSh.getDataRange().getValues();
+    var glHdrs = glVals[0];
+    var glResult = [];
+    for (var gli = 1; gli < glVals.length; gli++) {
+      var glObj = {};
+      for (var glj = 0; glj < glHdrs.length; glj++) {
+        var glV = glVals[gli][glj];
+        glObj[glHdrs[glj]] = (glV instanceof Date) ? glV.toISOString() : String(glV === null || glV === undefined ? '' : glV);
+      }
+      glResult.push(glObj);
+    }
+    return jsonResponse(glResult);
+  }
+
   if (data.action === 'save-pin') {
+    if (pinRateLimited_('staffpin_fail')) return jsonResponse({ ok: false, error: 'Too many attempts. Try again later.', locked: true });
     if (!data.pin || !/^\d{4}$/.test(String(data.pin))) return jsonResponse({ ok: false, error: 'invalid pin' });
     // Changing the PIN requires the current PIN or the Board recovery code;
     // setting it is open only while no PIN exists at all.
@@ -1144,7 +1424,8 @@ function doPost(e) {
       var recovery = setSh ? String(setSh.getRange('B1').getValue()).trim() : '';
       pinAuthorized = recovery !== '' && String(data.boardCode).trim() === recovery;
     }
-    if (!pinAuthorized) return jsonResponse({ ok: false, error: 'not authorized' });
+    if (!pinAuthorized) { recordPinFailure_('staffpin_fail'); return jsonResponse({ ok: false, error: 'not authorized' }); }
+    clearPinFailures_('staffpin_fail');
     opsSave_('staff_pin', String(data.pin));
     return jsonResponse({ ok: true });
   }
@@ -1174,7 +1455,7 @@ function doPost(e) {
     setLg('Email',  lg.email  || '');
     setLg('Team',   lg.team   || '');
     setLg('Notes',  lg.notes  || '');
-    lgSh.appendRow(lgRow);
+    lgSh.appendRow(sanitizeRow_(lgRow));
     return jsonResponse({ ok: true });
   }
 
@@ -1183,11 +1464,11 @@ function doPost(e) {
   if (data.action) return jsonResponse({ error: 'unknown action: ' + data.action });
 
   // Default: save registration (event signups post their fields with no action key)
-  getRegSheet().appendRow([
+  getRegSheet().appendRow(sanitizeRow_([
     data.id, data.event, data.eventMeta, data.firstName, data.lastName,
     data.email, data.phone, data.partner, data.players, data.memberNum,
     data.ghin, data.notes, data.timestamp, data.source
-  ]);
+  ]));
   return jsonResponse({ status: 'ok' });
 }
 
@@ -1358,8 +1639,8 @@ function sendDailyReminders() {
               '<p style="color:rgba(245,240,232,.6);font-size:12px;margin:4px 0 0;">Poplar Bluff, Missouri</p>' +
             '</div>' +
             '<div style="padding:28px 32px;background:#fff;">' +
-              '<p>Hi ' + dFirst + ',</p>' +
-              '<p>Just a reminder — you have a dining reservation at <strong>' + dVen + '</strong> tomorrow, <strong>' + tomorrowDisp + '</strong>' + (dTime ? ' at ' + dTime : '') + (dParty ? ' for ' + dParty + (dParty === '1' ? ' guest' : ' guests') : '') + '.</p>' +
+              '<p>Hi ' + escapeHtml_(dFirst) + ',</p>' +
+              '<p>Just a reminder — you have a dining reservation at <strong>' + escapeHtml_(dVen) + '</strong> tomorrow, <strong>' + tomorrowDisp + '</strong>' + (dTime ? ' at ' + escapeHtml_(dTime) : '') + (dParty ? ' for ' + escapeHtml_(dParty) + (dParty === '1' ? ' guest' : ' guests') : '') + '.</p>' +
               '<p style="font-size:13px;color:#666;">Need to change or cancel? Call us at <a href="tel:+15737855253">(573) 785-5253</a>.</p>' +
               '<p style="margin-top:28px;">See you tomorrow,<br><strong>Westwood Hills Country Club</strong></p>' +
             '</div>' +
@@ -1400,8 +1681,8 @@ function sendDailyReminders() {
               '<p style="color:rgba(245,240,232,.6);font-size:12px;margin:4px 0 0;">Poplar Bluff, Missouri</p>' +
             '</div>' +
             '<div style="padding:28px 32px;background:#fff;">' +
-              '<p>Hi ' + rFirst + ',</p>' +
-              '<p>Just a reminder — <strong>' + rEvt + '</strong> is tomorrow, <strong>' + tomorrowDisp + '</strong>. We hope to see you there!</p>' +
+              '<p>Hi ' + escapeHtml_(rFirst) + ',</p>' +
+              '<p>Just a reminder — <strong>' + escapeHtml_(rEvt) + '</strong> is tomorrow, <strong>' + tomorrowDisp + '</strong>. We hope to see you there!</p>' +
               '<p style="font-size:13px;color:#666;">Questions? Call us at <a href="tel:+15737855253">(573) 785-5253</a>.</p>' +
               '<p style="margin-top:28px;">See you tomorrow,<br><strong>Westwood Hills Country Club</strong></p>' +
             '</div>' +

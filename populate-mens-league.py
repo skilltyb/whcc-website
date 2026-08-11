@@ -4,7 +4,15 @@ import time
 import random
 import hashlib
 
+# NOTE: this deployment URL differs from the one currently used by index.html
+# (see WHCC_SCRIPT_URL there). Confirm which Apps Script deployment/Sheet this
+# points at before running — if it shares the live production Sheet, this will
+# insert ~200 rows of synthetic demo registrations into real data.
 URL = 'https://script.google.com/macros/s/AKfycbyWRVoY7tgV1Y8M7K1Bbrhp2DsQ8CfvYYe0trVh_tCZfQ6dIsAN8Xj63b1HPvsrxaaF/exec'
+
+if input(f'This will POST synthetic demo registrations to:\n  {URL}\nType "yes" to continue: ').strip().lower() != 'yes':
+    print('Aborted.')
+    raise SystemExit(0)
 
 def post(data):
     body = json.dumps(data).encode('utf-8')

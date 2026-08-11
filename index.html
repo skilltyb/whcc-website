@@ -11,6 +11,7 @@
 <meta property="og:url" content="https://skilltyb.github.io/whcc-website/" />
 <meta name="twitter:card" content="summary_large_image" />
 <title>Westwood Hills Country Club — Poplar Bluff, Missouri</title>
+<link rel="canonical" href="https://skilltyb.github.io/whcc-website/" />
 <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png" />
 <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16.png" />
 <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192.png" />
@@ -19,12 +20,34 @@
 <!-- Google Analytics — replace G-XXXXXXXXXX with your Measurement ID -->
 <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script> -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "GolfCourse",
+  "name": "Westwood Hills Country Club",
+  "description": "Poplar Bluff, Missouri's premier private country club since 1936. Championship golf, fine dining, aquatics, and family membership in Southeast Missouri.",
+  "url": "https://skilltyb.github.io/whcc-website/",
+  "telephone": "+1-573-785-5253",
+  "priceRange": "$$$",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "1 Birdie Ln",
+    "addressLocality": "Poplar Bluff",
+    "addressRegion": "MO",
+    "postalCode": "63901",
+    "addressCountry": "US"
+  },
+  "foundingDate": "1936"
+}
+</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:rgba(184,151,106,0.15)}
 :root{
-  --forest:#1a2b1f;--deep:#111a14;--gold:#b8976a;--gold-lt:#d4b483;
-  --cream:#f5f0e8;--sand:#e8dfc8;--mid:#2e4233;--text:#2a1f14;--muted:#7a6e5f;
+  --forest:#1a2b1f;--deep:#111a14;--gold:#b8976a;--gold-lt:#d4b483;--gold-dk:#7d6648;
+  --cream:#f5f0e8;--sand:#e8dfc8;--mid:#2e4233;--text:#2a1f14;--muted:#6d6355;
 }
 html{scroll-behavior:smooth;overflow-x:hidden}
 body{font-family:'Raleway',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden}
@@ -63,12 +86,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
 
 /* ── SHARED TYPOGRAPHY ── */
-.eyebrow{font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;display:flex;align-items:center;gap:14px}
+.eyebrow{font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold-dk);margin-bottom:18px;display:flex;align-items:center;gap:14px}
 .eyebrow::after{content:'';max-width:40px;height:1px;background:var(--gold);flex:1}
 .eyebrow.lt{color:var(--gold-lt)}.eyebrow.lt::after{background:var(--gold-lt)}
 .sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,3.5vw,50px);font-weight:400;line-height:1.1;color:var(--forest);margin-bottom:22px}
-.sec-title em{font-style:italic;color:var(--gold)}
+.sec-title em{font-style:italic;color:var(--gold-dk)}
 .sec-title.light{color:var(--cream)}
+.sec-title.light em,.pool-text .sec-title em,.priv-ev .sec-title em,.mission-text .sec-title em{color:var(--gold-lt)}
 .sec-body{font-size:14px;line-height:1.9;color:var(--muted);margin-bottom:24px;max-width:560px}
 .sec-body.full{max-width:100%}
 
@@ -904,6 +928,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
   .cf-row{grid-template-columns:1fr}
   .pool-feats{grid-template-columns:1fr}
   .course-specs{grid-template-columns:1fr}
+  .pool-hrs-grid{grid-template-columns:1fr 1fr}
 }
 /* iOS auto-zoom prevention: inputs must be ≥16px on mobile */
 @media(max-width:768px){
@@ -988,7 +1013,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
   </ul>
   <a class="nav-bill-link" href="https://www.goibsvision.com/WebRes/Club/westwoodhillscc/LogIn" target="_blank" rel="noopener">Pay My Bill</a>
   <button class="nav-cta" onclick="window.open('https://skilltyb.github.io/whcc-mobile/','_blank')">Member Login</button>
-  <button class="nav-hamburger" onclick="toggleMobileNav()"><span></span><span></span><span></span></button>
+  <button class="nav-hamburger" onclick="toggleMobileNav()" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav"><span></span><span></span><span></span></button>
   <button class="nav-site-back" onclick="navigate('home')">← Back to Site</button>
 </nav>
 <div class="nav-mobile" id="mobile-nav">
@@ -1057,9 +1082,9 @@ nav.staff-mode .nav-site-back{display:flex!important;}
       <p class="sec-body fade-up d2">Since 1936, Westwood Hills Country Club has been the social and sporting heart of Poplar Bluff. Nestled in the rolling terrain of Southeast Missouri, our parkland course has challenged and delighted generations of golfers — from weekend enthusiasts to State Amateur contenders.</p>
       <p class="sec-body fade-up d2">More than a golf club, Westwood Hills is a place where families gather, friendships deepen, and memories are made year after year.</p>
       <div class="stat-row fade-up d3">
-        <div><div class="stat-num">89<sup>+</sup></div><div class="stat-lbl">Years of history</div></div>
+        <div><div class="stat-num">90<sup>+</sup></div><div class="stat-lbl">Years of history</div></div>
         <div><div class="stat-num">18</div><div class="stat-lbl">Championship holes</div></div>
-        <div><div class="stat-num">5</div><div class="stat-lbl">Sets of tees</div></div>
+        <div><div class="stat-num">4</div><div class="stat-lbl">Sets of tees</div></div>
       </div>
     </div>
   </div>
@@ -1067,7 +1092,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
   <div class="section dark">
     <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:0;">
       <div><p class="eyebrow lt fade-up">The Club Experience</p><h2 class="sec-title light fade-up d1">Everything you<br>could want</h2></div>
-      <a class="btn-g lt fade-up" style="margin-bottom:6px;" onclick="navigate('about')">View all amenities</a>
+      <a class="btn-g lt fade-up" style="margin-bottom:6px;" onclick="navigate('membership')">View all amenities</a>
     </div>
     <div class="amenities-grid" style="margin-top:52px;">
       <div class="am-card fade-up"><div class="am-num">01</div><div class="am-line"></div><h3 class="am-name">Championship Golf</h3><p class="am-desc">18 holes of rolling parkland golf with strategic bunkering, mature trees, and greens renowned across Southeast Missouri.</p></div>
@@ -1131,7 +1156,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <div class="fade-up">
       <p class="eyebrow lt">Dining &amp; Events</p>
       <h2 class="sec-title light">Introducing <em>Hoover's</em><br>at Westwood Hills</h2>
-      <p class="sec-body full" style="color:rgba(245,240,232,.55)">Poplar Bluff's premier fine dining destination — open to members Thursday through Saturday, and to the public on the 3rd Saturday of each month by reservation.</p>
+      <p class="sec-body full" style="color:rgba(245,240,232,.55)">Poplar Bluff's premier fine dining destination — open to members Thursday through Saturday, and to the public on the <span data-wh-contact="hoovers_public">3rd Saturday of each month</span> by reservation.</p>
     </div>
     <div class="fade-up d2" style="flex-shrink:0;display:flex;flex-direction:column;gap:12px;align-items:center;">
       <button class="btn-p" onclick="navigate('dining')">View the Menu</button>
@@ -1145,7 +1170,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <h2 class="sec-title fade-up d1">Become part of<br>the <em>tradition</em></h2>
     <div class="mem-grid">
       <div class="mem-card fade-up d1">
-        <div class="mem-type">Full Access</div><div class="mem-name">Full Membership</div>
+        <div class="mem-type">Full Access</div><div class="mem-name">Full Family</div>
         <p class="mem-desc">Complete access to the championship course, aquatics, dining, events, and all club amenities.</p>
         <ul class="mem-feats"><li class="mem-feat">Unlimited golf rounds</li><li class="mem-feat">Full practice facility access</li><li class="mem-feat">Aquatics, dining &amp; events</li><li class="mem-feat">Member tournaments</li></ul>
         <button class="btn-g" style="width:100%" onclick="navigate('membership')">Inquire Now</button>
@@ -1171,7 +1196,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <div><div class="footer-brand-logo"><div class="nav-emblem">WH</div><div class="footer-brand-text">Westwood Hills<br>Country Club<small>Est. 1936 · Poplar Bluff, MO</small></div></div><p class="footer-tagline">Where Southeast Missouri's finest traditions of sport, dining, and fellowship come together.</p></div>
     <div><p class="fcol-title">Explore</p><ul class="flinks"><li><a onclick="navigate('golf')">Golf &amp; Course</a></li><li><a onclick="navigate('dining')">Dining</a></li><li><a onclick="navigate('aquatics')">Aquatics</a></li><li><a onclick="navigate('events')">Events &amp; Tournaments</a></li></ul></div>
     <div><p class="fcol-title">Membership</p><ul class="flinks"><li><a onclick="navigate('membership')">Full Family</a></li><li><a onclick="navigate('membership')">Junior Executive</a></li><li><a onclick="navigate('membership')">Youth</a></li><li><a onclick="navigate('membership')">Social</a></li><li><a onclick="navigate('membership')">Out of Town</a></li></ul></div>
-    <div><p class="fcol-title">Contact</p><div class="fci"><strong>Golf Shop</strong><span data-wh-contact="phone_golf">(573) 785-8211</span></div><div class="fci"><strong>Clubhouse</strong><span data-wh-contact="phone_main">(573) 785-5253</span></div><div class="fci"><strong>Email</strong><span data-wh-contact="email">info@westwoodhillscountryclub.com</span></div><div class="fci"><strong>Address</strong>1 Birdie Ln, Poplar Bluff, MO 63901</div></div>
+    <div><p class="fcol-title">Contact</p><div class="fci"><strong>Golf Shop</strong><span data-wh-contact="phone_golf">(573) 785-8211</span></div><div class="fci"><strong>Clubhouse</strong><span data-wh-contact="phone_main">(573) 785-5253</span></div><div class="fci"><strong>Email</strong><span data-wh-contact="email">info@westwoodhillscountryclub.com</span></div><div class="fci"><strong>Address</strong><span data-wh-contact="address">1 Birdie Ln, Poplar Bluff, Missouri 63901</span></div></div>
   </div><div class="footer-bottom"><p class="fcopy">© 2026 Westwood Hills Country Club. All rights reserved.</p><p class="fcopy">Poplar Bluff, Missouri · Est. 1936</p><p class="fcopy" style="margin-top:4px;"><a onclick="navigate('staff')" style="color:rgba(245,240,232,.35);cursor:pointer;text-decoration:none;font-size:10px;letter-spacing:.1em;">Staff Portal</a></p></div></footer>
 </div>
 
@@ -1191,7 +1216,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
         <h2 class="sec-title">Built for every <em>player</em></h2>
         <p class="sec-body full">Nestled in the rolling terrain of Southeast Missouri, our 18-hole championship layout is equal parts entertaining and challenging. Don't let the scorecard yardages fool you — Westwood Hills is well protected with strategic bunkering, ample trees, and Five par 3s that rank among the toughest holes on the course keep every round honest.</p>
         <p class="sec-body full">Practice facilities offer a full-length driving range, short game pitching and chipping area up to 50 yards, and a putting green that mimics course conditions daily.</p>
-        <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:4px;"><button class="btn-p" onclick="navigate('contact')">Contact the Pro Shop</button><button id="golf-dl-scorecard" class="btn-g" onclick="golfDownload('scorecard')">Download Scorecard</button><button id="golf-dl-pinsheet" class="btn-g" onclick="golfDownload('pinsheet')">Download Pin Sheet</button></div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:4px;"><button class="btn-p" onclick="navigate('about')">Contact the Pro Shop</button><button id="golf-dl-scorecard" class="btn-g" onclick="golfDownload('scorecard')">Download Scorecard</button><button id="golf-dl-pinsheet" class="btn-g" onclick="golfDownload('pinsheet')">Download Pin Sheet</button></div>
       </div>
       <div class="tee-box fade-up d2">
         <p class="tee-title">Tee Options</p>
@@ -1315,7 +1340,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
         </div>
         <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;">
           <button class="btn-p" onclick="openLessonModal()">Request a Lesson</button>
-          <button class="btn-g" onclick="navigate('contact')">Contact Pro Shop</button>
+          <button class="btn-g" onclick="navigate('about')">Contact Pro Shop</button>
         </div>
       </div>
     </div>
@@ -1356,7 +1381,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
         <p class="hoovers-at">at Westwood Hills</p>
         <div class="hoovers-rule"></div>
       </div>
-      <p class="sec-body full" style="color:rgba(245,240,232,.55);text-align:center;max-width:540px;margin:24px auto 0;">Poplar Bluff's premier fine dining destination. An elevated culinary experience for members Thursday through Saturday evenings — and open to the public on the 3rd Saturday of each month, by reservation.</p>
+      <p class="sec-body full" style="color:rgba(245,240,232,.55);text-align:center;max-width:540px;margin:24px auto 0;">Poplar Bluff's premier fine dining destination. An elevated culinary experience for members Thursday through Saturday evenings — and open to the public on the <span data-wh-contact="hoovers_public">3rd Saturday of each month</span>, by reservation.</p>
       <div class="hoovers-hours-row">
         <div class="hoovers-hour-item"><span class="hoovers-hour-day">Thursday</span><span class="hoovers-hour-time">5 PM – 9 PM</span></div>
         <div class="hoovers-hour-divider"></div>
@@ -1407,7 +1432,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
   <div id="dining-weekly-special" style="display:none;background:var(--cream);padding:56px 80px;text-align:center;">
     <p class="eyebrow">This Week's Feature</p>
     <div style="max-width:600px;margin:20px auto 0;border:1px solid rgba(184,151,106,.35);padding:40px;">
-      <img class="sf-img" src="" style="width:100%;max-height:320px;object-fit:cover;display:none;margin-bottom:24px;border-radius:2px;"/>
+      <img class="sf-img" src="" alt="" style="width:100%;max-height:320px;object-fit:cover;display:none;margin-bottom:24px;border-radius:2px;"/>
       <h3 class="sf-name" style="font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:400;color:var(--deep);letter-spacing:.02em;"></h3>
       <p class="sf-desc" style="font-size:14px;color:var(--muted);margin:14px 0 8px;line-height:1.85;max-width:460px;margin-left:auto;margin-right:auto;"></p>
       <p class="sf-wine" style="font-size:12px;font-style:italic;color:var(--gold);margin-bottom:8px;display:none;"></p>
@@ -1419,7 +1444,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
   <div id="dining-friday-special" style="display:none;background:var(--forest);padding:56px 80px;text-align:center;">
     <p class="eyebrow lt">Friday Night Special</p>
     <div style="max-width:600px;margin:20px auto 0;border:1px solid rgba(184,151,106,.25);padding:40px;">
-      <img class="sf-img" src="" style="width:100%;max-height:320px;object-fit:cover;display:none;margin-bottom:24px;border-radius:2px;"/>
+      <img class="sf-img" src="" alt="" style="width:100%;max-height:320px;object-fit:cover;display:none;margin-bottom:24px;border-radius:2px;"/>
       <h3 class="sf-name" style="font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:400;color:var(--cream);letter-spacing:.02em;"></h3>
       <p class="sf-desc" style="font-size:14px;color:rgba(245,240,232,.6);margin:14px 0 8px;line-height:1.85;max-width:460px;margin-left:auto;margin-right:auto;"></p>
       <p class="sf-wine" style="font-size:12px;font-style:italic;color:var(--gold-lt);margin-bottom:8px;display:none;"></p>
@@ -1433,7 +1458,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
       <div class="hoovers-res-info fade-up">
         <div class="hoovers-rule" style="margin:0;"></div>
         <h2 class="hoovers-res-title">Reserve Your<br><em>Table</em></h2>
-        <p class="hoovers-res-body">Hoover's is open to members Thursday through Saturday, 5 – 9 PM. Non-members are welcome by reservation on the 3rd Saturday of each month.</p>
+        <p class="hoovers-res-body">Hoover's is open to members Thursday through Saturday, 5 – 9 PM. Non-members are welcome by reservation on the <span data-wh-contact="hoovers_public">3rd Saturday of each month</span>.</p>
         <div class="hoovers-res-details">
           <div class="hoovers-res-detail">
             <span class="hoovers-res-detail-label">Reservations</span>
@@ -1460,27 +1485,27 @@ nav.staff-mode .nav-site-back{display:flex!important;}
             <div class="hrf-venue-toggle" id="res-venue-toggle">
               <button class="hrf-venue-btn active" onclick="selectVenue('hoovers',this)" type="button">
                 <span class="hrf-venue-name">Hoover's</span>
-                <span class="hrf-venue-desc">Fine Dining · Thu–Sat 5–9 PM</span>
+                <span class="hrf-venue-desc" data-wh-contact="hoovers_hours">Fine Dining · Thu–Sat 5–9 PM</span>
               </button>
               <button class="hrf-venue-btn" onclick="selectVenue('grille',this)" type="button">
                 <span class="hrf-venue-name">The Westwood Grill</span>
-                <span class="hrf-venue-desc" data-wh-contact="grill_hours">Casual · Daily 11 AM–8 PM</span>
+                <span class="hrf-venue-desc" data-wh-contact="grill_hours">Casual · Tue–Sun 11 AM–8 PM</span>
               </button>
             </div>
             <input type="hidden" id="res-venue" value="hoovers" />
           </div>
         </div>
         <div class="hrf-row">
-          <div class="hrf-group"><label class="hrf-label">First Name</label><input class="hrf-input" id="res-fname" type="text" placeholder="Jane" /></div>
-          <div class="hrf-group"><label class="hrf-label">Last Name</label><input class="hrf-input" id="res-lname" type="text" placeholder="Smith" /></div>
+          <div class="hrf-group"><label class="hrf-label" for="res-fname">First Name</label><input class="hrf-input" id="res-fname" type="text" placeholder="Jane" /></div>
+          <div class="hrf-group"><label class="hrf-label" for="res-lname">Last Name</label><input class="hrf-input" id="res-lname" type="text" placeholder="Smith" /></div>
         </div>
         <div class="hrf-row">
-          <div class="hrf-group"><label class="hrf-label">Email</label><input class="hrf-input" id="res-email" type="email" placeholder="jane@email.com" /></div>
-          <div class="hrf-group"><label class="hrf-label">Phone</label><input class="hrf-input" id="res-phone" type="tel" placeholder="(573) 555-0000" /></div>
+          <div class="hrf-group"><label class="hrf-label" for="res-email">Email</label><input class="hrf-input" id="res-email" type="email" placeholder="jane@email.com" /></div>
+          <div class="hrf-group"><label class="hrf-label" for="res-phone">Phone</label><input class="hrf-input" id="res-phone" type="tel" placeholder="(573) 555-0000" /></div>
         </div>
         <div class="hrf-row">
-          <div class="hrf-group"><label class="hrf-label">Party Size</label><select class="hrf-select" id="res-party"><option value="">Guests</option><option>1 Guest</option><option>2 Guests</option><option>3 Guests</option><option>4 Guests</option><option>5 Guests</option><option>6 Guests</option><option>7–8 Guests</option><option>9+ (call us)</option></select></div>
-          <div class="hrf-group"><label class="hrf-label">Are you a member?</label><select class="hrf-select" id="res-member" onchange="onMemberChange()"><option value="">Select</option><option value="member">Yes — Club Member</option><option value="nonmember">No — Non-Member Guest</option></select></div>
+          <div class="hrf-group"><label class="hrf-label" for="res-party">Party Size</label><select class="hrf-select" id="res-party"><option value="">Guests</option><option>1 Guest</option><option>2 Guests</option><option>3 Guests</option><option>4 Guests</option><option>5 Guests</option><option>6 Guests</option><option>7–8 Guests</option><option>9+ (call us)</option></select></div>
+          <div class="hrf-group"><label class="hrf-label" for="res-member">Are you a member?</label><select class="hrf-select" id="res-member" onchange="onMemberChange()"><option value="">Select</option><option value="member">Yes — Club Member</option><option value="nonmember">No — Non-Member Guest</option></select></div>
         </div>
         <!-- Date picker row - locked until member status selected -->
         <div class="hrf-row">
@@ -1521,9 +1546,9 @@ nav.staff-mode .nav-site-back{display:flex!important;}
           </div>
         </div>
         <div id="res-date-hint" class="hrf-date-hint"></div>
-        <div class="hrf-group" style="width:100%;"><label class="hrf-label">Special Requests</label><textarea class="hrf-textarea" id="res-notes" placeholder="Allergies, celebrations, seating preferences…"></textarea></div>
+        <div class="hrf-group" style="width:100%;"><label class="hrf-label" for="res-notes">Special Requests</label><textarea class="hrf-textarea" id="res-notes" placeholder="Allergies, celebrations, seating preferences…"></textarea></div>
         <div id="res-error" class="hrf-error"></div>
-        <button class="btn-p" style="width:100%;margin-top:6px;" onclick="submitReservation()">Request Reservation</button>
+        <button id="res-submit-btn" class="btn-p" style="width:100%;margin-top:6px;" onclick="submitReservation()">Request Reservation</button>
         </div>
         <div id="res-confirmation" class="hrf-confirmation" style="display:none;">
           <div class="hrf-conf-icon">✓</div>
@@ -1592,8 +1617,8 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <p class="eyebrow fade-up">Our Spaces</p>
     <h2 class="sec-title fade-up d1">Every setting, <em>perfectly appointed</em></h2>
     <div class="spaces-grid">
-      <div class="space-card fade-up d1"><div class="space-vis" data-wh-photo="venue_hoovers" style="background:var(--wh-bg,url('images/hoovers-table.jpg')) center/cover no-repeat;"></div><div class="space-info"><div class="space-cap">Hoover's at Westwood Hills</div><div class="space-name">Main Dining Room</div><p class="space-desc">Home to Hoover's — our signature fine dining experience. Elegant, airy, and ideal for an unforgettable evening.</p></div></div>
-      <div class="space-card fade-up d2"><div class="space-vis" data-wh-photo="venue_grill" style="background:var(--wh-bg,url('images/grill-bar.jpg')) center/cover no-repeat;"></div><div class="space-info"><div class="space-cap">Up to 40 guests</div><div class="space-name">The Westwood Grill</div><p class="space-desc">Relaxed and inviting — the everyday gathering spot for members after a round, with sports on screen and cold drinks on tap.</p></div></div>
+      <div class="space-card fade-up d1"><div class="space-vis" data-wh-photo="venue_hoovers" style="background:var(--wh-bg,url('images/hoovers-table.jpg')) center/cover no-repeat;"></div><div class="space-info"><div class="space-cap">Hoover's at Westwood Hills · Up to 120 guests</div><div class="space-name">Main Dining Room</div><p class="space-desc">Home to Hoover's — our signature fine dining experience. Elegant, airy, and ideal for an unforgettable evening.</p></div></div>
+      <div class="space-card fade-up d2"><div class="space-vis" data-wh-photo="venue_grill" style="background:var(--wh-bg,url('images/club-04.jpg')) center/cover no-repeat;"></div><div class="space-info"><div class="space-cap">Up to 40 guests</div><div class="space-name">The Westwood Grill</div><p class="space-desc">Relaxed and inviting — the everyday gathering spot for members after a round, with sports on screen and cold drinks on tap.</p></div></div>
       <div class="space-card fade-up d3"><div class="space-vis" data-wh-photo="venue_terrace" style="background:var(--wh-bg,url('images/terrace-cocktail.jpg')) center/cover no-repeat;"></div><div class="space-info"><div class="space-cap">Up to 80 guests</div><div class="space-name">The Terrace</div><p class="space-desc">Alfresco dining overlooking the 18th green — ideal for warm-weather evenings, cocktail receptions, and sunset gatherings.</p></div></div>
     </div>
   </div>
@@ -1607,8 +1632,8 @@ nav.staff-mode .nav-site-back{display:flex!important;}
       <div class="food-img"><img data-wh-photo="dining_food_2" src="images/food-fish.jpg" alt="Fresh catch" loading="lazy"></div>
       <div class="food-img"><img data-wh-photo="dining_food_3" src="images/food-pasta.jpg" alt="House pasta" loading="lazy"></div>
       <div class="food-img"><img data-wh-photo="dining_food_4" src="images/food-skewers.jpg" alt="Grilled skewers" loading="lazy"></div>
-      <div class="food-img"><img data-wh-photo="dining_food_5" src="images/food-charcuterie.jpg" alt="Charcuterie board" loading="lazy"></div>
-      <div class="food-img"><img data-wh-photo="dining_food_6" src="images/bar-cocktail.jpg" alt="Craft cocktail" loading="lazy"></div>
+      <div class="food-img"><img data-wh-photo="dining_food_5" src="images/club-31.jpg" alt="Charcuterie board" loading="lazy"></div>
+      <div class="food-img"><img data-wh-photo="dining_food_6" src="images/club-23.jpg" alt="Craft cocktail" loading="lazy"></div>
     </div>
   </div>
 
@@ -1677,6 +1702,21 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     </div>
   </div>
 
+  <!-- Swimming Programs -->
+  <div class="section" id="swim-programs">
+    <p class="eyebrow fade-up">Swimming Programs</p>
+    <h2 class="sec-title fade-up d1">Learn, compete, <em>thrive</em></h2>
+    <div class="feats3">
+      <div class="feat-card fade-up d1"><div class="feat-icon">👶</div><h3 class="feat-name">Parent &amp; Tot · Ages 3–6</h3><p class="feat-desc">Water safety fundamentals and early swim skills in a nurturing, fun environment with caregiver participation.</p></div>
+      <div class="feat-card fade-up d2"><div class="feat-icon">🏊</div><h3 class="feat-name">Learn to Swim · Ages 5–12</h3><p class="feat-desc">Progressive swim instruction through skill levels — from water comfort to competitive strokes and flip turns.</p></div>
+      <div class="feat-card fade-up d3" id="swim-team"><div class="feat-icon">🏅</div><h3 class="feat-name">Westwood Wahoos · Ages 8–18</h3><p class="feat-desc">Competitive swim team in the Southeast Missouri Swim League. Practice 4x per week, home meets on weekends, late May through late July.</p></div>
+      <div class="feat-card fade-up d1"><div class="feat-icon">⏱️</div><h3 class="feat-name">Adult Lap Swim · All Ages</h3><p class="feat-desc">Open lap lanes Monday–Friday from 6–9 AM and designated adult-only sessions during the week.</p></div>
+      <div class="feat-card fade-up d2"><div class="feat-icon">💧</div><h3 class="feat-name">Water Aerobics · Adults</h3><p class="feat-desc">Low-impact fitness classes in the pool — great for joint health, cardio, and fun. Multiple sessions weekly.</p></div>
+      <div class="feat-card fade-up d3"><div class="feat-icon">🛟</div><h3 class="feat-name">Lifeguard Certification · Ages 15+</h3><p class="feat-desc">Red Cross lifeguard training and certification course. Prerequisites apply. Offered each spring.</p></div>
+    </div>
+    <p class="sec-body" style="margin-top:8px;text-align:center;max-width:100%;">Contact the Pro Shop at (573) 785-5253 to register for any program.</p>
+  </div>
+
   <!-- CTA -->
   <div style="background:linear-gradient(135deg,#083050,#0d4a7a);padding:80px;text-align:center;">
     <div class="fade-up">
@@ -1687,7 +1727,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     </div>
   </div>
 
-  <footer><div class="footer-top"><div><div class="footer-brand-logo"><div class="nav-emblem">WH</div><div class="footer-brand-text">Westwood Hills<br>Country Club<small>Est. 1936 · Poplar Bluff, MO</small></div></div><p class="footer-tagline">Southeast Missouri's premier private country club.</p></div><div><p class="fcol-title">Aquatics</p><ul class="flinks"><li><a onclick="navigate('aquatics')">Pool Complex</a></li><li><a onclick="navigate('aquatics')">Swim Programs</a></li><li><a onclick="navigate('aquatics')">Swim Team</a></li><li><a onclick="navigate('aquatics')">Hours</a></li></ul></div><div><p class="fcol-title">The Club</p><ul class="flinks"><li><a onclick="navigate('golf')">Golf</a></li><li><a onclick="navigate('dining')">Dining</a></li><li><a onclick="navigate('membership')">Membership</a></li></ul></div><div><p class="fcol-title">Contact</p><div class="fci"><strong>Clubhouse</strong>(573) 785-5253</div></div></div><div class="footer-bottom"><p class="fcopy">© 2026 Westwood Hills Country Club.</p><p class="fcopy">Poplar Bluff, Missouri · Est. 1936</p><p class="fcopy" style="margin-top:4px;"><a onclick="navigate('staff')" style="color:rgba(245,240,232,.35);cursor:pointer;text-decoration:none;font-size:10px;letter-spacing:.1em;">Staff Portal</a></p></div></footer>
+  <footer><div class="footer-top"><div><div class="footer-brand-logo"><div class="nav-emblem">WH</div><div class="footer-brand-text">Westwood Hills<br>Country Club<small>Est. 1936 · Poplar Bluff, MO</small></div></div><p class="footer-tagline">Southeast Missouri's premier private country club.</p></div><div><p class="fcol-title">Aquatics</p><ul class="flinks"><li><a onclick="navigate('aquatics')">Pool Complex</a></li><li><a onclick="navigate('aquatics');setTimeout(function(){var e=document.getElementById('swim-programs');if(e)e.scrollIntoView({behavior:'smooth'});},60)">Swim Programs</a></li><li><a onclick="navigate('aquatics');setTimeout(function(){var e=document.getElementById('swim-team');if(e)e.scrollIntoView({behavior:'smooth'});},60)">Swim Team</a></li><li><a onclick="navigate('aquatics')">Hours</a></li></ul></div><div><p class="fcol-title">The Club</p><ul class="flinks"><li><a onclick="navigate('golf')">Golf</a></li><li><a onclick="navigate('dining')">Dining</a></li><li><a onclick="navigate('membership')">Membership</a></li></ul></div><div><p class="fcol-title">Contact</p><div class="fci"><strong>Clubhouse</strong>(573) 785-5253</div></div></div><div class="footer-bottom"><p class="fcopy">© 2026 Westwood Hills Country Club.</p><p class="fcopy">Poplar Bluff, Missouri · Est. 1936</p><p class="fcopy" style="margin-top:4px;"><a onclick="navigate('staff')" style="color:rgba(245,240,232,.35);cursor:pointer;text-decoration:none;font-size:10px;letter-spacing:.1em;">Staff Portal</a></p></div></footer>
 </div>
 
 <!-- ═══════════════════════════════════════
@@ -1711,6 +1751,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <p class="eyebrow fade-up">2026 Calendar</p>
     <h2 class="sec-title fade-up d1">Upcoming <em>events</em></h2>
     <div class="cal-grid" id="ev-cal-grid"></div>
+    <p id="ev-empty-state" style="display:none;color:var(--muted);font-size:14px;padding:32px 0;text-align:center;">No events match this filter right now — check back soon, or <a onclick="navigate('about')" style="color:var(--gold-dk);text-decoration:underline;cursor:pointer;">contact us</a> for more information.</p>
     <div class="ev-archive-bar">
       <button class="ev-archive-btn" id="ev-archive-toggle" style="display:none;" onclick="evToggleArchive()"></button>
     </div>
@@ -1828,12 +1869,12 @@ nav.staff-mode .nav-site-back{display:flex!important;}
       </div>
       <div class="inq-form fade-up d3">
         <p class="inq-title">Request Event Information</p>
-        <div class="frow"><div class="fg"><label class="fl">First Name</label><input class="fi" id="pei-fname" type="text" placeholder="Jane" /></div><div class="fg"><label class="fl">Last Name</label><input class="fi" id="pei-lname" type="text" placeholder="Smith" /></div></div>
-        <div class="fg"><label class="fl">Email</label><input class="fi" id="pei-email" type="email" placeholder="jane@email.com" /></div>
-        <div class="fg"><label class="fl">Phone</label><input class="fi" id="pei-phone" type="tel" placeholder="(573) 785-5253" /></div>
-        <div class="frow"><div class="fg"><label class="fl">Event Type</label><select class="fs" id="pei-type"><option>Wedding / Reception</option><option>Rehearsal Dinner</option><option>Corporate Event</option><option>Birthday Party</option><option>Other</option></select></div><div class="fg"><label class="fl">Est. Guests</label><input class="fi" id="pei-guests" type="text" placeholder="e.g. 80" /></div></div>
-        <div class="fg"><label class="fl">Preferred Date</label><input class="fi" id="pei-date" type="date" /></div>
-        <div class="fg"><label class="fl">Notes</label><textarea class="ft" id="pei-notes" placeholder="Tell us about your event…"></textarea></div>
+        <div class="frow"><div class="fg"><label class="fl" for="pei-fname">First Name</label><input class="fi" id="pei-fname" type="text" placeholder="Jane" /></div><div class="fg"><label class="fl" for="pei-lname">Last Name</label><input class="fi" id="pei-lname" type="text" placeholder="Smith" /></div></div>
+        <div class="fg"><label class="fl" for="pei-email">Email</label><input class="fi" id="pei-email" type="email" placeholder="jane@email.com" /></div>
+        <div class="fg"><label class="fl" for="pei-phone">Phone</label><input class="fi" id="pei-phone" type="tel" placeholder="(573) 785-5253" /></div>
+        <div class="frow"><div class="fg"><label class="fl" for="pei-type">Event Type</label><select class="fs" id="pei-type"><option>Wedding / Reception</option><option>Rehearsal Dinner</option><option>Corporate Event</option><option>Birthday Party</option><option>Other</option></select></div><div class="fg"><label class="fl" for="pei-guests">Est. Guests</label><input class="fi" id="pei-guests" type="text" placeholder="e.g. 80" /></div></div>
+        <div class="fg"><label class="fl" for="pei-date">Preferred Date</label><input class="fi" id="pei-date" type="date" /></div>
+        <div class="fg"><label class="fl" for="pei-notes">Notes</label><textarea class="ft" id="pei-notes" placeholder="Tell us about your event…"></textarea></div>
         <button class="btn-p" id="pei-submit" style="width:100%;margin-top:6px;" onclick="submitPrivateInquiry()">Submit Inquiry</button>
         <div id="pei-status" style="font-size:12px;margin-top:8px;display:none;"></div>
       </div>
@@ -1868,7 +1909,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <div class="wj-card">
       <div class="wj-icon">🏊</div>
       <div class="wj-title">Your kids' summer, solved</div>
-      <p class="wj-body">Drop the kids at the pool in the morning and pick them up in the afternoon. Swim team, lifeguards, snack bar, friends they'll keep for life. A Full Membership costs less per month than a season at most public pools — and includes everything else the club offers.</p>
+      <p class="wj-body">Drop the kids at the pool in the morning and pick them up in the afternoon. Swim team, lifeguards, snack bar, friends they'll keep for life. A Full Family membership costs less per month than a season at most public pools — and includes everything else the club offers.</p>
     </div>
     <div class="wj-card">
       <div class="wj-icon">🍽️</div>
@@ -1950,12 +1991,12 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <p class="eyebrow fade-up">Common Questions</p>
     <h2 class="sec-title fade-up d1">Frequently <em>asked</em></h2>
     <div class="faq-grid fade-up d2" id="membership-faq-grid">
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is there a waitlist for membership? <span class="faq-icon">+</span></div><div class="faq-a">Membership availability varies by category. Contact our membership director to check current availability for your preferred type.</div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I host non-member guests? <span class="faq-icon">+</span></div><div class="faq-a">Yes! Golf members receive 2 reduced-rate guest rounds per month. Additional guest visits are available at standard guest rates.</div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What is the initiation fee? <span class="faq-icon">+</span></div><div class="faq-a">Initiation fees vary by membership category and are occasionally waived for promotional periods. Contact our membership office for current schedules.</div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Are there junior membership options? <span class="faq-icon">+</span></div><div class="faq-a">Yes — our Junior Membership is available to members under age 35 at significantly reduced initiation and dues. We also offer Youth Memberships for ages 14–18.</div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I upgrade my membership later? <span class="faq-icon">+</span></div><div class="faq-a">Absolutely. Members may upgrade at any time, subject to availability. Downgrades are permitted with 30 days' written notice.</div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is the club open year-round? <span class="faq-icon">+</span></div><div class="faq-a">The golf course and clubhouse are open year-round, weather permitting. The aquatics complex operates Memorial Day through Labor Day.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)" onkeydown="faqKeydown(event,this)" role="button" tabindex="0" aria-expanded="false">Is there a waitlist for membership? <span class="faq-icon">+</span></div><div class="faq-a">Membership availability varies by category. Contact our membership director to check current availability for your preferred type.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)" onkeydown="faqKeydown(event,this)" role="button" tabindex="0" aria-expanded="false">Can I host non-member guests? <span class="faq-icon">+</span></div><div class="faq-a">Yes! Golf members receive 2 reduced-rate guest rounds per month. Additional guest visits are available at standard guest rates.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)" onkeydown="faqKeydown(event,this)" role="button" tabindex="0" aria-expanded="false">What is the initiation fee? <span class="faq-icon">+</span></div><div class="faq-a">Initiation fees vary by membership category and are occasionally waived for promotional periods. Contact our membership office for current schedules.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)" onkeydown="faqKeydown(event,this)" role="button" tabindex="0" aria-expanded="false">Are there junior membership options? <span class="faq-icon">+</span></div><div class="faq-a">Yes — our Junior Membership is available to members under age 35 at significantly reduced initiation and dues. We also offer Youth Memberships for ages 14–18.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)" onkeydown="faqKeydown(event,this)" role="button" tabindex="0" aria-expanded="false">Can I upgrade my membership later? <span class="faq-icon">+</span></div><div class="faq-a">Absolutely. Members may upgrade at any time, subject to availability. Downgrades are permitted with 30 days' written notice.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)" onkeydown="faqKeydown(event,this)" role="button" tabindex="0" aria-expanded="false">Is the club open year-round? <span class="faq-icon">+</span></div><div class="faq-a">The golf course and clubhouse are open year-round, weather permitting. The aquatics complex operates Memorial Day through Labor Day.</div></div>
     </div>
   </div>
 
@@ -2028,17 +2069,17 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <h2 class="sec-title fade-up d1">We'd love to <em>hear from you</em></h2>
     <div class="contact-grid">
       <div class="fade-up d1">
-        <div class="cb"><div class="cb-lbl">Address</div><div class="cb-val">1 Birdie Ln</div><div class="cb-sub">Poplar Bluff, Missouri 63901</div></div>
+        <div class="cb"><div class="cb-lbl">Address</div><div class="cb-val" data-wh-contact="address">1 Birdie Ln, Poplar Bluff, Missouri 63901</div></div>
         <div class="cb"><div class="cb-lbl">Golf Shop</div><div class="cb-val" data-wh-contact="phone_golf">(573) 785-8211</div><div class="cb-sub">Tee times, lessons, green fees</div></div>
         <div class="cb"><div class="cb-lbl">Clubhouse &amp; Events</div><div class="cb-val" data-wh-contact="phone_main">(573) 785-5253</div><div class="cb-sub">Reservations, membership, events</div></div>
         <div class="cb"><div class="cb-lbl">Email</div><div class="cb-val" style="font-size:17px;" data-wh-contact="email"><a href="mailto:info@westwoodhillscountryclub.com" style="color:inherit;text-decoration:none;">info@westwoodhillscountryclub.com</a></div></div>
-        <div class="cb"><div class="cb-lbl">Office Hours</div><div class="cb-sub" style="font-size:14px;color:var(--text);">Mon – Fri: 8:00 AM – 5:00 PM<br>Saturday: 8:00 AM – 2:00 PM<br>Sunday: Closed (Golf Shop open)</div></div>
+        <div class="cb"><div class="cb-lbl">Office Hours</div><div class="cb-sub" style="font-size:14px;color:var(--text);"><span data-wh-contact="hours_weekday">Mon – Fri: 8:00 AM – 5:00 PM</span><br><span data-wh-contact="hours_saturday">Saturday: 8:00 AM – 2:00 PM</span><br><span data-wh-contact="hours_sunday">Sunday: Closed (Golf Shop open)</span></div></div>
       </div>
       <div class="fade-up d2">
-        <div class="cf-g"><label class="cf-l">Full Name</label><input class="cf-i" id="cf-name" type="text" placeholder="Your name" /></div>
-        <div class="cf-row"><div class="cf-g"><label class="cf-l">Email</label><input class="cf-i" id="cf-email" type="email" placeholder="you@email.com" /></div><div class="cf-g"><label class="cf-l">Phone</label><input class="cf-i" id="cf-phone" type="tel" placeholder="(573) 555-0000" /></div></div>
-        <div class="cf-g"><label class="cf-l">Subject</label><select class="cf-s" id="cf-subject"><option>General Inquiry</option><option>Membership Information</option><option>Dining Reservations</option><option>Private Event Inquiry</option><option>Employment</option></select></div>
-        <div class="cf-g"><label class="cf-l">Message</label><textarea class="cf-t" id="cf-message" placeholder="How can we help?"></textarea></div>
+        <div class="cf-g"><label class="cf-l" for="cf-name">Full Name</label><input class="cf-i" id="cf-name" type="text" placeholder="Your name" /></div>
+        <div class="cf-row"><div class="cf-g"><label class="cf-l" for="cf-email">Email</label><input class="cf-i" id="cf-email" type="email" placeholder="you@email.com" /></div><div class="cf-g"><label class="cf-l" for="cf-phone">Phone</label><input class="cf-i" id="cf-phone" type="tel" placeholder="(573) 555-0000" /></div></div>
+        <div class="cf-g"><label class="cf-l" for="cf-subject">Subject</label><select class="cf-s" id="cf-subject"><option>General Inquiry</option><option>Membership Information</option><option>Dining Reservations</option><option>Private Event Inquiry</option><option>Employment</option></select></div>
+        <div class="cf-g"><label class="cf-l" for="cf-message">Message</label><textarea class="cf-t" id="cf-message" placeholder="How can we help?"></textarea></div>
         <button class="btn-p" id="cf-submit" style="width:100%" onclick="submitContactForm()">Send Message</button>
         <div id="cf-status" style="font-size:12px;margin-top:8px;display:none;"></div>
       </div>
@@ -2164,9 +2205,9 @@ nav.staff-mode .nav-site-back{display:flex!important;}
           <!-- Add guest note form -->
           <div id="guest-form" style="display:none;margin-top:16px;background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.15);padding:16px;">
             <div class="staff-tag" id="guest-form-label">New Guest Note</div>
-            <div class="hrf-row" style="margin-top:8px;"><div class="hrf-group"><label class="hrf-label">First Name</label><input class="hrf-input" id="gn-fname" /></div><div class="hrf-group"><label class="hrf-label">Last Name</label><input class="hrf-input" id="gn-lname" /></div></div>
-            <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label">Notes</label><textarea class="hrf-textarea" id="gn-notes" placeholder="Table 6 always, shellfish allergy, birthday in March, VIP..."></textarea></div>
-            <div class="hrf-row" style="margin-top:8px;"><div class="hrf-group"><label class="hrf-label">Tags</label><input class="hrf-input" id="gn-tags" placeholder="VIP, allergy, table-pref" /></div><div class="hrf-group"><label class="hrf-label">Preferred Table</label><input class="hrf-input" id="gn-table" placeholder="e.g. Table 6" /></div></div>
+            <div class="hrf-row" style="margin-top:8px;"><div class="hrf-group"><label class="hrf-label" for="gn-fname">First Name</label><input class="hrf-input" id="gn-fname" /></div><div class="hrf-group"><label class="hrf-label" for="gn-lname">Last Name</label><input class="hrf-input" id="gn-lname" /></div></div>
+            <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="gn-notes">Notes</label><textarea class="hrf-textarea" id="gn-notes" placeholder="Table 6 always, shellfish allergy, birthday in March, VIP..."></textarea></div>
+            <div class="hrf-row" style="margin-top:8px;"><div class="hrf-group"><label class="hrf-label" for="gn-tags">Tags</label><input class="hrf-input" id="gn-tags" placeholder="VIP, allergy, table-pref" /></div><div class="hrf-group"><label class="hrf-label" for="gn-table">Preferred Table</label><input class="hrf-input" id="gn-table" placeholder="e.g. Table 6" /></div></div>
             <div style="display:flex;gap:8px;margin-top:12px;">
               <button class="btn-p" style="flex:1;" onclick="guestSave()">Save</button>
               <button class="staff-cancel-btn" onclick="guestCancelForm()">Cancel</button>
@@ -2271,8 +2312,8 @@ nav.staff-mode .nav-site-back{display:flex!important;}
             <div style="font-size:11px;color:rgba(245,240,232,.4);margin-bottom:12px;">Add links to completed tournament results. These show on the Golf page so members can look back at recent events.</div>
             <div id="ls-admin-past-list" style="margin-bottom:12px;"></div>
             <div class="hrf-row">
-              <div class="hrf-group"><label class="hrf-label">Result Name</label><input class="hrf-input" id="ls-admin-past-name" placeholder="e.g. Spring 2-Man Scramble" /></div>
-              <div class="hrf-group"><label class="hrf-label">Portal URL</label><input class="hrf-input" id="ls-admin-past-url" placeholder="https://www.golfgenius.com/pages/..." /></div>
+              <div class="hrf-group"><label class="hrf-label" for="ls-admin-past-name">Result Name</label><input class="hrf-input" id="ls-admin-past-name" placeholder="e.g. Spring 2-Man Scramble" /></div>
+              <div class="hrf-group"><label class="hrf-label" for="ls-admin-past-url">Portal URL</label><input class="hrf-input" id="ls-admin-past-url" placeholder="https://www.golfgenius.com/pages/..." /></div>
             </div>
             <button class="staff-mini-btn accent" style="margin-top:8px;" onclick="lsAdminAddPast()">+ Add Result</button>
           </div>
@@ -2397,11 +2438,11 @@ nav.staff-mode .nav-site-back{display:flex!important;}
                   <input type="checkbox" id="sm-ws-active"> Active on Dining page
                 </label>
               </div>
-              <div class="hrf-group" style="width:100%;"><label class="hrf-label">Dish Name</label><input class="hrf-input" id="sm-ws-name" placeholder="e.g. Pan-Seared Halibut" /></div>
-              <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label">Description</label><textarea class="hrf-textarea" id="sm-ws-desc" rows="3" placeholder="Brief description of the dish..."></textarea></div>
+              <div class="hrf-group" style="width:100%;"><label class="hrf-label" for="sm-ws-name">Dish Name</label><input class="hrf-input" id="sm-ws-name" placeholder="e.g. Pan-Seared Halibut" /></div>
+              <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="sm-ws-desc">Description</label><textarea class="hrf-textarea" id="sm-ws-desc" rows="3" placeholder="Brief description of the dish..."></textarea></div>
               <div class="hrf-row" style="margin-top:8px;">
-                <div class="hrf-group"><label class="hrf-label">Price (optional)</label><input class="hrf-input" id="sm-ws-price" placeholder="e.g. $36" /></div>
-                <div class="hrf-group"><label class="hrf-label">Wine Pairing (optional)</label><input class="hrf-input" id="sm-ws-wine" placeholder="e.g. Pinot Noir or Chardonnay" /></div>
+                <div class="hrf-group"><label class="hrf-label" for="sm-ws-price">Price (optional)</label><input class="hrf-input" id="sm-ws-price" placeholder="e.g. $36" /></div>
+                <div class="hrf-group"><label class="hrf-label" for="sm-ws-wine">Wine Pairing (optional)</label><input class="hrf-input" id="sm-ws-wine" placeholder="e.g. Pinot Noir or Chardonnay" /></div>
               </div>
               <div style="margin-top:8px;">
                 <label class="hrf-label">Photo (optional)</label>
@@ -2425,11 +2466,11 @@ nav.staff-mode .nav-site-back{display:flex!important;}
                   <input type="checkbox" id="sm-fn-active"> Active on Dining page
                 </label>
               </div>
-              <div class="hrf-group" style="width:100%;"><label class="hrf-label">Dish Name</label><input class="hrf-input" id="sm-fn-name" placeholder="e.g. Surf &amp; Turf Fridays" /></div>
-              <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label">Description</label><textarea class="hrf-textarea" id="sm-fn-desc" rows="3" placeholder="Brief description..."></textarea></div>
+              <div class="hrf-group" style="width:100%;"><label class="hrf-label" for="sm-fn-name">Dish Name</label><input class="hrf-input" id="sm-fn-name" placeholder="e.g. Surf &amp; Turf Fridays" /></div>
+              <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="sm-fn-desc">Description</label><textarea class="hrf-textarea" id="sm-fn-desc" rows="3" placeholder="Brief description..."></textarea></div>
               <div class="hrf-row" style="margin-top:8px;">
-                <div class="hrf-group"><label class="hrf-label">Price (optional)</label><input class="hrf-input" id="sm-fn-price" placeholder="e.g. $42" /></div>
-                <div class="hrf-group"><label class="hrf-label">Wine Pairing (optional)</label><input class="hrf-input" id="sm-fn-wine" placeholder="e.g. Cabernet or Bordeaux" /></div>
+                <div class="hrf-group"><label class="hrf-label" for="sm-fn-price">Price (optional)</label><input class="hrf-input" id="sm-fn-price" placeholder="e.g. $42" /></div>
+                <div class="hrf-group"><label class="hrf-label" for="sm-fn-wine">Wine Pairing (optional)</label><input class="hrf-input" id="sm-fn-wine" placeholder="e.g. Cabernet or Bordeaux" /></div>
               </div>
               <div style="margin-top:8px;">
                 <label class="hrf-label">Photo (optional)</label>
@@ -2734,16 +2775,16 @@ nav.staff-mode .nav-site-back{display:flex!important;}
             <div style="font-size:11px;color:var(--muted);margin-top:4px;">Phone numbers, address, and hours shown throughout the site.</div>
           </div>
           <div style="display:grid;gap:12px;max-width:520px;">
-            <div class="hrf-group"><label class="hrf-label">Main Phone (Clubhouse & Events)</label><input class="hrf-input" id="cms-ct-phone-main" /></div>
-            <div class="hrf-group"><label class="hrf-label">Golf Shop Phone</label><input class="hrf-input" id="cms-ct-phone-golf" /></div>
-            <div class="hrf-group"><label class="hrf-label">Email Address</label><input class="hrf-input" id="cms-ct-email" /></div>
-            <div class="hrf-group"><label class="hrf-label">Mailing Address</label><input class="hrf-input" id="cms-ct-address" /></div>
-            <div class="hrf-group"><label class="hrf-label">Office Hours — Weekdays</label><input class="hrf-input" id="cms-ct-hours-wd" /></div>
-            <div class="hrf-group"><label class="hrf-label">Office Hours — Saturday</label><input class="hrf-input" id="cms-ct-hours-sa" /></div>
-            <div class="hrf-group"><label class="hrf-label">Office Hours — Sunday</label><input class="hrf-input" id="cms-ct-hours-su" /></div>
-            <div class="hrf-group"><label class="hrf-label">Hoover's Dinner Hours</label><input class="hrf-input" id="cms-ct-hoovers-hours" /></div>
-            <div class="hrf-group"><label class="hrf-label">Hoover's Public Night</label><input class="hrf-input" id="cms-ct-hoovers-public" /></div>
-            <div class="hrf-group"><label class="hrf-label">Westwood Grill Hours</label><input class="hrf-input" id="cms-ct-grill-hours" /></div>
+            <div class="hrf-group"><label class="hrf-label" for="cms-ct-phone-main">Main Phone (Clubhouse & Events)</label><input class="hrf-input" id="cms-ct-phone-main" /></div>
+            <div class="hrf-group"><label class="hrf-label" for="cms-ct-phone-golf">Golf Shop Phone</label><input class="hrf-input" id="cms-ct-phone-golf" /></div>
+            <div class="hrf-group"><label class="hrf-label" for="cms-ct-email">Email Address</label><input class="hrf-input" id="cms-ct-email" /></div>
+            <div class="hrf-group"><label class="hrf-label" for="cms-ct-address">Mailing Address</label><input class="hrf-input" id="cms-ct-address" /></div>
+            <div class="hrf-group"><label class="hrf-label" for="cms-ct-hours-wd">Office Hours — Weekdays</label><input class="hrf-input" id="cms-ct-hours-wd" /></div>
+            <div class="hrf-group"><label class="hrf-label" for="cms-ct-hours-sa">Office Hours — Saturday</label><input class="hrf-input" id="cms-ct-hours-sa" /></div>
+            <div class="hrf-group"><label class="hrf-label" for="cms-ct-hours-su">Office Hours — Sunday</label><input class="hrf-input" id="cms-ct-hours-su" /></div>
+            <div class="hrf-group"><label class="hrf-label" for="cms-ct-hoovers-hours">Hoover's Dinner Hours</label><input class="hrf-input" id="cms-ct-hoovers-hours" /></div>
+            <div class="hrf-group"><label class="hrf-label" for="cms-ct-hoovers-public">Hoover's Public Night</label><input class="hrf-input" id="cms-ct-hoovers-public" /></div>
+            <div class="hrf-group"><label class="hrf-label" for="cms-ct-grill-hours">Westwood Grill Hours</label><input class="hrf-input" id="cms-ct-grill-hours" /></div>
           </div>
           <button class="btn-p" style="margin-top:20px;width:100%;max-width:520px;" onclick="cmsContactSave()">Save Contact Info</button>
           <div id="cms-contact-status" style="display:none;color:#8fcc8f;font-size:12px;margin-top:8px;"></div>
@@ -2817,7 +2858,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
             <div style="font-size:11px;color:var(--muted);margin-top:4px;">Set pool season dates and daily schedule shown on the Aquatics page.</div>
           </div>
           <div style="display:grid;gap:12px;max-width:560px;">
-            <div class="hrf-group"><label class="hrf-label">Season (shown in heading)</label><input class="hrf-input" id="cms-pool-season" placeholder="Memorial Day through Labor Day" /></div>
+            <div class="hrf-group"><label class="hrf-label" for="cms-pool-season">Season (shown in heading)</label><input class="hrf-input" id="cms-pool-season" placeholder="Memorial Day through Labor Day" /></div>
             <div style="color:rgba(245,240,232,.5);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-top:4px;padding-bottom:4px;border-bottom:1px solid rgba(184,151,106,.1);">Daily Schedule — Days &nbsp;|&nbsp; Hours &nbsp;|&nbsp; Note</div>
             <div id="cms-pool-hours-rows"></div>
           </div>
@@ -2832,7 +2873,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
             <div style="font-size:11px;color:var(--muted);margin-top:4px;">Update the Express Lunch items, prices, and availability shown on the Dining page.</div>
           </div>
           <div style="display:grid;gap:12px;max-width:520px;">
-            <div class="hrf-group"><label class="hrf-label">Availability (banner text)</label><input class="hrf-input" id="cms-el-available" placeholder="Tue – Fri · 11:30 AM – 1:00 PM" /></div>
+            <div class="hrf-group"><label class="hrf-label" for="cms-el-available">Availability (banner text)</label><input class="hrf-input" id="cms-el-available" placeholder="Tue – Fri · 11:30 AM – 1:00 PM" /></div>
             <div style="color:rgba(245,240,232,.5);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-top:4px;padding-bottom:4px;border-bottom:1px solid rgba(184,151,106,.1);">Menu Items — Item Name &nbsp;|&nbsp; Price</div>
             <div id="cms-el-items"></div>
           </div>
@@ -2847,11 +2888,11 @@ nav.staff-mode .nav-site-back{display:flex!important;}
             <div style="font-size:11px;color:var(--muted);margin-top:4px;">Numbers displayed in the statistics band on the About page.</div>
           </div>
           <div style="display:grid;gap:12px;max-width:400px;">
-            <div class="hrf-group"><label class="hrf-label">Year Founded</label><input class="hrf-input" id="cms-stat-year" /></div>
-            <div class="hrf-group"><label class="hrf-label">Championship Holes</label><input class="hrf-input" id="cms-stat-holes" /></div>
-            <div class="hrf-group"><label class="hrf-label">Member Families</label><input class="hrf-input" id="cms-stat-families" placeholder="e.g. 500+" /></div>
-            <div class="hrf-group"><label class="hrf-label">Annual Events</label><input class="hrf-input" id="cms-stat-events" placeholder="e.g. 25+" /></div>
-            <div class="hrf-group"><label class="hrf-label">Staff Members</label><input class="hrf-input" id="cms-stat-staff" placeholder="e.g. 30+" /></div>
+            <div class="hrf-group"><label class="hrf-label" for="cms-stat-year">Year Founded</label><input class="hrf-input" id="cms-stat-year" /></div>
+            <div class="hrf-group"><label class="hrf-label" for="cms-stat-holes">Championship Holes</label><input class="hrf-input" id="cms-stat-holes" /></div>
+            <div class="hrf-group"><label class="hrf-label" for="cms-stat-families">Member Families</label><input class="hrf-input" id="cms-stat-families" placeholder="e.g. 500+" /></div>
+            <div class="hrf-group"><label class="hrf-label" for="cms-stat-events">Annual Events</label><input class="hrf-input" id="cms-stat-events" placeholder="e.g. 25+" /></div>
+            <div class="hrf-group"><label class="hrf-label" for="cms-stat-staff">Staff Members</label><input class="hrf-input" id="cms-stat-staff" placeholder="e.g. 30+" /></div>
           </div>
           <button class="btn-p" style="margin-top:20px;width:100%;max-width:400px;" onclick="cmsStatsSave()">Save Statistics</button>
           <div id="cms-stats-status" style="display:none;color:#8fcc8f;font-size:12px;margin-top:8px;"></div>
@@ -2876,16 +2917,16 @@ nav.staff-mode .nav-site-back{display:flex!important;}
           </div>
           <div style="display:grid;gap:12px;max-width:560px;">
             <div class="hrf-row" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-              <div class="hrf-group"><label class="hrf-label">Pro Name</label><input class="hrf-input" id="cms-pro-name" placeholder="e.g. Tyler Evans" /></div>
-              <div class="hrf-group"><label class="hrf-label">Title / Credentials</label><input class="hrf-input" id="cms-pro-title" placeholder="Head Golf Professional" /></div>
+              <div class="hrf-group"><label class="hrf-label" for="cms-pro-name">Pro Name</label><input class="hrf-input" id="cms-pro-name" placeholder="e.g. Tyler Evans" /></div>
+              <div class="hrf-group"><label class="hrf-label" for="cms-pro-title">Title / Credentials</label><input class="hrf-input" id="cms-pro-title" placeholder="Head Golf Professional" /></div>
             </div>
-            <div class="hrf-group"><label class="hrf-label">Bio (shown on Golf page)</label><textarea class="hrf-input" id="cms-pro-bio" rows="4" placeholder="A brief professional bio…" style="height:auto;resize:vertical;"></textarea></div>
-            <div class="hrf-group"><label class="hrf-label">Photo URL</label><input class="hrf-input" id="cms-pro-photo" placeholder="https://… or leave blank" /></div>
-            <div class="hrf-group"><label class="hrf-label">Email Address</label><input class="hrf-input" id="cms-pro-email" type="email" placeholder="pro@westwoodhillscc.com" /></div>
+            <div class="hrf-group"><label class="hrf-label" for="cms-pro-bio">Bio (shown on Golf page)</label><textarea class="hrf-input" id="cms-pro-bio" rows="4" placeholder="A brief professional bio…" style="height:auto;resize:vertical;"></textarea></div>
+            <div class="hrf-group"><label class="hrf-label" for="cms-pro-photo">Photo URL</label><input class="hrf-input" id="cms-pro-photo" placeholder="https://… or leave blank" /></div>
+            <div class="hrf-group"><label class="hrf-label" for="cms-pro-email">Email Address</label><input class="hrf-input" id="cms-pro-email" type="email" placeholder="pro@westwoodhillscc.com" /></div>
             <div style="color:rgba(245,240,232,.5);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-top:4px;padding-bottom:4px;border-bottom:1px solid rgba(184,151,106,.1);">Lesson Details</div>
-            <div class="hrf-group"><label class="hrf-label">Lesson Types Offered</label><input class="hrf-input" id="cms-pro-lesson-types" placeholder="Private Lessons · Group Clinics · Junior Programs" /></div>
-            <div class="hrf-group"><label class="hrf-label">Rates (optional)</label><input class="hrf-input" id="cms-pro-rates" placeholder="e.g. Private $75/hr · Group $30/person" /></div>
-            <div class="hrf-group"><label class="hrf-label">Available Days</label><input class="hrf-input" id="cms-pro-days" placeholder="Mon – Fri · Call Pro Shop to schedule" /></div>
+            <div class="hrf-group"><label class="hrf-label" for="cms-pro-lesson-types">Lesson Types Offered</label><input class="hrf-input" id="cms-pro-lesson-types" placeholder="Private Lessons · Group Clinics · Junior Programs" /></div>
+            <div class="hrf-group"><label class="hrf-label" for="cms-pro-rates">Rates (optional)</label><input class="hrf-input" id="cms-pro-rates" placeholder="e.g. Private $75/hr · Group $30/person" /></div>
+            <div class="hrf-group"><label class="hrf-label" for="cms-pro-days">Available Days</label><input class="hrf-input" id="cms-pro-days" placeholder="Mon – Fri · Call Pro Shop to schedule" /></div>
           </div>
           <button class="btn-p" style="margin-top:20px;width:100%;max-width:560px;" onclick="cmsProBioSave()">Save Pro &amp; Lessons</button>
           <div id="cms-probio-status" style="display:none;color:#8fcc8f;font-size:12px;margin-top:8px;"></div>
@@ -3051,11 +3092,11 @@ nav.staff-mode .nav-site-back{display:flex!important;}
         <div id="staff-form" style="display:none;">
           <div class="staff-tag" id="staff-form-label">New Reservation</div>
           <div id="staff-form-date-label" class="staff-detail-date" style="margin-bottom:16px;"></div>
-          <div class="hrf-row"><div class="hrf-group"><label class="hrf-label">First Name</label><input class="hrf-input" id="sf-fname" /></div><div class="hrf-group"><label class="hrf-label">Last Name</label><input class="hrf-input" id="sf-lname" /></div></div>
-          <div class="hrf-row"><div class="hrf-group"><label class="hrf-label">Email</label><input class="hrf-input" id="sf-email" /></div><div class="hrf-group"><label class="hrf-label">Phone</label><input class="hrf-input" id="sf-phone" /></div></div>
-          <div class="hrf-row"><div class="hrf-group"><label class="hrf-label">Time</label><select class="hrf-select" id="sf-time"><option value="">Select...</option><option>5:00 PM</option><option>5:30 PM</option><option>6:00 PM</option><option>6:30 PM</option><option>7:00 PM</option><option>7:30 PM</option><option>8:00 PM</option><option>8:30 PM</option></select></div><div class="hrf-group"><label class="hrf-label">Party Size</label><input class="hrf-input" id="sf-party" value="2" /></div></div>
-          <div class="hrf-row"><div class="hrf-group"><label class="hrf-label">Member?</label><select class="hrf-select" id="sf-member"><option value="member">Member</option><option value="nonmember">Non-Member</option></select></div><div class="hrf-group"><label class="hrf-label">Status</label><select class="hrf-select" id="sf-status"><option value="pending">Pending</option><option value="confirmed">Confirmed</option><option value="cancelled">Cancelled</option></select></div></div>
-          <div class="hrf-group" style="width:100%;margin-top:4px;"><label class="hrf-label">Notes</label><textarea class="hrf-textarea" id="sf-notes"></textarea></div>
+          <div class="hrf-row"><div class="hrf-group"><label class="hrf-label" for="sf-fname">First Name</label><input class="hrf-input" id="sf-fname" /></div><div class="hrf-group"><label class="hrf-label" for="sf-lname">Last Name</label><input class="hrf-input" id="sf-lname" /></div></div>
+          <div class="hrf-row"><div class="hrf-group"><label class="hrf-label" for="sf-email">Email</label><input class="hrf-input" id="sf-email" /></div><div class="hrf-group"><label class="hrf-label" for="sf-phone">Phone</label><input class="hrf-input" id="sf-phone" /></div></div>
+          <div class="hrf-row"><div class="hrf-group"><label class="hrf-label" for="sf-time">Time</label><select class="hrf-select" id="sf-time"><option value="">Select...</option><option>5:00 PM</option><option>5:30 PM</option><option>6:00 PM</option><option>6:30 PM</option><option>7:00 PM</option><option>7:30 PM</option><option>8:00 PM</option><option>8:30 PM</option></select></div><div class="hrf-group"><label class="hrf-label" for="sf-party">Party Size</label><input class="hrf-input" id="sf-party" value="2" /></div></div>
+          <div class="hrf-row"><div class="hrf-group"><label class="hrf-label" for="sf-member">Member?</label><select class="hrf-select" id="sf-member"><option value="member">Member</option><option value="nonmember">Non-Member</option></select></div><div class="hrf-group"><label class="hrf-label" for="sf-status">Status</label><select class="hrf-select" id="sf-status"><option value="pending">Pending</option><option value="confirmed">Confirmed</option><option value="cancelled">Cancelled</option></select></div></div>
+          <div class="hrf-group" style="width:100%;margin-top:4px;"><label class="hrf-label" for="sf-notes">Notes</label><textarea class="hrf-textarea" id="sf-notes"></textarea></div>
           <!-- Guest note match -->
           <div id="sf-guest-note" style="display:none;" class="staff-guest-match"></div>
           <div style="display:flex;gap:8px;margin-top:14px;">
@@ -3067,8 +3108,8 @@ nav.staff-mode .nav-site-back{display:flex!important;}
         <div id="staff-wl-form" style="display:none;">
           <div class="staff-tag">Add to Waitlist</div>
           <div id="staff-wl-date-label" class="staff-detail-date" style="margin-bottom:16px;"></div>
-          <div class="hrf-row"><div class="hrf-group"><label class="hrf-label">Name</label><input class="hrf-input" id="wl-name" /></div><div class="hrf-group"><label class="hrf-label">Phone</label><input class="hrf-input" id="wl-phone" /></div></div>
-          <div class="hrf-row"><div class="hrf-group"><label class="hrf-label">Party Size</label><input class="hrf-input" id="wl-party" value="2" /></div><div class="hrf-group"><label class="hrf-label">Preferred Time</label><select class="hrf-select" id="wl-time"><option value="">Any</option><option>5:00 PM</option><option>5:30 PM</option><option>6:00 PM</option><option>6:30 PM</option><option>7:00 PM</option><option>7:30 PM</option><option>8:00 PM</option><option>8:30 PM</option></select></div></div>
+          <div class="hrf-row"><div class="hrf-group"><label class="hrf-label" for="wl-name">Name</label><input class="hrf-input" id="wl-name" /></div><div class="hrf-group"><label class="hrf-label" for="wl-phone">Phone</label><input class="hrf-input" id="wl-phone" /></div></div>
+          <div class="hrf-row"><div class="hrf-group"><label class="hrf-label" for="wl-party">Party Size</label><input class="hrf-input" id="wl-party" value="2" /></div><div class="hrf-group"><label class="hrf-label" for="wl-time">Preferred Time</label><select class="hrf-select" id="wl-time"><option value="">Any</option><option>5:00 PM</option><option>5:30 PM</option><option>6:00 PM</option><option>6:30 PM</option><option>7:00 PM</option><option>7:30 PM</option><option>8:00 PM</option><option>8:30 PM</option></select></div></div>
           <div style="display:flex;gap:8px;margin-top:14px;">
             <button class="btn-p" style="flex:1;" onclick="staffSaveWaitlist()">Add to Waitlist</button>
             <button class="staff-cancel-btn" onclick="staffCancelWlForm()">Cancel</button>
@@ -3193,7 +3234,7 @@ var WH_SITE_DEFAULTS = {
     hours_sunday:     'Sunday: Closed (Golf Shop open)',
     hoovers_hours:    'Thursday\u2013Saturday, 5 PM \u2013 9 PM',
     hoovers_public:   '3rd Saturday of each month',
-    grill_hours:      'Casual \u00b7 Daily 11 AM\u20138 PM'
+    grill_hours:      'Casual \u00b7 Tue\u2013Sun 11 AM\u20138 PM'
   },
   pool: {
     season_label: 'Memorial Day through Labor Day',
@@ -3252,8 +3293,8 @@ var WH_SITE_DEFAULTS = {
     dining_food_2:    'images/food-fish.jpg',
     dining_food_3:    'images/food-pasta.jpg',
     dining_food_4:    'images/food-skewers.jpg',
-    dining_food_5:    'images/food-charcuterie.jpg',
-    dining_food_6:    'images/bar-cocktail.jpg',
+    dining_food_5:    'images/club-31.jpg',
+    dining_food_6:    'images/club-23.jpg',
     golf_gallery_1:   'images/golf-tournament-1.jpg',
     golf_gallery_2:   'images/golf-tournament-2.jpg',
     golf_gallery_3:   'images/golf-tournament-3.jpg',
@@ -3263,12 +3304,10 @@ var WH_SITE_DEFAULTS = {
     pool_main:        'images/pool-hero.jpg',
     events_interior:  'images/events-interior.jpg',
     venue_hoovers:    'images/hoovers-table.jpg',
-    venue_grill:      'images/grill-bar.jpg',
+    venue_grill:      'images/club-04.jpg',
     venue_terrace:    'images/terrace-cocktail.jpg'
   }
 };
-
-function whSiteContent() { return WH_SITE_CONTENT || WH_SITE_DEFAULTS; }
 
 function applySiteContent(sc) {
   if (!sc) return;
@@ -3320,11 +3359,12 @@ function applySiteContent(sc) {
   }
   // Pool hours
   var poolData = sc.pool || WH_SITE_DEFAULTS.pool;
-  var poolLabel = document.getElementById('pool-season-label');
-  if (poolLabel) poolLabel.innerHTML = 'Open <em>' + (poolData.season_label || 'Memorial Day through Labor Day') + '</em>';
   var poolGrid = document.getElementById('pool-hours');
   if (poolGrid && poolData.hours && poolData.hours.length) {
-    poolGrid.innerHTML = poolData.hours.map(function(h) {
+    var seasonItem = poolData.season_label
+      ? '<div class="pf-item"><div class="pf-name">Season</div><div class="pf-sub">' + poolData.season_label + '</div></div>'
+      : '';
+    poolGrid.innerHTML = seasonItem + poolData.hours.map(function(h) {
       return '<div class="pf-item"><div class="pf-name">' + h.days + '</div>'
            + '<div class="pf-sub">' + h.time + (h.note ? ' \u00b7 ' + h.note : '') + '</div></div>';
     }).join('');
@@ -3350,7 +3390,7 @@ function applySiteContent(sc) {
   var faqGrid = document.getElementById('membership-faq-grid');
   if (faqGrid && faqData && faqData.length) {
     faqGrid.innerHTML = faqData.map(function(item) {
-      return '<div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">' + item.q + ' <span class="faq-icon">+</span></div><div class="faq-a">' + item.a + '</div></div>';
+      return '<div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)" onkeydown="faqKeydown(event,this)" role="button" tabindex="0" aria-expanded="false">' + item.q + ' <span class="faq-icon">+</span></div><div class="faq-a">' + item.a + '</div></div>';
     }).join('');
   }
   // Pro Bio — Meet the Pro section on Golf page
@@ -3368,7 +3408,7 @@ function renderProBio(pb) {
   var titleEl = document.getElementById('golf-pro-title-line');
   if (titleEl) titleEl.textContent = pb.title || 'Head Golf Professional';
   var bioEl = document.getElementById('golf-pro-bio');
-  if (bioEl) bioEl.textContent = pb.bio || '';
+  if (bioEl) { bioEl.textContent = pb.bio || ''; bioEl.style.display = pb.bio ? '' : 'none'; }
   // Photo
   var photoWrap = document.getElementById('golf-pro-photo-wrap');
   var photoImg = document.getElementById('golf-pro-photo');
@@ -3634,7 +3674,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'delete', id: id })
+      body: JSON.stringify({ action: 'delete', id: id, staffPin: _staffSessionPin })
     })
     .then(function(r) { return r.json(); })
     .then(function(res) { if (cb) cb(res); })
@@ -3643,22 +3683,25 @@ var WHCC_SYNC = {
 
   saveTeeSheet: function(event, round, date, config, groups, cb) {
     var body = JSON.stringify({ action: 'save-teesheet', event: event, round: round,
-      date: date, config: config, groups: groups });
+      date: date, config: config, groups: groups, staffPin: _staffSessionPin });
     fetch(WHCC_SCRIPT_URL, { method: 'POST', headers: {'Content-Type':'text/plain'}, body: body })
       .then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
   },
   saveScores: function(event, round, scores, cb) {
-    var body = JSON.stringify({ action: 'save-scores', event: event, round: round, scores: scores });
+    var body = JSON.stringify({ action: 'save-scores', event: event, round: round, scores: scores, staffPin: _staffSessionPin });
     fetch(WHCC_SCRIPT_URL, { method: 'POST', headers: {'Content-Type':'text/plain'}, body: body })
       .then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
   },
   loadTeeSheets: function(event, cb) {
-    var url = WHCC_SCRIPT_URL + '?action=get-teesheets' + (event ? '&event=' + encodeURIComponent(event) : '');
-    fetch(url).then(function(r){ return r.json(); })
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'get-teesheets', event: event, staffPin: _staffSessionPin })
+    }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
   },
@@ -3668,7 +3711,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'save-conditions', data: data })
+      body: JSON.stringify({ action: 'save-conditions', data: data, staffPin: _staffSessionPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -3685,7 +3728,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'save-menus', data: data })
+      body: JSON.stringify({ action: 'save-menus', data: data, staffPin: _staffSessionPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -3708,8 +3751,11 @@ var WHCC_SYNC = {
       .catch(function(e){ if (cb) cb(null, e); });
   },
   fetchDining: function(cb) {
-    fetch(WHCC_SCRIPT_URL + '?action=get-dining')
-      .then(function(r){ return r.json(); })
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'get-dining', staffPin: _staffSessionPin })
+    }).then(function(r){ return r.json(); })
       .then(function(rows){ if (cb) cb(rows, null); })
       .catch(function(e){ if (cb) cb(null, e); });
   },
@@ -3717,7 +3763,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'update-dining', id: id, status: status })
+      body: JSON.stringify({ action: 'update-dining', id: id, status: status, staffPin: _staffSessionPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -3726,7 +3772,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(Object.assign({ action: 'update-dining-full' }, res))
+      body: JSON.stringify(Object.assign({ action: 'update-dining-full', staffPin: _staffSessionPin }, res))
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -3735,7 +3781,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'delete-dining', id: id })
+      body: JSON.stringify({ action: 'delete-dining', id: id, staffPin: _staffSessionPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -3744,14 +3790,17 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'save-live-scoring', data: data })
+      body: JSON.stringify({ action: 'save-live-scoring', data: data, staffPin: _staffSessionPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
   },
   fetchLiveScoring: function(cb) {
-    fetch(WHCC_SCRIPT_URL + '?action=get-live-scoring')
-      .then(function(r){ return r.json(); })
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'get-live-scoring', staffPin: _staffSessionPin })
+    }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
   },
@@ -3761,14 +3810,17 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'save-waitlist', data: data })
+      body: JSON.stringify({ action: 'save-waitlist', data: data, staffPin: _staffSessionPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
   },
   fetchWaitlist: function(cb) {
-    fetch(WHCC_SCRIPT_URL + '?action=get-waitlist')
-      .then(function(r){ return r.json(); })
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'get-waitlist', staffPin: _staffSessionPin })
+    }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
   },
@@ -3778,14 +3830,17 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'save-guest-notes', data: data })
+      body: JSON.stringify({ action: 'save-guest-notes', data: data, staffPin: _staffSessionPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
   },
   fetchGuestNotes: function(cb) {
-    fetch(WHCC_SCRIPT_URL + '?action=get-guest-notes')
-      .then(function(r){ return r.json(); })
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'get-guest-notes', staffPin: _staffSessionPin })
+    }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
   },
@@ -3795,14 +3850,17 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'save-pairings', data: data })
+      body: JSON.stringify({ action: 'save-pairings', data: data, staffPin: _staffSessionPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
   },
   fetchPairings: function(cb) {
-    fetch(WHCC_SCRIPT_URL + '?action=get-pairings')
-      .then(function(r){ return r.json(); })
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'get-pairings', staffPin: _staffSessionPin })
+    }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
   },
@@ -3818,8 +3876,11 @@ var WHCC_SYNC = {
       .catch(function(e){ if (cb) cb(null, e); });
   },
   fetchLessons: function(cb) {
-    fetch(WHCC_SCRIPT_URL + '?action=get-lessons')
-      .then(function(r){ return r.json(); })
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'get-lessons', staffPin: _staffSessionPin })
+    }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
   },
@@ -3827,7 +3888,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'update-lesson-status', id: id, status: status })
+      body: JSON.stringify({ action: 'update-lesson-status', id: id, status: status, staffPin: _staffSessionPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -3838,7 +3899,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'save-site-content', data: data })
+      body: JSON.stringify({ action: 'save-site-content', data: data, staffPin: _staffSessionPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -3864,8 +3925,11 @@ var WHCC_SYNC = {
       .catch(function(e){ if (cb) cb(false, e); });
   },
   validatePin: function(pin, cb) {
-    fetch(WHCC_SCRIPT_URL + '?action=validate-staff-pin&pin=' + encodeURIComponent(pin))
-      .then(function(r){ return r.json(); })
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'validate-staff-pin', pin: pin })
+    }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d || null, null); })
       .catch(function(e){ if (cb) cb(null, e); });
   },
@@ -3884,13 +3948,19 @@ function parseEventCardDate(card) {
   return new Date(parseInt(yr.textContent.trim()), m, parseInt(dy.textContent.trim()));
 }
 
+// Local calendar date as YYYY-MM-DD (unlike toISOString, does not shift to UTC first)
+function localDateStr(d) {
+  d = d || new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
 function parseMetaDate(meta) {
   if (!meta) return null;
   var m = (meta + '').match(/([A-Za-z]+)\s+(\d+)/);
   if (!m) return null;
   var mo = _MO[m[1].toLowerCase().slice(0,3)];
   if (mo === undefined) return null;
-  return new Date(2026, mo, parseInt(m[2]));
+  return new Date(new Date().getFullYear(), mo, parseInt(m[2]));
 }
 
 function archiveEventCards() {
@@ -3943,8 +4013,6 @@ function evToggleArchive() {
 
 // Auto-sync counts from Sheet in background on every page load
 document.addEventListener('DOMContentLoaded', function() {
-  // Seed default staff PIN if none has been set
-  if (!localStorage.getItem('staff-pin')) { localStorage.setItem('staff-pin', '1936'); }
   WHCC_SYNC.fetchCounts(); whInitSiteContent();
 });
 
@@ -4252,6 +4320,7 @@ function submitPrivateInquiry() {
         statusEl.style.color  = '#2e7d32'; statusEl.style.display = 'block';
         ['pei-fname','pei-lname','pei-email','pei-phone','pei-guests','pei-notes'].forEach(function(id){ var e=document.getElementById(id); if(e) e.value=''; });
         document.getElementById('pei-date').value = '';
+        document.getElementById('pei-type').selectedIndex = 0;
       } else {
         submitBtn.disabled = false; submitBtn.textContent = 'Submit Inquiry';
         statusEl.textContent = 'Something went wrong — please call (573) 785-5253.';
@@ -4273,6 +4342,16 @@ function submitRegForm(e) {
   btn.textContent = 'Registering…';
   btn.disabled = true;
 
+  var regNotes = document.getElementById('reg-notes').value.trim();
+  // Capacity is advertised on the modal ("FULL — join waitlist") but there's
+  // no separate event-waitlist system — tag overflow signups in Notes so
+  // staff actually see them instead of the cap being purely decorative.
+  var isOverCapacity = currentRegEvent && currentRegEvent.capacity &&
+    WHCC_SYNC.getCount(currentRegEvent.title) >= currentRegEvent.capacity;
+  if (isOverCapacity) {
+    regNotes = '[WAITLIST — event was full at signup] ' + regNotes;
+  }
+
   var reg = {
     event: currentRegEvent ? currentRegEvent.title : '',
     eventMeta: currentRegEvent ? currentRegEvent.meta : '',
@@ -4284,16 +4363,17 @@ function submitRegForm(e) {
     players: document.getElementById('reg-players').value,
     memberNum: document.getElementById('reg-membernum').value.trim(),
     ghin: document.getElementById('reg-ghin') ? document.getElementById('reg-ghin').value.trim() : '',
-    notes: document.getElementById('reg-notes').value.trim(),
+    notes: regNotes,
     timestamp: new Date().toISOString(),
     source: 'website'
   };
 
-  // HCP validation
+  // HCP validation — GHIN indexes for plus-handicap (better-than-scratch)
+  // golfers are negative (e.g. "-2.3"), so the floor isn't 0.
   if (reg.ghin !== '') {
     var hcp = parseFloat(reg.ghin);
-    if (isNaN(hcp) || hcp < 0 || hcp > 54) {
-      errEl.textContent = 'Handicap Index must be between 0.0 and 54.0 (e.g. 8.4). Please check your entry.';
+    if (isNaN(hcp) || hcp < -10 || hcp > 54) {
+      errEl.textContent = 'Handicap Index must be between -10.0 and 54.0 (e.g. 8.4, or -2.3 for a plus handicap). Please check your entry.';
       errEl.style.display = 'block';
       btn.textContent = 'Complete Registration';
       btn.disabled = false;
@@ -4347,8 +4427,9 @@ function submitRegForm(e) {
   btn.disabled = false;
   document.getElementById('reg-form-wrap').style.display = 'none';
   document.getElementById('reg-success').style.display = 'block';
-  document.getElementById('reg-success-body').textContent =
-    'You\'re signed up for ' + reg.event + '. The Pro Shop will confirm your registration within 24 hours at ' + (reg.email || reg.phone || 'the contact provided') + '.';
+  document.getElementById('reg-success-body').textContent = isOverCapacity
+    ? 'This event is full, so you\'ve been added to the waitlist for ' + reg.event + '. The Pro Shop will reach out at ' + (reg.email || reg.phone || 'the contact provided') + ' if a spot opens up.'
+    : 'You\'re signed up for ' + reg.event + '. The Pro Shop will confirm your registration within 24 hours at ' + (reg.email || reg.phone || 'the contact provided') + '.';
 }
 
 function saveRegLocal(reg) {
@@ -4358,13 +4439,6 @@ function saveRegLocal(reg) {
     all.push(reg);
     localStorage.setItem('wh_registrations', JSON.stringify(all));
   } catch(e) {}
-}
-
-function getRegsForEvent(eventTitle) {
-  try {
-    var all = JSON.parse(localStorage.getItem('wh_registrations') || '[]');
-    return all.filter(function(r){ return r.event === eventTitle; });
-  } catch(e) { return []; }
 }
 
 function getAllRegs() {
@@ -4409,17 +4483,23 @@ var _pageUrlMap = {
 };
 
 function navigate(page, skipPushState) {
-  // Hide all pages
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   // Show target
   const target = document.getElementById('page-' + page);
   if (!target) return;
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   target.classList.add('active');
   target.classList.remove('page-enter');
   void target.offsetWidth; // reflow
   target.classList.add('page-enter');
   // Scroll to top
   window.scrollTo({ top: 0, behavior: 'instant' });
+  // Move focus to the new page so keyboard/screen-reader users know it changed
+  var pageHeading = target.querySelector('h1');
+  if (pageHeading) {
+    pageHeading.setAttribute('tabindex', '-1');
+    pageHeading.focus({ preventScroll: true });
+  }
   // Toggle staff mode on nav (hides public links, shows ← Back)
   var nav = document.getElementById('main-nav');
   if (nav) nav.classList.toggle('staff-mode', page === 'staff');
@@ -4432,6 +4512,8 @@ function navigate(page, skipPushState) {
   });
   // Close mobile nav
   document.getElementById('mobile-nav').classList.remove('open');
+  var hamburgerBtn = document.querySelector('.nav-hamburger');
+  if (hamburgerBtn) { hamburgerBtn.setAttribute('aria-expanded', 'false'); hamburgerBtn.setAttribute('aria-label', 'Open menu'); }
   // Archive past events when showing events page
   if (page === 'events') setTimeout(archiveEventCards, 50);
   // Update download links on golf page
@@ -4454,6 +4536,8 @@ function navigate(page, skipPushState) {
     if (_ogDesc) _ogDesc.setAttribute('content', _m.desc);
     var _ogUrl = document.querySelector('meta[property="og:url"]');
     if (_ogUrl) _ogUrl.setAttribute('content', 'https://skilltyb.github.io' + (_pageUrlMap[page] || _basePath + '/'));
+    var _canonical = document.querySelector('link[rel="canonical"]');
+    if (_canonical) _canonical.setAttribute('href', 'https://skilltyb.github.io' + (_pageUrlMap[page] || _basePath + '/'));
   }
 }
 
@@ -4505,7 +4589,13 @@ function _urlToPage(path) {
 
 // ── MOBILE NAV ──────────────────────────────────
 function toggleMobileNav() {
-  document.getElementById('mobile-nav').classList.toggle('open');
+  var nav = document.getElementById('mobile-nav');
+  var isOpen = nav.classList.toggle('open');
+  var btn = document.querySelector('.nav-hamburger');
+  if (btn) {
+    btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    btn.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+  }
 }
 
 // ── NAV SCROLL ──────────────────────────────────
@@ -4527,23 +4617,17 @@ function currentPage() {
 }
 initFades();
 
-// ── MENU TABS ───────────────────────────────────
-function switchMenuTab(btn, panelId) {
-  btn.closest('.section').querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
-  btn.closest('.section').querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById(panelId).classList.add('active');
-}
-
 // ── EVENT FILTER ────────────────────────────────
 document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', function() {
     this.closest('.filter-bar').querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     this.classList.add('active');
     const filter = this.textContent.trim().toLowerCase();
+    let visibleCount = 0;
     document.querySelectorAll('#page-events .ev-card').forEach(card => {
       if (filter === 'all events') {
         card.style.display = '';
+        visibleCount++;
         return;
       }
       const typeEl = card.querySelector('.ev-type');
@@ -4551,13 +4635,25 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
       // "tournaments" filter matches "tournament" type
       const match = type === filter || (filter === 'tournaments' && type === 'tournament');
       card.style.display = match ? '' : 'none';
-    });  });
+      if (match) visibleCount++;
+    });
+    const emptyState = document.getElementById('ev-empty-state');
+    if (emptyState) emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+  });
 });
 
 // ── FAQ TOGGLE ─────────────────────────────────
 function toggleFaq(el) {
   const item = el.closest('.faq-item');
-  item.classList.toggle('open');
+  const isOpen = item.classList.toggle('open');
+  el.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+}
+
+function faqKeydown(evt, el) {
+  if (evt.key === 'Enter' || evt.key === ' ') {
+    evt.preventDefault();
+    toggleFaq(el);
+  }
 }
 
 // ── HOOVER'S RESERVATION DATE PICKER ───────────
@@ -4596,7 +4692,7 @@ function selectVenue(venue, btn) {
   // For Westwood Grill, unlock date immediately (members only)
   if (venue === 'grille') {
     document.getElementById('res-date-display').classList.remove('disabled');
-    document.getElementById('res-date-hint').textContent = 'The Westwood Grill is open daily for lunch and dinner.';
+    document.getElementById('res-date-hint').textContent = 'The Westwood Grill is open Tuesday–Sunday for lunch and dinner.';
     var now = new Date(); calMonth = now.getMonth(); calYear = now.getFullYear(); renderCal();
   } else {
     onMemberChange();
@@ -4616,7 +4712,7 @@ function onMemberChange() {
 
   if (venue === 'grille') {
     display.classList.remove('disabled');
-    hint.textContent = 'The Westwood Grill is open daily for lunch and dinner.';
+    hint.textContent = 'The Westwood Grill is open Tuesday–Sunday for lunch and dinner.';
     var now = new Date(); calMonth = now.getMonth(); calYear = now.getFullYear(); renderCal();
     return;
   }
@@ -4769,7 +4865,10 @@ document.addEventListener('click', function(e) {
 // ── RESERVATION SUBMISSION ─────────────────────
 async function submitReservation() {
   const errorEl = document.getElementById('res-error');
+  const submitBtn = document.getElementById('res-submit-btn');
   errorEl.textContent = '';
+
+  if (submitBtn.disabled) return; // guard against double-click/double-submit
 
   // Gather values
   const venue = document.getElementById('res-venue').value;
@@ -4790,6 +4889,9 @@ async function submitReservation() {
   if (!dateVal) { errorEl.textContent = 'Please select a date.'; return; }
   if (!time) { errorEl.textContent = 'Please select a time.'; return; }
   if (!partySize) { errorEl.textContent = 'Please select your party size.'; return; }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting…';
 
   // Build reservation object (matches dashboard format)
   const reservation = {
@@ -4829,6 +4931,8 @@ async function submitReservation() {
     });
     if (isDup) {
       errorEl.textContent = 'A reservation already exists for this contact on the selected date. Please call us if you need to make changes.';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Request Reservation';
       return;
     }
 
@@ -4910,6 +5014,10 @@ function resetResForm() {
 
   document.getElementById('res-form-fields').style.display = 'block';
   document.getElementById('res-confirmation').style.display = 'none';
+
+  var submitBtn = document.getElementById('res-submit-btn');
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'Request Reservation';
 }
 
 // ════════════════════════════════════════════════════
@@ -5112,7 +5220,7 @@ function menuLoad(){
   }
   catch(e){return JSON.parse(JSON.stringify(WH_MENU_DEFAULTS));}
 }
-function menuSave(data){data._version=WH_MENU_VERSION;localStorage.setItem('wh_menus',JSON.stringify(data));menuRenderAll(data);WHCC_SYNC.saveMenus(data,function(){});}
+function menuSave(data){data._version=WH_MENU_VERSION;localStorage.setItem('wh_menus',JSON.stringify(data));menuRenderAll(data);WHCC_SYNC.saveMenus(data,function(r,err){if(err&&typeof staffToast==='function')staffToast('Saved locally — could not reach server.','error');});}
 function menuFetch(){WHCC_SYNC.fetchMenus(function(remote,err){if(!remote||err||typeof remote!=='object')return;remote._version=WH_MENU_VERSION;localStorage.setItem('wh_menus',JSON.stringify(remote));menuRenderAll(remote);smRenderEditorLists(remote);});}
 function menuEsc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
@@ -5155,21 +5263,22 @@ function menuRenderSpecials(data){
   var fnEl=document.getElementById('dining-friday-special');
   var ws=data.weeklySpecial||{};
   var fn=data.fridayNight||{};
-  function fillSpecial(el,spec){
+  function fillSpecial(el,spec,requireDay){
     if(!el) return;
-    if(spec.active&&spec.name){
+    var dayOk = requireDay === undefined || new Date().getDay() === requireDay;
+    if(spec.active&&spec.name&&dayOk){
       el.querySelector('.sf-name').textContent=spec.name;
       el.querySelector('.sf-desc').textContent=spec.desc||'';
       el.querySelector('.sf-price').textContent=spec.price||'';
       var wEl=el.querySelector('.sf-wine');
       if(wEl){wEl.textContent=spec.wine?'Pairs with '+spec.wine:'';wEl.style.display=spec.wine?'':'none';}
       var iEl=el.querySelector('.sf-img');
-      if(iEl){if(spec.image){iEl.src=spec.image;iEl.style.display='block';}else{iEl.src='';iEl.style.display='none';}}
+      if(iEl){if(spec.image){iEl.src=spec.image;iEl.alt=spec.name;iEl.style.display='block';}else{iEl.src='';iEl.alt='';iEl.style.display='none';}}
       el.style.display='block';
     } else el.style.display='none';
   }
   fillSpecial(wsEl,ws);
-  fillSpecial(fnEl,fn);
+  fillSpecial(fnEl,fn,5); // 5 = Friday — auto-hides if staff forgets to toggle it off after Friday
 }
 function menuRenderAll(data){
   data=data||menuLoad();
@@ -5275,7 +5384,7 @@ function smSaveSpecials(){
     fetch(WHCC_SCRIPT_URL, { method:'POST', headers:{'Content-Type':'text/plain'},
       body: JSON.stringify({ action:'upload-photo', base64: imgData.split(',')[1],
         mimeType: imgData.split(';')[0].split(':')[1] || 'image/jpeg',
-        filename: 'special-weekly-' + Date.now() + '.jpg', category: 'Dining' })
+        filename: 'special-weekly-' + Date.now() + '.jpg', category: 'Dining', staffPin: _staffSessionPin })
     }).then(function(r){ return r.json(); }).then(function(d) {
       var url = (d && d.ok) ? d.url : imgData;
       if (d && d.ok) document.getElementById('sm-ws-img-data').value = url;
@@ -5302,7 +5411,7 @@ function smSaveFriday(){
     fetch(WHCC_SCRIPT_URL, { method:'POST', headers:{'Content-Type':'text/plain'},
       body: JSON.stringify({ action:'upload-photo', base64: imgData.split(',')[1],
         mimeType: imgData.split(';')[0].split(':')[1] || 'image/jpeg',
-        filename: 'special-friday-' + Date.now() + '.jpg', category: 'Dining' })
+        filename: 'special-friday-' + Date.now() + '.jpg', category: 'Dining', staffPin: _staffSessionPin })
     }).then(function(r){ return r.json(); }).then(function(d) {
       var url = (d && d.ok) ? d.url : imgData;
       if (d && d.ok) document.getElementById('sm-fn-img-data').value = url;
@@ -5344,10 +5453,10 @@ function smRenderItemList(cid,items,key,hasPrice,hasWine){
   });
   // Add-item form (hidden)
   html+='<div id="smi-add-'+cid+'" style="display:none;background:rgba(255,255,255,.04);border:1px solid rgba(184,151,106,.2);padding:12px;margin-bottom:4px;">';
-  html+='<div class="hrf-group" style="width:100%;margin-bottom:8px;"><label class="hrf-label">Name</label><input class="hrf-input" id="smi-aname-'+cid+'" /></div>';
-  html+='<div class="hrf-group" style="width:100%;margin-bottom:8px;"><label class="hrf-label">Description</label><input class="hrf-input" id="smi-adesc-'+cid+'" /></div>';
-  if(hasWine) html+='<div class="hrf-group" style="width:100%;margin-bottom:8px;"><label class="hrf-label">Wine Pairing</label><input class="hrf-input" id="smi-awine-'+cid+'" /></div>';
-  if(hasPrice) html+='<div class="hrf-group" style="width:100%;margin-bottom:8px;"><label class="hrf-label">Price</label><input class="hrf-input" id="smi-aprice-'+cid+'" placeholder="e.g. $18" /></div>';
+  html+='<div class="hrf-group" style="width:100%;margin-bottom:8px;"><label class="hrf-label" for="smi-aname-'+cid+'">Name</label><input class="hrf-input" id="smi-aname-'+cid+'" /></div>';
+  html+='<div class="hrf-group" style="width:100%;margin-bottom:8px;"><label class="hrf-label" for="smi-adesc-'+cid+'">Description</label><input class="hrf-input" id="smi-adesc-'+cid+'" /></div>';
+  if(hasWine) html+='<div class="hrf-group" style="width:100%;margin-bottom:8px;"><label class="hrf-label" for="smi-awine-'+cid+'">Wine Pairing</label><input class="hrf-input" id="smi-awine-'+cid+'" /></div>';
+  if(hasPrice) html+='<div class="hrf-group" style="width:100%;margin-bottom:8px;"><label class="hrf-label" for="smi-aprice-'+cid+'">Price</label><input class="hrf-input" id="smi-aprice-'+cid+'" placeholder="e.g. $18" /></div>';
   html+='<div style="display:flex;gap:8px;"><button class="btn-p" style="flex:1;padding:10px;" onclick="smAddSave(\''+cid+'\',\''+key+'\','+!!hasPrice+','+!!hasWine+')">Add Item</button>';
   html+='<button class="staff-cancel-btn" onclick="document.getElementById(\'smi-add-'+cid+'\').style.display=\'none\'">Cancel</button></div></div>';
   html+='<button class="staff-mini-btn" style="width:100%;margin-top:4px;" onclick="document.getElementById(\'smi-add-'+cid+'\').style.display=\'block\'">+ Add Item</button>';
@@ -5359,10 +5468,10 @@ function smEditOpen(cid,key,idx,hasPrice,hasWine){
   var item=arr[idx];
   var wrap=document.getElementById('smi-'+cid+'-'+idx);if(!wrap) return;
   var h='<div style="background:rgba(255,255,255,.05);border:1px solid rgba(184,151,106,.25);padding:12px;">';
-  h+='<div class="hrf-group" style="width:100%;margin-bottom:8px;"><label class="hrf-label">Name</label><input class="hrf-input" id="smie-name" value="'+menuEsc(item.name)+'" /></div>';
-  h+='<div class="hrf-group" style="width:100%;margin-bottom:8px;"><label class="hrf-label">Description</label><input class="hrf-input" id="smie-desc" value="'+menuEsc(item.desc||'')+'" /></div>';
-  if(hasWine) h+='<div class="hrf-group" style="width:100%;margin-bottom:8px;"><label class="hrf-label">Wine Pairing</label><input class="hrf-input" id="smie-wine" value="'+menuEsc(item.wine||'')+'" /></div>';
-  if(hasPrice) h+='<div class="hrf-group" style="width:100%;margin-bottom:8px;"><label class="hrf-label">Price</label><input class="hrf-input" id="smie-price" value="'+menuEsc(item.price||'')+'" /></div>';
+  h+='<div class="hrf-group" style="width:100%;margin-bottom:8px;"><label class="hrf-label" for="smie-name">Name</label><input class="hrf-input" id="smie-name" value="'+menuEsc(item.name)+'" /></div>';
+  h+='<div class="hrf-group" style="width:100%;margin-bottom:8px;"><label class="hrf-label" for="smie-desc">Description</label><input class="hrf-input" id="smie-desc" value="'+menuEsc(item.desc||'')+'" /></div>';
+  if(hasWine) h+='<div class="hrf-group" style="width:100%;margin-bottom:8px;"><label class="hrf-label" for="smie-wine">Wine Pairing</label><input class="hrf-input" id="smie-wine" value="'+menuEsc(item.wine||'')+'" /></div>';
+  if(hasPrice) h+='<div class="hrf-group" style="width:100%;margin-bottom:8px;"><label class="hrf-label" for="smie-price">Price</label><input class="hrf-input" id="smie-price" value="'+menuEsc(item.price||'')+'" /></div>';
   h+='<div style="display:flex;gap:8px;"><button class="btn-p" style="flex:1;padding:10px;" onclick="smEditSave(\''+cid+'\',\''+key+'\','+idx+','+!!hasPrice+','+!!hasWine+')">Save</button>';
   h+='<button class="staff-cancel-btn" onclick="smRenderEditorLists(menuLoad())">Cancel</button></div></div>';
   wrap.innerHTML=h;
@@ -5394,9 +5503,9 @@ function smAddSave(cid,key,hasPrice,hasWine){
 function smRenderSpecialtyForm(sp){
   var el=document.getElementById('smh-specialty-form');if(!el) return;
   sp=sp||{};
-  el.innerHTML='<div class="hrf-group" style="width:100%;margin-bottom:8px;"><label class="hrf-label">Dish Name</label><input class="hrf-input" id="smsp-name" value="'+menuEsc(sp.name||'')+'" /></div>'+
-    '<div class="hrf-group" style="width:100%;margin-bottom:8px;"><label class="hrf-label">Description</label><textarea class="hrf-textarea" id="smsp-desc" rows="3">'+menuEsc(sp.desc||'')+'</textarea></div>'+
-    '<div class="hrf-group" style="width:100%;margin-bottom:12px;"><label class="hrf-label">Wine Pairing</label><input class="hrf-input" id="smsp-wine" value="'+menuEsc(sp.wine||'')+'" /></div>'+
+  el.innerHTML='<div class="hrf-group" style="width:100%;margin-bottom:8px;"><label class="hrf-label" for="smsp-name">Dish Name</label><input class="hrf-input" id="smsp-name" value="'+menuEsc(sp.name||'')+'" /></div>'+
+    '<div class="hrf-group" style="width:100%;margin-bottom:8px;"><label class="hrf-label" for="smsp-desc">Description</label><textarea class="hrf-textarea" id="smsp-desc" rows="3">'+menuEsc(sp.desc||'')+'</textarea></div>'+
+    '<div class="hrf-group" style="width:100%;margin-bottom:12px;"><label class="hrf-label" for="smsp-wine">Wine Pairing</label><input class="hrf-input" id="smsp-wine" value="'+menuEsc(sp.wine||'')+'" /></div>'+
     '<button class="btn-p" style="width:100%;" onclick="smSaveSpecialty()">Save House Specialty</button>'+
     '<div id="sm-sp-status" style="font-size:11px;color:#8fcc8f;margin-top:6px;display:none;"></div>';
 }
@@ -5488,14 +5597,14 @@ async function duAdminSave() {
     updatedAt: new Date().toISOString()
   };
   golfUpdateDownloadLinks(data);
-  try {
-    await window.storage.set('daily-update', JSON.stringify(data));
-    var status = document.getElementById('du-admin-status');
+  try { await window.storage.set('daily-update', JSON.stringify(data)); } catch(e) {}
+  var status = document.getElementById('du-admin-status');
+  WHCC_SYNC.saveConditions(data, function(r, err) {
+    if (!status) return;
     status.style.display = 'block';
-    status.textContent = '✓ Home page updated. Changes are live now.';
+    status.textContent = err ? '⚠ Saved locally — could not reach server.' : '✓ Home page updated. Changes are live now.';
     setTimeout(function() { status.style.display = 'none'; }, 4000);
-  } catch(e) {}
-  WHCC_SYNC.saveConditions(data, function() {});
+  });
 }
 
 function duPreset(type) {
@@ -6058,15 +6167,15 @@ function renderStaffRegs() {
       // Player 1 (registrant)
       html += '<div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);">';
       html += '<div style="width:20px;height:20px;border-radius:50%;background:rgba(184,151,106,.2);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:#d4b483;font-weight:700;flex-shrink:0;">1</div>';
-      html += '<div><div style="font-size:.82rem;font-weight:600;color:#f5f0e8;">' + (r.firstName||'') + ' ' + (r.lastName||'') + '</div>';
-      html += '<div style="font-size:.7rem;color:rgba(245,240,232,.45);">' + (r.email||'') + (r.phone?' · '+r.phone:'') + (r.memberNum?' · #'+r.memberNum:'') + '</div></div></div>';
+      html += '<div><div style="font-size:.82rem;font-weight:600;color:#f5f0e8;">' + pairEsc(r.firstName||'') + ' ' + pairEsc(r.lastName||'') + '</div>';
+      html += '<div style="font-size:.7rem;color:rgba(245,240,232,.45);">' + pairEsc(r.email||'') + (r.phone?' · '+pairEsc(r.phone):'') + (r.memberNum?' · #'+pairEsc(r.memberNum):'') + '</div></div></div>';
       // Partners
       if (r.partner) {
         var partners = r.partner.split(/[,;&\/]+/).map(function(p){return p.trim();}).filter(Boolean);
         partners.forEach(function(p, pi) {
           html += '<div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);">';
           html += '<div style="width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:rgba(245,240,232,.5);font-weight:700;flex-shrink:0;">' + (pi+2) + '</div>';
-          html += '<div style="font-size:.82rem;color:rgba(245,240,232,.7);">' + p + '</div></div>';
+          html += '<div style="font-size:.82rem;color:rgba(245,240,232,.7);">' + pairEsc(p) + '</div></div>';
         });
         // Fill remaining slots
         var totalFilled = 1 + partners.length;
@@ -6082,7 +6191,7 @@ function renderStaffRegs() {
           html += '<div style="font-size:.75rem;color:rgba(245,240,232,.2);font-style:italic;">Open slot</div></div>';
         }
       }
-      if (r.notes) html += '<div style="font-size:.72rem;color:rgba(245,240,232,.4);margin-top:6px;font-style:italic;">📝 ' + r.notes + '</div>';
+      if (r.notes) html += '<div style="font-size:.72rem;color:rgba(245,240,232,.4);margin-top:6px;font-style:italic;">📝 ' + pairEsc(r.notes) + '</div>';
       html += '</div>';
     });
     list.innerHTML = html;
@@ -6097,7 +6206,7 @@ function renderStaffRegs() {
         var evRegs = byEvent[ev];
         var evInfo = getEventInfo ? getEventInfo(ev) : {capacity:72};
         html2 += '<div style="margin-bottom:20px;">';
-        html2 += '<div style="font-size:.78rem;font-weight:700;color:#d4b483;letter-spacing:.08em;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid rgba(184,151,106,.2);">' + ev + ' <span style="font-weight:400;color:rgba(245,240,232,.35);">(' + evRegs.length + '/' + evInfo.capacity + ')</span></div>';
+        html2 += '<div style="font-size:.78rem;font-weight:700;color:#d4b483;letter-spacing:.08em;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid rgba(184,151,106,.2);">' + pairEsc(ev) + ' <span style="font-weight:400;color:rgba(245,240,232,.35);">(' + evRegs.length + '/' + evInfo.capacity + ')</span></div>';
         evRegs.forEach(function(r, i) {
           html2 += renderRegRow(r, i+1, false);
         });
@@ -6117,10 +6226,10 @@ function renderRegRow(r, num, showDelete) {
     + '<div style="display:flex;align-items:center;gap:8px;">'
     + '<div style="font-size:.7rem;color:rgba(184,151,106,.6);font-weight:700;min-width:18px;">' + num + '</div>'
     + '<div>'
-    + '<div style="font-size:.84rem;font-weight:700;color:#f5f0e8;">' + (r.firstName||'') + ' ' + (r.lastName||'') + ghinBadge(r) + '</div>'
-    + '<div style="font-size:.72rem;color:rgba(245,240,232,.5);margin-top:1px;">' + (r.email||'') + (r.phone?' · '+r.phone:'') + (r.memberNum?' · Member #'+r.memberNum:'') + (r.ghin?' · HCP '+r.ghin:'') + '</div>'
-    + (r.partner?'<div style="font-size:.72rem;color:rgba(184,151,106,.7);margin-top:2px;">Partner: '+r.partner+'</div>':'')
-    + (r.notes?'<div style="font-size:.7rem;color:rgba(245,240,232,.4);font-style:italic;margin-top:2px;">'+r.notes+'</div>':'')
+    + '<div style="font-size:.84rem;font-weight:700;color:#f5f0e8;">' + pairEsc((r.firstName||'') + ' ' + (r.lastName||'')) + ghinBadge(r) + '</div>'
+    + '<div style="font-size:.72rem;color:rgba(245,240,232,.5);margin-top:1px;">' + pairEsc((r.email||'') + (r.phone?' · '+r.phone:'') + (r.memberNum?' · Member #'+r.memberNum:'') + (r.ghin?' · HCP '+r.ghin:'')) + '</div>'
+    + (r.partner?'<div style="font-size:.72rem;color:rgba(184,151,106,.7);margin-top:2px;">Partner: '+pairEsc(r.partner)+'</div>':'')
+    + (r.notes?'<div style="font-size:.7rem;color:rgba(245,240,232,.4);font-style:italic;margin-top:2px;">'+pairEsc(r.notes)+'</div>':'')
     + '</div></div>'
     + '<div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">'
     + '<div style="font-size:.65rem;color:rgba(245,240,232,.3);">' + d + '</div>'
@@ -6155,24 +6264,6 @@ function regExportCSV() {
   a.click();
 }
 
-function regPrintList() {
-  var filter = currentRegFilter || '';
-  var regs = getAllRegs().filter(function(r){ return !filter || r.event === filter; });
-  if (!regs.length) { alert('No registrations to print.'); return; }
-  var html = '<html><head><title>Registration List</title><style>body{font-family:Arial,sans-serif;font-size:12px;color:#111}h1{font-size:16px;margin-bottom:4px}h2{font-size:13px;color:#555;font-weight:normal;margin-bottom:16px}table{width:100%;border-collapse:collapse}th{background:#1a2b1f;color:#f5f0e8;padding:6px 10px;text-align:left;font-size:11px}td{padding:5px 10px;border-bottom:1px solid #e8e0d0}tr:nth-child(even){background:#f9f6f0}.footer{margin-top:20px;font-size:10px;color:#999}</style></head><body>';
-  html += '<h1>Westwood Hills Country Club — Event Registration List</h1>';
-  html += '<h2>' + (filter || 'All Events') + ' · Printed ' + new Date().toLocaleDateString() + '</h2>';
-  html += '<table><thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Event</th><th>Partner</th><th>Players</th><th>Member #</th><th>Notes</th></tr></thead><tbody>';
-  regs.forEach(function(r,i){
-    html += '<tr><td>'+(i+1)+'</td><td>'+(r.firstName||'')+' '+(r.lastName||'')+'</td><td>'+(r.email||'')+'</td><td>'+(r.phone||'')+'</td><td>'+(r.event||'')+'</td><td>'+(r.partner||'')+'</td><td>'+(r.players||'')+'</td><td>'+(r.memberNum||'')+'</td><td>'+(r.notes||'')+'</td></tr>';
-  });
-  html += '</tbody></table><div class="footer">Westwood Hills CC · (573) 785-8211 · Generated ' + new Date().toISOString() + '</div></body></html>';
-  var w = window.open('','_blank');
-  w.document.write(html);
-  w.document.close();
-  w.print();
-}
-
 function regPrintSignupSheet() {
   var filter = currentRegFilter || '';
   var regs = getAllRegs().filter(function(r){ return !filter || r.event === filter; });
@@ -6197,7 +6288,7 @@ function regPrintSignupSheet() {
 
   // Header
   html += '<div style="display:flex;align-items:flex-start;justify-content:space-between;">';
-  html += '<div><h1>' + (filter||'All Events') + '</h1>';
+  html += '<div><h1>' + pairEsc(filter||'All Events') + '</h1>';
   html += '<div class="sub">' + (info.fee||'') + ' · Capacity: ' + info.capacity + ' · ' + regs.length + ' registered · Printed ' + new Date().toLocaleDateString() + '</div></div>';
   html += '<div style="font-size:10px;color:#999;">Westwood Hills CC</div></div>';
 
@@ -6208,11 +6299,11 @@ function regPrintSignupSheet() {
     regs.forEach(function(r,i){
       html += '<tr style="border-bottom:1px solid #eee;' + (i%2===0?'':'background:#fafaf8;') + '">';
       html += '<td style="padding:5px 10px;color:#999;">' + (i+1) + '</td>';
-      html += '<td style="padding:5px 10px;font-weight:bold;">' + (r.firstName||'') + ' ' + (r.lastName||'') + '</td>';
-      html += '<td style="padding:5px 10px;">' + (r.email||'') + '</td>';
-      html += '<td style="padding:5px 10px;">' + (r.phone||'') + '</td>';
-      html += '<td style="padding:5px 10px;">' + (r.memberNum||'') + '</td>';
-      html += '<td style="padding:5px 10px;font-style:italic;color:#666;">' + (r.notes||'') + '</td></tr>';
+      html += '<td style="padding:5px 10px;font-weight:bold;">' + pairEsc((r.firstName||'') + ' ' + (r.lastName||'')) + '</td>';
+      html += '<td style="padding:5px 10px;">' + pairEsc(r.email||'') + '</td>';
+      html += '<td style="padding:5px 10px;">' + pairEsc(r.phone||'') + '</td>';
+      html += '<td style="padding:5px 10px;">' + pairEsc(r.memberNum||'') + '</td>';
+      html += '<td style="padding:5px 10px;font-style:italic;color:#666;">' + pairEsc(r.notes||'') + '</td></tr>';
     });
     // Add empty rows to fill up to capacity (max 20 blank rows)
     var blanks = Math.min(20, info.capacity - regs.length);
@@ -6227,19 +6318,19 @@ function regPrintSignupSheet() {
     var groupLabel = evType === 'twosome' ? 'TEAM' : 'GROUP';
     regs.forEach(function(r, gi) {
       var partners = r.partner ? r.partner.split(/[,;&\/]+/).map(function(p){return p.trim();}).filter(Boolean) : [];
-      html += '<div class="group"><div class="group-header"><span>' + groupLabel + ' ' + (gi+1) + '</span><span>' + (r.event||'') + '</span></div>';
+      html += '<div class="group"><div class="group-header"><span>' + groupLabel + ' ' + (gi+1) + '</span><span>' + pairEsc(r.event||'') + '</span></div>';
       // Player 1
-      html += '<div class="player-row"><div class="num">1</div><div class="name">' + (r.firstName||'') + ' ' + (r.lastName||'') + '</div><div class="detail">' + (r.email||'') + (r.phone?' · '+r.phone:'') + (r.memberNum?' · #'+r.memberNum:'') + '</div></div>';
+      html += '<div class="player-row"><div class="num">1</div><div class="name">' + pairEsc((r.firstName||'') + ' ' + (r.lastName||'')) + '</div><div class="detail">' + pairEsc((r.email||'') + (r.phone?' · '+r.phone:'') + (r.memberNum?' · #'+r.memberNum:'')) + '</div></div>';
       // Partners
       partners.forEach(function(p, pi) {
-        html += '<div class="player-row"><div class="num">' + (pi+2) + '</div><div class="name">' + p + '</div><div class="detail"></div></div>';
+        html += '<div class="player-row"><div class="num">' + (pi+2) + '</div><div class="name">' + pairEsc(p) + '</div><div class="detail"></div></div>';
       });
       // Open slots
       var filled = 1 + partners.length;
       for (var s = filled; s < groupSize; s++) {
         html += '<div class="player-row" style="background:#fafaf8;"><div class="num" style="border-color:#ddd;color:#ccc;">' + (s+1) + '</div><div class="empty">Open slot</div></div>';
       }
-      if (r.notes) html += '<div style="padding:4px 12px 8px;font-size:11px;color:#888;font-style:italic;">📝 ' + r.notes + '</div>';
+      if (r.notes) html += '<div style="padding:4px 12px 8px;font-size:11px;color:#888;font-style:italic;">📝 ' + pairEsc(r.notes) + '</div>';
       html += '</div>';
     });
     // Add empty groups to fill remaining capacity
@@ -6371,20 +6462,20 @@ function staffResCard(r, idx, showDate) {
   const guestKey = (r.firstName + ' ' + r.lastName).toLowerCase().trim();
   const guestNote = staffGuestNotes[guestKey];
   var html = '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;"><div>';
-  html += '<div class="staff-res-name">' + r.firstName + ' ' + r.lastName;
+  html += '<div class="staff-res-name">' + pairEsc(r.firstName) + ' ' + pairEsc(r.lastName);
   if (r.member === 'nonmember') html += '<span class="staff-res-guest-tag">Guest</span>';
   if (guestNote) html += '<span class="staff-res-guest-tag" style="background:rgba(184,151,106,.15);border-color:rgba(184,151,106,.3);">📋</span>';
   html += '</div>';
-  if (showDate) html += '<div class="staff-res-meta" style="color:#b8976a;">' + staffFormatDate(showDate) + ' &middot; ' + r.time + '</div>';
-  html += '<div class="staff-res-meta">Party of ' + r.partySize + (r.phone ? ' &middot; ' + r.phone : '') + '</div>';
-  if (r.notes) html += '<div class="staff-res-notes">&ldquo;' + r.notes + '&rdquo;</div>';
-  if (guestNote) html += '<div class="staff-res-notes" style="color:#d4b483;">📋 ' + guestNote.notes + (guestNote.table ? ' &middot; ' + guestNote.table : '') + '</div>';
+  if (showDate) html += '<div class="staff-res-meta" style="color:#b8976a;">' + staffFormatDate(showDate) + ' &middot; ' + pairEsc(r.time) + '</div>';
+  html += '<div class="staff-res-meta">Party of ' + pairEsc(r.partySize) + (r.phone ? ' &middot; ' + pairEsc(r.phone) : '') + '</div>';
+  if (r.notes) html += '<div class="staff-res-notes">&ldquo;' + pairEsc(r.notes) + '&rdquo;</div>';
+  if (guestNote) html += '<div class="staff-res-notes" style="color:#d4b483;">📋 ' + pairEsc(guestNote.notes) + (guestNote.table ? ' &middot; ' + pairEsc(guestNote.table) : '') + '</div>';
   html += '</div><span class="staff-res-status" style="background:' + st.bg + ';color:' + st.color + ';">' + st.label + '</span></div>';
   html += '<div class="staff-res-actions">';
   if (r.status === 'pending') html += '<button class="staff-mini-btn accent" data-action="confirm" data-idx="' + idx + '">Confirm</button>';
   if (r.status === 'confirmed') html += '<button class="staff-mini-btn" data-action="pending" data-idx="' + idx + '">Pending</button>';
   html += '<button class="staff-mini-btn" data-action="edit" data-idx="' + idx + '">Edit</button>';
-  if (r.email) html += '<button class="staff-mini-btn" data-action="email" data-idx="' + idx + '" title="Email ' + r.firstName + '">✉</button>';
+  if (r.email) html += '<button class="staff-mini-btn" data-action="email" data-idx="' + idx + '" title="Email ' + pairEsc(r.firstName) + '">✉</button>';
   if (r.status !== 'cancelled') html += '<button class="staff-mini-btn danger" data-action="cancel" data-idx="' + idx + '">Cancel</button>';
   if (r.status === 'cancelled') html += '<button class="staff-mini-btn danger" data-action="delete" data-idx="' + idx + '">Delete</button>';
   html += '</div>';
@@ -6472,7 +6563,7 @@ function staffCheckGuestNote() {
   var el = document.getElementById('sf-guest-note');
   if (note && key.length > 2) {
     el.style.display = 'block';
-    el.innerHTML = '<strong>' + (note.firstName || '') + ' ' + (note.lastName || '') + '</strong>: ' + note.notes + (note.table ? '<br>Preferred table: ' + note.table : '') + (note.tags ? '<br>Tags: ' + note.tags : '');
+    el.innerHTML = '<strong>' + pairEsc(note.firstName || '') + ' ' + pairEsc(note.lastName || '') + '</strong>: ' + pairEsc(note.notes) + (note.table ? '<br>Preferred table: ' + pairEsc(note.table) : '') + (note.tags ? '<br>Tags: ' + pairEsc(note.tags) : '');
   } else { el.style.display = 'none'; }
 }
 
@@ -6530,7 +6621,7 @@ function staffRenderWaitlist() {
   if (wl.length === 0 && isFull) { list.innerHTML = '<div style="color:rgba(245,240,232,.3);font-size:11px;font-style:italic;">No one on waitlist yet.</div>'; return; }
   wl.forEach(function(w, i) {
     var card = document.createElement('div'); card.className = 'staff-wl-card';
-    card.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;"><div><div class="staff-wl-name">' + w.name + '</div><div class="staff-wl-meta">Party of ' + w.partySize + (w.time ? ' &middot; Pref: ' + w.time : ' &middot; Any time') + (w.phone ? ' &middot; ' + w.phone : '') + '</div></div><div style="display:flex;gap:4px;"><button class="staff-mini-btn accent" data-wl="promote" data-wi="' + i + '">Seat</button><button class="staff-mini-btn danger" data-wl="remove" data-wi="' + i + '">Remove</button></div></div>';
+    card.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;"><div><div class="staff-wl-name">' + pairEsc(w.name) + '</div><div class="staff-wl-meta">Party of ' + pairEsc(w.partySize) + (w.time ? ' &middot; Pref: ' + pairEsc(w.time) : ' &middot; Any time') + (w.phone ? ' &middot; ' + pairEsc(w.phone) : '') + '</div></div><div style="display:flex;gap:4px;"><button class="staff-mini-btn accent" data-wl="promote" data-wi="' + i + '">Seat</button><button class="staff-mini-btn danger" data-wl="remove" data-wi="' + i + '">Remove</button></div></div>';
     card.querySelectorAll('.staff-mini-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
         var wi = parseInt(this.getAttribute('data-wi'));
@@ -6601,12 +6692,12 @@ function guestRenderList(filter) {
     var key = pair[0], g = pair[1];
     var card = document.createElement('div'); card.className = 'staff-guest-card';
     var html = '<div style="display:flex;justify-content:space-between;align-items:flex-start;"><div>';
-    html += '<div class="staff-guest-name">' + (g.firstName || '') + ' ' + (g.lastName || '') + '</div>';
-    html += '<div class="staff-guest-note-text">' + g.notes + '</div>';
-    if (g.table) html += '<div class="staff-guest-note-text" style="color:#b8976a;">Preferred table: ' + g.table + '</div>';
+    html += '<div class="staff-guest-name">' + pairEsc(g.firstName || '') + ' ' + pairEsc(g.lastName || '') + '</div>';
+    html += '<div class="staff-guest-note-text">' + pairEsc(g.notes) + '</div>';
+    if (g.table) html += '<div class="staff-guest-note-text" style="color:#b8976a;">Preferred table: ' + pairEsc(g.table) + '</div>';
     if (g.tags) {
       html += '<div class="staff-guest-tags">';
-      g.tags.split(',').forEach(function(t) { t = t.trim(); if (t) html += '<span class="staff-guest-tag-pill' + (t.toLowerCase() === 'vip' ? ' vip' : '') + '">' + t + '</span>'; });
+      g.tags.split(',').forEach(function(t) { t = t.trim(); if (t) html += '<span class="staff-guest-tag-pill' + (t.toLowerCase() === 'vip' ? ' vip' : '') + '">' + pairEsc(t) + '</span>'; });
       html += '</div>';
     }
     html += '</div><div style="display:flex;gap:4px;"><button class="staff-mini-btn" data-gaction="edit" data-gkey="' + key + '">Edit</button><button class="staff-mini-btn danger" data-gaction="delete" data-gkey="' + key + '">Delete</button></div></div>';
@@ -6681,12 +6772,12 @@ function staffPrintNight() {
     atTime.forEach(function(r) {
       var guestKey = (r.firstName + ' ' + r.lastName).toLowerCase().trim();
       var gn = staffGuestNotes[guestKey];
-      html += '<div class="print-row"><span class="pr-name">' + r.firstName + ' ' + r.lastName + (r.member === 'nonmember' ? ' (Guest)' : '') + '</span><span>Party of ' + r.partySize + ' &middot; ' + (r.status === 'confirmed' ? '&#10003; Confirmed' : 'Pending') + '</span></div>';
+      html += '<div class="print-row"><span class="pr-name">' + pairEsc(r.firstName) + ' ' + pairEsc(r.lastName) + (r.member === 'nonmember' ? ' (Guest)' : '') + '</span><span>Party of ' + pairEsc(r.partySize) + ' &middot; ' + (r.status === 'confirmed' ? '&#10003; Confirmed' : 'Pending') + '</span></div>';
       if (r.notes || gn) {
         html += '<div class="print-notes">';
-        if (r.notes) html += r.notes;
+        if (r.notes) html += pairEsc(r.notes);
         if (r.notes && gn) html += ' | ';
-        if (gn) html += '📋 ' + gn.notes + (gn.table ? ' &middot; ' + gn.table : '');
+        if (gn) html += '📋 ' + pairEsc(gn.notes) + (gn.table ? ' &middot; ' + pairEsc(gn.table) : '');
         html += '</div>';
       }
     });
@@ -6695,7 +6786,7 @@ function staffPrintNight() {
 
   if (wl.length > 0) {
     html += '<div class="print-section"><h3>Waitlist</h3>';
-    wl.forEach(function(w) { html += '<div class="print-row"><span class="pr-name">' + w.name + '</span><span>Party of ' + w.partySize + (w.time ? ' &middot; Pref: ' + w.time : '') + (w.phone ? ' &middot; ' + w.phone : '') + '</span></div>'; });
+    wl.forEach(function(w) { html += '<div class="print-row"><span class="pr-name">' + pairEsc(w.name) + '</span><span>Party of ' + pairEsc(w.partySize) + (w.time ? ' &middot; Pref: ' + pairEsc(w.time) : '') + (w.phone ? ' &middot; ' + pairEsc(w.phone) : '') + '</span></div>'; });
     html += '</div>';
   }
 
@@ -7042,6 +7133,10 @@ function lsRenderPreview() {
   prev.style.display = 'block';
 }
 
+function isGolfGeniusUrl(url) {
+  return /^https:\/\/([a-z0-9-]+\.)?golfgenius\.com\//i.test(url);
+}
+
 async function lsAdminSave() {
   lsConfig.active = document.getElementById('ls-admin-active').value === 'yes';
   lsConfig.eventName = document.getElementById('ls-admin-name').value.trim();
@@ -7054,22 +7149,35 @@ async function lsAdminSave() {
   };
   // Clean empty values
   Object.keys(lsConfig.pages).forEach(function(k) { if (!lsConfig.pages[k]) delete lsConfig.pages[k]; });
-  try {
-    await window.storage.set('live-scoring-config', JSON.stringify(lsConfig));
-    var status = document.getElementById('ls-admin-status');
+  // Reject anything that isn't a golfgenius.com URL — this gets embedded in an iframe on the public Golf page
+  var rejectedCount = 0;
+  Object.keys(lsConfig.pages).forEach(function(k) {
+    if (!isGolfGeniusUrl(lsConfig.pages[k])) { delete lsConfig.pages[k]; rejectedCount++; }
+  });
+  try { await window.storage.set('live-scoring-config', JSON.stringify(lsConfig)); } catch(e) {}
+  var status = document.getElementById('ls-admin-status');
+  var pageCount = Object.keys(lsConfig.pages).length;
+  WHCC_SYNC.saveLiveScoring(lsConfig, function(r, err) {
+    if (!status) return;
     status.style.display = 'block';
-    var pageCount = Object.keys(lsConfig.pages).length;
-    if (lsConfig.active && pageCount > 0) {
+    if (rejectedCount > 0) {
+      status.style.color = '#d4b483';
+      status.textContent = '⚠ ' + rejectedCount + ' URL' + (rejectedCount > 1 ? 's' : '') + ' ignored — must be a golfgenius.com link.';
+    } else if (err) {
+      status.style.color = '#d4b483';
+      status.textContent = '⚠ Saved locally — could not reach server.';
+    } else if (lsConfig.active && pageCount > 0) {
+      status.style.color = '#8fcc8f';
       status.textContent = '✓ Live — ' + pageCount + ' portal tab' + (pageCount > 1 ? 's' : '') + ' now visible on the Golf page.';
     } else if (lsConfig.active) {
       status.style.color = '#d4b483';
       status.textContent = '⚠ Tournament is active but no portal URLs entered. Add at least one URL above.';
     } else {
+      status.style.color = '#8fcc8f';
       status.textContent = '✓ Saved — tournament display is off.';
     }
     setTimeout(function() { status.style.display = 'none'; status.style.color = '#8fcc8f'; }, 5000);
-  } catch(e) {}
-  WHCC_SYNC.saveLiveScoring(lsConfig, function() {});
+  });
   lsRenderPreview();
 }
 
@@ -7083,7 +7191,7 @@ function lsAdminRenderPast() {
   lsConfig.pastResults.forEach(function(res, i) {
     var row = document.createElement('div');
     row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(184,151,106,.08);';
-    row.innerHTML = '<div style="font-size:12px;color:#f5f0e8;">' + res.name + ' <span style="color:rgba(245,240,232,.3);font-size:10px;">→ ' + res.url.substring(0, 40) + '...</span></div><button class="staff-mini-btn danger" data-ri="' + i + '">Remove</button>';
+    row.innerHTML = '<div style="font-size:12px;color:#f5f0e8;">' + pairEsc(res.name) + ' <span style="color:rgba(245,240,232,.3);font-size:10px;">→ ' + pairEsc(res.url.substring(0, 40)) + '...</span></div><button class="staff-mini-btn danger" data-ri="' + i + '">Remove</button>';
     row.querySelector('.staff-mini-btn').addEventListener('click', function() {
       lsConfig.pastResults.splice(parseInt(this.getAttribute('data-ri')), 1);
       lsAdminSavePast();
@@ -7096,6 +7204,7 @@ async function lsAdminAddPast() {
   var name = document.getElementById('ls-admin-past-name').value.trim();
   var url = document.getElementById('ls-admin-past-url').value.trim();
   if (!name || !url) return;
+  if (!/^https:\/\/[^\s]+\.[^\s]+/i.test(url)) { alert('Please enter a valid https:// link.'); return; }
   if (!lsConfig.pastResults) lsConfig.pastResults = [];
   lsConfig.pastResults.unshift({ name: name, url: url });
   document.getElementById('ls-admin-past-name').value = '';
@@ -7105,7 +7214,15 @@ async function lsAdminAddPast() {
 
 async function lsAdminSavePast() {
   try { await window.storage.set('live-scoring-config', JSON.stringify(lsConfig)); } catch(e) {}
-  WHCC_SYNC.saveLiveScoring(lsConfig, function() {});
+  WHCC_SYNC.saveLiveScoring(lsConfig, function(r, err) {
+    if (!err) return;
+    var status = document.getElementById('ls-admin-status');
+    if (!status) return;
+    status.style.display = 'block';
+    status.style.color = '#d4b483';
+    status.textContent = '⚠ Saved locally — could not reach server.';
+    setTimeout(function() { status.style.display = 'none'; status.style.color = '#8fcc8f'; }, 5000);
+  });
   lsAdminRenderPast();
 }
 
@@ -7185,17 +7302,17 @@ function cmsEvShowForm(ev) {
   form.innerHTML =
     '<div style="font-size:13px;color:var(--gold);margin-bottom:14px;font-weight:600;">' + (_cmsEvEditIdx === null ? 'New Event' : 'Edit Event') + '</div>' +
     '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:10px;">' +
-      '<div><label class="hrf-label">Month</label><input class="hrf-input" id="cef-month" value="' + menuEsc(ev.month||'') + '" placeholder="Apr" /></div>' +
-      '<div><label class="hrf-label">Day</label><input class="hrf-input" id="cef-day" value="' + menuEsc(ev.day||'') + '" placeholder="18" /></div>' +
-      '<div><label class="hrf-label">Year</label><input class="hrf-input" id="cef-year" value="' + menuEsc(ev.year||String(new Date().getFullYear())) + '" placeholder="' + new Date().getFullYear() + '" /></div>' +
-      '<div><label class="hrf-label">Time (optional)</label><input class="hrf-input" id="cef-time" value="' + menuEsc(ev.time||'') + '" placeholder="1:00 PM" /></div>' +
+      '<div><label class="hrf-label" for="cef-month">Month</label><input class="hrf-input" id="cef-month" value="' + menuEsc(ev.month||'') + '" placeholder="Apr" /></div>' +
+      '<div><label class="hrf-label" for="cef-day">Day</label><input class="hrf-input" id="cef-day" value="' + menuEsc(ev.day||'') + '" placeholder="18" /></div>' +
+      '<div><label class="hrf-label" for="cef-year">Year</label><input class="hrf-input" id="cef-year" value="' + menuEsc(ev.year||String(new Date().getFullYear())) + '" placeholder="' + new Date().getFullYear() + '" /></div>' +
+      '<div><label class="hrf-label" for="cef-time">Time (optional)</label><input class="hrf-input" id="cef-time" value="' + menuEsc(ev.time||'') + '" placeholder="1:00 PM" /></div>' +
     '</div>' +
-    '<div style="margin-bottom:10px;"><label class="hrf-label">Event Name</label><input class="hrf-input" id="cef-name" value="' + menuEsc(ev.name||'') + '" placeholder="e.g. Spring Scramble" /></div>' +
+    '<div style="margin-bottom:10px;"><label class="hrf-label" for="cef-name">Event Name</label><input class="hrf-input" id="cef-name" value="' + menuEsc(ev.name||'') + '" placeholder="e.g. Spring Scramble" /></div>' +
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">' +
-      '<div><label class="hrf-label">Type</label><select class="hrf-select" id="cef-type"><option value="golf"' + (ev.type==='golf'?' selected':'') + '>Golf</option><option value="tournament"' + (ev.type==='tournament'?' selected':'') + '>Tournament</option><option value="social"' + (ev.type==='social'?' selected':'') + '>Social</option><option value="aquatics"' + (ev.type==='aquatics'?' selected':'') + '>Aquatics</option></select></div>' +
-      '<div><label class="hrf-label">CTA Button Text</label><input class="hrf-input" id="cef-cta" value="' + menuEsc(ev.cta||'Sign Up') + '" /></div>' +
+      '<div><label class="hrf-label" for="cef-type">Type</label><select class="hrf-select" id="cef-type"><option value="golf"' + (ev.type==='golf'?' selected':'') + '>Golf</option><option value="tournament"' + (ev.type==='tournament'?' selected':'') + '>Tournament</option><option value="social"' + (ev.type==='social'?' selected':'') + '>Social</option><option value="aquatics"' + (ev.type==='aquatics'?' selected':'') + '>Aquatics</option></select></div>' +
+      '<div><label class="hrf-label" for="cef-cta">CTA Button Text</label><input class="hrf-input" id="cef-cta" value="' + menuEsc(ev.cta||'Sign Up') + '" /></div>' +
     '</div>' +
-    '<div style="margin-bottom:10px;"><label class="hrf-label">Description (shown on card)</label><textarea class="hrf-textarea" id="cef-detail" rows="2">' + menuEsc(ev.detail||'') + '</textarea></div>' +
+    '<div style="margin-bottom:10px;"><label class="hrf-label" for="cef-detail">Description (shown on card)</label><textarea class="hrf-textarea" id="cef-detail" rows="2">' + menuEsc(ev.detail||'') + '</textarea></div>' +
     '<div style="margin-bottom:14px;display:flex;align-items:center;gap:10px;"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:rgba(245,240,232,.7);font-size:12px;"><input type="checkbox" id="cef-featured"' + (ev.featured?' checked':'') + '> Show on home page</label></div>' +
     '<div style="display:flex;gap:8px;"><button class="btn-p" style="flex:1;padding:10px;" onclick="cmsEvSaveForm()">Save Event</button><button class="staff-cancel-btn" onclick="cmsEvCancelForm()">Cancel</button></div>';
 }
@@ -7283,9 +7400,9 @@ function cmsAnnShowForm(a) {
   form.style.display = 'block';
   form.innerHTML =
     '<div style="font-size:13px;color:var(--gold);margin-bottom:14px;font-weight:600;">' + (_cmsAnnEditIdx === null ? 'New Announcement' : 'Edit Announcement') + '</div>' +
-    '<div style="margin-bottom:10px;"><label class="hrf-label">Label (e.g. Notice, Closed, Tournament)</label><input class="hrf-input" id="caf-label" value="' + menuEsc(a.label||'Notice') + '" /></div>' +
-    '<div style="margin-bottom:10px;"><label class="hrf-label">Message</label><textarea class="hrf-textarea" id="caf-text" rows="2">' + menuEsc(a.text||'') + '</textarea></div>' +
-    '<div style="margin-bottom:10px;"><label class="hrf-label">Link URL (optional — leave blank for no link)</label><input class="hrf-input" id="caf-link" value="' + menuEsc(a.link||'') + '" placeholder="https://..." /></div>' +
+    '<div style="margin-bottom:10px;"><label class="hrf-label" for="caf-label">Label (e.g. Notice, Closed, Tournament)</label><input class="hrf-input" id="caf-label" value="' + menuEsc(a.label||'Notice') + '" /></div>' +
+    '<div style="margin-bottom:10px;"><label class="hrf-label" for="caf-text">Message</label><textarea class="hrf-textarea" id="caf-text" rows="2">' + menuEsc(a.text||'') + '</textarea></div>' +
+    '<div style="margin-bottom:10px;"><label class="hrf-label" for="caf-link">Link URL (optional — leave blank for no link)</label><input class="hrf-input" id="caf-link" value="' + menuEsc(a.link||'') + '" placeholder="https://..." /></div>' +
     '<div style="margin-bottom:14px;"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:rgba(245,240,232,.7);font-size:12px;"><input type="checkbox" id="caf-urgent"' + (a.urgent?' checked':'') + '> Mark as urgent (red background)</label></div>' +
     '<div style="display:flex;gap:8px;"><button class="btn-p" style="flex:1;padding:10px;" onclick="cmsAnnSaveForm()">Post Announcement</button><button class="staff-cancel-btn" onclick="cmsAnnCancelForm()">Cancel</button></div>';
 }
@@ -7339,10 +7456,10 @@ function cmsHeroesLoad() {
     return '<div style="background:rgba(26,43,31,.35);border:1px solid rgba(184,151,106,.12);padding:16px;margin-bottom:12px;">' +
       '<div style="font-size:12px;color:var(--gold);letter-spacing:.08em;margin-bottom:12px;">' + p.label.toUpperCase() + '</div>' +
       '<div style="display:grid;gap:10px;">' +
-        '<div><label class="hrf-label">Tag / Eyebrow</label><input class="hrf-input" id="ch-' + p.key + '-tag" value="' + menuEsc(h.tag||'') + '" /></div>' +
-        '<div><label class="hrf-label">Headline (HTML ok — use &lt;em&gt; for italic gold)</label><input class="hrf-input" id="ch-' + p.key + '-title" value="' + menuEsc(h.title||'') + '" /></div>' +
-        '<div><label class="hrf-label">Subtitle</label><textarea class="hrf-textarea" id="ch-' + p.key + '-sub" rows="2">' + menuEsc(h.subtitle||'') + '</textarea></div>' +
-        '<div><label class="hrf-label">Banner Photo URL</label><input class="hrf-input" id="ch-' + p.key + '-img" value="' + menuEsc(h.image||'') + '" placeholder="https://... or images/filename.jpg" /></div>' +
+        '<div><label class="hrf-label" for="ch-' + p.key + '-tag">Tag / Eyebrow</label><input class="hrf-input" id="ch-' + p.key + '-tag" value="' + menuEsc(h.tag||'') + '" /></div>' +
+        '<div><label class="hrf-label" for="ch-' + p.key + '-title">Headline (HTML ok — use &lt;em&gt; for italic gold)</label><input class="hrf-input" id="ch-' + p.key + '-title" value="' + menuEsc(h.title||'') + '" /></div>' +
+        '<div><label class="hrf-label" for="ch-' + p.key + '-sub">Subtitle</label><textarea class="hrf-textarea" id="ch-' + p.key + '-sub" rows="2">' + menuEsc(h.subtitle||'') + '</textarea></div>' +
+        '<div><label class="hrf-label" for="ch-' + p.key + '-img">Banner Photo URL</label><input class="hrf-input" id="ch-' + p.key + '-img" value="' + menuEsc(h.image||'') + '" placeholder="https://... or images/filename.jpg" /></div>' +
       '</div>' +
     '</div>';
   }).join('');
@@ -7533,7 +7650,7 @@ function phUploadAll() {
           action: 'upload-photo',
           base64: base64,
           mimeType: mime,
-          filename: item.filename, category: item.category
+          filename: item.filename, category: item.category, staffPin: _staffSessionPin
         })
       })
       .then(function(r){ return r.json(); })
@@ -7638,7 +7755,7 @@ function phMakePublic() {
   if (status) status.textContent = 'Making photos public…';
   fetch(WHCC_SCRIPT_URL, {
     method: 'POST', headers: { 'Content-Type': 'text/plain' },
-    body: JSON.stringify({ action: 'make-photos-public' })
+    body: JSON.stringify({ action: 'make-photos-public', staffPin: _staffSessionPin })
   })
   .then(function(r) { return r.json(); })
   .then(function(d) {
@@ -7667,7 +7784,7 @@ function phDelete(fileId, btn) {
   fetch(WHCC_SCRIPT_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain' },
-    body: JSON.stringify({ action: 'delete-photo', fileId: fileId })
+    body: JSON.stringify({ action: 'delete-photo', fileId: fileId, staffPin: _staffSessionPin })
   })
   .then(function(r) { return r.json(); })
   .then(function(data) {
@@ -7811,7 +7928,8 @@ function phPickerUpload() {
           action: 'upload-photo', base64: base64,
           mimeType: mime,
           filename: key + '-' + file.name.replace(/\s+/g,'-').toLowerCase(),
-          category: key.startsWith('dining_food') ? 'Dining' : key.startsWith('golf_gallery') ? 'Golf' : (key.startsWith('pool') || key.startsWith('events') || key.startsWith('venue')) ? 'Pool & Events' : 'Banners'
+          category: key.startsWith('dining_food') ? 'Dining' : key.startsWith('golf_gallery') ? 'Golf' : (key.startsWith('pool') || key.startsWith('events') || key.startsWith('venue')) ? 'Pool & Events' : 'Banners',
+          staffPin: _staffSessionPin
         })
       })
       .then(function(r){return r.json();})
@@ -7939,7 +8057,7 @@ function phAddToSection(prefix, sectionId) {
           base64: ev.target.result.split(',')[1],
           mimeType: file.type || 'image/jpeg',
           filename: key + '-' + file.name.replace(/\s+/g,'-').toLowerCase(),
-          category: cat
+          category: cat, staffPin: _staffSessionPin
         })
       })
       .then(function(r){return r.json();})
@@ -7974,7 +8092,7 @@ function renderFoodGrid(photos) {
     var url = all['dining_food_' + i];
     if (!url) break;
     html += '<div class="food-img' + (i === 1 ? ' wide' : '') + '">' +
-      '<img data-wh-photo="dining_food_' + i + '" src="' + url + '" alt="Menu item ' + i + '" loading="lazy"></div>';
+      '<img data-wh-photo="dining_food_' + i + '" src="' + url + '" alt="Dish from the Westwood Hills kitchen" loading="lazy"></div>';
   }
   if (html) grid.innerHTML = html;
 }
@@ -7992,7 +8110,7 @@ function renderGolfGallery(photos) {
   urls.forEach(function(p, idx) {
     var isTall = idx === 0 || idx === urls.length - 1;
     html += '<div class="gg-img' + (isTall ? ' tall' : '') + '">' +
-      '<img data-wh-photo="' + p.key + '" src="' + p.url + '" alt="Golf photo ' + (idx+1) + '" loading="lazy"></div>';
+      '<img data-wh-photo="' + p.key + '" src="' + p.url + '" alt="Golf at Westwood Hills Country Club" loading="lazy"></div>';
   });
   if (html) gallery.innerHTML = html;
 }
@@ -8181,6 +8299,9 @@ function staffRenderLessons(all) {
         (status !== 'Booked' ? '<button class="staff-mini-btn" onclick="lessonMarkStatus(\'' + id + '\',' + idx + ',\'Booked\')">Mark Booked</button>' : '') +
         '<button class="staff-mini-btn" style="margin-left:auto;" onclick="lessonMarkStatus(\'' + id + '\',' + idx + ',\'Closed\')">Dismiss</button>' +
       '</div>' : '') +
+      (id && status === 'Closed' ? '<div style="margin-top:8px;display:flex;gap:5px;border-top:1px solid rgba(184,151,106,.08);padding-top:8px;">' +
+        '<button class="staff-mini-btn" onclick="lessonMarkStatus(\'' + id + '\',' + idx + ',\'New\')">Reopen</button>' +
+      '</div>' : '') +
     '</div>';
   }).join('');
 }
@@ -8188,7 +8309,12 @@ function staffRenderLessons(all) {
 function lessonMarkStatus(id, idx, status) {
   var card = document.getElementById('lesson-card-' + idx);
   if (card) card.style.opacity = '0.5';
-  WHCC_SYNC.updateLessonStatus(id, status, function(res) {
+  WHCC_SYNC.updateLessonStatus(id, status, function(res, err) {
+    if (err) {
+      if (card) card.style.opacity = '1';
+      if (typeof staffToast === 'function') staffToast('Could not update status — check your connection and try again.', 'error');
+      return;
+    }
     staffViewLessons();
   });
 }
@@ -8487,7 +8613,11 @@ function boardOverrideVerify() {
   var boardSub = document.getElementById('board-sub');
   if (!code) { errEl.textContent = 'Please enter the recovery code.'; return; }
   errEl.textContent = 'Verifying…';
-  fetch(WHCC_SCRIPT_URL + '?action=validate-board-pin&code=' + encodeURIComponent(code))
+  fetch(WHCC_SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({ action: 'validate-board-pin', code: code })
+  })
     .then(function(r){ return r.json(); })
     .then(function(data) {
       if (data && data.ok) {
@@ -8594,11 +8724,12 @@ function staffConfirmClose() {
 // ═══════════════════════════════════════
 var pairRoster = [];
 
-// Parse a handicap string from the sheet; reject values > 54 (those are GHIN IDs, not handicaps)
+// Parse a handicap string from the sheet; reject values > 54 (those are GHIN IDs,
+// not handicaps) but allow negative values down to -10 for plus-handicap golfers.
 function parseHcp(val, fallback) {
   if (fallback === undefined) fallback = 18;
   var n = parseFloat(val);
-  if (isNaN(n) || n < 0 || n > 54) return fallback;
+  if (isNaN(n) || n < -10 || n > 54) return fallback;
   return Math.round(n * 10) / 10;
 }
 var pairTeams  = [];
@@ -8813,10 +8944,7 @@ function pairAssignTiers(sorted, gs) {
 
 // Serpentine team builder: A ascending, B descending, C ascending, D descending
 function pairBuildTeams(tiers, gs) {
-  var teamCount = tiers[0].length; // use largest tier size... actually we need minimum
-  teamCount = tiers.reduce(function(m, tier) { return Math.min(m, tier.length); }, tiers[0].length);
-  // Handle extra players (put remainder in final team slot)
-  var maxTeams = tiers[0].length; // A tier is largest or equal
+  var teamCount = tiers.reduce(function(m, tier) { return Math.min(m, tier.length); }, tiers[0].length);
 
   var teams = [];
   for (var i = 0; i < teamCount; i++) {
@@ -8831,17 +8959,23 @@ function pairBuildTeams(tiers, gs) {
     }
     teams.push(team);
   }
-  // Leftover players (if any tier has more members than the min)
-  var allAssigned = {};
-  teams.forEach(function(t){ t.players.forEach(function(tp){ allAssigned[tp.player.id] = true; }); });
-  var leftover = pairRoster.filter(function(p){ return !allAssigned[p.id]; });
-  if (leftover.length > 0) {
-    var extra = { id: teams.length + 1, players: [] };
-    leftover.forEach(function(p, i) {
-      extra.players.push({ player: p, tier: ['A','B','C','D'][i] || '?', tierClass: ['tier-a','tier-b','tier-c','tier-d'][i] || '' });
+  // Leftover players (any tier with more members than the smallest tier) — keep
+  // each player's real tier label rather than relabeling by position, so a
+  // B/C/D-tier player never shows up mislabeled as "A" in the leftover group.
+  // Ascending tiers (even) consumed indices [0, teamCount) above, so their
+  // leftovers are the tail; descending tiers (odd) consumed the tail, so their
+  // leftovers are the head.
+  var extra = { id: teams.length + 1, players: [] };
+  for (var lt = 0; lt < gs; lt++) {
+    var lTier = tiers[lt];
+    var leftoverIndexes = (lt % 2 === 0)
+      ? Array.from({length: lTier.length - teamCount}, function(_, k){ return teamCount + k; })
+      : Array.from({length: lTier.length - teamCount}, function(_, k){ return k; });
+    leftoverIndexes.forEach(function(li) {
+      extra.players.push({ player: lTier[li], tier: ['A','B','C','D'][lt], tierClass: ['tier-a','tier-b','tier-c','tier-d'][lt] });
     });
-    teams.push(extra);
   }
+  if (extra.players.length > 0) teams.push(extra);
   return teams;
 }
 
@@ -9298,7 +9432,7 @@ function pairGetGroupUnits(team) {
 function pairCountRepeats(groups) {
   var cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - 28);
-  var cutoffStr = cutoff.toISOString().slice(0, 10);
+  var cutoffStr = localDateStr(cutoff);
   var recent = {};
   pairHistory.forEach(function(week) {
     if (week.date < cutoffStr) return;
@@ -9459,7 +9593,7 @@ function pairGenerateTeamMode() {
 
   // Stamp each group with its repeat date (if any) for display
   var cutoff = new Date(); cutoff.setDate(cutoff.getDate() - 28);
-  var cutoffStr = cutoff.toISOString().slice(0, 10);
+  var cutoffStr = localDateStr(cutoff);
   var recent = {};
   pairHistory.forEach(function(week) {
     if (week.date < cutoffStr) return;
@@ -9487,7 +9621,7 @@ function pairGenerateTeamMode() {
 function pairSaveToHistory() {
   if (!pairTeams.length) return;
   var entry = {
-    date:  new Date().toISOString().slice(0, 10),
+    date:  localDateStr(),
     event: pairEventFilter || '',
     groups: pairTeams.map(function(team) {
       return { units: pairGetGroupUnits(team) };
@@ -9501,7 +9635,7 @@ function pairSaveToHistory() {
   if (btn) { btn.textContent = '✓ Saved'; btn.disabled = true; }
   // Also push pairings to Google Sheet as round 1 tee sheet
   if (pairEventFilter && typeof WHCC_SYNC !== 'undefined') {
-    var date = new Date().toISOString().slice(0, 10);
+    var date = localDateStr();
     WHCC_SYNC.saveTeeSheet(pairEventFilter, 1, date, teeConfig, pairTeams, function(){});
   }
 }
@@ -9851,7 +9985,7 @@ function tsSaveToSheet() {
   var status = document.getElementById('ts-sync-status');
   if (btn) { btn.textContent = '⏳ Saving…'; btn.disabled = true; }
   var event = pairEventFilter || 'General';
-  var date  = new Date().toISOString().slice(0, 10);
+  var date  = localDateStr();
   WHCC_SYNC.saveTeeSheet(event, teeRound, date, teeConfig, teeSheet, function(res, err) {
     if (btn) { btn.textContent = '💾 Save to Sheet'; btn.disabled = false; }
     if (err || (res && res.error)) {
@@ -10454,7 +10588,7 @@ function launchFire() {
 <!-- ═══ EVENT REGISTRATION MODAL ═══ -->
 <div class="reg-overlay" id="reg-overlay" style="display:none" onclick="if(event.target===this)closeRegModal()">
   <div class="reg-modal">
-    <button class="reg-modal-close" onclick="closeRegModal()">×</button>
+    <button class="reg-modal-close" onclick="closeRegModal()" aria-label="Close">×</button>
     <div id="reg-form-wrap">
       <p class="reg-modal-tag">Event Registration</p>
       <h2 class="reg-modal-title" id="reg-event-title">Event Name</h2>
@@ -10492,7 +10626,7 @@ function launchFire() {
 <!-- ═══ EVENT RSVP MODAL ═══ -->
 <div class="reg-overlay" id="rsvp-overlay" style="display:none" onclick="if(event.target===this)closeRsvpModal()">
   <div class="reg-modal">
-    <button class="reg-modal-close" onclick="closeRsvpModal()">×</button>
+    <button class="reg-modal-close" onclick="closeRsvpModal()" aria-label="Close">×</button>
     <div id="rsvp-form-wrap">
       <p class="reg-modal-tag">Event RSVP</p>
       <h2 class="reg-modal-title" id="rsvp-event-title">Event Name</h2>
@@ -10523,7 +10657,7 @@ function launchFire() {
 <!-- ═══ LESSON REQUEST MODAL ═══ -->
 <div class="reg-overlay" id="lesson-overlay" style="display:none" onclick="if(event.target===this)closeLessonModal()">
   <div class="reg-modal">
-    <button class="reg-modal-close" onclick="closeLessonModal()">×</button>
+    <button class="reg-modal-close" onclick="closeLessonModal()" aria-label="Close">×</button>
     <div id="lesson-form-wrap">
       <p class="reg-modal-tag">Instruction</p>
       <h2 class="reg-modal-title">Request a Lesson</h2>

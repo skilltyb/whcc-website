@@ -1,4 +1,14 @@
 /**
+ * ⚠ SUPERSEDED — DO NOT PASTE INTO Code.gs ⚠
+ * Everything in this file (getOrCreateDiningSheet, diningDateStr_,
+ * diningNormStatus_, the dining-reservation/update-dining/get-dining
+ * handlers) has already been merged into Code.gs. Re-pasting this would
+ * redeclare those functions a second time — Apps Script silently lets the
+ * later declaration win, so it's harmless only if this file is byte-for-byte
+ * identical to what's already in Code.gs, and a real bug risk otherwise.
+ * Kept here for historical reference only.
+ * ─────────────────────────────────────────────────────────────────────
+ *
  * WESTWOOD HILLS CC — Apps Script Additions for Dining Reservation Sync
  * ─────────────────────────────────────────────────────────────────────
  * Add these snippets to your existing Apps Script (script.google.com).

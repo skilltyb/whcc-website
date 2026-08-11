@@ -2,7 +2,7 @@ from PIL import Image, ImageDraw, ImageFont
 import os
 
 F   = r'C:\Windows\Fonts'
-OUT = r'C:\Users\sctr1\claude\images\scorecard.jpg'
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'images', 'scorecard.jpg')
 
 # ── Palette ────────────────────────────────────────────────────────────────────
 DARK_GREEN = (26,  43,  31)
@@ -23,7 +23,8 @@ TEXT_DARK  = ( 20,  20,  20)
 TEXT_MID   = ( 80,  80,  80)
 
 def fnt(name, size):
-    return ImageFont.truetype(os.path.join(F, name), size)
+    try:    return ImageFont.truetype(os.path.join(F, name), size)
+    except: return ImageFont.load_default()
 
 f_title  = fnt('georgiab.ttf', 54)
 f_sub    = fnt('georgia.ttf',  26)

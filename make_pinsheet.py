@@ -2,7 +2,7 @@ from PIL import Image, ImageDraw, ImageFont
 import os
 
 F   = r'C:\Windows\Fonts'
-OUT = r'C:\Users\sctr1\claude\images\pinsheet.jpg'
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'images', 'pinsheet.jpg')
 
 # ── Colors ───────────────────────────────────────────────────────────────────
 DARK_GREEN   = ( 26,  43,  31)
@@ -39,17 +39,20 @@ f_depth  = fnt('arial.ttf',    13)
 f_label  = fnt('arialbd.ttf',  14)   # section letter on green
 
 # ── Scorecard data ────────────────────────────────────────────────────────────
+# Kept in sync with the authoritative front9/back9 tables in make_scorecard.py
+# and the "Hole-by-hole" table on the website's Golf page — do not edit here
+# without also checking those match.
 HOLES = [
-    {'n': 1, 'par':4,'hdcp': 5},  {'n': 2, 'par':3,'hdcp':15},
-    {'n': 3, 'par':4,'hdcp': 3},  {'n': 4, 'par':4,'hdcp': 1},
-    {'n': 5, 'par':3,'hdcp':17},  {'n': 6, 'par':5,'hdcp':11},
-    {'n': 7, 'par':4,'hdcp': 7},  {'n': 8, 'par':4,'hdcp': 9},
-    {'n': 9, 'par':4,'hdcp':13},
-    {'n':10, 'par':5,'hdcp': 8},  {'n':11, 'par':4,'hdcp': 4},
-    {'n':12, 'par':3,'hdcp':16},  {'n':13, 'par':4,'hdcp': 2},
-    {'n':14, 'par':4,'hdcp': 6},  {'n':15, 'par':5,'hdcp':12},
-    {'n':16, 'par':4,'hdcp':10},  {'n':17, 'par':3,'hdcp':18},
-    {'n':18, 'par':4,'hdcp':14},
+    {'n': 1, 'par':4,'hdcp':10},  {'n': 2, 'par':5,'hdcp': 4},
+    {'n': 3, 'par':3,'hdcp':18},  {'n': 4, 'par':4,'hdcp': 8},
+    {'n': 5, 'par':4,'hdcp': 6},  {'n': 6, 'par':4,'hdcp':14},
+    {'n': 7, 'par':4,'hdcp':12},  {'n': 8, 'par':3,'hdcp':16},
+    {'n': 9, 'par':5,'hdcp': 2},
+    {'n':10, 'par':3,'hdcp':13},  {'n':11, 'par':4,'hdcp': 3},
+    {'n':12, 'par':3,'hdcp':17},  {'n':13, 'par':4,'hdcp': 9},
+    {'n':14, 'par':5,'hdcp': 1},  {'n':15, 'par':4,'hdcp': 7},
+    {'n':16, 'par':3,'hdcp':15},  {'n':17, 'par':4,'hdcp':11},
+    {'n':18, 'par':5,'hdcp': 5},
 ]
 
 # Today's depth (yards from front edge to pin) — read from scorecard photo

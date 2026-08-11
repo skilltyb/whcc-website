@@ -5,10 +5,18 @@ set DOWNLOADS=%USERPROFILE%\Downloads
 set APP=C:\Users\sctr1\wh-app
 
 if exist "%DOWNLOADS%\index.html" (
-    echo Found index.html in Downloads - copying to app folder...
-    copy /Y "%DOWNLOADS%\index.html" "%APP%\index.html"
-    echo Done! Deleting from Downloads to keep things tidy...
-    del "%DOWNLOADS%\index.html"
+    echo Found index.html in Downloads.
+    set /p CONFIRM="Overwrite %APP%\index.html with it? [y/N] "
+    if /i "%CONFIRM%"=="y" (
+        if exist "%APP%\index.html" (
+            copy /Y "%APP%\index.html" "%APP%\index.html.bak" >nul
+            echo Backed up existing file to index.html.bak
+        )
+        copy /Y "%DOWNLOADS%\index.html" "%APP%\index.html"
+        echo Copied. Leaving the Downloads copy in place ^(not auto-deleting^).
+    ) else (
+        echo Skipped — using existing app file.
+    )
 ) else (
     echo No new index.html found in Downloads, using existing file.
 )

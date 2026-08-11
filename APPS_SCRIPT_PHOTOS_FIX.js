@@ -1,4 +1,11 @@
 /**
+ * ⚠ SUPERSEDED — DO NOT PASTE INTO Code.gs ⚠
+ * This fix (setSharing() on upload-photo, plus the make-photos-public case)
+ * is already merged into Code.gs. Re-pasting this would redeclare those
+ * handlers a second time — harmless only if identical to what's already
+ * there, and a real bug risk otherwise. Kept here for historical reference.
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
  * WESTWOOD HILLS CC — Apps Script: Fix Photo Library (make Drive files public)
  * ─────────────────────────────────────────────────────────────────────────────
  * Problem: photos uploaded to Drive are private by default, so thumbnails
