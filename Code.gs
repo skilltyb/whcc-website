@@ -871,10 +871,17 @@ function doPost(e) {
     if (!requireStaffAuth_(data)) return jsonResponse({ status: 'not authorized' });
     var sh = getRegSheet();
     var rows = sh.getDataRange().getValues();
+    // IDs here are client-generated Date.now().toString() values (numeric
+    // strings) — Sheets auto-types a numeric-looking value as a Number when
+    // read back, so a strict === against the string data.id never matched
+    // and this always reported "deleted" whether or not a row actually was.
     for (var i = 1; i < rows.length; i++) {
-      if (rows[i][0] === data.id) { sh.deleteRow(i + 1); break; }
+      if (String(rows[i][0]) === String(data.id)) {
+        sh.deleteRow(i + 1);
+        return jsonResponse({ status: 'deleted' });
+      }
     }
-    return jsonResponse({ status: 'deleted' });
+    return jsonResponse({ status: 'not found' });
   }
 
   if (data.action === 'save-teesheet') {
