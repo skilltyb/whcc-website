@@ -3322,6 +3322,67 @@ var WH_SITE_DEFAULTS = {
   }
 };
 
+// Fee/capacity aren't tracked per-event in the calendar array above (that's
+// what WHCC_EVENTS was for) — but the mobile app needs them on the same
+// object it syncs, so they're merged in here rather than hand-duplicated
+// into every literal above. Also derives the ISO date + default archived
+// flag mobile relies on. Events not listed here simply have no fee/capacity
+// (getEventInfo() falls back to the legacy WHCC_EVENTS registry for those).
+var WH_EVENT_EXTRAS_ = {
+  "St. Patty's Shootout": {fee:'Member Event', capacity:60},
+  "Ladies Opening Day": {fee:'Member Event', capacity:40},
+  "Masters Dinner": {fee:'$45/person', capacity:80},
+  "Mules Invitational": {fee:'$80/team', capacity:20},
+  "MGA Draft Day": {fee:'Member Event', capacity:64},
+  "Men’s Opening Day": {fee:'Member Event', capacity:72},
+  "Ozark Invitational": {fee:'$150/team', capacity:96},
+  "Friday Night Fights Begins": {fee:'$10/round', capacity:48},
+  "Hit & Giggle": {fee:'Member Event', capacity:40},
+  "Men’s League Opening Night": {fee:'League Fee', capacity:80},
+  "Spring 2-Man Scramble": {fee:'$120/team', capacity:80},
+  "MGA 2-Man Best Ball": {fee:'Member Event', capacity:64},
+  "Memorial Day Wing Ding": {fee:'$20/person', capacity:120},
+  "UCAN Golf Outing": {fee:'$80/player', capacity:72},
+  "Ladies Cup Challenge Matches": {fee:'Member Event', capacity:32},
+  "Ladies Powder Puff": {fee:'Member Event', capacity:40},
+  "Three Rivers College Outing": {fee:'$75/player', capacity:72},
+  "Steak Stag — SEMO Qualifier": {fee:'$60/player', capacity:48},
+  "Parent–Child Championship": {fee:'Member Event', capacity:48},
+  "MGA Alternate Shot": {fee:'Member Event', capacity:40},
+  "PGA Junior Series Event": {fee:'Member Event', capacity:48},
+  "4th of July Wing Ding": {fee:'$20/person', capacity:120},
+  "MGA Match Play": {fee:'Member Event', capacity:32},
+  "Mules Booster Club Outing": {fee:'$80/player', capacity:72},
+  "Ladies Sweet Treat": {fee:'Member Event', capacity:48},
+  "SEMO Cup — Thursday Qualifier": {fee:'Member Event', capacity:48},
+  "Muleskinner Member–Member": {fee:'Member Event', capacity:64},
+  "Labor Day Wing Ding": {fee:'$20/person', capacity:120},
+  "SEMO Cup — Qualifier #5": {fee:'Member Event', capacity:48},
+  "Friday Night Fights — Tournament of Champions": {fee:'Member Event', capacity:48},
+  "WHCC Mixed Pairs Scramble": {fee:'Member Event', capacity:64},
+  "Missouri Amateur — Men’s Senior Am": {fee:'$50/player', capacity:48},
+  "Poplar Bluff Chamber of Commerce Outing": {fee:'$75/player', capacity:72},
+  "Club Championships": {fee:'Member Event', capacity:64},
+  "Calcutta Bidding — Bourbon Tasting": {fee:'$40/person', capacity:60},
+  "Men’s Calcutta": {fee:'Member Event', capacity:72},
+  "WHCC Fall 2-Man Scramble": {fee:'$120/team', capacity:80},
+  "Ladies Calcutta": {fee:'Member Event', capacity:40},
+  "Men’s Rib Stag — Pro’s Cup Draft Party": {fee:'$50/person', capacity:60},
+  "Pro’s Cup": {fee:'Member Event', capacity:80},
+  "Gobbler": {fee:'Member Event', capacity:64},
+  "Yule Tide Classic": {fee:'Member Event', capacity:64}
+};
+var WH_EVENT_MONTHS_NUM_ = {jan:'01',feb:'02',mar:'03',apr:'04',may:'05',jun:'06',jul:'07',aug:'08',sep:'09',oct:'10',nov:'11',dec:'12'};
+(function normalizeDefaultEvents_() {
+  WH_SITE_DEFAULTS.events.forEach(function(ev) {
+    var extra = WH_EVENT_EXTRAS_[ev.name];
+    if (extra) { ev.fee = extra.fee; ev.capacity = extra.capacity; }
+    var mNum = WH_EVENT_MONTHS_NUM_[(ev.month || '').toLowerCase().slice(0,3)] || '01';
+    ev.date = (ev.year || '2026') + '-' + mNum + '-' + String(ev.day || '1').padStart(2, '0');
+    ev.archived = ev.archived || false;
+  });
+})();
+
 function applySiteContent(sc) {
   if (!sc) return;
   // Heroes
@@ -3464,7 +3525,7 @@ function renderProBio(pb) {
 function renderEventsGrid(events) {
   var grid = document.getElementById('ev-cal-grid');
   if (!grid) return;
-  var active = (events || []).filter(function(e) { return e.active !== false; });
+  var active = (events || []).filter(function(e) { return e.active !== false && !e.archived; });
   var delays = ['d1','d2','d3'];
   grid.innerHTML = active.map(function(ev, i) {
     var typeClass = ev.type || 'golf';
@@ -3492,8 +3553,8 @@ function renderEventsGrid(events) {
 function renderHomeEvents(events) {
   var list = document.getElementById('home-events-list');
   if (!list) return;
-  var featured = (events || []).filter(function(e) { return e.featured && e.active !== false; }).slice(0, 5);
-  if (featured.length === 0) featured = (events || []).filter(function(e) { return e.active !== false; }).slice(0, 5);
+  var featured = (events || []).filter(function(e) { return e.featured && e.active !== false && !e.archived; }).slice(0, 5);
+  if (featured.length === 0) featured = (events || []).filter(function(e) { return e.active !== false && !e.archived; }).slice(0, 5);
   var typeLabels = { golf:'Golf', tournament:'Tournament', social:'Social', aquatics:'Aquatics', weekly:'Weekly' };
   list.innerHTML = featured.map(function(ev) {
     return '<div class="event-item">' +
@@ -3581,7 +3642,21 @@ var WHCC_EVENTS = {
 
 function getEventInfo(title) {
   if (title && title.startsWith("Men's League")) return { type:'single', capacity:24, fee:'Member Event' };
-  return WHCC_EVENTS[title] || { type:'single', capacity:72, fee:'Member Event' };
+  var base = WHCC_EVENTS[title] || { type:'single', capacity:72, fee:'Member Event' };
+  // Capacity/fee live on the shared events array now (kept in sync with the
+  // mobile app) — prefer it over this legacy registry when an event has it,
+  // but keep the registry's team-format 'type' (single/twosome/foursome),
+  // which the shared array doesn't track.
+  var live = (WH_SITE_CONTENT || WH_SITE_DEFAULTS).events;
+  var liveEv = live && live.filter(function(e) { return e.name === title; })[0];
+  if (liveEv) {
+    return {
+      type: base.type,
+      capacity: liveEv.capacity !== undefined ? liveEv.capacity : base.capacity,
+      fee: liveEv.fee || base.fee
+    };
+  }
+  return base;
 }
 
 // ═══════════════════════════════════════
@@ -7377,14 +7452,42 @@ function cmsEvIsPast(ev) {
   var today = new Date(); today.setHours(0,0,0,0);
   return evDate < today;
 }
+
+// Events are archived rather than deleted (a "special place" to keep past/
+// retired events instead of losing them) — this toggles which pile the CMS
+// list is currently showing. Rows are addressed by id, not array index, so
+// filtering between the two piles can never point a button at the wrong row.
+var _cmsEvShowArchived = false;
+function cmsEvToggleArchivedView() {
+  _cmsEvShowArchived = !_cmsEvShowArchived;
+  cmsEvRenderList(cmsGetContent().events || []);
+}
 function cmsEvRenderList(events) {
   var list = document.getElementById('cms-ev-list');
   if (!list) return;
-  if (!events.length) { list.innerHTML = '<div style="color:var(--muted);font-style:italic;">No events yet.</div>'; return; }
-  list.innerHTML = events.map(function(ev, i) {
+  var archivedCount = events.filter(function(e) { return e.archived; }).length;
+  var toggleBtn = '<div style="margin-bottom:12px;">' +
+    '<button class="staff-mini-btn" onclick="cmsEvToggleArchivedView()">' +
+      (_cmsEvShowArchived ? '← Back to Active Events' : '🗄 View Archived (' + archivedCount + ')') +
+    '</button>' +
+    (!_cmsEvShowArchived && archivedCount === 0 && events.some(cmsEvIsPast)
+      ? '<button class="staff-mini-btn" style="margin-left:8px;" onclick="cmsEvArchivePast()">Archive All Past Events</button>' : '') +
+  '</div>';
+  var shown = events.filter(function(e) { return _cmsEvShowArchived ? !!e.archived : !e.archived; });
+  if (!shown.length) {
+    list.innerHTML = toggleBtn + '<div style="color:var(--muted);font-style:italic;">' + (_cmsEvShowArchived ? 'No archived events.' : 'No events yet.') + '</div>';
+    return;
+  }
+  list.innerHTML = toggleBtn + shown.map(function(ev) {
     var active = ev.active !== false;
     var past = cmsEvIsPast(ev);
     var rowOpacity = past ? 'opacity:.45;' : '';
+    var idEsc = menuEsc(ev.id||'');
+    var actions = _cmsEvShowArchived
+      ? '<button class="staff-mini-btn" onclick="cmsEvRestore(\'' + idEsc + '\')">Restore</button>'
+      : '<button class="staff-mini-btn" onclick="cmsEvEdit(\'' + idEsc + '\')">Edit</button>' +
+        '<button class="staff-mini-btn" onclick="cmsEvToggle(\'' + idEsc + '\')">' + (active ? 'Hide' : 'Show') + '</button>' +
+        '<button class="staff-mini-btn danger" onclick="cmsEvArchive(\'' + idEsc + '\')">Archive</button>';
     return '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:rgba(26,43,31,.35);border:1px solid rgba(184,151,106,.12);margin-bottom:8px;' + rowOpacity + '">' +
       '<div style="display:flex;align-items:center;gap:12px;">' +
         '<div style="text-align:center;min-width:48px;background:rgba(184,151,106,.1);padding:4px 8px;">' +
@@ -7396,25 +7499,25 @@ function cmsEvRenderList(events) {
           '<div style="font-size:11px;color:var(--muted);margin-top:2px;">' + (ev.type||'golf') + (past ? ' · <span style="color:#cc8888;">Past</span>' : '') + (active ? '' : ' · <span style="color:#cc8888;">Hidden</span>') + '</div>' +
         '</div>' +
       '</div>' +
-      '<div style="display:flex;gap:6px;">' +
-        '<button class="staff-mini-btn" onclick="cmsEvEdit(' + i + ')">Edit</button>' +
-        '<button class="staff-mini-btn" onclick="cmsEvToggle(' + i + ')">' + (active ? 'Hide' : 'Show') + '</button>' +
-        '<button class="staff-mini-btn danger" onclick="cmsEvDelete(' + i + ')">Delete</button>' +
-      '</div>' +
+      '<div style="display:flex;gap:6px;">' + actions + '</div>' +
     '</div>';
   }).join('');
 }
 
-var _cmsEvEditIdx = null;
-function cmsEvNew() { _cmsEvEditIdx = null; cmsEvShowForm({}); }
-function cmsEvEdit(i) { _cmsEvEditIdx = i; cmsEvShowForm((cmsGetContent().events || [])[i] || {}); }
+var _cmsEvEditId = null;
+function cmsEvNew() { _cmsEvEditId = null; cmsEvShowForm({}); }
+function cmsEvEdit(id) {
+  _cmsEvEditId = id;
+  var ev = (cmsGetContent().events || []).find(function(e) { return e.id === id; }) || {};
+  cmsEvShowForm(ev);
+}
 
 function cmsEvShowForm(ev) {
   var form = document.getElementById('cms-ev-form');
   if (!form) return;
   form.style.display = 'block';
   form.innerHTML =
-    '<div style="font-size:13px;color:var(--gold);margin-bottom:14px;font-weight:600;">' + (_cmsEvEditIdx === null ? 'New Event' : 'Edit Event') + '</div>' +
+    '<div style="font-size:13px;color:var(--gold);margin-bottom:14px;font-weight:600;">' + (_cmsEvEditId === null ? 'New Event' : 'Edit Event') + '</div>' +
     '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:10px;">' +
       '<div><label class="hrf-label" for="cef-month">Month</label><input class="hrf-input" id="cef-month" value="' + menuEsc(ev.month||'') + '" placeholder="Apr" /></div>' +
       '<div><label class="hrf-label" for="cef-day">Day</label><input class="hrf-input" id="cef-day" value="' + menuEsc(ev.day||'') + '" placeholder="18" /></div>' +
@@ -7426,6 +7529,10 @@ function cmsEvShowForm(ev) {
       '<div><label class="hrf-label" for="cef-type">Type</label><select class="hrf-select" id="cef-type"><option value="golf"' + (ev.type==='golf'?' selected':'') + '>Golf</option><option value="tournament"' + (ev.type==='tournament'?' selected':'') + '>Tournament</option><option value="social"' + (ev.type==='social'?' selected':'') + '>Social</option><option value="aquatics"' + (ev.type==='aquatics'?' selected':'') + '>Aquatics</option></select></div>' +
       '<div><label class="hrf-label" for="cef-cta">CTA Button Text</label><input class="hrf-input" id="cef-cta" value="' + menuEsc(ev.cta||'Sign Up') + '" /></div>' +
     '</div>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">' +
+      '<div><label class="hrf-label" for="cef-fee">Entry Fee (optional)</label><input class="hrf-input" id="cef-fee" value="' + menuEsc(ev.fee||'') + '" placeholder="Member Event or $45/person" /></div>' +
+      '<div><label class="hrf-label" for="cef-capacity">Capacity (optional)</label><input class="hrf-input" id="cef-capacity" type="number" value="' + menuEsc(ev.capacity||'') + '" placeholder="72" /></div>' +
+    '</div>' +
     '<div style="margin-bottom:10px;"><label class="hrf-label" for="cef-detail">Description (shown on card)</label><textarea class="hrf-textarea" id="cef-detail" rows="2">' + menuEsc(ev.detail||'') + '</textarea></div>' +
     '<div style="margin-bottom:14px;display:flex;align-items:center;gap:10px;"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:rgba(245,240,232,.7);font-size:12px;"><input type="checkbox" id="cef-featured"' + (ev.featured?' checked':'') + '> Show on home page</label></div>' +
     '<div style="display:flex;gap:8px;"><button class="btn-p" style="flex:1;padding:10px;" onclick="cmsEvSaveForm()">Save Event</button><button class="staff-cancel-btn" onclick="cmsEvCancelForm()">Cancel</button></div>';
@@ -7434,49 +7541,88 @@ function cmsEvShowForm(ev) {
 function cmsEvCancelForm() {
   var form = document.getElementById('cms-ev-form');
   if (form) { form.style.display = 'none'; form.innerHTML = ''; }
-  _cmsEvEditIdx = null;
+  _cmsEvEditId = null;
 }
 
 function cmsEvSaveForm() {
   var name = document.getElementById('cef-name').value.trim();
   if (!name) { staffToast('Event name is required.', 'error'); return; }
+  var sc = cmsGetContent();
+  if (!sc.events) sc.events = [];
+  var existing = _cmsEvEditId === null ? null : sc.events.find(function(e) { return e.id === _cmsEvEditId; });
+  var month = document.getElementById('cef-month').value.trim();
+  var day   = document.getElementById('cef-day').value.trim();
+  var year  = document.getElementById('cef-year').value.trim() || '2026';
+  var mNum  = WH_EVENT_MONTHS_NUM_[month.toLowerCase().slice(0,3)] || '01';
+  var capacityVal = document.getElementById('cef-capacity').value.trim();
   var ev = {
-    id:       _cmsEvEditIdx === null ? 'ev' + Date.now() : ((cmsGetContent().events||[])[_cmsEvEditIdx]||{}).id || 'ev' + Date.now(),
+    id:       existing ? existing.id : 'ev' + Date.now(),
     name:     name,
-    month:    document.getElementById('cef-month').value.trim(),
-    day:      document.getElementById('cef-day').value.trim(),
-    year:     document.getElementById('cef-year').value.trim() || '2026',
+    month:    month,
+    day:      day,
+    year:     year,
+    date:     year + '-' + mNum + '-' + String(day || '1').padStart(2, '0'),
     type:     document.getElementById('cef-type').value,
     detail:   document.getElementById('cef-detail').value.trim(),
     time:     document.getElementById('cef-time') ? document.getElementById('cef-time').value.trim() : '',
+    fee:      document.getElementById('cef-fee').value.trim(),
+    capacity: capacityVal ? parseInt(capacityVal) : undefined,
     cta:      document.getElementById('cef-cta').value.trim() || 'Sign Up',
-    regMeta:  document.getElementById('cef-month').value.trim() + ' ' + document.getElementById('cef-day').value.trim() + ', ' + document.getElementById('cef-year').value.trim(),
+    regMeta:  month + ' ' + day + ', ' + year,
     featured: document.getElementById('cef-featured').checked,
-    active:   true
+    active:   true,
+    archived: existing ? !!existing.archived : false
   };
-  var sc = cmsGetContent();
-  if (!sc.events) sc.events = [];
-  if (_cmsEvEditIdx === null) sc.events.push(ev);
-  else sc.events[_cmsEvEditIdx] = ev;
+  if (existing) sc.events[sc.events.indexOf(existing)] = ev;
+  else sc.events.push(ev);
   cmsSave(sc, 'cms-ev-status');
   cmsEvCancelForm();
   cmsEvRenderList(sc.events);
   staffToast('Event saved and live on the website.', 'success');
 }
 
-function cmsEvToggle(i) {
+function cmsEvToggle(id) {
   var sc = cmsGetContent();
-  sc.events[i].active = !(sc.events[i].active !== false);
+  var ev = sc.events.find(function(e) { return e.id === id; });
+  if (!ev) return;
+  ev.active = !(ev.active !== false);
   cmsSave(sc, 'cms-ev-status');
   cmsEvRenderList(sc.events);
 }
 
-function cmsEvDelete(i) {
-  if (!confirm('Remove this event from the calendar?')) return;
+// Archive keeps the event in the array (a "special place" for past/retired
+// events) rather than deleting it — capacity/fee/registration history stays
+// intact and it can be restored later. It's also hidden from the public site.
+function cmsEvArchive(id) {
   var sc = cmsGetContent();
-  sc.events.splice(i, 1);
+  var ev = sc.events.find(function(e) { return e.id === id; });
+  if (!ev) return;
+  ev.archived = true;
   cmsSave(sc, 'cms-ev-status');
   cmsEvRenderList(sc.events);
+  staffToast('Event archived.', 'success');
+}
+
+function cmsEvRestore(id) {
+  var sc = cmsGetContent();
+  var ev = sc.events.find(function(e) { return e.id === id; });
+  if (!ev) return;
+  ev.archived = false;
+  cmsSave(sc, 'cms-ev-status');
+  cmsEvRenderList(sc.events);
+  staffToast('Event restored.', 'success');
+}
+
+function cmsEvArchivePast() {
+  if (!confirm('Archive all past events? They\'ll move to the Archived list — nothing is deleted.')) return;
+  var sc = cmsGetContent();
+  var n = 0;
+  (sc.events || []).forEach(function(ev) {
+    if (!ev.archived && cmsEvIsPast(ev)) { ev.archived = true; n++; }
+  });
+  cmsSave(sc, 'cms-ev-status');
+  cmsEvRenderList(sc.events);
+  staffToast(n + ' past event' + (n === 1 ? '' : 's') + ' archived.', 'success');
 }
 
 // ── ANNOUNCEMENTS ────────────────────────────────────────

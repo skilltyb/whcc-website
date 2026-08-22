@@ -210,9 +210,31 @@ function escapeHtml_(v) {
 // (validate-staff-pin) only gates the UI — without this, anyone could call a
 // staff action directly (e.g. from the browser console) with no credentials
 // at all. Callers must send the staff PIN as data.staffPin.
+//
+// The mobile app authenticates per-person (App Users email+PIN) rather than
+// via the single shared portal PIN, so it never has data.staffPin to send.
+// As a second path, accept a valid staff/both-role App User's own email +
+// PIN (data.staffEmail / data.staffUserPin) as equivalent proof of authority.
 function requireStaffAuth_(data) {
   var stored = opsGet_('staff_pin');
-  return stored !== null && stored !== '' && String(data.staffPin || '') === String(stored);
+  if (stored !== null && stored !== '' && String(data.staffPin || '') === String(stored)) return true;
+
+  var email = String(data.staffEmail || '').toLowerCase().trim();
+  var pin   = String(data.staffUserPin || '').trim();
+  if (!email || !pin) return false;
+  var authSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('App Users');
+  if (!authSheet) return false;
+  var rows = authSheet.getDataRange().getValues();
+  var hdrs = rows[0];
+  var emailCol = hdrs.indexOf('Email'), pinCol = hdrs.indexOf('PIN'), roleCol = hdrs.indexOf('Role');
+  if (emailCol < 0 || pinCol < 0 || roleCol < 0) return false;
+  for (var i = 1; i < rows.length; i++) {
+    if (String(rows[i][emailCol]).toLowerCase().trim() === email && String(rows[i][pinCol]).trim() === pin) {
+      var role = String(rows[i][roleCol] || '').toLowerCase();
+      return role === 'staff' || role === 'both';
+    }
+  }
+  return false;
 }
 
 // Confirms a Drive file lives inside the WHCC Photos folder tree (root or
