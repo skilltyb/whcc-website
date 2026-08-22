@@ -6543,17 +6543,38 @@ function staffRefreshSearchIfActive() {
   if (input && input.value.trim()) staffSearch();
 }
 
+// The local view updates optimistically before the Sheet sync call even
+// returns, so a lost/failed sync (network blip, or several of these fired
+// in quick succession) previously left the change looking successful while
+// silently never reaching the server — the change would then reappear as
+// if it never happened next time the data reloaded. Warn staff so they know
+// to retry instead of assuming it worked.
+function staffWarnIfSyncFailed(res, err, action) {
+  if (err || !res || res.ok === false) {
+    staffToast('Could not sync "' + action + '" to Google Sheets — check your connection and try again.', 'error');
+  }
+}
+
 function staffUpdateStatus(dk, i, status) {
   if (!staffData[dk] || !staffData[dk][i]) return;
   var id = staffData[dk][i].id;
   staffData[dk][i].status = status;
   staffSaveData();
-  if (id) WHCC_SYNC.updateDiningStatus(id, status, function() {});
+  if (id) WHCC_SYNC.updateDiningStatus(id, status, function(res, err) { staffWarnIfSyncFailed(res, err, 'status change'); });
   staffSelectDate(dk);
   staffUpdatePendingBadge();
   staffRefreshSearchIfActive();
 }
-function staffDeleteRes(dk, i) { if (!staffData[dk] || !staffData[dk][i]) return; var id = staffData[dk][i].id; staffData[dk].splice(i, 1); if (staffData[dk].length === 0) delete staffData[dk]; staffSaveData(); if (id) WHCC_SYNC.deleteDining(id, function() {}); staffSelectDate(dk); staffRefreshSearchIfActive(); }
+function staffDeleteRes(dk, i) {
+  if (!staffData[dk] || !staffData[dk][i]) return;
+  var id = staffData[dk][i].id;
+  staffData[dk].splice(i, 1);
+  if (staffData[dk].length === 0) delete staffData[dk];
+  staffSaveData();
+  if (id) WHCC_SYNC.deleteDining(id, function(res, err) { staffWarnIfSyncFailed(res, err, 'delete'); });
+  staffSelectDate(dk);
+  staffRefreshSearchIfActive();
+}
 
 // ── ADD/EDIT FORM ──
 function staffShowForm() {
@@ -6615,7 +6636,7 @@ function staffSaveRes() {
       firstName: newRes.firstName, lastName: newRes.lastName, email: newRes.email,
       phone: newRes.phone, party: newRes.partySize, member: newRes.member,
       venue: staffVenue, note: newRes.notes, status: newRes.status
-    }, function() {});
+    }, function(res, err) { staffWarnIfSyncFailed(res, err, 'reservation update'); });
   } else {
     // Duplicate check: same name + time already booked on this date
     var fnLc = newRes.firstName.toLowerCase(), lnLc = newRes.lastName.toLowerCase();
@@ -6632,7 +6653,7 @@ function staffSaveRes() {
       firstName: newRes.firstName, lastName: newRes.lastName, email: newRes.email,
       phone: newRes.phone, party: newRes.partySize, member: newRes.member,
       venue: staffVenue, note: newRes.notes, submitted: newRes.createdAt, source: 'staff-portal'
-    }, function() {});
+    }, function(res, err) { staffWarnIfSyncFailed(res, err, 'new reservation'); });
   }
   staffSaveData(); staffEditIdx = null; document.getElementById('staff-form').style.display = 'none'; staffSelectDate(staffSelDate);
 }
