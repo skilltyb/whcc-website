@@ -929,6 +929,42 @@ function doPost(e) {
   }
 
   if (data.action === 'dining-reservation') {
+    // The public calendar widget only prevents *clicking* an invalid date —
+    // res-date-value is a plain field, so a direct POST (or a stale value
+    // left over from switching venue/member type) can reach here with a
+    // past date or a day the venue is closed. This is the real trust
+    // boundary; validate for real instead of trusting the client.
+    var resDateObj = data.date ? new Date(data.date + 'T00:00:00') : null;
+    if (!resDateObj || isNaN(resDateObj.getTime())) {
+      return jsonResponse({ ok: false, error: 'Invalid reservation date.' });
+    }
+    var todayObj = new Date();
+    todayObj.setHours(0, 0, 0, 0);
+    if (resDateObj < todayObj) {
+      return jsonResponse({ ok: false, error: 'Reservation date is in the past.' });
+    }
+    // Staff need to book exceptions (private events, holiday hours) on days
+    // that are otherwise closed — only the public-facing form is restricted
+    // to the venue's normal open days.
+    if (String(data.source || '') !== 'staff-portal') {
+      var resVenue = String(data.venue || '').toLowerCase();
+      var resDow = resDateObj.getDay();
+      if ((resVenue === 'grille' || resVenue === 'grill') && resDow === 1) {
+        return jsonResponse({ ok: false, error: 'The Westwood Grill is closed on Mondays.' });
+      }
+      if (resVenue === 'hoovers') {
+        var isMemberRes = String(data.member || '') === 'member';
+        var resDateNum = resDateObj.getDate();
+        var validHooversDay = isMemberRes
+          ? (resDow === 4 || resDow === 5 || resDow === 6)
+          : (resDow === 6 && resDateNum >= 15 && resDateNum <= 21);
+        if (!validHooversDay) {
+          return jsonResponse({ ok: false, error: isMemberRes
+            ? "Hoover's is only open Thursday-Saturday for members."
+            : "Non-member reservations at Hoover's are only available on the 3rd Saturday of the month." });
+        }
+      }
+    }
     var dSheet = getOrCreateDiningSheet();
     var hdrs = dSheet.getRange(1, 1, 1, dSheet.getLastColumn()).getValues()[0];
     var row = new Array(hdrs.length).fill('');

@@ -543,9 +543,11 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 .staff-cal-head{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px}
 .staff-cal-head span{text-align:center;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);padding:6px 0}
 .staff-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
-.staff-cal-day{padding:8px 4px;text-align:center;min-height:58px;border:1px solid transparent;border-radius:3px;transition:all .15s;cursor:default}
-.staff-cal-day.service{background:rgba(255,255,255,.03);cursor:pointer}
+.staff-cal-day{padding:8px 4px;text-align:center;min-height:58px;border:1px solid transparent;border-radius:3px;transition:all .15s;cursor:pointer}
+.staff-cal-day:hover{background:rgba(255,255,255,.04)}
+.staff-cal-day.service{background:rgba(255,255,255,.03)}
 .staff-cal-day.service:hover{background:rgba(184,151,106,.1)}
+.staff-cal-day.flagged{border-color:rgba(204,85,85,.5)}
 .staff-cal-day.selected{background:rgba(184,151,106,.2)}
 .staff-cal-day.today{border-color:rgba(184,151,106,.4)}
 .staff-cal-day-num{font-size:14px;color:rgba(245,240,232,.2)}
@@ -4887,6 +4889,15 @@ async function submitReservation() {
   if (!email && !phone) { errorEl.textContent = 'Please provide an email or phone number so we can confirm.'; return; }
   if (venue === 'hoovers' && !member) { errorEl.textContent = 'Please select whether you are a member.'; return; }
   if (!dateVal) { errorEl.textContent = 'Please select a date.'; return; }
+  // Re-validate the date against the same rules the calendar widget uses —
+  // the widget only prevents *clicking* an invalid date; res-date-value is a
+  // plain hidden input, so nothing else stops a stale or tampered value from
+  // reaching here (e.g. a date selected before switching venue/member type).
+  var dvParts = dateVal.split('-').map(Number);
+  if (dvParts.length !== 3 || !isDateAvailable(dvParts[0], dvParts[1] - 1, dvParts[2])) {
+    errorEl.textContent = 'That date is no longer available. Please choose another date.';
+    return;
+  }
   if (!time) { errorEl.textContent = 'Please select a time.'; return; }
   if (!partySize) { errorEl.textContent = 'Please select your party size.'; return; }
 
@@ -6396,12 +6407,18 @@ function staffRenderCal() {
     const pct = staffCapPct(dk);
     const count = staffCountActive(dk);
     const is3rdSat = d === thirdSat && new Date(staffYear, staffMonth, d).getDay() === 6;
+    const isFlagged = count > 0 && !isSvc;
     const cell = document.createElement('div');
-    cell.className = 'staff-cal-day' + (isSvc ? ' service' : '') + (isToday ? ' today' : '') + (isSel ? ' selected' : '');
-    if (isSvc) cell.addEventListener('click', function() { staffSelectDate(dk); });
+    cell.className = 'staff-cal-day' + (isSvc ? ' service' : '') + (isToday ? ' today' : '') + (isSel ? ' selected' : '') + (isFlagged ? ' flagged' : '');
+    // Every day must stay clickable, not just "service" days — a reservation
+    // can end up on a closed day (bad data, a stale booking, a validation
+    // gap elsewhere) and staff still need to be able to open it to confirm
+    // or delete it. isSvc is styling-only now; it must never gate the click
+    // handler or the reservation-count badge below.
+    cell.addEventListener('click', function() { staffSelectDate(dk); });
     const num = document.createElement('div'); num.className = 'staff-cal-day-num'; num.textContent = d; cell.appendChild(num);
     if (is3rdSat) { const lbl = document.createElement('div'); lbl.className = 'staff-cal-day-label'; lbl.textContent = 'PUBLIC'; cell.appendChild(lbl); }
-    if (count > 0 && isSvc) {
+    if (count > 0) {
       const badge = document.createElement('div'); badge.className = 'staff-cal-day-badge';
       badge.style.background = pct >= 90 ? '#6a3030' : pct >= 60 ? '#5a4520' : '#2a4030';
       badge.style.color = pct >= 90 ? '#ff9999' : pct >= 60 ? '#d4b483' : '#8fcc8f';
@@ -6517,6 +6534,15 @@ function staffResCard(r, idx, showDate) {
   return card;
 }
 
+// Re-renders the Search tab's result list if a search is currently active —
+// staffSelectDate() only refreshes the shared detail panel, so without this
+// the left-hand search results kept showing a stale status after Confirm/
+// Cancel/Delete acted on a reservation found via Search.
+function staffRefreshSearchIfActive() {
+  var input = document.getElementById('staff-search-input');
+  if (input && input.value.trim()) staffSearch();
+}
+
 function staffUpdateStatus(dk, i, status) {
   if (!staffData[dk] || !staffData[dk][i]) return;
   var id = staffData[dk][i].id;
@@ -6525,8 +6551,9 @@ function staffUpdateStatus(dk, i, status) {
   if (id) WHCC_SYNC.updateDiningStatus(id, status, function() {});
   staffSelectDate(dk);
   staffUpdatePendingBadge();
+  staffRefreshSearchIfActive();
 }
-function staffDeleteRes(dk, i) { if (!staffData[dk] || !staffData[dk][i]) return; var id = staffData[dk][i].id; staffData[dk].splice(i, 1); if (staffData[dk].length === 0) delete staffData[dk]; staffSaveData(); if (id) WHCC_SYNC.deleteDining(id, function() {}); staffSelectDate(dk); }
+function staffDeleteRes(dk, i) { if (!staffData[dk] || !staffData[dk][i]) return; var id = staffData[dk][i].id; staffData[dk].splice(i, 1); if (staffData[dk].length === 0) delete staffData[dk]; staffSaveData(); if (id) WHCC_SYNC.deleteDining(id, function() {}); staffSelectDate(dk); staffRefreshSearchIfActive(); }
 
 // ── ADD/EDIT FORM ──
 function staffShowForm() {
