@@ -2577,6 +2577,16 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 
   <!-- Signup sheet -->
   <div id="sv-reg-list"></div>
+
+  <!-- Event RSVPs (social events — separate from the full registration flow above) -->
+  <div style="margin-top:28px;border-top:1px solid rgba(184,151,106,.2);padding-top:18px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:16px;color:#f5f0e8;">Event <em style="color:#d4b483;">RSVPs</em></div>
+      <button class="staff-add-btn" id="rsvp-refresh-btn" onclick="staffLoadEventRsvps()" style="background:#2d6a3f;color:#f5f0e8;border:1px solid #4a9460;">↻ Refresh</button>
+    </div>
+    <div style="font-size:.68rem;color:rgba(245,240,232,.35);margin-bottom:10px;">Attendees for Wing Dings, Calcuttas, and other RSVP-only social events.</div>
+    <div id="sv-rsvp-list"></div>
+  </div>
         </div>
 
         <!-- Pairings view -->
@@ -3863,6 +3873,15 @@ var WHCC_SYNC = {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({ action: 'get-pairings', staffPin: _staffSessionPin })
+    }).then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+  fetchEventRsvps: function(cb) {
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'get-event-rsvps', staffPin: _staffSessionPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -6123,6 +6142,52 @@ function staffViewRegistrations() {
                           ' · synced ' + new Date().toLocaleTimeString();
       }
     }
+  });
+
+  staffLoadEventRsvps();
+}
+
+// Event RSVPs (social events like Wing Dings/Calcuttas) are a separate sheet
+// from the full registration flow above — previously nothing in the staff
+// portal, mobile app, or anywhere else surfaced them, so staff had no way to
+// see who'd RSVP'd short of opening the raw Google Sheet.
+function staffLoadEventRsvps() {
+  var list = document.getElementById('sv-rsvp-list');
+  var btn = document.getElementById('rsvp-refresh-btn');
+  if (!list) return;
+  if (btn) { btn.disabled = true; btn.textContent = '…'; }
+  WHCC_SYNC.fetchEventRsvps(function(rows, err) {
+    if (btn) { btn.disabled = false; btn.textContent = '↻ Refresh'; }
+    if (err || !rows) {
+      list.innerHTML = '<div style="font-size:.75rem;color:rgba(245,240,232,.35);text-align:center;padding:16px;">Could not load RSVPs — check your connection.</div>';
+      return;
+    }
+    if (!rows.length) {
+      list.innerHTML = '<div style="font-size:.75rem;color:rgba(245,240,232,.35);text-align:center;padding:16px;">No RSVPs yet</div>';
+      return;
+    }
+    rows.sort(function(a, b) { return new Date(b['Timestamp'] || 0) - new Date(a['Timestamp'] || 0); });
+    var byEvent = {};
+    rows.forEach(function(r) {
+      var key = r['Event Name'] || 'Unknown event';
+      if (!byEvent[key]) byEvent[key] = [];
+      byEvent[key].push(r);
+    });
+    var html = '';
+    Object.keys(byEvent).forEach(function(evName) {
+      var evRows = byEvent[evName];
+      html += '<div style="background:rgba(255,255,255,.04);border:1px solid rgba(184,151,106,.15);padding:10px 14px;margin-bottom:8px;border-radius:2px;">';
+      html += '<div style="font-size:.72rem;font-weight:700;color:#d4b483;letter-spacing:.05em;margin-bottom:6px;">' + pairEsc(evName) + ' <span style="font-weight:400;color:rgba(245,240,232,.35);">(' + evRows.length + ')</span></div>';
+      evRows.forEach(function(r) {
+        html += '<div style="font-size:.72rem;color:rgba(245,240,232,.75);padding:3px 0;border-top:1px solid rgba(255,255,255,.06);">' +
+          pairEsc(r['First Name']) + ' ' + pairEsc(r['Last Name']) +
+          (r['Email'] ? ' · ' + pairEsc(r['Email']) : '') +
+          (r['Phone'] ? ' · ' + pairEsc(r['Phone']) : '') +
+          '</div>';
+      });
+      html += '</div>';
+    });
+    list.innerHTML = html;
   });
 }
 

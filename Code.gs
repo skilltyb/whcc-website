@@ -544,6 +544,24 @@ function doGet(e) {
     return jsonResponse(val !== null ? val : {});
   }
 
+  if (action === 'get-event-rsvps') {
+    if (!requireStaffAuth_(e.parameter)) return jsonResponse({ error: 'Not authorized.' });
+    var gerSh = getOrCreateEventRsvpSheet_();
+    var gerVals = gerSh.getDataRange().getValues();
+    if (gerVals.length <= 1) return jsonResponse([]);
+    var gerHdrs = gerVals[0];
+    var gerResult = [];
+    for (var geri = 1; geri < gerVals.length; geri++) {
+      var gerObj = {};
+      for (var gerj = 0; gerj < gerHdrs.length; gerj++) {
+        var gerV = gerVals[geri][gerj];
+        gerObj[gerHdrs[gerj]] = (gerV instanceof Date) ? gerV.toISOString() : String(gerV === null || gerV === undefined ? '' : gerV);
+      }
+      gerResult.push(gerObj);
+    }
+    return jsonResponse(gerResult);
+  }
+
   if (action === 'get-all-ops') {
     if (!requireStaffAuth_(e.parameter)) return jsonResponse({ error: 'Not authorized.' });
     var sh = getOpsSheet_();
@@ -1418,6 +1436,24 @@ function doPost(e) {
     if (!requireStaffAuth_(data)) return jsonResponse({ error: 'Not authorized.' });
     var val = opsGet_('pairings');
     return jsonResponse(val !== null ? val : {});
+  }
+
+  if (data.action === 'get-event-rsvps') {
+    if (!requireStaffAuth_(data)) return jsonResponse({ error: 'Not authorized.' });
+    var gerSh = getOrCreateEventRsvpSheet_();
+    var gerVals = gerSh.getDataRange().getValues();
+    if (gerVals.length <= 1) return jsonResponse([]);
+    var gerHdrs = gerVals[0];
+    var gerResult = [];
+    for (var geri = 1; geri < gerVals.length; geri++) {
+      var gerObj = {};
+      for (var gerj = 0; gerj < gerHdrs.length; gerj++) {
+        var gerV = gerVals[geri][gerj];
+        gerObj[gerHdrs[gerj]] = (gerV instanceof Date) ? gerV.toISOString() : String(gerV === null || gerV === undefined ? '' : gerV);
+      }
+      gerResult.push(gerObj);
+    }
+    return jsonResponse(gerResult);
   }
 
   if (data.action === 'get-live-scoring') {
