@@ -6158,7 +6158,7 @@ function staffLoadEventRsvps() {
   if (btn) { btn.disabled = true; btn.textContent = '…'; }
   WHCC_SYNC.fetchEventRsvps(function(rows, err) {
     if (btn) { btn.disabled = false; btn.textContent = '↻ Refresh'; }
-    if (err || !rows) {
+    if (err || !rows || !Array.isArray(rows)) {
       list.innerHTML = '<div style="font-size:.75rem;color:rgba(245,240,232,.35);text-align:center;padding:16px;">Could not load RSVPs — check your connection.</div>';
       return;
     }
