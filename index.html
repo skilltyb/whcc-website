@@ -3553,8 +3553,16 @@ function renderEventsGrid(events) {
 function renderHomeEvents(events) {
   var list = document.getElementById('home-events-list');
   if (!list) return;
-  var featured = (events || []).filter(function(e) { return e.featured && e.active !== false && !e.archived; }).slice(0, 5);
-  if (featured.length === 0) featured = (events || []).filter(function(e) { return e.active !== false && !e.archived; }).slice(0, 5);
+  // The events array isn't kept chronologically sorted (new events are
+  // appended, not inserted in date order), so this must filter to upcoming
+  // dates and sort itself rather than just taking the first N entries —
+  // otherwise old events sitting early in the array show up here forever.
+  var todayISO = new Date().toISOString().split('T')[0];
+  var upcoming = (events || [])
+    .filter(function(e) { return e.active !== false && !e.archived && e.date >= todayISO; })
+    .sort(function(a, b) { return (a.date || '').localeCompare(b.date || ''); });
+  var featured = upcoming.filter(function(e) { return e.featured; }).slice(0, 5);
+  if (featured.length === 0) featured = upcoming.slice(0, 5);
   var typeLabels = { golf:'Golf', tournament:'Tournament', social:'Social', aquatics:'Aquatics', weekly:'Weekly' };
   list.innerHTML = featured.map(function(ev) {
     return '<div class="event-item">' +
