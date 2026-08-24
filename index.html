@@ -124,6 +124,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .ph-tag{display:inline-block;font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;padding-left:44px;position:relative}
 .ph-tag::before{content:'';position:absolute;left:0;top:50%;width:32px;height:1px;background:var(--gold)}
 .ph-title{font-family:'Cormorant Garamond',serif;font-size:clamp(38px,5vw,68px);font-weight:300;color:var(--cream);line-height:.97}
+.ph-title:focus{outline:none}
 .ph-title em{font-style:italic;color:var(--gold-lt)}
 .ph-sub{margin-top:14px;font-size:13px;letter-spacing:.07em;color:rgba(245,240,232,.65);max-width:460px;line-height:1.8}
 .breadcrumb{background:var(--forest);padding:13px 80px;display:flex;align-items:center;gap:10px}
@@ -165,6 +166,7 @@ footer{background:var(--deep);padding:80px 80px 40px}
 .hero-tag{display:inline-block;font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;padding-left:48px;position:relative}
 .hero-tag::before{content:'';position:absolute;left:0;top:50%;width:36px;height:1px;background:var(--gold)}
 .hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(52px,7vw,96px);font-weight:300;color:var(--cream);line-height:.95;max-width:700px}
+.hero-title:focus{outline:none}
 .hero-title em{font-style:italic;color:var(--gold-lt)}
 .hero-sub{margin-top:24px;font-size:13px;letter-spacing:.12em;color:rgba(245,240,232,.65);max-width:380px;line-height:1.8}
 .hero-actions{margin-top:44px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
@@ -1218,7 +1220,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
         <h2 class="sec-title">Built for every <em>player</em></h2>
         <p class="sec-body full">Nestled in the rolling terrain of Southeast Missouri, our 18-hole championship layout is equal parts entertaining and challenging. Don't let the scorecard yardages fool you — Westwood Hills is well protected with strategic bunkering, ample trees, and Five par 3s that rank among the toughest holes on the course keep every round honest.</p>
         <p class="sec-body full">Practice facilities offer a full-length driving range, short game pitching and chipping area up to 50 yards, and a putting green that mimics course conditions daily.</p>
-        <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:4px;"><button class="btn-p" onclick="navigate('about')">Contact the Pro Shop</button><button id="golf-dl-scorecard" class="btn-g" onclick="golfDownload('scorecard')">Download Scorecard</button><button id="golf-dl-pinsheet" class="btn-g" onclick="golfDownload('pinsheet')">Download Pin Sheet</button></div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:4px;"><button class="btn-p" onclick="navigate('about')">Contact the Pro Shop</button><button id="golf-dl-scorecard" class="btn-g" onclick="golfDownload('scorecard')">Download Scorecard</button></div>
       </div>
       <div class="tee-box fade-up d2">
         <p class="tee-title">Tee Options</p>
@@ -1293,7 +1295,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 
       <!-- No active tournament -->
       <div id="ls-inactive" class="ls-inactive">
-        <div class="ls-inactive-icon">🏆</div>
+        <div class="ls-inactive-icon"></div>
         <p class="ls-inactive-title">No tournament in progress</p>
         <p class="ls-inactive-body">Live scoring, tee sheets, and pairings are available during tournaments and league events. Check the <a onclick="navigate('events')" style="color:var(--gold);cursor:pointer;text-decoration:none;">events calendar</a> for upcoming competitions.</p>
         <div class="ls-upcoming" id="ls-upcoming"></div>
@@ -1311,12 +1313,12 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <p class="eyebrow lt fade-up">Practice &amp; Facilities</p>
     <h2 class="sec-title light fade-up d1">Everything to <em>improve your game</em></h2>
     <div class="feats3">
-      <div class="feat-card fade-up d1"><div class="feat-icon">⛳</div><h3 class="feat-name">Driving Range</h3><p class="feat-desc">Full-length range with grass tees, target greens at 75, 125, and 200 yards, and mat stations for year-round practice.</p></div>
-      <div class="feat-card fade-up d2"><div class="feat-icon">🏌️</div><h3 class="feat-name">Short Game Area</h3><p class="feat-desc">Dedicated chipping green with multiple pin positions, bunkers, and a 50-yard approach zone.</p></div>
-      <div class="feat-card fade-up d3"><div class="feat-icon">🟢</div><h3 class="feat-name">Putting Green</h3><p class="feat-desc">Championship-condition putting green mirroring exact course speed and slope. Available before and after every round.</p></div>
-      <div class="feat-card fade-up d1"><div class="feat-icon">🎓</div><h3 class="feat-name">Lessons &amp; Clinics</h3><p class="feat-desc">PGA professionals on staff for private lessons, group clinics, and custom improvement programs for all ages.</p></div>
-      <div class="feat-card fade-up d2"><div class="feat-icon">🛒</div><h3 class="feat-name">Golf Cars</h3><p class="feat-desc">Fleet of modern electric golf cars available for all rounds. Pull carts for those who prefer to walk.</p></div>
-      <div class="feat-card fade-up d3"><div class="feat-icon">🏆</div><h3 class="feat-name">Pro Shop</h3><p class="feat-desc">Premium equipment, branded apparel, custom fitting, and club repair.</p></div>
+      <div class="feat-card fade-up d1"><h3 class="feat-name">Driving Range</h3><p class="feat-desc">Full-length range with grass tees, target greens at 75, 125, and 200 yards, and mat stations for year-round practice.</p></div>
+      <div class="feat-card fade-up d2"><h3 class="feat-name">Short Game Area</h3><p class="feat-desc">Dedicated chipping green with multiple pin positions, bunkers, and a 50-yard approach zone.</p></div>
+      <div class="feat-card fade-up d3"><h3 class="feat-name">Putting Green</h3><p class="feat-desc">Championship-condition putting green mirroring exact course speed and slope. Available before and after every round.</p></div>
+      <div class="feat-card fade-up d1"><h3 class="feat-name">Lessons &amp; Clinics</h3><p class="feat-desc">PGA professionals on staff for private lessons, group clinics, and custom improvement programs for all ages.</p></div>
+      <div class="feat-card fade-up d2"><h3 class="feat-name">Golf Cars</h3><p class="feat-desc">Fleet of modern electric golf cars available for all rounds. Pull carts for those who prefer to walk.</p></div>
+      <div class="feat-card fade-up d3"><h3 class="feat-name">Pro Shop</h3><p class="feat-desc">Premium equipment, branded apparel, custom fitting, and club repair.</p></div>
     </div>
   </div>
 
@@ -1676,17 +1678,14 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <h2 class="sec-title fade-up d1" style="color:var(--forest)">Everything a <em>summer should be</em></h2>
     <div class="fade-up d2" style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:48px;">
       <div style="text-align:center;padding:32px 24px;background:#fff;border-radius:8px;box-shadow:0 2px 16px rgba(0,0,0,.06);">
-        <div style="font-size:2rem;margin-bottom:12px;">☀️</div>
         <p style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--forest);margin:0 0 8px;">Endless Sunny Days</p>
         <p style="font-size:.85rem;color:var(--muted-text);line-height:1.7;margin:0;">Six days a week of sparkling water, warm sun, and the kind of lazy afternoon every child deserves. Open Tuesday through Sunday all season long.</p>
       </div>
-      <div style="text-align:center;padding:32px 24px;background:#fff;border-radius:8px;box-shadow:0 2px 16px rgba(0,0,0,.06);">
-        <div style="font-size:2rem;margin-bottom:12px;">🎉</div>
-        <p style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--forest);margin:0 0 8px;">Private Pool Parties</p>
-        <p style="font-size:.85rem;color:var(--muted-text);line-height:1.7;margin:0;">Make your child's birthday unforgettable. Members can reserve the pool exclusively — call the Pro Shop at (573) 785-5253 to plan the perfect party.</p>
+      <div id="pool-rentals" style="text-align:center;padding:32px 24px;background:#fff;border-radius:8px;box-shadow:0 2px 16px rgba(0,0,0,.06);">
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--forest);margin:0 0 8px;">Rent the Pool</p>
+        <p style="font-size:.85rem;color:var(--muted-text);line-height:1.7;margin:0;">Make your child's birthday — or any occasion — unforgettable. Members can reserve the pool exclusively in 2-hour blocks, $100 for up to 25 guests. Call the Pro Shop at (573) 785-5253 to book.</p>
       </div>
       <div style="text-align:center;padding:32px 24px;background:#fff;border-radius:8px;box-shadow:0 2px 16px rgba(0,0,0,.06);">
-        <div style="font-size:2rem;margin-bottom:12px;">🍽️</div>
         <p style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--forest);margin:0 0 8px;">Dine Right Poolside</p>
         <p style="font-size:.85rem;color:var(--muted-text);line-height:1.7;margin:0;">No packing a cooler. Enjoy fresh food and cold drinks from the Westwood Grill — all charged conveniently to your member account.</p>
       </div>
@@ -1704,21 +1703,6 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     </div>
   </div>
 
-  <!-- Swimming Programs -->
-  <div class="section" id="swim-programs">
-    <p class="eyebrow fade-up">Swimming Programs</p>
-    <h2 class="sec-title fade-up d1">Learn, compete, <em>thrive</em></h2>
-    <div class="feats3">
-      <div class="feat-card fade-up d1"><div class="feat-icon">👶</div><h3 class="feat-name">Parent &amp; Tot · Ages 3–6</h3><p class="feat-desc">Water safety fundamentals and early swim skills in a nurturing, fun environment with caregiver participation.</p></div>
-      <div class="feat-card fade-up d2"><div class="feat-icon">🏊</div><h3 class="feat-name">Learn to Swim · Ages 5–12</h3><p class="feat-desc">Progressive swim instruction through skill levels — from water comfort to competitive strokes and flip turns.</p></div>
-      <div class="feat-card fade-up d3" id="swim-team"><div class="feat-icon">🏅</div><h3 class="feat-name">Westwood Wahoos · Ages 8–18</h3><p class="feat-desc">Competitive swim team in the Southeast Missouri Swim League. Practice 4x per week, home meets on weekends, late May through late July.</p></div>
-      <div class="feat-card fade-up d1"><div class="feat-icon">⏱️</div><h3 class="feat-name">Adult Lap Swim · All Ages</h3><p class="feat-desc">Open lap lanes Monday–Friday from 6–9 AM and designated adult-only sessions during the week.</p></div>
-      <div class="feat-card fade-up d2"><div class="feat-icon">💧</div><h3 class="feat-name">Water Aerobics · Adults</h3><p class="feat-desc">Low-impact fitness classes in the pool — great for joint health, cardio, and fun. Multiple sessions weekly.</p></div>
-      <div class="feat-card fade-up d3"><div class="feat-icon">🛟</div><h3 class="feat-name">Lifeguard Certification · Ages 15+</h3><p class="feat-desc">Red Cross lifeguard training and certification course. Prerequisites apply. Offered each spring.</p></div>
-    </div>
-    <p class="sec-body" style="margin-top:8px;text-align:center;max-width:100%;">Contact the Pro Shop at (573) 785-5253 to register for any program.</p>
-  </div>
-
   <!-- CTA -->
   <div style="background:linear-gradient(135deg,#083050,#0d4a7a);padding:80px;text-align:center;">
     <div class="fade-up">
@@ -1729,7 +1713,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     </div>
   </div>
 
-  <footer><div class="footer-top"><div><div class="footer-brand-logo"><div class="nav-emblem">WH</div><div class="footer-brand-text">Westwood Hills<br>Country Club<small>Est. 1936 · Poplar Bluff, MO</small></div></div><p class="footer-tagline">Southeast Missouri's premier private country club.</p></div><div><p class="fcol-title">Aquatics</p><ul class="flinks"><li><a onclick="navigate('aquatics')">Pool Complex</a></li><li><a onclick="navigate('aquatics');setTimeout(function(){var e=document.getElementById('swim-programs');if(e)e.scrollIntoView({behavior:'smooth'});},60)">Swim Programs</a></li><li><a onclick="navigate('aquatics');setTimeout(function(){var e=document.getElementById('swim-team');if(e)e.scrollIntoView({behavior:'smooth'});},60)">Swim Team</a></li><li><a onclick="navigate('aquatics')">Hours</a></li></ul></div><div><p class="fcol-title">The Club</p><ul class="flinks"><li><a onclick="navigate('golf')">Golf</a></li><li><a onclick="navigate('dining')">Dining</a></li><li><a onclick="navigate('membership')">Membership</a></li></ul></div><div><p class="fcol-title">Contact</p><div class="fci"><strong>Clubhouse</strong>(573) 785-5253</div></div></div><div class="footer-bottom"><p class="fcopy">© 2026 Westwood Hills Country Club.</p><p class="fcopy">Poplar Bluff, Missouri · Est. 1936</p><p class="fcopy" style="margin-top:4px;"><a onclick="navigate('staff')" style="color:rgba(245,240,232,.35);cursor:pointer;text-decoration:none;font-size:10px;letter-spacing:.1em;">Staff Portal</a></p></div></footer>
+  <footer><div class="footer-top"><div><div class="footer-brand-logo"><div class="nav-emblem">WH</div><div class="footer-brand-text">Westwood Hills<br>Country Club<small>Est. 1936 · Poplar Bluff, MO</small></div></div><p class="footer-tagline">Southeast Missouri's premier private country club.</p></div><div><p class="fcol-title">Aquatics</p><ul class="flinks"><li><a onclick="navigate('aquatics')">Pool Complex</a></li><li><a onclick="navigate('aquatics');setTimeout(function(){var e=document.getElementById('pool-rentals');if(e)e.scrollIntoView({behavior:'smooth'});},60)">Pool Rentals</a></li><li><a onclick="navigate('aquatics')">Hours</a></li></ul></div><div><p class="fcol-title">The Club</p><ul class="flinks"><li><a onclick="navigate('golf')">Golf</a></li><li><a onclick="navigate('dining')">Dining</a></li><li><a onclick="navigate('membership')">Membership</a></li></ul></div><div><p class="fcol-title">Contact</p><div class="fci"><strong>Clubhouse</strong>(573) 785-5253</div></div></div><div class="footer-bottom"><p class="fcopy">© 2026 Westwood Hills Country Club.</p><p class="fcopy">Poplar Bluff, Missouri · Est. 1936</p><p class="fcopy" style="margin-top:4px;"><a onclick="navigate('staff')" style="color:rgba(245,240,232,.35);cursor:pointer;text-decoration:none;font-size:10px;letter-spacing:.1em;">Staff Portal</a></p></div></footer>
 </div>
 
 <!-- ═══════════════════════════════════════
@@ -1743,10 +1727,6 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 
   <div class="filter-bar">
     <button class="filter-btn active">All Events</button>
-    <button class="filter-btn">Golf</button>
-    <button class="filter-btn">Tournaments</button>
-    <button class="filter-btn">Social</button>
-    <button class="filter-btn">Aquatics</button>
   </div>
 
   <div class="section">
@@ -1904,32 +1884,26 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 
   <div class="wj-grid fade-up d2">
     <div class="wj-card">
-      <div class="wj-icon">⛳</div>
       <div class="wj-title">Golf whenever you want</div>
       <p class="wj-body">No tee time fees. No per-round charges. Just show up and play 18 — or 9 at sunset, or a quick putting session before work. The course is yours, seven days a week. Try getting that value at a daily-fee course.</p>
     </div>
     <div class="wj-card">
-      <div class="wj-icon">🏊</div>
       <div class="wj-title">Your kids' summer, solved</div>
-      <p class="wj-body">Drop the kids at the pool in the morning and pick them up in the afternoon. Swim team, lifeguards, snack bar, friends they'll keep for life. A Full Family membership costs less per month than a season at most public pools — and includes everything else the club offers.</p>
+      <p class="wj-body">Drop the kids at the pool in the morning and pick them up in the afternoon. Lifeguards, snack bar, friends they'll keep for life. A Full Family membership costs less per month than a season at most public pools — and includes everything else the club offers.</p>
     </div>
     <div class="wj-card">
-      <div class="wj-icon">🍽️</div>
       <div class="wj-title">A real night out — in Poplar Bluff</div>
       <p class="wj-body">Hoover's is the best restaurant for 50 miles and it's exclusively for members and their guests (except 3rd Saturday). Filet Oscar, wine pairings, tablecloths — without the two-hour drive. Plus the Westwood Grill for Tuesday burgers when you just want to be easy.</p>
     </div>
     <div class="wj-card">
-      <div class="wj-icon">👨‍👩‍👧‍👦</div>
       <div class="wj-title">It's a community, not a facility</div>
-      <p class="wj-body">The couple you meet at the Member-Guest becomes your Saturday foursome. Your daughter's swim friend's mom becomes your friend. The bartender knows your drink. That's what happens when the same 200 families share a place for years. It compounds.</p>
+      <p class="wj-body">The couple you meet at the Member-Guest becomes your Saturday foursome. Your daughter's pool friend's mom becomes your friend. The bartender knows your drink. That's what happens when the same 200 families share a place for years. It compounds.</p>
     </div>
     <div class="wj-card">
-      <div class="wj-icon">📅</div>
       <div class="wj-title">Something happening every week</div>
       <p class="wj-body">Trivia night, couples' golf, kids' movie night, holiday brunches, the Fourth of July blowout, the Club Championship. There's always a reason to come back. People who join expecting to golf end up spending just as much time at the events.</p>
     </div>
     <div class="wj-card">
-      <div class="wj-icon">💰</div>
       <div class="wj-title">It's more affordable than you think</div>
       <p class="wj-body">Most people assume a country club is out of reach. But when you add up the gym membership you're not using, the public pool passes, the green fees at other courses, and eating out twice a week — you're already spending it. You're just not getting all this.</p>
     </div>
@@ -3469,6 +3443,12 @@ function applySiteContent(sc) {
   }
   // Pro Bio — Meet the Pro section on Golf page
   renderProBio(sc.proBio || WH_SITE_DEFAULTS.proBio || {});
+  // Re-observe any freshly-rendered .fade-up elements (event cards, photo
+  // grids, FAQ items) — this runs again once the async Sheet fetch resolves
+  // and replaces content that initFades() already ran against on page load,
+  // so without this, the new elements are stuck at opacity:0 forever (looks
+  // like the section "disappears" a few seconds after it first rendered).
+  if (typeof initFades === 'function') initFades();
 }
 
 function renderProBio(pb) {
