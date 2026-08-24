@@ -284,13 +284,6 @@ footer{background:var(--deep);padding:80px 80px 40px}
 .menu-item:last-child{border-bottom:none}
 .mi-name{font-size:14px;color:var(--text)}.mi-desc{font-size:12px;color:var(--muted);margin-top:1px}
 .mi-price{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold);flex-shrink:0}
-.express-banner{display:flex;align-items:center;justify-content:center;gap:12px;background:var(--forest);color:#fff;padding:10px 28px;border-radius:28px;font-size:.85rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;width:fit-content;margin:0 auto 36px}
-.express-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:0}
-.express-card{background:#fff;border:1px solid rgba(26,43,31,.12);border-radius:10px;padding:28px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;box-shadow:0 2px 12px rgba(26,43,31,.06)}
-.express-price{background:var(--forest);color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;padding:4px 20px;border-radius:20px;line-height:1.4}
-.express-name{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--dark);line-height:1.3}
-.express-avail{font-size:.8rem;color:var(--muted);margin-top:24px;text-align:center}
-
 .spaces-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:44px}
 .space-card{background:var(--cream);border:1px solid rgba(26,43,31,.1);overflow:hidden}
 .space-vis{height:180px;background:var(--forest);display:flex;align-items:center;justify-content:center}
@@ -881,7 +874,6 @@ nav.staff-mode .nav-site-back{display:flex!important;}
   .course-split{grid-template-columns:1fr;gap:40px}
   .feats3{grid-template-columns:1fr 1fr}
   .menu-grid{grid-template-columns:1fr}
-  .express-grid{grid-template-columns:repeat(2,1fr)}
   .spaces-grid{grid-template-columns:1fr}
   .hours-grid{grid-template-columns:1fr}
   .hoovers-intro{padding:64px 32px}
@@ -1585,35 +1577,10 @@ nav.staff-mode .nav-site-back{display:flex!important;}
         <div id="hm-grill-lunchdesserts"></div>
         <p class="menu-cat-title" style="margin-top:28px;">Kids Menu</p>
         <div id="hm-grill-quick"></div>
+        <p class="menu-cat-title" style="margin-top:28px;">Dessert</p>
+        <div id="hm-grill-dessert"></div>
       </div>
     </div></div>
-  </div>
-
-  <!-- ── EXPRESS LUNCH ── -->
-  <div class="section" style="background:var(--cream);">
-    <p class="eyebrow fade-up">Westwood Grill</p>
-    <h2 class="sec-title fade-up d1">Express Lunch — <em>15 Minute Guarantee</em></h2>
-    <p class="sec-body fade-up d2">Short on time? Our Express Lunch gets you a fresh, delicious meal in 15 minutes or less. Choose from four great options, available Tuesday through Friday from 11:30 AM to 1:00 PM.</p>
-    <div class="express-banner fade-up d2" id="express-lunch-banner">⚡ 15 Minute Guarantee &nbsp;·&nbsp; Tue – Fri &nbsp;·&nbsp; 11:30 AM – 1:00 PM</div>
-    <div class="express-grid fade-up d3" id="express-lunch-grid">
-      <div class="express-card">
-        <div class="express-price">$13</div>
-        <div class="express-name">Chicken Bacon Ranch Wrap</div>
-      </div>
-      <div class="express-card">
-        <div class="express-price">$14</div>
-        <div class="express-name">½ lb Cheeseburger</div>
-      </div>
-      <div class="express-card">
-        <div class="express-price">$13</div>
-        <div class="express-name">Caesar Salad</div>
-      </div>
-      <div class="express-card">
-        <div class="express-price">$12</div>
-        <div class="express-name">Soup &amp; Salad Combo</div>
-      </div>
-    </div>
-    <p class="express-avail fade-up d3">Our entire grill menu is also available for take out — call <strong>(573) 785-5253</strong>.</p>
   </div>
 
   <!-- ── OUR SPACES ── -->
@@ -2124,7 +2091,6 @@ nav.staff-mode .nav-site-back{display:flex!important;}
             <button id="svb-contact"       onclick="staffView('contact');svCloseDrop()">Contact Info</button>
             <button id="svb-photos"        onclick="staffView('photos');svCloseDrop()">Photos</button>
             <button id="svb-pool"          onclick="staffView('pool');svCloseDrop()">Pool Hours</button>
-            <button id="svb-express"       onclick="staffView('express');svCloseDrop()">Express Lunch</button>
             <button id="svb-stats"         onclick="staffView('stats');svCloseDrop()">Club Statistics</button>
             <button id="svb-faq"           onclick="staffView('faq');svCloseDrop()">Membership FAQ</button>
             <button id="svb-probio"        onclick="staffView('probio');svCloseDrop()">Pro &amp; Lessons</button>
@@ -2491,7 +2457,8 @@ nav.staff-mode .nav-site-back{display:flex!important;}
               <div style="margin-bottom:16px;"><div class="staff-tag" style="margin-bottom:8px;">Starters</div><div id="smg-starters-list"></div></div>
               <div style="margin-bottom:16px;"><div class="staff-tag" style="margin-bottom:8px;">Sandwiches</div><div id="smg-sandwiches-list"></div></div>
               <div style="margin-bottom:16px;"><div class="staff-tag" style="margin-bottom:8px;">Signature Entrees</div><div id="smg-lunchentrees-list"></div></div>
-              <div><div class="staff-tag" style="margin-bottom:8px;">Salads</div><div id="smg-lunchdesserts-list"></div></div>
+              <div style="margin-bottom:16px;"><div class="staff-tag" style="margin-bottom:8px;">Salads</div><div id="smg-lunchdesserts-list"></div></div>
+              <div><div class="staff-tag" style="margin-bottom:8px;">Dessert</div><div id="smg-dessert-list"></div></div>
             </div>
             <div id="smg-drinks" style="display:none;">
               <div style="margin-bottom:16px;"><div class="staff-tag" style="margin-bottom:8px;">Cocktails</div><div id="smg-cocktails-list"></div></div>
@@ -2850,21 +2817,6 @@ nav.staff-mode .nav-site-back{display:flex!important;}
           </div>
           <button class="btn-p" style="margin-top:20px;width:100%;max-width:560px;" onclick="cmsPoolSave()">Save Pool Hours</button>
           <div id="cms-pool-status" style="display:none;color:#8fcc8f;font-size:12px;margin-top:8px;"></div>
-        </div>
-
-        <!-- EXPRESS LUNCH EDITOR -->
-        <div id="sv-express" style="display:none;">
-          <div class="staff-section-header" style="margin-bottom:16px;">
-            <div class="staff-tag">Express Lunch</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:4px;">Update the Express Lunch items, prices, and availability shown on the Dining page.</div>
-          </div>
-          <div style="display:grid;gap:12px;max-width:520px;">
-            <div class="hrf-group"><label class="hrf-label" for="cms-el-available">Availability (banner text)</label><input class="hrf-input" id="cms-el-available" placeholder="Tue – Fri · 11:30 AM – 1:00 PM" /></div>
-            <div style="color:rgba(245,240,232,.5);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-top:4px;padding-bottom:4px;border-bottom:1px solid rgba(184,151,106,.1);">Menu Items — Item Name &nbsp;|&nbsp; Price</div>
-            <div id="cms-el-items"></div>
-          </div>
-          <button class="btn-p" style="margin-top:20px;width:100%;max-width:520px;" onclick="cmsExpressSave()">Save Express Lunch</button>
-          <div id="cms-express-status" style="display:none;color:#8fcc8f;font-size:12px;margin-top:8px;"></div>
         </div>
 
         <!-- CLUB STATS EDITOR -->
@@ -3232,15 +3184,6 @@ var WH_SITE_DEFAULTS = {
       { days: 'Sat & Sun', time: '10 AM \u2013 9 PM',      note: 'Full day open swim'   }
     ]
   },
-  express_lunch: {
-    available: 'Tue \u2013 Fri \u00b7 11:30 AM \u2013 1:00 PM',
-    items: [
-      { name: 'Chicken Bacon Ranch Wrap', price: '$13' },
-      { name: '\u00bd lb Cheeseburger',   price: '$14' },
-      { name: 'Caesar Salad',             price: '$13' },
-      { name: 'Soup & Salad Combo',       price: '$12' }
-    ]
-  },
   about_stats: {
     year_founded:    '1936',
     holes:           '18',
@@ -3415,16 +3358,6 @@ function applySiteContent(sc) {
     poolGrid.innerHTML = seasonItem + poolData.hours.map(function(h) {
       return '<div class="pf-item"><div class="pf-name">' + h.days + '</div>'
            + '<div class="pf-sub">' + h.time + (h.note ? ' \u00b7 ' + h.note : '') + '</div></div>';
-    }).join('');
-  }
-  // Express lunch
-  var elData = sc.express_lunch || WH_SITE_DEFAULTS.express_lunch;
-  var elBanner = document.getElementById('express-lunch-banner');
-  if (elBanner) elBanner.innerHTML = '&#9889; 15 Minute Guarantee &nbsp;&middot;&nbsp; ' + (elData.available || '');
-  var elGrid = document.getElementById('express-lunch-grid');
-  if (elGrid && elData.items && elData.items.length) {
-    elGrid.innerHTML = elData.items.map(function(item) {
-      return '<div class="express-card"><div class="express-price">' + item.price + '</div><div class="express-name">' + item.name + '</div></div>';
     }).join('');
   }
   // About stats
@@ -5183,7 +5116,7 @@ loadDailyUpdate();
 // MENU MANAGEMENT
 // ════════════════════════════════════════════════════
 // Bump this string whenever WH_MENU_DEFAULTS changes to auto-clear stale caches
-var WH_MENU_VERSION = '3';
+var WH_MENU_VERSION = '4';
 var WH_MENU_DEFAULTS = {
   weeklySpecial:{active:false,name:'',desc:'',price:'',wine:''},
   fridayNight:{active:false,name:'',desc:'',price:'',wine:''},
@@ -5213,36 +5146,43 @@ var WH_MENU_DEFAULTS = {
   },
   grill:{
     starters:[
-      {name:'Cheese Balls',desc:'Regular or Spicy',price:'$14'},
-      {name:'Fried Green Beans',desc:'',price:'$10'},
-      {name:'Mini Tacos',desc:'',price:'$12'},
-      {name:'Chips & Queso',desc:'',price:'$13'},
-      {name:'Wings (6 pc)',desc:'Sweet Thai Chili, Buffalo, Garlic Parm, BBQ, or Plain',price:'$12'},
-      {name:'Wings (12 pc)',desc:'Sweet Thai Chili, Buffalo, Garlic Parm, BBQ, or Plain',price:'$16'}
+      {name:'Fried Green Beans',desc:'Served with house-made ranch or chipotle ranch',price:'$10'},
+      {name:'Cheese Balls',desc:'Golden-fried cheese curds, served with ranch or chipotle ranch',price:'$13'},
+      {name:'Spicy Cheese Curds',desc:'Crispy battered cheese curds, served with ranch or chipotle ranch',price:'$13'},
+      {name:'House Chips & Queso',desc:'Hand-cut chips with warm queso dip',price:'$11'},
+      {name:'Mini Tacos',desc:'Seasoned chicken and beans, with sour cream and salsa',price:'$11'},
+      {name:'Boneless or Traditional Wings (6 pc)',desc:'Sweet Thai Chili, Buffalo, Garlic Parm, BBQ, or Plain',price:'$12'},
+      {name:'Boneless or Traditional Wings (12 pc)',desc:'Sweet Thai Chili, Buffalo, Garlic Parm, BBQ, or Plain',price:'$16'}
     ],
     sandwiches:[
-      {name:'WHCC Club',desc:'With choice of side',price:'$15'},
-      {name:'Chicken Bacon Ranch Wrap',desc:'With choice of side',price:'$13'},
-      {name:'Chicken Sandwich',desc:'Grilled or Fried — with choice of side',price:'$15'},
+      {name:'WHCC Club',desc:'Sandwich or wrap — with choice of side',price:'$14'},
+      {name:'Chicken Bacon Ranch Wrap',desc:'Grilled or Fried — with choice of side',price:'$13'},
+      {name:'Philly Cheesesteak',desc:'Steak or Chicken — with choice of side',price:'$14'},
+      {name:'Hot Ham & Cheese',desc:'With choice of side',price:'$11'},
+      {name:'Reuben',desc:'With choice of side',price:'$13'},
       {name:'WHCC Smashburger (Single)',desc:'With choice of side',price:'$11'},
       {name:'WHCC Smashburger (Double)',desc:'With choice of side',price:'$14'},
-      {name:'Steak or Chicken Philly',desc:'With choice of side',price:'$14'},
-      {name:'Hot Ham & Cheese',desc:'With choice of side',price:'$11'},
-      {name:'Chicken Caesar Wrap',desc:'With choice of side',price:'$13'},
-      {name:'BLT',desc:'With choice of side',price:'$14'},
+      {name:'Chicken Sandwich',desc:'Grilled or Fried — with choice of side',price:'$15'},
       {name:'Quesadilla',desc:'Chicken or Steak — with choice of side',price:'$12'},
-      {name:'Grilled Cheese',desc:'With choice of side',price:'$8'}
+      {name:'BLT',desc:'With choice of side',price:'$14'},
+      {name:'Chicken Salad Sandwich',desc:'Toasted croissant — with choice of side',price:'$13'}
     ],
     lunchEntrees:[
       {name:'12oz Ribeye',desc:'',price:'$35'},
+      {name:'Bone-In Pork Chop',desc:'',price:'$30'},
       {name:'Pan Seared Salmon',desc:'',price:'$24'},
       {name:'Grilled Chicken',desc:'',price:'$22'}
     ],
     lunchDesserts:[
-      {name:'House Salad',desc:'Add Chicken, Shrimp, or Salmon +$7',price:'$10'},
+      {name:'House',desc:'Add Chicken, Shrimp, or Salmon +$7',price:'$11'},
       {name:'Caesar',desc:'Add Chicken, Shrimp, or Salmon +$7',price:'$11'},
       {name:'Nicoise',desc:'Add Chicken, Shrimp, or Salmon +$7',price:'$13'},
       {name:'Cranberry Pecan',desc:'Add Chicken, Shrimp, or Salmon +$7',price:'$13'}
+    ],
+    dessert:[
+      {name:'Sorbet',desc:'',price:'$7'},
+      {name:'Crème Brûlée',desc:'',price:'$6'},
+      {name:'Chocolate Lava Cake',desc:'',price:'$8'}
     ],
     cocktails:[
       {name:'Westwood Old Fashioned',desc:'Bulleit Rye, house demerara, Angostura, orange',price:'$13'},
@@ -5346,7 +5286,8 @@ function menuRenderGrill(g){
   var map={'hm-grill-starters':g.starters,'hm-grill-sandwiches':g.sandwiches,
     'hm-grill-lunchentrees':g.lunchEntrees,'hm-grill-lunchdesserts':g.lunchDesserts,
     'hm-grill-cocktails':g.cocktails,'hm-grill-wine':g.wine,
-    'hm-grill-quick':g.quickBites,'hm-grill-postround':g.postRound};
+    'hm-grill-quick':g.quickBites,'hm-grill-postround':g.postRound,
+    'hm-grill-dessert':g.dessert};
   Object.keys(map).forEach(function(id){
     var el=document.getElementById(id);
     if(el&&map[id]) el.innerHTML=map[id].map(function(i){return menuItemHTML(i,true);}).join('');
@@ -5523,6 +5464,7 @@ function smRenderEditorLists(data){
   smRenderItemList('smg-sandwiches-list',data.grill.sandwiches,'grill.sandwiches',true,false);
   smRenderItemList('smg-lunchentrees-list',data.grill.lunchEntrees,'grill.lunchEntrees',true,false);
   smRenderItemList('smg-lunchdesserts-list',data.grill.lunchDesserts,'grill.lunchDesserts',true,false);
+  smRenderItemList('smg-dessert-list',data.grill.dessert,'grill.dessert',true,false);
   smRenderItemList('smg-cocktails-list',data.grill.cocktails,'grill.cocktails',true,false);
   smRenderItemList('smg-wine-list',data.grill.wine,'grill.wine',true,false);
   smRenderItemList('smg-quick-list',data.grill.quickBites,'grill.quickBites',true,false);
@@ -6019,7 +5961,7 @@ var _svViewGroups = {
   reservations: ['today','calendar','upcoming','pending','guests'],
   golf:         ['registrations','pairings','daily','scoring','lessons'],
   admin:        ['menus','settings','launch'],
-  website:      ['events','announcements','heroes','contact','photos','pool','express','stats','faq','probio']
+  website:      ['events','announcements','heroes','contact','photos','pool','stats','faq','probio']
 };
 function svToggleDrop(name) {
   if (_svDropOpen && _svDropOpen !== name) svCloseDrop();
@@ -6054,7 +5996,7 @@ function staffView(view, btn, useSecondary) {
   var menuItem = document.getElementById('svb-' + view);
   if (menuItem) menuItem.classList.add('active-view');
 
-  ['today','calendar','upcoming','pending','search','guests','settings','scoring','daily','menus','registrations','pairings','lessons','events','announcements','heroes','contact','photos','pool','express','stats','faq','probio','launch'].forEach(v => {
+  ['today','calendar','upcoming','pending','search','guests','settings','scoring','daily','menus','registrations','pairings','lessons','events','announcements','heroes','contact','photos','pool','stats','faq','probio','launch'].forEach(v => {
     const el = document.getElementById('sv-' + v);
     if (el) el.style.display = v === view ? 'block' : 'none';
   });
@@ -6079,7 +6021,6 @@ function staffView(view, btn, useSecondary) {
   if (view === 'contact')       { cmsContactLoad(); }
   if (view === 'photos')        { phTab('upload'); }
   if (view === 'pool')          { cmsPoolLoad(); }
-  if (view === 'express')       { cmsExpressLoad(); }
   if (view === 'stats')         { cmsStatsLoad(); }
   if (view === 'faq')           { cmsFaqLoad(); }
   if (view === 'probio')        { cmsProBioLoad(); }
@@ -8393,36 +8334,6 @@ function cmsPoolSave() {
   }
   sc.pool = { season_label: document.getElementById('cms-pool-season').value.trim(), hours: hours };
   cmsSave(sc, 'cms-pool-status');
-}
-
-// ── EXPRESS LUNCH ─────────────────────────────────────────
-
-function cmsExpressLoad() {
-  var sc = cmsGetContent();
-  var el = sc.express_lunch || WH_SITE_DEFAULTS.express_lunch;
-  document.getElementById('cms-el-available').value = el.available || '';
-  var itemsDiv = document.getElementById('cms-el-items');
-  if (!itemsDiv) return;
-  itemsDiv.innerHTML = (el.items || []).map(function(item, i) {
-    return '<div style="display:grid;grid-template-columns:1fr 80px;gap:8px;margin-bottom:8px;">' +
-      '<input class="hrf-input" data-el-name="'+i+'" placeholder="Item name" value="'+(item.name||'').replace(/"/g,'&quot;')+'">' +
-      '<input class="hrf-input" data-el-price="'+i+'" placeholder="$00" value="'+(item.price||'')+'">' +
-    '</div>';
-  }).join('');
-}
-
-function cmsExpressSave() {
-  var sc = cmsGetContent();
-  var itemsDiv = document.getElementById('cms-el-items');
-  var n = itemsDiv ? itemsDiv.querySelectorAll('[data-el-name]').length : 0;
-  var items = [];
-  for (var i = 0; i < n; i++) {
-    var nEl = itemsDiv.querySelector('[data-el-name="'+i+'"]');
-    var pEl = itemsDiv.querySelector('[data-el-price="'+i+'"]');
-    if (nEl && nEl.value.trim()) items.push({ name: nEl.value.trim(), price: pEl ? pEl.value.trim() : '' });
-  }
-  sc.express_lunch = { available: document.getElementById('cms-el-available').value.trim(), items: items };
-  cmsSave(sc, 'cms-express-status');
 }
 
 // ── CLUB STATS ────────────────────────────────────────────
