@@ -1633,7 +1633,8 @@ nav.staff-mode .nav-site-back{display:flex!important;}
       <h2 class="sec-title">Where little ones <em>love to be</em></h2>
       <p class="sec-body full">Grab your sunscreen and your littles — the Westwood Hills pool is the coolest spot in Poplar Bluff all summer long. With a professional lifeguard on duty and a welcoming, community atmosphere, it's the kind of place where kids make memories and moms finally get to exhale.</p>
       <div class="pool-feats" id="pool-hours" style="margin-top:28px;">
-        <div class="pf-item"><div class="pf-name">Tuesday – Sunday</div><div class="pf-sub">Open 11:00 AM – 7:00 PM</div></div>
+        <div class="pf-item"><div class="pf-name">Tuesday – Sunday</div><div class="pf-sub">Open 10:00 AM – 5:00 PM</div></div>
+        <div class="pf-item"><div class="pf-name">Monday</div><div class="pf-sub">Closed</div></div>
         <div class="pf-item"><div class="pf-name">Memorial Day</div><div class="pf-sub">through Labor Day</div></div>
       </div>
     </div>
@@ -1661,7 +1662,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <div class="fade-up d3" style="text-align:center;margin-top:48px;">
       <button onclick="document.getElementById('pool-policies').style.display=document.getElementById('pool-policies').style.display==='none'?'block':'none'" style="background:none;border:none;color:var(--forest);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;opacity:.5;text-decoration:underline;text-underline-offset:4px;">Pool Policies</button>
       <div id="pool-policies" style="display:none;max-width:680px;margin:28px auto 0;text-align:left;background:rgba(26,43,31,.06);border-radius:6px;padding:28px 32px;">
-        <p style="font-size:.82rem;color:var(--forest);line-height:1.8;margin:0 0 10px;"><strong>Lifeguard on duty</strong> Tuesday–Sunday, 11 AM–7 PM. Pool is closed when lifeguard is off duty or on break.</p>
+        <p style="font-size:.82rem;color:var(--forest);line-height:1.8;margin:0 0 10px;"><strong>Lifeguard on duty</strong> Tuesday–Sunday, 10 AM–5 PM. Pool is closed Mondays and when the lifeguard is off duty or on break.</p>
         <p style="font-size:.82rem;color:var(--forest);line-height:1.8;margin:0 0 10px;"><strong>Children under 12</strong> must be accompanied by a parent or adult at all times.</p>
         <p style="font-size:.82rem;color:var(--forest);line-height:1.8;margin:0 0 10px;"><strong>Guest policy:</strong> Local guests (Butler &amp; surrounding counties) may swim Wednesdays with a $2 fee. Non-local guests may swim Tuesday–Sunday with a $2 fee. Grandchildren and nannies are always free.</p>
         <p style="font-size:.82rem;color:var(--forest);line-height:1.8;margin:0 0 10px;"><strong>Pool rentals</strong> are available in 2-hour increments for $100 (up to 25 guests). Contact the Pro Shop for details.</p>
@@ -3178,10 +3179,8 @@ var WH_SITE_DEFAULTS = {
   pool: {
     season_label: 'Memorial Day through Labor Day',
     hours: [
-      { days: 'Monday',    time: '6\u20139 AM / 12\u20138 PM', note: 'Lap swim + Open swim' },
-      { days: 'Tue \u2013 Thu', time: '6\u20139 AM / 12\u20138 PM', note: 'Lap swim + Open swim' },
-      { days: 'Friday',    time: '12\u20139 PM',           note: 'Open swim all day'    },
-      { days: 'Sat & Sun', time: '10 AM \u2013 9 PM',      note: 'Full day open swim'   }
+      { days: 'Monday',           time: 'Closed',              note: '' },
+      { days: 'Tuesday \u2013 Sunday', time: '10:00 AM \u2013 5:00 PM', note: '' }
     ]
   },
   about_stats: {
