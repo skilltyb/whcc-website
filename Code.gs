@@ -155,6 +155,44 @@ function archivePreLaunchTestData() {
   SpreadsheetApp.getUi().alert('Archived pre-' + ARCHIVE_CUTOFF_DATE_ + ' test data:\n\n' + msg);
 }
 
+// Archives events whose date has passed — same effect as the staff CMS's
+// "Archive All Past Events" button, except this runs on its own (see
+// installArchivePastEventsTrigger below) instead of depending on a staff
+// member remembering to click it. Safe to run repeatedly: only touches
+// events that aren't already archived.
+function archivePastEvents() {
+  var scSh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Site Content');
+  if (!scSh || scSh.getLastRow() < 2) return;
+  var sc;
+  try { sc = JSON.parse(scSh.getRange(2, 1).getValue()); } catch (e) { Logger.log('archivePastEvents: bad JSON'); return; }
+  if (!sc || !Array.isArray(sc.events)) return;
+
+  var todayStr = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
+  var n = 0;
+  sc.events.forEach(function(ev) {
+    if (!ev.archived && ev.date && ev.date < todayStr) { ev.archived = true; n++; }
+  });
+  if (n > 0) {
+    scSh.getRange(2, 1, 1, 2).setValues([[JSON.stringify(sc), new Date().toISOString()]]);
+  }
+  Logger.log('archivePastEvents: archived ' + n + ' event(s)');
+}
+
+// Run this ONCE from the Apps Script editor to schedule archivePastEvents()
+// to run automatically every day (~2 AM) — removes any existing trigger for
+// it first so re-running this doesn't stack up duplicate triggers.
+function installArchivePastEventsTrigger() {
+  ScriptApp.getProjectTriggers().forEach(function(t) {
+    if (t.getHandlerFunction() === 'archivePastEvents') ScriptApp.deleteTrigger(t);
+  });
+  ScriptApp.newTrigger('archivePastEvents').timeBased().everyDays(1).atHour(2).create();
+  try {
+    SpreadsheetApp.getUi().alert('Scheduled archivePastEvents to run automatically every day around 2 AM.');
+  } catch (e) {
+    Logger.log('installArchivePastEventsTrigger: trigger created (alert unavailable outside bound-sheet UI context)');
+  }
+}
+
 // ── HELPERS ───────────────────────────────────────────────────────────────────
 
 // Sheets that are never the registration store, even though some of them
