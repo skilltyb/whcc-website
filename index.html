@@ -3527,11 +3527,11 @@ function whInitSiteContent() {
   // without requiring a page reload when staff makes changes in the Sheet
   if (window._contentSyncInterval) clearInterval(window._contentSyncInterval);
   window._contentSyncInterval = setInterval(function() {
-    WHCC_SYNC.fetchConditions(function(remote, err) {
-      if (!remote || err) return;
-      try { localStorage.setItem('wh_conditions', JSON.stringify(remote)); } catch(e) {}
-      if (window.renderConditionsUI) renderConditionsUI(remote);
-    });
+    // loadDailyUpdate() both fetches and re-renders the home page's course
+    // conditions display; it previously called a renderConditionsUI()
+    // that was never defined on the website, so this poll silently did
+    // nothing until the visitor manually navigated back to the home page.
+    loadDailyUpdate();
     menuFetch();
     WHCC_SYNC.fetchSiteContent(function(remote, err) {
       if (!remote || err || typeof remote !== 'object' || !remote.events) return;
