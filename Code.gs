@@ -173,6 +173,43 @@ function venueDisplay_(v) {
   return v ? String(v) : 'Dining Room';
 }
 
+// Fires when staff move a reservation to Confirmed — the initial request
+// only ever told the guest "pending confirmation, we'll follow up," so
+// this is the actual confirmation the guest is waiting on.
+function sendDiningConfirmedEmail_(hdr, row) {
+  function col(name) { var i = hdr.indexOf(name); return i >= 0 ? row[i] : ''; }
+  var email = col('Email');
+  if (!email) return;
+  var first    = col('First Name') || 'Guest';
+  var venueStr = venueDisplay_(col('Venue'));
+  var dateStr  = diningDateStr_(col('Date'));
+  var timeStr  = col('Time Display') || col('Time') || '';
+  var partyNum = String(col('Party Size') || 1);
+  MailApp.sendEmail({
+    to: email,
+    subject: 'Your ' + venueStr + ' reservation is confirmed — Westwood Hills Country Club',
+    htmlBody:
+      '<div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;color:#222;">' +
+      '<div style="background:#1a2b1f;padding:24px 32px;">' +
+        '<p style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:22px;color:#b8976a;margin:0;">Westwood Hills Country Club</p>' +
+        '<p style="color:rgba(245,240,232,.6);font-size:12px;margin:4px 0 0;">Poplar Bluff, Missouri</p>' +
+      '</div>' +
+      '<div style="padding:28px 32px;background:#fff;">' +
+        '<p>Dear ' + escapeHtml_(first) + ',</p>' +
+        '<p>Your reservation is <strong>confirmed</strong>. Here\'s a summary:</p>' +
+        '<table style="border-collapse:collapse;width:100%;margin:16px 0;">' +
+          '<tr><td style="padding:9px 12px;background:#f5f0e8;font-weight:600;width:38%;border-bottom:1px solid #e8e0d4;">Venue</td><td style="padding:9px 12px;border-bottom:1px solid #e8e0d4;">' + escapeHtml_(venueStr) + '</td></tr>' +
+          '<tr><td style="padding:9px 12px;background:#f5f0e8;font-weight:600;border-bottom:1px solid #e8e0d4;">Date</td><td style="padding:9px 12px;border-bottom:1px solid #e8e0d4;">' + escapeHtml_(dateStr) + '</td></tr>' +
+          '<tr><td style="padding:9px 12px;background:#f5f0e8;font-weight:600;border-bottom:1px solid #e8e0d4;">Time</td><td style="padding:9px 12px;border-bottom:1px solid #e8e0d4;">' + escapeHtml_(timeStr) + '</td></tr>' +
+          '<tr><td style="padding:9px 12px;background:#f5f0e8;font-weight:600;">Party Size</td><td style="padding:9px 12px;">' + partyNum + ' ' + (partyNum === '1' ? 'guest' : 'guests') + '</td></tr>' +
+        '</table>' +
+        '<p style="font-size:13px;color:#666;">Need to make a change? Call us at <a href="tel:+15737855253">(573) 785-5253</a>.</p>' +
+        '<p style="margin-top:28px;">We look forward to seeing you,<br><strong>Westwood Hills Country Club</strong><br>Poplar Bluff, Missouri</p>' +
+      '</div>' +
+      '</div>'
+  });
+}
+
 function diningNormStatus_(s) {
   if (!s) return 'Pending';
   var t = String(s).trim();
@@ -1104,7 +1141,16 @@ function doPost(e) {
     if (idCol < 0 || statCol < 0) return jsonResponse({ ok: false, error: 'columns missing' });
     for (var di = 1; di < dRows.length; di++) {
       if (String(dRows[di][idCol]) === String(data.id)) {
-        dSheet2.getRange(di + 1, statCol + 1).setValue(diningNormStatus_(data.status));
+        var newStatus = diningNormStatus_(data.status);
+        dSheet2.getRange(di + 1, statCol + 1).setValue(newStatus);
+        // Only the confirmation step gets an email — the initial request
+        // already emailed the guest ("pending confirmation"), and Cancel
+        // is handled separately, so this is the one transition nobody
+        // was telling the guest about.
+        if (newStatus === 'Confirmed') {
+          try { sendDiningConfirmedEmail_(dHdr, dRows[di]); }
+          catch (dcMailErr) { Logger.log('Dining confirm email error: ' + dcMailErr.toString()); }
+        }
         return jsonResponse({ ok: true });
       }
     }
