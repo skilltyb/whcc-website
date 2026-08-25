@@ -91,6 +91,59 @@ function clearTestAndDemoData() {
   SpreadsheetApp.getUi().alert('Cleared test/demo data from:\n\n' + msg);
 }
 
+// Run this ONCE from the Apps Script editor to move pre-launch test
+// reservations/registrations/RSVPs out of the live sheets without deleting
+// anything — each row moves to a same-named "<Sheet> Archive" sheet (created
+// if missing), keeping headers intact. Only rows whose own timestamp column
+// is before ARCHIVE_CUTOFF_DATE_ move; everything from that date forward is
+// left alone as real data. Safe to re-run — already-archived rows are gone
+// from the source sheet so they won't be picked up twice.
+var ARCHIVE_CUTOFF_DATE_ = '2026-08-23';
+
+function archivePreLaunchTestData() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var cutoff = new Date(ARCHIVE_CUTOFF_DATE_ + 'T00:00:00');
+  var targets = [
+    { sheet: 'Registrations',       dateCol: 'Registered At' },
+    { sheet: 'Dining Reservations', dateCol: 'Submitted' },
+    { sheet: 'Event RSVPs',         dateCol: 'Timestamp' },
+    { sheet: 'League Regs',         dateCol: 'Timestamp' }
+  ];
+  var summary = [];
+  targets.forEach(function(t) {
+    var sh = ss.getSheetByName(t.sheet);
+    if (!sh || sh.getLastRow() < 2) return;
+    var values  = sh.getDataRange().getValues();
+    var hdr     = values[0];
+    var dateIdx = hdr.indexOf(t.dateCol);
+    if (dateIdx < 0) return;
+
+    var archiveName = t.sheet + ' Archive';
+    var archiveSh = ss.getSheetByName(archiveName);
+    if (!archiveSh) {
+      archiveSh = ss.insertSheet(archiveName);
+      archiveSh.appendRow(hdr);
+      archiveSh.setFrozenRows(1);
+    }
+
+    var moved = 0;
+    // Walk bottom-up so deleting a row doesn't shift the indices of rows
+    // still to be checked above it.
+    for (var i = values.length - 1; i >= 1; i--) {
+      var raw = values[i][dateIdx];
+      var d = raw instanceof Date ? raw : new Date(raw);
+      if (!raw || isNaN(d.getTime()) || d >= cutoff) continue;
+      archiveSh.appendRow(values[i]);
+      sh.deleteRow(i + 1);
+      moved++;
+    }
+    if (moved > 0) summary.push(t.sheet + ': ' + moved + ' row' + (moved === 1 ? '' : 's') + ' archived');
+  });
+  var msg = summary.length ? summary.join('\n') : 'Nothing to archive — no rows found before ' + ARCHIVE_CUTOFF_DATE_ + '.';
+  Logger.log('Archived: ' + msg);
+  SpreadsheetApp.getUi().alert('Archived pre-' + ARCHIVE_CUTOFF_DATE_ + ' test data:\n\n' + msg);
+}
+
 // ── HELPERS ───────────────────────────────────────────────────────────────────
 
 // Sheets that are never the registration store, even though some of them
