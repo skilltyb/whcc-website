@@ -126,18 +126,29 @@ function archivePreLaunchTestData() {
       archiveSh.setFrozenRows(1);
     }
 
-    var moved = 0;
-    // Walk bottom-up so deleting a row doesn't shift the indices of rows
-    // still to be checked above it.
-    for (var i = values.length - 1; i >= 1; i--) {
+    // Partition in memory and write back in two batch calls — one row-by-row
+    // appendRow+deleteRow per data row is what timed out at 6 minutes on a
+    // sheet with ~1800 rows (each is a separate round trip). Batching drops
+    // that to a handful of calls regardless of row count.
+    var toArchive = [];
+    var toKeep    = [];
+    for (var i = 1; i < values.length; i++) {
       var raw = values[i][dateIdx];
       var d = raw instanceof Date ? raw : new Date(raw);
-      if (!raw || isNaN(d.getTime()) || d >= cutoff) continue;
-      archiveSh.appendRow(values[i]);
-      sh.deleteRow(i + 1);
-      moved++;
+      if (raw && !isNaN(d.getTime()) && d < cutoff) toArchive.push(values[i]);
+      else toKeep.push(values[i]);
     }
-    if (moved > 0) summary.push(t.sheet + ': ' + moved + ' row' + (moved === 1 ? '' : 's') + ' archived');
+    if (toArchive.length > 0) {
+      var archiveStart = archiveSh.getLastRow() + 1;
+      archiveSh.getRange(archiveStart, 1, toArchive.length, hdr.length).setValues(toArchive);
+      // Rewrite the source sheet's data rows with just the keepers, then
+      // clear whatever trailing rows are now unused.
+      var lastRow = sh.getLastRow();
+      if (toKeep.length > 0) sh.getRange(2, 1, toKeep.length, hdr.length).setValues(toKeep);
+      var staleFrom = 2 + toKeep.length;
+      if (staleFrom <= lastRow) sh.getRange(staleFrom, 1, lastRow - staleFrom + 1, hdr.length).clearContent();
+      summary.push(t.sheet + ': ' + toArchive.length + ' row' + (toArchive.length === 1 ? '' : 's') + ' archived');
+    }
   });
   var msg = summary.length ? summary.join('\n') : 'Nothing to archive — no rows found before ' + ARCHIVE_CUTOFF_DATE_ + '.';
   Logger.log('Archived: ' + msg);
