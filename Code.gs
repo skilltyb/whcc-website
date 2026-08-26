@@ -884,7 +884,7 @@ function doPost(e) {
                 '<ul style="padding-left:20px;line-height:1.9;">' +
                   '<li>Unlimited golf on our championship course, seven days a week</li>' +
                   '<li>Full aquatics complex for the whole family all summer</li>' +
-                  '<li>Exclusive dining at Hoover\'s Restaurant and the Westwood Grill</li>' +
+                  '<li>Exclusive dining at the Westwood Grill</li>' +
                   '<li>Access to all club events, leagues, and tournaments</li>' +
                   '<li>A close-knit community of about 200 member families</li>' +
                 '</ul>' +
@@ -1138,17 +1138,10 @@ function doPost(e) {
       if ((resVenue === 'grille' || resVenue === 'grill') && resDow === 1) {
         return jsonResponse({ ok: false, error: 'The Westwood Grill is closed on Mondays.' });
       }
+      // Hoover's no longer operates — reject outright rather than validating
+      // against its old schedule, in case a stale cached client still sends it.
       if (resVenue === 'hoovers') {
-        var isMemberRes = String(data.member || '') === 'member';
-        var resDateNum = resDateObj.getDate();
-        var validHooversDay = isMemberRes
-          ? (resDow === 4 || resDow === 5 || resDow === 6)
-          : (resDow === 6 && resDateNum >= 15 && resDateNum <= 21);
-        if (!validHooversDay) {
-          return jsonResponse({ ok: false, error: isMemberRes
-            ? "Hoover's is only open Thursday-Saturday for members."
-            : "Non-member reservations at Hoover's are only available on the 3rd Saturday of the month." });
-        }
+        return jsonResponse({ ok: false, error: "Hoover's is no longer open. Please reserve at the Westwood Grill." });
       }
     }
     var dSheet = getOrCreateDiningSheet();
