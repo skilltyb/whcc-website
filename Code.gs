@@ -1353,32 +1353,49 @@ function doPost(e) {
   if (data.action === 'create-pin') {
     var email     = (data.email     || '').toLowerCase().trim();
     var memberNum = (data.memberNum || '').trim();
-    var lastName  = (data.lastName  || '').trim().toLowerCase();
+    var firstName = (data.firstName || '').trim();
+    var lastNameRaw = (data.lastName || '').trim();
+    var lastName  = lastNameRaw.toLowerCase();
     var pin       = (data.pin       || '').trim();
     if (!email || !memberNum || !lastName || !/^\d{4}$/.test(pin))
       return jsonResponse({ ok: false, error: 'Invalid request.' });
     var mSh = ss.getSheetByName('Members');
-    if (!mSh) return jsonResponse({ ok: false, error: 'Members list not configured.' });
-    var mRows  = mSh.getDataRange().getValues();
-    var mHdr   = mRows[0];
-    var cNum   = mHdr.indexOf('Member Number');
-    var cFirst = mHdr.indexOf('First Name');
-    var cLast  = mHdr.indexOf('Last Name');
-    var cMem   = mHdr.indexOf('Membership');
-    var cHcp   = mHdr.indexOf('Handicap');
     var inputNum  = normMemberNum_(memberNum);
     var memberRow = null;
-    var storedNum = '';
-    for (var i = 1; i < mRows.length; i++) {
-      // Require both member number AND last name to match — member numbers are
-      // predictable/sequential, so number alone isn't proof of identity.
-      if (normMemberNum_(mRows[i][cNum]) === inputNum && String(mRows[i][cLast] || '').trim().toLowerCase() === lastName) {
-        memberRow = mRows[i];
-        storedNum = String(mRows[i][cNum] || '').trim();
-        break;
+    var mHdr, cFirst, cLast, cMem, cHcp;
+    if (mSh) {
+      var mRows = mSh.getDataRange().getValues();
+      mHdr   = mRows[0];
+      var cNum = mHdr.indexOf('Member Number');
+      cFirst = mHdr.indexOf('First Name');
+      cLast  = mHdr.indexOf('Last Name');
+      cMem   = mHdr.indexOf('Membership');
+      cHcp   = mHdr.indexOf('Handicap');
+      for (var i = 1; i < mRows.length; i++) {
+        // Require both member number AND last name to match — member numbers are
+        // predictable/sequential, so number alone isn't proof of identity.
+        if (normMemberNum_(mRows[i][cNum]) === inputNum && String(mRows[i][cLast] || '').trim().toLowerCase() === lastName) {
+          memberRow = mRows[i];
+          break;
+        }
       }
     }
-    if (!memberRow) return jsonResponse({ ok: false, error: 'Member not found. Check your member number and last name.' });
+    // The member roster isn't fully populated in the Sheet yet, so a missing
+    // match no longer blocks account creation — it's flagged "Pending
+    // Verification" instead of hard-failing, so staff can reconcile it once
+    // the roster catches up. Remove this fallback once onboarding is done.
+    var storedNum, fullName, membership, handicap;
+    if (memberRow) {
+      storedNum  = String(memberRow[cNum] || '').trim();
+      fullName   = (String(memberRow[cFirst] || '') + ' ' + String(memberRow[cLast] || '')).trim();
+      membership = String(memberRow[cMem] || '');
+      handicap   = String(memberRow[cHcp] || '');
+    } else {
+      storedNum  = memberNum;
+      fullName   = (firstName + ' ' + lastNameRaw).trim();
+      membership = 'Pending Verification';
+      handicap   = '';
+    }
     var auSh = ss.getSheetByName('App Users');
     if (!auSh) {
       auSh = ss.insertSheet('App Users');
@@ -1395,8 +1412,7 @@ function doPost(e) {
       if (existEmail === email || existNum === inputNum)
         return jsonResponse({ ok: false, error: 'An account already exists for this member. Use Forgot your PIN or contact the Pro Shop.' });
     }
-    var fullName = (String(memberRow[cFirst] || '') + ' ' + String(memberRow[cLast] || '')).trim();
-    auSh.appendRow(sanitizeRow_([email, pin, 'member', fullName, '', storedNum, String(memberRow[cMem] || ''), String(memberRow[cHcp] || '')]));
+    auSh.appendRow(sanitizeRow_([email, pin, 'member', fullName, '', storedNum, membership, handicap]));
     return jsonResponse({ ok: true });
   }
 
