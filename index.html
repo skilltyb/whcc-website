@@ -2350,7 +2350,6 @@ nav.staff-mode .nav-site-back{display:flex!important;}
           <div id="sm-grill" style="display:none;">
             <div id="smg-tabs" style="display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap;">
               <button class="staff-view-btn active" id="smg-tab-lunch" onclick="smgTab('lunch',this)">Lunch</button>
-              <button class="staff-view-btn" id="smg-tab-drinks" onclick="smgTab('drinks',this)">Bar &amp; Drinks</button>
               <button class="staff-view-btn" id="smg-tab-bites" onclick="smgTab('bites',this)">Kids &amp; Sides</button>
             </div>
             <div id="smg-lunch">
@@ -2359,10 +2358,6 @@ nav.staff-mode .nav-site-back{display:flex!important;}
               <div style="margin-bottom:16px;"><div class="staff-tag" style="margin-bottom:8px;">Signature Entrees</div><div id="smg-lunchentrees-list"></div></div>
               <div style="margin-bottom:16px;"><div class="staff-tag" style="margin-bottom:8px;">Salads</div><div id="smg-lunchdesserts-list"></div></div>
               <div><div class="staff-tag" style="margin-bottom:8px;">Dessert</div><div id="smg-dessert-list"></div></div>
-            </div>
-            <div id="smg-drinks" style="display:none;">
-              <div style="margin-bottom:16px;"><div class="staff-tag" style="margin-bottom:8px;">Cocktails</div><div id="smg-cocktails-list"></div></div>
-              <div><div class="staff-tag" style="margin-bottom:8px;">Wine by the Glass</div><div id="smg-wine-list"></div></div>
             </div>
             <div id="smg-bites" style="display:none;">
               <div style="margin-bottom:16px;"><div class="staff-tag" style="margin-bottom:8px;">Kids Menu</div><div id="smg-quick-list"></div></div>
@@ -5013,18 +5008,6 @@ var WH_MENU_DEFAULTS = {
       {name:'Crème Brûlée',desc:'',price:'$6'},
       {name:'Chocolate Lava Cake',desc:'',price:'$8'}
     ],
-    cocktails:[
-      {name:'Westwood Old Fashioned',desc:'Bulleit Rye, house demerara, Angostura, orange',price:'$13'},
-      {name:'The Westwood',desc:"Hendrick's Gin, elderflower, cucumber, tonic",price:'$12'},
-      {name:'Ozark Mule',desc:'Missouri bourbon, ginger beer, fresh lime',price:'$11'},
-      {name:'Birdie Aperol Spritz',desc:'Aperol, Prosecco, splash of soda, orange',price:'$12'}
-    ],
-    wine:[
-      {name:'Kim Crawford Sauvignon Blanc',desc:'New Zealand',price:'$11'},
-      {name:"Stags' Leap Chardonnay",desc:'Napa Valley',price:'$14'},
-      {name:'Decoy Pinot Noir',desc:'Sonoma, CA',price:'$13'},
-      {name:'Jordan Cabernet Sauvignon',desc:'Alexander Valley, CA',price:'$16'}
-    ],
     quickBites:[
       {name:'Hamburger',desc:'',price:'$7'},
       {name:'Cheeseburger',desc:'',price:'$8'},
@@ -5097,7 +5080,6 @@ function menuItemHTML(item,hasPrice){
 function menuRenderGrill(g){
   var map={'hm-grill-starters':g.starters,'hm-grill-sandwiches':g.sandwiches,
     'hm-grill-lunchentrees':g.lunchEntrees,'hm-grill-lunchdesserts':g.lunchDesserts,
-    'hm-grill-cocktails':g.cocktails,'hm-grill-wine':g.wine,
     'hm-grill-quick':g.quickBites,'hm-grill-postround':g.postRound,
     'hm-grill-dessert':g.dessert};
   Object.keys(map).forEach(function(id){
@@ -5160,7 +5142,7 @@ function smTab(tab,btn){
   if(tab==='grill') smRenderEditorLists(menuLoad());
 }
 function smgTab(section,btn){
-  ['lunch','drinks','bites'].forEach(function(t){
+  ['lunch','bites'].forEach(function(t){
     var el=document.getElementById('smg-'+t);if(el) el.style.display=t===section?'block':'none';
   });
   document.querySelectorAll('#smg-tabs .staff-view-btn').forEach(function(b){b.classList.remove('active');});
@@ -5264,8 +5246,6 @@ function smRenderEditorLists(data){
   smRenderItemList('smg-lunchentrees-list',data.grill.lunchEntrees,'grill.lunchEntrees',true,false);
   smRenderItemList('smg-lunchdesserts-list',data.grill.lunchDesserts,'grill.lunchDesserts',true,false);
   smRenderItemList('smg-dessert-list',data.grill.dessert,'grill.dessert',true,false);
-  smRenderItemList('smg-cocktails-list',data.grill.cocktails,'grill.cocktails',true,false);
-  smRenderItemList('smg-wine-list',data.grill.wine,'grill.wine',true,false);
   smRenderItemList('smg-quick-list',data.grill.quickBites,'grill.quickBites',true,false);
   smRenderItemList('smg-postround-list',data.grill.postRound,'grill.postRound',true,false);
 }
