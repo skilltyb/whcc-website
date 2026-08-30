@@ -2279,17 +2279,80 @@ nav.staff-mode .nav-site-back{display:flex!important;}
             <div class="staff-tag" style="margin-bottom:10px;">Weekly Restaurant Specials</div>
             <div class="hrf-group" style="width:100%;"><label class="hrf-label" for="eb-weekly-name">Weekly Special</label><input class="hrf-input" id="eb-weekly-name" oninput="ebUpdatePreview()" placeholder="e.g. Steak Sandwich" /></div>
             <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-weekly-desc">Weekly Special Description</label><textarea class="hrf-textarea" id="eb-weekly-desc" rows="2" oninput="ebUpdatePreview()" placeholder="e.g. served on a hoagie bun with homemade sauce &amp; your choice of side"></textarea></div>
-            <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-drink-special">Weekly Drink Special</label><input class="hrf-input" id="eb-drink-special" oninput="ebUpdatePreview()" placeholder="e.g. Strawberry Margarita" /></div>
+            <div style="margin-top:8px;">
+              <label class="hrf-label">Photo (optional)</label>
+              <div id="sm-ws-img-preview" style="display:none;position:relative;margin-bottom:8px;">
+                <img id="sm-ws-img" src="" style="width:100%;max-height:160px;object-fit:cover;border-radius:4px;display:block;"/>
+                <button onclick="smRemoveImage('ws')" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,.7);color:#fff;border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:13px;line-height:22px;padding:0;">✕</button>
+              </div>
+              <input type="hidden" id="sm-ws-img-data"/>
+              <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,240,232,.55);border:1px solid rgba(245,240,232,.2);padding:6px 12px;border-radius:2px;">
+                📷 Upload Photo<input type="file" accept="image/*" style="display:none;" onchange="smLoadImage(this,'ws')">
+              </label>
+            </div>
+            <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">Same photo shown on the Dining page's Weekly Special — one photo, edited here only.</div>
+            <div class="hrf-group" style="width:100%;margin-top:14px;"><label class="hrf-label" for="eb-drink-special">Weekly Drink Special</label><input class="hrf-input" id="eb-drink-special" oninput="ebUpdatePreview()" placeholder="e.g. Strawberry Margarita" /></div>
             <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">Drink special appears in the email only — there's no cocktail menu section on the site to sync it to.</div>
             <div class="hrf-group" style="width:100%;margin-top:14px;"><label class="hrf-label" for="eb-friday-name">Friday Night Dinner Special</label><input class="hrf-input" id="eb-friday-name" oninput="ebUpdatePreview()" placeholder="Leave blank most days — fill in by Friday" /></div>
             <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-friday-desc">Friday Special Description</label><textarea class="hrf-textarea" id="eb-friday-desc" rows="2" oninput="ebUpdatePreview()" placeholder="e.g. Panko Crusted Salmon with Roasted Potatoes &amp; Seared Veggies"></textarea></div>
-            <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">These two sync to the Weekly Special &amp; Friday Night Special shown on the Dining page.</div>
+            <div style="margin-top:8px;">
+              <label class="hrf-label">Photo (optional)</label>
+              <div id="sm-fn-img-preview" style="display:none;position:relative;margin-bottom:8px;">
+                <img id="sm-fn-img" src="" style="width:100%;max-height:160px;object-fit:cover;border-radius:4px;display:block;"/>
+                <button onclick="smRemoveImage('fn')" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,.7);color:#fff;border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:13px;line-height:22px;padding:0;">✕</button>
+              </div>
+              <input type="hidden" id="sm-fn-img-data"/>
+              <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,240,232,.55);border:1px solid rgba(245,240,232,.2);padding:6px 12px;border-radius:2px;">
+                📷 Upload Photo<input type="file" accept="image/*" style="display:none;" onchange="smLoadImage(this,'fn')">
+              </label>
+            </div>
+            <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">These sync to the Weekly Special &amp; Friday Night Special shown on the Dining page — same photo &amp; text in both places.</div>
           </div>
 
           <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-bottom:16px;">
             <div class="staff-tag" style="margin-bottom:10px;">Course &amp; Facility Update</div>
-            <div id="eb-hours-readout" style="font-size:12px;color:rgba(245,240,232,.7);line-height:1.9;margin-bottom:10px;">—</div>
-            <div style="font-size:10px;color:rgba(245,240,232,.35);margin-bottom:12px;">Course hours, cart policy, range &amp; pro shop come from the <a href="#" onclick="staffView('daily',document.getElementById('svb-daily'));return false;" style="color:var(--gold-lt);">Daily Sheet</a> tab. Edit them there — they'll pull in here automatically.</div>
+            <div class="hrf-row">
+              <div class="hrf-group">
+                <label class="hrf-label">Course Opens</label>
+                <input class="hrf-input" id="eb-ed-opens" placeholder="e.g. 9:00 AM" oninput="ebUpdatePreview()" />
+              </div>
+              <div class="hrf-group">
+                <label class="hrf-label">Cart Path Rules</label>
+                <select class="hrf-select" id="eb-ed-cart" onchange="ebUpdatePreview()">
+                  <option value="Off Path">Off Path (full course)</option>
+                  <option value="Cart Path Only">Cart Path Only</option>
+                  <option value="90° Rule">90° Rule</option>
+                  <option value="No Carts">No Carts Today</option>
+                </select>
+              </div>
+            </div>
+            <div class="hrf-row">
+              <div class="hrf-group">
+                <label class="hrf-label">Driving Range Status</label>
+                <select class="hrf-select" id="eb-ed-range-status" onchange="ebUpdatePreview()">
+                  <option value="Open — Mats Only">Open — Mats Only</option>
+                  <option value="Open — Grass Tees">Open — Grass Tees</option>
+                  <option value="Open — Grass &amp; Mats">Open — Grass &amp; Mats</option>
+                  <option value="Closed">Closed</option>
+                  <option value="Closed — Tournament">Closed — Tournament</option>
+                </select>
+              </div>
+              <div class="hrf-group">
+                <label class="hrf-label">Range Hours</label>
+                <input class="hrf-input" id="eb-ed-range-hours" placeholder="e.g. 8:30 AM – 5:00 PM" oninput="ebUpdatePreview()" />
+              </div>
+            </div>
+            <div class="hrf-row">
+              <div class="hrf-group">
+                <label class="hrf-label">Putting Green</label>
+                <input class="hrf-input" id="eb-ed-putting" placeholder="e.g. 9:00 AM – Dusk" oninput="ebUpdatePreview()" />
+              </div>
+              <div class="hrf-group">
+                <label class="hrf-label">Pro Shop Hours</label>
+                <input class="hrf-input" id="eb-ed-proshop" placeholder="e.g. 8:30 AM – 6:00 PM" oninput="ebUpdatePreview()" />
+              </div>
+            </div>
+            <div style="font-size:10px;color:rgba(245,240,232,.35);margin:4px 0 12px;">Linked with the <a href="#" onclick="staffView('daily',document.getElementById('svb-daily'));return false;" style="color:var(--gold-lt);">Daily Sheet</a> tab — editing here updates there too, and vice versa.</div>
             <div class="hrf-row">
               <div class="hrf-group"><label class="hrf-label" for="eb-clubhouse-hours">Clubhouse Hours</label><input class="hrf-input" id="eb-clubhouse-hours" oninput="ebUpdatePreview()" placeholder="e.g. 10:00 AM – 11:00 PM" /></div>
               <div class="hrf-group"><label class="hrf-label" for="eb-pool-hours">Pool Hours</label><input class="hrf-input" id="eb-pool-hours" oninput="ebUpdatePreview()" placeholder="e.g. 11:00 AM – 7:00 PM" /></div>
@@ -2357,17 +2420,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
                 <div class="hrf-group"><label class="hrf-label" for="sm-ws-price">Price (optional)</label><input class="hrf-input" id="sm-ws-price" placeholder="e.g. $36" /></div>
                 <div class="hrf-group"><label class="hrf-label" for="sm-ws-wine">Wine Pairing (optional)</label><input class="hrf-input" id="sm-ws-wine" placeholder="e.g. Pinot Noir or Chardonnay" /></div>
               </div>
-              <div style="margin-top:8px;">
-                <label class="hrf-label">Photo (optional)</label>
-                <div id="sm-ws-img-preview" style="display:none;position:relative;margin-bottom:8px;">
-                  <img id="sm-ws-img" src="" style="width:100%;max-height:160px;object-fit:cover;border-radius:4px;display:block;"/>
-                  <button onclick="smRemoveImage('ws')" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,.7);color:#fff;border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:13px;line-height:22px;padding:0;">✕</button>
-                </div>
-                <input type="hidden" id="sm-ws-img-data"/>
-                <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,240,232,.55);border:1px solid rgba(245,240,232,.2);padding:6px 12px;border-radius:2px;">
-                  📷 Upload Photo<input type="file" accept="image/*" style="display:none;" onchange="smLoadImage(this,'ws')">
-                </label>
-              </div>
+              <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:8px;">Photo is managed under <strong style="color:var(--gold-lt);">Admin → Daily Email</strong> so the Dining page and the email always show the same picture.</div>
               <button class="btn-p" style="width:100%;margin-top:12px;" onclick="smSaveSpecials()">Save Weekly Special</button>
               <div id="sm-ws-status" style="font-size:11px;color:#8fcc8f;margin-top:6px;display:none;"></div>
             </div>
@@ -2385,17 +2438,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
                 <div class="hrf-group"><label class="hrf-label" for="sm-fn-price">Price (optional)</label><input class="hrf-input" id="sm-fn-price" placeholder="e.g. $42" /></div>
                 <div class="hrf-group"><label class="hrf-label" for="sm-fn-wine">Wine Pairing (optional)</label><input class="hrf-input" id="sm-fn-wine" placeholder="e.g. Cabernet or Bordeaux" /></div>
               </div>
-              <div style="margin-top:8px;">
-                <label class="hrf-label">Photo (optional)</label>
-                <div id="sm-fn-img-preview" style="display:none;position:relative;margin-bottom:8px;">
-                  <img id="sm-fn-img" src="" style="width:100%;max-height:160px;object-fit:cover;border-radius:4px;display:block;"/>
-                  <button onclick="smRemoveImage('fn')" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,.7);color:#fff;border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:13px;line-height:22px;padding:0;">✕</button>
-                </div>
-                <input type="hidden" id="sm-fn-img-data"/>
-                <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,240,232,.55);border:1px solid rgba(245,240,232,.2);padding:6px 12px;border-radius:2px;">
-                  📷 Upload Photo<input type="file" accept="image/*" style="display:none;" onchange="smLoadImage(this,'fn')">
-                </label>
-              </div>
+              <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:8px;">Photo is managed under <strong style="color:var(--gold-lt);">Admin → Daily Email</strong> so the Dining page and the email always show the same picture.</div>
               <button class="btn-p" style="width:100%;margin-top:12px;" onclick="smSaveFriday()">Save Friday Night Special</button>
               <div id="sm-fn-status" style="font-size:11px;color:#8fcc8f;margin-top:6px;display:none;"></div>
             </div>
@@ -2746,7 +2789,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
           <div id="ph-assign" class="ph-panel" style="display:none;">
             <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">Paste a URL from the Library, or type a filename like <code style="color:var(--gold-lt);font-size:11px;">images/golf-hero.jpg</code></div>
             <div style="background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);border-radius:6px;padding:10px 14px;font-size:11px;color:rgba(245,240,232,.55);margin-bottom:16px;">
-              💡 <strong style="color:var(--gold-lt);">Weekly Special &amp; Friday Night Special photos</strong> are managed under <strong style="color:var(--gold-lt);">Admin → Menus</strong> — scroll to the specials section and use the 📷 Upload Photo button there.
+              💡 <strong style="color:var(--gold-lt);">Weekly Special &amp; Friday Night Special photos</strong> are managed under <strong style="color:var(--gold-lt);">Admin → Daily Email</strong> — scroll to the specials section and use the 📷 Upload Photo button there.
             </div>
             <div id="cms-photos-list" style="display:grid;gap:6px;max-width:640px;"></div>
           </div>
@@ -5197,9 +5240,9 @@ function smLoad(){
   function setVal(id,val){var e=document.getElementById(id);if(e) e.value=val||'';}
   function setChk(id,val){var e=document.getElementById(id);if(e) e.checked=!!val;}
   setChk('sm-ws-active',ws.active);setVal('sm-ws-name',ws.name);setVal('sm-ws-desc',ws.desc);
-  setVal('sm-ws-price',ws.price);setVal('sm-ws-wine',ws.wine);smRestoreImgPreview('ws',ws.image);
+  setVal('sm-ws-price',ws.price);setVal('sm-ws-wine',ws.wine);
   setChk('sm-fn-active',fn.active);setVal('sm-fn-name',fn.name);setVal('sm-fn-desc',fn.desc);
-  setVal('sm-fn-price',fn.price);setVal('sm-fn-wine',fn.wine);smRestoreImgPreview('fn',fn.image);
+  setVal('sm-fn-price',fn.price);setVal('sm-fn-wine',fn.wine);
   smRenderEditorLists(data);
   // Reset to specials tab
   smTab('specials',document.getElementById('sm-tab-specials'));
@@ -5260,58 +5303,34 @@ function smRestoreImgPreview(prefix, imageData) {
   }
 }
 function smSaveSpecials(){
-  var imgData = document.getElementById('sm-ws-img-data').value || '';
-  var doSave = function(imgUrl) {
-    var data = menuLoad();
-    data.weeklySpecial = { active: document.getElementById('sm-ws-active').checked,
-      name: document.getElementById('sm-ws-name').value.trim(),
-      desc: document.getElementById('sm-ws-desc').value.trim(),
-      price: document.getElementById('sm-ws-price').value.trim(),
-      wine: document.getElementById('sm-ws-wine').value.trim(),
-      image: imgUrl };
-    menuSave(data);
-    var st = document.getElementById('sm-ws-status');
-    if (st) { st.textContent = 'Saved — dining page updated!'; st.style.display = 'block'; setTimeout(function(){ st.style.display='none'; }, 2500); }
-  };
-  if (imgData.startsWith('data:')) {
-    staffToast('Uploading photo to Drive…', 'info');
-    fetch(WHCC_SCRIPT_URL, { method:'POST', headers:{'Content-Type':'text/plain'},
-      body: JSON.stringify({ action:'upload-photo', base64: imgData.split(',')[1],
-        mimeType: imgData.split(';')[0].split(':')[1] || 'image/jpeg',
-        filename: 'special-weekly-' + Date.now() + '.jpg', category: 'Dining', staffPin: _staffSessionPin })
-    }).then(function(r){ return r.json(); }).then(function(d) {
-      var url = (d && d.ok) ? d.url : imgData;
-      if (d && d.ok) document.getElementById('sm-ws-img-data').value = url;
-      doSave(url);
-    }).catch(function(){ doSave(imgData); });
-  } else { doSave(imgData); }
+  // Photo is edited from the Daily Email tab now (single shared field) —
+  // preserve whatever image is already stored instead of touching it here.
+  var data = menuLoad();
+  var existingImage = (data.weeklySpecial || {}).image || '';
+  data.weeklySpecial = { active: document.getElementById('sm-ws-active').checked,
+    name: document.getElementById('sm-ws-name').value.trim(),
+    desc: document.getElementById('sm-ws-desc').value.trim(),
+    price: document.getElementById('sm-ws-price').value.trim(),
+    wine: document.getElementById('sm-ws-wine').value.trim(),
+    image: existingImage };
+  menuSave(data);
+  var st = document.getElementById('sm-ws-status');
+  if (st) { st.textContent = 'Saved — dining page updated!'; st.style.display = 'block'; setTimeout(function(){ st.style.display='none'; }, 2500); }
 }
 function smSaveFriday(){
-  var imgData = document.getElementById('sm-fn-img-data').value || '';
-  var doSave = function(imgUrl) {
-    var data = menuLoad();
-    data.fridayNight = { active: document.getElementById('sm-fn-active').checked,
-      name: document.getElementById('sm-fn-name').value.trim(),
-      desc: document.getElementById('sm-fn-desc').value.trim(),
-      price: document.getElementById('sm-fn-price').value.trim(),
-      wine: document.getElementById('sm-fn-wine').value.trim(),
-      image: imgUrl };
-    menuSave(data);
-    var st = document.getElementById('sm-fn-status');
-    if (st) { st.textContent = 'Saved — dining page updated!'; st.style.display = 'block'; setTimeout(function(){ st.style.display='none'; }, 2500); }
-  };
-  if (imgData.startsWith('data:')) {
-    staffToast('Uploading photo to Drive…', 'info');
-    fetch(WHCC_SCRIPT_URL, { method:'POST', headers:{'Content-Type':'text/plain'},
-      body: JSON.stringify({ action:'upload-photo', base64: imgData.split(',')[1],
-        mimeType: imgData.split(';')[0].split(':')[1] || 'image/jpeg',
-        filename: 'special-friday-' + Date.now() + '.jpg', category: 'Dining', staffPin: _staffSessionPin })
-    }).then(function(r){ return r.json(); }).then(function(d) {
-      var url = (d && d.ok) ? d.url : imgData;
-      if (d && d.ok) document.getElementById('sm-fn-img-data').value = url;
-      doSave(url);
-    }).catch(function(){ doSave(imgData); });
-  } else { doSave(imgData); }
+  // Photo is edited from the Daily Email tab now (single shared field) —
+  // preserve whatever image is already stored instead of touching it here.
+  var data = menuLoad();
+  var existingImage = (data.fridayNight || {}).image || '';
+  data.fridayNight = { active: document.getElementById('sm-fn-active').checked,
+    name: document.getElementById('sm-fn-name').value.trim(),
+    desc: document.getElementById('sm-fn-desc').value.trim(),
+    price: document.getElementById('sm-fn-price').value.trim(),
+    wine: document.getElementById('sm-fn-wine').value.trim(),
+    image: existingImage };
+  menuSave(data);
+  var st = document.getElementById('sm-fn-status');
+  if (st) { st.textContent = 'Saved — dining page updated!'; st.style.display = 'block'; setTimeout(function(){ st.style.display='none'; }, 2500); }
 }
 
 // ════════════════════════════════════════════════════
@@ -5346,22 +5365,19 @@ function ebPopulateFields() {
   setVal('eb-tomorrow-notice', c.tomorrowNotice);
   setVal('eb-weekly-name', ws.name);
   setVal('eb-weekly-desc', ws.desc);
+  smRestoreImgPreview('ws', ws.image);
   setVal('eb-drink-special', ws.drinkSpecial);
   setVal('eb-friday-name', fn.name);
   setVal('eb-friday-desc', fn.desc);
+  smRestoreImgPreview('fn', fn.image);
+  setVal('eb-ed-opens', c.courseOpens);
+  setVal('eb-ed-cart', c.cartRules || 'Off Path');
+  setVal('eb-ed-range-status', c.rangeStatus || 'Open — Mats Only');
+  setVal('eb-ed-range-hours', c.rangeHours);
+  setVal('eb-ed-putting', c.puttingGreen);
+  setVal('eb-ed-proshop', c.proShop);
   setVal('eb-clubhouse-hours', c.clubhouseHours);
   setVal('eb-pool-hours', c.poolHours);
-
-  var hoursEl = document.getElementById('eb-hours-readout');
-  if (hoursEl) {
-    var rows = [
-      ['Course Opens', c.courseOpens], ['Cart Policy', c.cartRules],
-      ['Driving Range', (c.rangeStatus || '') + (c.rangeHours ? ' · ' + c.rangeHours : '')],
-      ['Putting Green', c.puttingGreen], ['Pro Shop', c.proShop]
-    ];
-    var rowsHtml = rows.map(function(r) { return r[1] ? '<div><strong style="color:rgba(245,240,232,.9);">' + r[0] + ':</strong> ' + menuEsc(r[1]) + '</div>' : ''; }).join('');
-    hoursEl.innerHTML = rowsHtml || '<em style="color:rgba(245,240,232,.3);">Not set yet — fill in the Daily Sheet tab.</em>';
-  }
 
   var evEl = document.getElementById('eb-events-readout');
   if (evEl) {
@@ -5407,12 +5423,14 @@ function ebFieldVals() {
     weeklyName: val('eb-weekly-name'), weeklyDesc: val('eb-weekly-desc'),
     drinkSpecial: val('eb-drink-special'),
     fridayName: val('eb-friday-name'), fridayDesc: val('eb-friday-desc'),
+    courseOpens: val('eb-ed-opens'), cartRules: val('eb-ed-cart'),
+    rangeStatus: val('eb-ed-range-status'), rangeHours: val('eb-ed-range-hours'),
+    puttingGreen: val('eb-ed-putting'), proShop: val('eb-ed-proshop'),
     clubhouseHours: val('eb-clubhouse-hours'), poolHours: val('eb-pool-hours')
   };
 }
 function ebBuildHtml() {
   var f = ebFieldVals();
-  var c = ebConditionsCache || {};
   var esc = menuEsc;
   var sec = function(title, inner) {
     return '<h3 style="font-size:20px;color:#1a2b1f;margin:22px 0 10px;">' + title + '</h3>' + inner + '<hr style="border:none;border-top:1px solid #ddd;margin:18px 0;">';
@@ -5427,11 +5445,11 @@ function ebBuildHtml() {
   specials += '<p><em>Specials are subject to availability and may change.</em></p>';
   html += sec('🍽️ WEEKLY RESTAURANT SPECIALS', specials);
   var hours = '<p>' +
-    '<strong>Course Opens:</strong> ' + esc(c.courseOpens) + '<br>' +
-    '<strong>Cart Policy:</strong> ' + esc(c.cartRules) + '<br>' +
-    '<strong>Driving Range:</strong> ' + esc(c.rangeStatus) + (c.rangeHours ? ' | ' + esc(c.rangeHours) : '') + '<br>' +
-    '<strong>Putting Green:</strong> ' + esc(c.puttingGreen) + '<br>' +
-    '<strong>Pro Shop:</strong> ' + esc(c.proShop) + '<br>' +
+    '<strong>Course Opens:</strong> ' + esc(f.courseOpens) + '<br>' +
+    '<strong>Cart Policy:</strong> ' + esc(f.cartRules) + '<br>' +
+    '<strong>Driving Range:</strong> ' + esc(f.rangeStatus) + (f.rangeHours ? ' | ' + esc(f.rangeHours) : '') + '<br>' +
+    '<strong>Putting Green:</strong> ' + esc(f.puttingGreen) + '<br>' +
+    '<strong>Pro Shop:</strong> ' + esc(f.proShop) + '<br>' +
     '<strong>Clubhouse:</strong> ' + esc(f.clubhouseHours) + '<br>' +
     '<strong>Pool:</strong> ' + esc(f.poolHours) +
     '</p><p><strong>Please help us take care of the golf course:</strong></p>' +
@@ -5450,10 +5468,29 @@ function ebUpdatePreview() {
   if (prev) prev.innerHTML = ebBuildHtml();
 }
 
+function ebUploadPhotoIfNeeded_(prefix, cb) {
+  var dataEl = document.getElementById('sm-' + prefix + '-img-data');
+  var imgData = dataEl ? (dataEl.value || '') : '';
+  if (!imgData.startsWith('data:')) { cb(imgData); return; }
+  staffToast('Uploading photo to Drive…', 'info');
+  fetch(WHCC_SCRIPT_URL, { method:'POST', headers:{'Content-Type':'text/plain'},
+    body: JSON.stringify({ action:'upload-photo', base64: imgData.split(',')[1],
+      mimeType: imgData.split(';')[0].split(':')[1] || 'image/jpeg',
+      filename: 'special-' + prefix + '-' + Date.now() + '.jpg', category: 'Dining', staffPin: _staffSessionPin })
+  }).then(function(r){ return r.json(); }).then(function(d) {
+    var url = (d && d.ok) ? d.url : imgData;
+    if (d && d.ok && dataEl) dataEl.value = url;
+    cb(url);
+  }).catch(function(){ cb(imgData); });
+}
+
 function ebSaveAndSync() {
   var f = ebFieldVals();
   var cdata = Object.assign({}, ebConditionsCache, {
     notice: f.todayNotice, tomorrowNotice: f.tomorrowNotice,
+    courseOpens: f.courseOpens, cartRules: f.cartRules,
+    rangeStatus: f.rangeStatus, rangeHours: f.rangeHours,
+    puttingGreen: f.puttingGreen, proShop: f.proShop,
     clubhouseHours: f.clubhouseHours, poolHours: f.poolHours,
     updatedAt: new Date().toISOString()
   });
@@ -5461,19 +5498,23 @@ function ebSaveAndSync() {
   try { window.storage.set('daily-update', JSON.stringify(cdata)); } catch(e) {}
   WHCC_SYNC.saveConditions(cdata, function() {});
 
-  var mdata = menuLoad();
-  mdata.weeklySpecial = Object.assign({}, mdata.weeklySpecial, { name: f.weeklyName, desc: f.weeklyDesc, drinkSpecial: f.drinkSpecial });
-  mdata.fridayNight = Object.assign({}, mdata.fridayNight, { name: f.fridayName, desc: f.fridayDesc });
-  ebMenusCache = mdata;
-  menuSave(mdata);
+  ebUploadPhotoIfNeeded_('ws', function(wsUrl) {
+    ebUploadPhotoIfNeeded_('fn', function(fnUrl) {
+      var mdata = menuLoad();
+      mdata.weeklySpecial = Object.assign({}, mdata.weeklySpecial, { name: f.weeklyName, desc: f.weeklyDesc, drinkSpecial: f.drinkSpecial, image: wsUrl });
+      mdata.fridayNight = Object.assign({}, mdata.fridayNight, { name: f.fridayName, desc: f.fridayDesc, image: fnUrl });
+      ebMenusCache = mdata;
+      menuSave(mdata);
 
-  var status = document.getElementById('eb-save-status');
-  if (status) {
-    status.style.display = 'block';
-    status.textContent = '✓ Saved. Website updated.';
-    setTimeout(function() { status.style.display = 'none'; }, 4000);
-  }
-  ebUpdatePreview();
+      var status = document.getElementById('eb-save-status');
+      if (status) {
+        status.style.display = 'block';
+        status.textContent = '✓ Saved. Website updated.';
+        setTimeout(function() { status.style.display = 'none'; }, 4000);
+      }
+      ebUpdatePreview();
+    });
+  });
 }
 
 function ebRefreshRecipientCount() {
@@ -5677,7 +5718,15 @@ function duUpdatePreview() {
 async function duAdminSave() {
   var scEl = document.getElementById('du-ed-scorecard-url');
   var psEl = document.getElementById('du-ed-pinsheet-url');
-  var data = {
+  // Merge onto the latest known data (not overwrite) — otherwise saving here
+  // would wipe out fields only the Daily Email tab edits (tomorrowNotice,
+  // clubhouseHours, poolHours), since save-conditions replaces the whole blob.
+  var existing = Object.assign({}, duDefaults);
+  try {
+    var r = await window.storage.get('daily-update');
+    if (r && r.value) existing = JSON.parse(r.value);
+  } catch(e) {}
+  var data = Object.assign({}, existing, {
     courseOpens: document.getElementById('du-ed-opens').value.trim(),
     cartRules: document.getElementById('du-ed-cart').value,
     rangeStatus: document.getElementById('du-ed-range-status').value,
@@ -5688,7 +5737,7 @@ async function duAdminSave() {
     scorecardUrl: scEl ? scEl.value.trim() : '',
     pinSheetUrl: psEl ? psEl.value.trim() : '',
     updatedAt: new Date().toISOString()
-  };
+  });
   golfUpdateDownloadLinks(data);
   try { await window.storage.set('daily-update', JSON.stringify(data)); } catch(e) {}
   var status = document.getElementById('du-admin-status');
