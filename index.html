@@ -5277,6 +5277,7 @@ function smLoadImage(input, prefix) {
     if (dataEl) dataEl.value = dataUrl;
     if (imgEl)  imgEl.src   = dataUrl;
     if (prevEl) prevEl.style.display = 'block';
+    if (typeof ebUpdatePreview === 'function') ebUpdatePreview();
   };
   reader.readAsDataURL(file);
 }
@@ -5287,6 +5288,7 @@ function smRemoveImage(prefix) {
   if (dataEl) dataEl.value = '';
   if (imgEl)  imgEl.src   = '';
   if (prevEl) prevEl.style.display = 'none';
+  if (typeof ebUpdatePreview === 'function') ebUpdatePreview();
 }
 function smRestoreImgPreview(prefix, imageData) {
   var dataEl = document.getElementById('sm-' + prefix + '-img-data');
@@ -5420,9 +5422,9 @@ function ebFieldVals() {
   function val(id) { var e = document.getElementById(id); return e ? e.value.trim() : ''; }
   return {
     todayNotice: val('eb-today-notice'), tomorrowNotice: val('eb-tomorrow-notice'),
-    weeklyName: val('eb-weekly-name'), weeklyDesc: val('eb-weekly-desc'),
+    weeklyName: val('eb-weekly-name'), weeklyDesc: val('eb-weekly-desc'), weeklyImage: val('sm-ws-img-data'),
     drinkSpecial: val('eb-drink-special'),
-    fridayName: val('eb-friday-name'), fridayDesc: val('eb-friday-desc'),
+    fridayName: val('eb-friday-name'), fridayDesc: val('eb-friday-desc'), fridayImage: val('sm-fn-img-data'),
     courseOpens: val('eb-ed-opens'), cartRules: val('eb-ed-cart'),
     rangeStatus: val('eb-ed-range-status'), rangeHours: val('eb-ed-range-hours'),
     puttingGreen: val('eb-ed-putting'), proShop: val('eb-ed-proshop'),
@@ -5438,10 +5440,15 @@ function ebBuildHtml() {
   var html = '<div style="font-family:Georgia,serif;max-width:640px;color:#222;">';
   html += sec('TODAY AT THE CLUB', '<p>' + (esc(f.todayNotice).replace(/\n/g, '<br>') || '<em>—</em>') + '</p>');
   html += sec('TOMORROW AT THE CLUB', '<p>' + (esc(f.tomorrowNotice).replace(/\n/g, '<br>') || '<em>—</em>') + '</p>');
+  var img = function(src, alt) {
+    return src ? '<img src="' + src + '" alt="' + esc(alt) + '" style="max-width:100%;height:auto;border-radius:6px;margin:6px 0 14px;display:block;">' : '';
+  };
   var specials = '<p>Be sure to stop by the clubhouse and enjoy our weekly restaurant specials.</p>';
   specials += '<p><strong>Weekly Special:</strong> ' + esc(f.weeklyName) + (f.weeklyDesc ? ' - ' + esc(f.weeklyDesc) : '') + '</p>';
+  specials += img(f.weeklyImage, f.weeklyName);
   specials += '<p><strong>Weekly Drink Special:</strong> ' + esc(f.drinkSpecial) + '</p>';
   specials += '<p><strong>Friday Night Dinner Special:</strong> ' + esc(f.fridayName) + (f.fridayDesc ? ' - ' + esc(f.fridayDesc) : '') + '</p>';
+  specials += img(f.fridayImage, f.fridayName);
   specials += '<p><em>Specials are subject to availability and may change.</em></p>';
   html += sec('WEEKLY RESTAURANT SPECIALS', specials);
   var hours = '<p>' +
@@ -5484,7 +5491,7 @@ function ebUploadPhotoIfNeeded_(prefix, cb) {
   }).catch(function(){ cb(imgData); });
 }
 
-function ebSaveAndSync() {
+function ebSaveAndSync(cb) {
   var f = ebFieldVals();
   var cdata = Object.assign({}, ebConditionsCache, {
     notice: f.todayNotice, tomorrowNotice: f.tomorrowNotice,
@@ -5513,6 +5520,7 @@ function ebSaveAndSync() {
         setTimeout(function() { status.style.display = 'none'; }, 4000);
       }
       ebUpdatePreview();
+      if (cb) cb();
     });
   });
 }
@@ -5539,23 +5547,30 @@ function ebSendStatus(msg, ok) {
   status.textContent = msg;
 }
 function ebSendTest() {
-  ebSendStatus('Sending test…', true);
-  WHCC_SYNC.sendDailyEmail({ test: true, subject: ebBuildSubject(), html: ebBuildHtml() }, function(r, err) {
-    if (err || !r || !r.ok) { ebSendStatus('⚠ ' + ((r && r.error) || 'Could not send test email.'), false); return; }
-    ebSendStatus('✓ Test email sent.', true);
+  // Save first so any photo still sitting as unsaved base64 gets uploaded to
+  // Drive — most email clients strip inline data: URIs, so the sent email
+  // must reference a real hosted URL, not the raw upload.
+  ebSendStatus('Saving photos & sending test…', true);
+  ebSaveAndSync(function() {
+    WHCC_SYNC.sendDailyEmail({ test: true, subject: ebBuildSubject(), html: ebBuildHtml() }, function(r, err) {
+      if (err || !r || !r.ok) { ebSendStatus('⚠ ' + ((r && r.error) || 'Could not send test email.'), false); return; }
+      ebSendStatus('✓ Test email sent.', true);
+    });
   });
 }
 function ebSendAll() {
   var count = _ebRecipientCount;
   var msg = count
-    ? 'Send this email to all ' + count + ' member' + (count === 1 ? '' : 's') + ' on file? This cannot be undone.'
-    : 'Send this email to all members on file? This cannot be undone.';
+    ? 'Save changes and send this email to all ' + count + ' member' + (count === 1 ? '' : 's') + ' on file? This cannot be undone.'
+    : 'Save changes and send this email to all members on file? This cannot be undone.';
   if (!confirm(msg)) return;
-  ebSendStatus('Sending…', true);
-  WHCC_SYNC.sendDailyEmail({ test: false, subject: ebBuildSubject(), html: ebBuildHtml() }, function(r, err) {
-    if (err || !r || !r.ok) { ebSendStatus('⚠ ' + ((r && r.error) || 'Could not send email.'), false); return; }
-    ebSendStatus('✓ Sent to ' + r.sent + ' member' + (r.sent === 1 ? '' : 's') + '.', true);
-    ebRefreshRecipientCount();
+  ebSendStatus('Saving photos & sending…', true);
+  ebSaveAndSync(function() {
+    WHCC_SYNC.sendDailyEmail({ test: false, subject: ebBuildSubject(), html: ebBuildHtml() }, function(r, err) {
+      if (err || !r || !r.ok) { ebSendStatus('⚠ ' + ((r && r.error) || 'Could not send email.'), false); return; }
+      ebSendStatus('✓ Sent to ' + r.sent + ' member' + (r.sent === 1 ? '' : 's') + '.', true);
+      ebRefreshRecipientCount();
+    });
   });
 }
 
