@@ -2277,11 +2277,13 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 
           <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-bottom:16px;">
             <div class="staff-tag" style="margin-bottom:10px;">Weekly Restaurant Specials</div>
-            <div class="hrf-group" style="width:100%;"><label class="hrf-label" for="eb-drink-special">Weekly Drink Special</label><input class="hrf-input" id="eb-drink-special" oninput="ebUpdatePreview()" placeholder="e.g. Strawberry Margarita" /></div>
+            <div class="hrf-group" style="width:100%;"><label class="hrf-label" for="eb-weekly-name">Weekly Special</label><input class="hrf-input" id="eb-weekly-name" oninput="ebUpdatePreview()" placeholder="e.g. Steak Sandwich" /></div>
+            <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-weekly-desc">Weekly Special Description</label><textarea class="hrf-textarea" id="eb-weekly-desc" rows="2" oninput="ebUpdatePreview()" placeholder="e.g. served on a hoagie bun with homemade sauce &amp; your choice of side"></textarea></div>
+            <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-drink-special">Weekly Drink Special</label><input class="hrf-input" id="eb-drink-special" oninput="ebUpdatePreview()" placeholder="e.g. Strawberry Margarita" /></div>
             <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">Drink special appears in the email only — there's no cocktail menu section on the site to sync it to.</div>
             <div class="hrf-group" style="width:100%;margin-top:14px;"><label class="hrf-label" for="eb-friday-name">Friday Night Dinner Special</label><input class="hrf-input" id="eb-friday-name" oninput="ebUpdatePreview()" placeholder="Leave blank most days — fill in by Friday" /></div>
             <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-friday-desc">Friday Special Description</label><textarea class="hrf-textarea" id="eb-friday-desc" rows="2" oninput="ebUpdatePreview()" placeholder="e.g. Panko Crusted Salmon with Roasted Potatoes &amp; Seared Veggies"></textarea></div>
-            <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">Syncs to the Friday Night Special shown on the Dining page.</div>
+            <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">These two sync to the Weekly Special &amp; Friday Night Special shown on the Dining page.</div>
           </div>
 
           <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-bottom:16px;">
@@ -5342,6 +5344,8 @@ function ebPopulateFields() {
   function setVal(id, val) { var e = document.getElementById(id); if (e) e.value = val || ''; }
   setVal('eb-today-notice', c.notice);
   setVal('eb-tomorrow-notice', c.tomorrowNotice);
+  setVal('eb-weekly-name', ws.name);
+  setVal('eb-weekly-desc', ws.desc);
   setVal('eb-drink-special', ws.drinkSpecial);
   setVal('eb-friday-name', fn.name);
   setVal('eb-friday-desc', fn.desc);
@@ -5400,6 +5404,7 @@ function ebFieldVals() {
   function val(id) { var e = document.getElementById(id); return e ? e.value.trim() : ''; }
   return {
     todayNotice: val('eb-today-notice'), tomorrowNotice: val('eb-tomorrow-notice'),
+    weeklyName: val('eb-weekly-name'), weeklyDesc: val('eb-weekly-desc'),
     drinkSpecial: val('eb-drink-special'),
     fridayName: val('eb-friday-name'), fridayDesc: val('eb-friday-desc'),
     clubhouseHours: val('eb-clubhouse-hours'), poolHours: val('eb-pool-hours')
@@ -5416,6 +5421,7 @@ function ebBuildHtml() {
   html += sec('⛳ TODAY AT THE CLUB', '<p>' + (esc(f.todayNotice).replace(/\n/g, '<br>') || '<em>—</em>') + '</p>');
   html += sec('📅 TOMORROW AT THE CLUB', '<p>' + (esc(f.tomorrowNotice).replace(/\n/g, '<br>') || '<em>—</em>') + '</p>');
   var specials = '<p>Be sure to stop by the clubhouse and enjoy our weekly restaurant specials.</p>';
+  specials += '<p><strong>Weekly Special:</strong> ' + esc(f.weeklyName) + (f.weeklyDesc ? ' - ' + esc(f.weeklyDesc) : '') + '</p>';
   specials += '<p><strong>Weekly Drink Special:</strong> ' + esc(f.drinkSpecial) + '</p>';
   specials += '<p><strong>Friday Night Dinner Special:</strong> ' + esc(f.fridayName) + (f.fridayDesc ? ' - ' + esc(f.fridayDesc) : '') + '</p>';
   specials += '<p><em>Specials are subject to availability and may change.</em></p>';
@@ -5456,7 +5462,7 @@ function ebSaveAndSync() {
   WHCC_SYNC.saveConditions(cdata, function() {});
 
   var mdata = menuLoad();
-  mdata.weeklySpecial = Object.assign({}, mdata.weeklySpecial, { drinkSpecial: f.drinkSpecial });
+  mdata.weeklySpecial = Object.assign({}, mdata.weeklySpecial, { name: f.weeklyName, desc: f.weeklyDesc, drinkSpecial: f.drinkSpecial });
   mdata.fridayNight = Object.assign({}, mdata.fridayNight, { name: f.fridayName, desc: f.fridayDesc });
   ebMenusCache = mdata;
   menuSave(mdata);
