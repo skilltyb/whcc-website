@@ -2271,14 +2271,14 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 
           <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-bottom:16px;">
             <div class="staff-tag" style="margin-bottom:10px;">Today &amp; Tomorrow</div>
-            <div class="hrf-group" style="width:100%;"><label class="hrf-label" for="eb-today-notice">Today at the Club</label><textarea class="hrf-textarea" id="eb-today-notice" rows="3" oninput="ebUpdatePreview()" placeholder="e.g. The course is open for play today! No events scheduled — great day to get out."></textarea></div>
-            <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-tomorrow-notice">Tomorrow at the Club</label><textarea class="hrf-textarea" id="eb-tomorrow-notice" rows="3" oninput="ebUpdatePreview()" placeholder="e.g. Friday Night Fights - 5:15 PM Start Time"></textarea></div>
+            <div class="hrf-group" style="width:100%;"><label class="hrf-label" for="eb-today-notice">Today at the Club</label><textarea class="hrf-textarea" id="eb-today-notice" rows="3" oninput="ebOnEdit()" placeholder="e.g. The course is open for play today! No events scheduled — great day to get out."></textarea></div>
+            <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-tomorrow-notice">Tomorrow at the Club</label><textarea class="hrf-textarea" id="eb-tomorrow-notice" rows="3" oninput="ebOnEdit()" placeholder="e.g. Friday Night Fights - 5:15 PM Start Time"></textarea></div>
           </div>
 
           <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-bottom:16px;">
             <div class="staff-tag" style="margin-bottom:10px;">Weekly Restaurant Specials</div>
-            <div class="hrf-group" style="width:100%;"><label class="hrf-label" for="eb-weekly-name">Weekly Special</label><input class="hrf-input" id="eb-weekly-name" oninput="ebUpdatePreview()" placeholder="e.g. Steak Sandwich" /></div>
-            <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-weekly-desc">Weekly Special Description</label><textarea class="hrf-textarea" id="eb-weekly-desc" rows="2" oninput="ebUpdatePreview()" placeholder="e.g. served on a hoagie bun with homemade sauce &amp; your choice of side"></textarea></div>
+            <div class="hrf-group" style="width:100%;"><label class="hrf-label" for="eb-weekly-name">Weekly Special</label><input class="hrf-input" id="eb-weekly-name" oninput="ebOnEdit()" placeholder="e.g. Steak Sandwich" /></div>
+            <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-weekly-desc">Weekly Special Description</label><textarea class="hrf-textarea" id="eb-weekly-desc" rows="2" oninput="ebOnEdit()" placeholder="e.g. served on a hoagie bun with homemade sauce &amp; your choice of side"></textarea></div>
             <div style="margin-top:8px;">
               <label class="hrf-label">Photo (optional)</label>
               <div id="sm-ws-img-preview" style="display:none;position:relative;margin-bottom:8px;">
@@ -2291,10 +2291,10 @@ nav.staff-mode .nav-site-back{display:flex!important;}
               </label>
             </div>
             <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">Same photo shown on the Dining page's Weekly Special — one photo, edited here only.</div>
-            <div class="hrf-group" style="width:100%;margin-top:14px;"><label class="hrf-label" for="eb-drink-special">Weekly Drink Special</label><input class="hrf-input" id="eb-drink-special" oninput="ebUpdatePreview()" placeholder="e.g. Strawberry Margarita" /></div>
+            <div class="hrf-group" style="width:100%;margin-top:14px;"><label class="hrf-label" for="eb-drink-special">Weekly Drink Special</label><input class="hrf-input" id="eb-drink-special" oninput="ebOnEdit()" placeholder="e.g. Strawberry Margarita" /></div>
             <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">Drink special appears in the email only — there's no cocktail menu section on the site to sync it to.</div>
-            <div class="hrf-group" style="width:100%;margin-top:14px;"><label class="hrf-label" for="eb-friday-name">Friday Night Dinner Special</label><input class="hrf-input" id="eb-friday-name" oninput="ebUpdatePreview()" placeholder="Leave blank most days — fill in by Friday" /></div>
-            <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-friday-desc">Friday Special Description</label><textarea class="hrf-textarea" id="eb-friday-desc" rows="2" oninput="ebUpdatePreview()" placeholder="e.g. Panko Crusted Salmon with Roasted Potatoes &amp; Seared Veggies"></textarea></div>
+            <div class="hrf-group" style="width:100%;margin-top:14px;"><label class="hrf-label" for="eb-friday-name">Friday Night Dinner Special</label><input class="hrf-input" id="eb-friday-name" oninput="ebOnEdit()" placeholder="Leave blank most days — fill in by Friday" /></div>
+            <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-friday-desc">Friday Special Description</label><textarea class="hrf-textarea" id="eb-friday-desc" rows="2" oninput="ebOnEdit()" placeholder="e.g. Panko Crusted Salmon with Roasted Potatoes &amp; Seared Veggies"></textarea></div>
             <div style="margin-top:8px;">
               <label class="hrf-label">Photo (optional)</label>
               <div id="sm-fn-img-preview" style="display:none;position:relative;margin-bottom:8px;">
@@ -2314,11 +2314,11 @@ nav.staff-mode .nav-site-back{display:flex!important;}
             <div class="hrf-row">
               <div class="hrf-group">
                 <label class="hrf-label">Course Opens</label>
-                <input class="hrf-input" id="eb-ed-opens" placeholder="e.g. 9:00 AM" oninput="ebUpdatePreview()" />
+                <input class="hrf-input" id="eb-ed-opens" placeholder="e.g. 9:00 AM" oninput="ebOnEdit()" />
               </div>
               <div class="hrf-group">
                 <label class="hrf-label">Cart Path Rules</label>
-                <select class="hrf-select" id="eb-ed-cart" onchange="ebUpdatePreview()">
+                <select class="hrf-select" id="eb-ed-cart" onchange="ebOnEdit()">
                   <option value="Off Path">Off Path (full course)</option>
                   <option value="Cart Path Only">Cart Path Only</option>
                   <option value="90° Rule">90° Rule</option>
@@ -2329,7 +2329,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
             <div class="hrf-row">
               <div class="hrf-group">
                 <label class="hrf-label">Driving Range Status</label>
-                <select class="hrf-select" id="eb-ed-range-status" onchange="ebUpdatePreview()">
+                <select class="hrf-select" id="eb-ed-range-status" onchange="ebOnEdit()">
                   <option value="Open — Mats Only">Open — Mats Only</option>
                   <option value="Open — Grass Tees">Open — Grass Tees</option>
                   <option value="Open — Grass &amp; Mats">Open — Grass &amp; Mats</option>
@@ -2339,23 +2339,23 @@ nav.staff-mode .nav-site-back{display:flex!important;}
               </div>
               <div class="hrf-group">
                 <label class="hrf-label">Range Hours</label>
-                <input class="hrf-input" id="eb-ed-range-hours" placeholder="e.g. 8:30 AM – 5:00 PM" oninput="ebUpdatePreview()" />
+                <input class="hrf-input" id="eb-ed-range-hours" placeholder="e.g. 8:30 AM – 5:00 PM" oninput="ebOnEdit()" />
               </div>
             </div>
             <div class="hrf-row">
               <div class="hrf-group">
                 <label class="hrf-label">Putting Green</label>
-                <input class="hrf-input" id="eb-ed-putting" placeholder="e.g. 9:00 AM – Dusk" oninput="ebUpdatePreview()" />
+                <input class="hrf-input" id="eb-ed-putting" placeholder="e.g. 9:00 AM – Dusk" oninput="ebOnEdit()" />
               </div>
               <div class="hrf-group">
                 <label class="hrf-label">Pro Shop Hours</label>
-                <input class="hrf-input" id="eb-ed-proshop" placeholder="e.g. 8:30 AM – 6:00 PM" oninput="ebUpdatePreview()" />
+                <input class="hrf-input" id="eb-ed-proshop" placeholder="e.g. 8:30 AM – 6:00 PM" oninput="ebOnEdit()" />
               </div>
             </div>
             <div style="font-size:10px;color:rgba(245,240,232,.35);margin:4px 0 12px;">Linked with the <a href="#" onclick="staffView('daily',document.getElementById('svb-daily'));return false;" style="color:var(--gold-lt);">Daily Sheet</a> tab — editing here updates there too, and vice versa.</div>
             <div class="hrf-row">
-              <div class="hrf-group"><label class="hrf-label" for="eb-clubhouse-hours">Clubhouse Hours</label><input class="hrf-input" id="eb-clubhouse-hours" oninput="ebUpdatePreview()" placeholder="e.g. 10:00 AM – 11:00 PM" /></div>
-              <div class="hrf-group"><label class="hrf-label" for="eb-pool-hours">Pool Hours</label><input class="hrf-input" id="eb-pool-hours" oninput="ebUpdatePreview()" placeholder="e.g. 11:00 AM – 7:00 PM" /></div>
+              <div class="hrf-group"><label class="hrf-label" for="eb-clubhouse-hours">Clubhouse Hours</label><input class="hrf-input" id="eb-clubhouse-hours" oninput="ebOnEdit()" placeholder="e.g. 10:00 AM – 11:00 PM" /></div>
+              <div class="hrf-group"><label class="hrf-label" for="eb-pool-hours">Pool Hours</label><input class="hrf-input" id="eb-pool-hours" oninput="ebOnEdit()" placeholder="e.g. 11:00 AM – 7:00 PM" /></div>
             </div>
           </div>
 
@@ -5277,6 +5277,7 @@ function smLoadImage(input, prefix) {
     if (dataEl) dataEl.value = dataUrl;
     if (imgEl)  imgEl.src   = dataUrl;
     if (prevEl) prevEl.style.display = 'block';
+    if (typeof _ebDirty !== 'undefined') _ebDirty = true;
     if (typeof ebUpdatePreview === 'function') ebUpdatePreview();
   };
   reader.readAsDataURL(file);
@@ -5288,6 +5289,7 @@ function smRemoveImage(prefix) {
   if (dataEl) dataEl.value = '';
   if (imgEl)  imgEl.src   = '';
   if (prevEl) prevEl.style.display = 'none';
+  if (typeof _ebDirty !== 'undefined') _ebDirty = true;
   if (typeof ebUpdatePreview === 'function') ebUpdatePreview();
 }
 function smRestoreImgPreview(prefix, imageData) {
@@ -5341,20 +5343,28 @@ function smSaveFriday(){
 var ebConditionsCache = {};
 var ebMenusCache = {};
 var _ebRecipientCount = null;
+// Set the moment the user touches any field (typing, a dropdown, a photo
+// upload). While true, the background "fetch latest from server" callbacks
+// below still update the cache but skip repainting the DOM — otherwise a
+// slow network response landing after the user has already started editing
+// (e.g. just uploaded a photo) silently wipes out what they just did.
+var _ebDirty = false;
+function ebOnEdit() { _ebDirty = true; ebUpdatePreview(); }
 
 async function ebLoad() {
+  _ebDirty = false;
   ebConditionsCache = Object.assign({}, duDefaults);
   try {
     var r = await window.storage.get('daily-update');
     if (r && r.value) ebConditionsCache = JSON.parse(r.value);
   } catch(e) {}
   ebMenusCache = menuLoad();
-  ebPopulateFields();
+  if (!_ebDirty) ebPopulateFields();
   WHCC_SYNC.fetchConditions(function(remote, err) {
-    if (remote && !err && typeof remote === 'object') { ebConditionsCache = remote; ebPopulateFields(); }
+    if (remote && !err && typeof remote === 'object') { ebConditionsCache = remote; if (!_ebDirty) ebPopulateFields(); }
   });
   WHCC_SYNC.fetchMenus(function(remote, err) {
-    if (remote && !err && typeof remote === 'object') { ebMenusCache = remote; ebPopulateFields(); }
+    if (remote && !err && typeof remote === 'object') { ebMenusCache = remote; if (!_ebDirty) ebPopulateFields(); }
   });
   ebRefreshRecipientCount();
 }
