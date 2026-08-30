@@ -31,6 +31,21 @@ function makeStaffMember() {
   Logger.log('Account not found.');
 }
 
+function getMemberEmails_() {
+  var mSh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Members');
+  if (!mSh || mSh.getLastRow() < 2) return [];
+  var rows = mSh.getDataRange().getValues();
+  var eCol = rows[0].indexOf('Email');
+  if (eCol === -1) return [];
+  var seen = {};
+  var emails = [];
+  for (var i = 1; i < rows.length; i++) {
+    var em = String(rows[i][eCol] || '').trim().toLowerCase();
+    if (em && em.indexOf('@') !== -1 && !seen[em]) { seen[em] = true; emails.push(em); }
+  }
+  return emails;
+}
+
 function normMemberNum_(s) {
   var str = String(s || '').trim().toUpperCase().replace(/^[A-Z]+/, '').split('-')[0];
   return parseInt(str, 10) || 0;
@@ -573,6 +588,10 @@ function doGet(e) {
     var scSh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Site Content');
     if (!scSh || scSh.getLastRow() < 2) return jsonResponse({});
     return ContentService.createTextOutput(String(scSh.getRange(2, 1).getValue())).setMimeType(ContentService.MimeType.JSON);
+  }
+
+  if (action === 'member-email-count') {
+    return jsonResponse({ ok: true, count: getMemberEmails_().length });
   }
 
   if (action === 'get-lessons') {
@@ -1348,6 +1367,42 @@ function doPost(e) {
       else scSh.getRange(2, 1, 1, 2).setValues([[scJson, new Date().toISOString()]]);
       return jsonResponse({ ok: true });
     } finally { scLock.releaseLock(); }
+  }
+
+  if (data.action === 'send-daily-email') {
+    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
+    var emailHtml = data.html || '';
+    var emailSubject = data.subject || 'Course Conditions & Events';
+    if (!emailHtml.trim()) return jsonResponse({ ok: false, error: 'No email content provided.' });
+
+    if (data.test) {
+      try {
+        MailApp.sendEmail({ to: 'sctr1217@gmail.com', subject: '[TEST] ' + emailSubject, htmlBody: emailHtml });
+        return jsonResponse({ ok: true, sent: 1, test: true });
+      } catch (testMailErr) {
+        return jsonResponse({ ok: false, error: testMailErr.toString() });
+      }
+    }
+
+    var memberEmails = getMemberEmails_();
+    if (!memberEmails.length) return jsonResponse({ ok: false, error: 'No member emails on file in the Members sheet yet.' });
+    var mailQuota = MailApp.getRemainingDailyQuota();
+    if (mailQuota < 1) return jsonResponse({ ok: false, error: 'Daily email quota exhausted — try again tomorrow.' });
+    if (memberEmails.length > mailQuota) {
+      return jsonResponse({ ok: false, error: 'Recipient list (' + memberEmails.length + ') exceeds today\'s remaining send quota (' + mailQuota + ').' });
+    }
+    var sendLock = LockService.getScriptLock();
+    try { sendLock.waitLock(10000); } catch (sendLockErr) { return jsonResponse({ ok: false, error: 'busy' }); }
+    try {
+      var BATCH_SIZE = 80; // keep each BCC header comfortably under mail-server limits
+      for (var bi = 0; bi < memberEmails.length; bi += BATCH_SIZE) {
+        var batch = memberEmails.slice(bi, bi + BATCH_SIZE);
+        MailApp.sendEmail({ to: 'sctr1217@gmail.com', bcc: batch.join(','), subject: emailSubject, htmlBody: emailHtml });
+      }
+      return jsonResponse({ ok: true, sent: memberEmails.length });
+    } catch (sendErr) {
+      return jsonResponse({ ok: false, error: sendErr.toString() });
+    } finally { sendLock.releaseLock(); }
   }
 
   if (data.action === 'create-pin') {

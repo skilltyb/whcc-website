@@ -2001,6 +2001,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
           <button class="sv-drop-btn" id="sv-drop-admin" onclick="svToggleDrop('admin')">Admin ▾</button>
           <div class="sv-drop-menu" id="sv-menu-admin">
             <button id="svb-menus" onclick="staffView('menus');svCloseDrop()">Menus</button>
+            <button id="svb-email" onclick="staffView('email');svCloseDrop()">✉️ Daily Email</button>
             <button id="svb-settings" onclick="staffView('settings');svCloseDrop()">Settings</button>
             <button id="svb-launch" onclick="staffView('launch');svCloseDrop()" style="color:#e07070;">🚀 Launch Site</button>
           </div>
@@ -2260,6 +2261,61 @@ nav.staff-mode .nav-site-back{display:flex!important;}
               <button class="staff-mini-btn" onclick="duPreset('tournament')">Tournament Day</button>
               <button class="staff-mini-btn danger" onclick="duPreset('closed')">Course Closed</button>
             </div>
+          </div>
+        </div>
+
+        <!-- Daily Email Builder view -->
+        <div id="sv-email" style="display:none;">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:#f5f0e8;margin-bottom:4px;">Daily <em style="color:#d4b483;">Email</em></div>
+          <div style="font-size:11px;color:rgba(245,240,232,.4);margin-bottom:16px;">Compose the daily &quot;Course Conditions &amp; Events&quot; email. Saving updates the website; sending emails the members on file.</div>
+
+          <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-bottom:16px;">
+            <div class="staff-tag" style="margin-bottom:10px;">Today &amp; Tomorrow</div>
+            <div class="hrf-group" style="width:100%;"><label class="hrf-label" for="eb-today-notice">Today at the Club</label><textarea class="hrf-textarea" id="eb-today-notice" rows="3" oninput="ebUpdatePreview()" placeholder="e.g. The course is open for play today! No events scheduled — great day to get out."></textarea></div>
+            <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-tomorrow-notice">Tomorrow at the Club</label><textarea class="hrf-textarea" id="eb-tomorrow-notice" rows="3" oninput="ebUpdatePreview()" placeholder="e.g. Friday Night Fights - 5:15 PM Start Time"></textarea></div>
+          </div>
+
+          <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-bottom:16px;">
+            <div class="staff-tag" style="margin-bottom:10px;">Weekly Restaurant Specials</div>
+            <div class="hrf-group" style="width:100%;"><label class="hrf-label" for="eb-lunch-name">Weekly Lunch Special</label><input class="hrf-input" id="eb-lunch-name" oninput="ebUpdatePreview()" placeholder="e.g. Steak Sandwich" /></div>
+            <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-lunch-desc">Lunch Special Description</label><textarea class="hrf-textarea" id="eb-lunch-desc" rows="2" oninput="ebUpdatePreview()" placeholder="e.g. served on a hoagie bun with homemade sauce &amp; your choice of side"></textarea></div>
+            <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-drink-special">Weekly Drink Special</label><input class="hrf-input" id="eb-drink-special" oninput="ebUpdatePreview()" placeholder="e.g. Strawberry Margarita" /></div>
+            <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">Drink special appears in the email only — there's no cocktail menu section on the site to sync it to.</div>
+            <div class="hrf-group" style="width:100%;margin-top:14px;"><label class="hrf-label" for="eb-friday-name">Friday Night Dinner Special</label><input class="hrf-input" id="eb-friday-name" oninput="ebUpdatePreview()" placeholder="Leave blank most days — fill in by Friday" /></div>
+            <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-friday-desc">Friday Special Description</label><textarea class="hrf-textarea" id="eb-friday-desc" rows="2" oninput="ebUpdatePreview()" placeholder="e.g. Panko Crusted Salmon with Roasted Potatoes &amp; Seared Veggies"></textarea></div>
+            <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">These two sync to the Weekly Special &amp; Friday Night Special shown on the Dining page.</div>
+          </div>
+
+          <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-bottom:16px;">
+            <div class="staff-tag" style="margin-bottom:10px;">Course &amp; Facility Update</div>
+            <div id="eb-hours-readout" style="font-size:12px;color:rgba(245,240,232,.7);line-height:1.9;margin-bottom:10px;">—</div>
+            <div style="font-size:10px;color:rgba(245,240,232,.35);margin-bottom:12px;">Course hours, cart policy, range &amp; pro shop come from the <a href="#" onclick="staffView('daily',document.getElementById('svb-daily'));return false;" style="color:var(--gold-lt);">Daily Sheet</a> tab. Edit them there — they'll pull in here automatically.</div>
+            <div class="hrf-row">
+              <div class="hrf-group"><label class="hrf-label" for="eb-clubhouse-hours">Clubhouse Hours</label><input class="hrf-input" id="eb-clubhouse-hours" oninput="ebUpdatePreview()" placeholder="e.g. 10:00 AM – 11:00 PM" /></div>
+              <div class="hrf-group"><label class="hrf-label" for="eb-pool-hours">Pool Hours</label><input class="hrf-input" id="eb-pool-hours" oninput="ebUpdatePreview()" placeholder="e.g. 11:00 AM – 7:00 PM" /></div>
+            </div>
+          </div>
+
+          <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-bottom:16px;">
+            <div class="staff-tag" style="margin-bottom:8px;">Upcoming Events</div>
+            <div id="eb-events-readout" style="font-size:12px;color:rgba(245,240,232,.7);line-height:1.9;">—</div>
+            <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:8px;">Pulled automatically from <a href="#" onclick="staffView('events',document.getElementById('svb-events'));return false;" style="color:var(--gold-lt);">Website → Events</a>. Edit the list there.</div>
+          </div>
+
+          <button class="btn-p" style="width:100%;" onclick="ebSaveAndSync()">Save &amp; Update Website</button>
+          <div id="eb-save-status" style="font-size:11px;color:#8fcc8f;margin-top:8px;display:none;"></div>
+
+          <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-top:16px;">
+            <div class="staff-tag" style="margin-bottom:10px;">Preview — as the email will appear</div>
+            <div id="eb-preview" style="background:rgba(26,43,31,.6);border-radius:6px;padding:16px;font-size:12px;color:rgba(245,240,232,.85);line-height:1.7;max-height:420px;overflow-y:auto;"></div>
+          </div>
+
+          <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-top:16px;">
+            <div class="staff-tag" style="margin-bottom:10px;">Send</div>
+            <div id="eb-recipient-count" style="font-size:11px;color:rgba(245,240,232,.5);margin-bottom:10px;">Checking member list…</div>
+            <button class="staff-mini-btn" style="width:100%;margin-bottom:8px;" onclick="ebSendTest()">Send Test Email</button>
+            <button class="btn-p" style="width:100%;background:#8f3a3a;color:#f5f0e8;" onclick="ebSendAll()">Send to All Members</button>
+            <div id="eb-send-status" style="font-size:11px;margin-top:8px;display:none;"></div>
           </div>
         </div>
 
@@ -3641,6 +3697,23 @@ var WHCC_SYNC = {
   },
   fetchMenus: function(cb) {
     fetch(WHCC_SCRIPT_URL + '?action=get-menus')
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+
+  // ── DAILY EMAIL ──
+  sendDailyEmail: function(payload, cb) {
+    fetch(WHCC_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(Object.assign({ action: 'send-daily-email', staffPin: _staffSessionPin }, payload))
+    }).then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+  memberEmailCount: function(cb) {
+    fetch(WHCC_SCRIPT_URL + '?action=member-email-count')
       .then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -5240,6 +5313,211 @@ function smSaveFriday(){
     }).catch(function(){ doSave(imgData); });
   } else { doSave(imgData); }
 }
+
+// ════════════════════════════════════════════════════
+// DAILY EMAIL BUILDER
+// ════════════════════════════════════════════════════
+var ebConditionsCache = {};
+var ebMenusCache = {};
+var _ebRecipientCount = null;
+
+async function ebLoad() {
+  ebConditionsCache = Object.assign({}, duDefaults);
+  try {
+    var r = await window.storage.get('daily-update');
+    if (r && r.value) ebConditionsCache = JSON.parse(r.value);
+  } catch(e) {}
+  ebMenusCache = menuLoad();
+  ebPopulateFields();
+  WHCC_SYNC.fetchConditions(function(remote, err) {
+    if (remote && !err && typeof remote === 'object') { ebConditionsCache = remote; ebPopulateFields(); }
+  });
+  WHCC_SYNC.fetchMenus(function(remote, err) {
+    if (remote && !err && typeof remote === 'object') { ebMenusCache = remote; ebPopulateFields(); }
+  });
+  ebRefreshRecipientCount();
+}
+
+function ebPopulateFields() {
+  var c = ebConditionsCache || {}, m = ebMenusCache || {};
+  var ws = m.weeklySpecial || {}, fn = m.fridayNight || {};
+  function setVal(id, val) { var e = document.getElementById(id); if (e) e.value = val || ''; }
+  setVal('eb-today-notice', c.notice);
+  setVal('eb-tomorrow-notice', c.tomorrowNotice);
+  setVal('eb-lunch-name', ws.name);
+  setVal('eb-lunch-desc', ws.desc);
+  setVal('eb-drink-special', ws.drinkSpecial);
+  setVal('eb-friday-name', fn.name);
+  setVal('eb-friday-desc', fn.desc);
+  setVal('eb-clubhouse-hours', c.clubhouseHours);
+  setVal('eb-pool-hours', c.poolHours);
+
+  var hoursEl = document.getElementById('eb-hours-readout');
+  if (hoursEl) {
+    var rows = [
+      ['Course Opens', c.courseOpens], ['Cart Policy', c.cartRules],
+      ['Driving Range', (c.rangeStatus || '') + (c.rangeHours ? ' · ' + c.rangeHours : '')],
+      ['Putting Green', c.puttingGreen], ['Pro Shop', c.proShop]
+    ];
+    var rowsHtml = rows.map(function(r) { return r[1] ? '<div><strong style="color:rgba(245,240,232,.9);">' + r[0] + ':</strong> ' + menuEsc(r[1]) + '</div>' : ''; }).join('');
+    hoursEl.innerHTML = rowsHtml || '<em style="color:rgba(245,240,232,.3);">Not set yet — fill in the Daily Sheet tab.</em>';
+  }
+
+  var evEl = document.getElementById('eb-events-readout');
+  if (evEl) {
+    var events = ebUpcomingEvents();
+    evEl.innerHTML = events.length
+      ? events.map(function(l) { return '<div>' + menuEsc(l) + '</div>'; }).join('')
+      : '<em style="color:rgba(245,240,232,.3);">No upcoming events on file.</em>';
+  }
+
+  ebUpdatePreview();
+}
+
+function ebUpcomingEvents() {
+  var sc = cmsGetContent();
+  var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var today = new Date(); today.setHours(0, 0, 0, 0);
+  var events = (sc.events || []).filter(function(e) {
+    if (e.archived || e.active === false || !e.date) return false;
+    var d = new Date(e.date + 'T00:00:00');
+    return d >= today;
+  });
+  events.sort(function(a, b) { return new Date(a.date) - new Date(b.date); });
+  return events.slice(0, 20).map(function(e) {
+    var d = new Date(e.date + 'T00:00:00');
+    return months[d.getMonth()] + ' ' + d.getDate() + ' — ' + (e.name || '') + (e.time ? ' | ' + e.time : '');
+  });
+}
+
+function ebOrdinal(n) {
+  n = parseInt(n, 10);
+  var s = ['th', 'st', 'nd', 'rd'], v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
+function ebBuildSubject() {
+  var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var now = new Date();
+  return 'Course Conditions & Events - ' + months[now.getMonth()] + ' ' + ebOrdinal(now.getDate()) + ' ' + now.getFullYear();
+}
+function ebFieldVals() {
+  function val(id) { var e = document.getElementById(id); return e ? e.value.trim() : ''; }
+  return {
+    todayNotice: val('eb-today-notice'), tomorrowNotice: val('eb-tomorrow-notice'),
+    lunchName: val('eb-lunch-name'), lunchDesc: val('eb-lunch-desc'),
+    drinkSpecial: val('eb-drink-special'),
+    fridayName: val('eb-friday-name'), fridayDesc: val('eb-friday-desc'),
+    clubhouseHours: val('eb-clubhouse-hours'), poolHours: val('eb-pool-hours')
+  };
+}
+function ebBuildHtml() {
+  var f = ebFieldVals();
+  var c = ebConditionsCache || {};
+  var esc = menuEsc;
+  var sec = function(title, inner) {
+    return '<h3 style="font-size:20px;color:#1a2b1f;margin:22px 0 10px;">' + title + '</h3>' + inner + '<hr style="border:none;border-top:1px solid #ddd;margin:18px 0;">';
+  };
+  var html = '<div style="font-family:Georgia,serif;max-width:640px;color:#222;">';
+  html += sec('⛳ TODAY AT THE CLUB', '<p>' + (esc(f.todayNotice).replace(/\n/g, '<br>') || '<em>—</em>') + '</p>');
+  html += sec('📅 TOMORROW AT THE CLUB', '<p>' + (esc(f.tomorrowNotice).replace(/\n/g, '<br>') || '<em>—</em>') + '</p>');
+  var specials = '<p>Be sure to stop by the clubhouse and enjoy our weekly restaurant specials.</p>';
+  specials += '<p><strong>Weekly Lunch Special:</strong> ' + esc(f.lunchName) + (f.lunchDesc ? ' - ' + esc(f.lunchDesc) : '') + '</p>';
+  specials += '<p><strong>Weekly Drink Special:</strong> ' + esc(f.drinkSpecial) + '</p>';
+  specials += '<p><strong>Friday Night Dinner Special:</strong> ' + esc(f.fridayName) + (f.fridayDesc ? ' - ' + esc(f.fridayDesc) : '') + '</p>';
+  specials += '<p><em>Specials are subject to availability and may change.</em></p>';
+  html += sec('🍽️ WEEKLY RESTAURANT SPECIALS', specials);
+  var hours = '<p>' +
+    '<strong>Course Opens:</strong> ' + esc(c.courseOpens) + '<br>' +
+    '<strong>Cart Policy:</strong> ' + esc(c.cartRules) + '<br>' +
+    '<strong>Driving Range:</strong> ' + esc(c.rangeStatus) + (c.rangeHours ? ' | ' + esc(c.rangeHours) : '') + '<br>' +
+    '<strong>Putting Green:</strong> ' + esc(c.puttingGreen) + '<br>' +
+    '<strong>Pro Shop:</strong> ' + esc(c.proShop) + '<br>' +
+    '<strong>Clubhouse:</strong> ' + esc(f.clubhouseHours) + '<br>' +
+    '<strong>Pool:</strong> ' + esc(f.poolHours) +
+    '</p><p><strong>Please help us take care of the golf course:</strong></p>' +
+    '<p>• Repair all ball marks.<br>• Sand all divots.<br>• Keep carts out of native areas.</p>';
+  html += sec('🌱 COURSE &amp; FACILITY UPDATE', hours);
+  var events = ebUpcomingEvents();
+  var evHtml = events.length ? events.map(function(l) { return '<div>' + esc(l) + '</div>'; }).join('') : '<p><em>No upcoming events on file.</em></p>';
+  html += '<h3 style="font-size:20px;color:#1a2b1f;margin:22px 0 10px;">📆 UPCOMING EVENTS</h3>' + evHtml;
+  html += '<p style="color:#c0392b;font-weight:bold;margin-top:20px;">Reminder: The golf course is closed on Mondays.</p>';
+  html += '<p>Thank you for being a part of Westwood Hills Country Club. We appreciate your continued support and look forward to seeing you at the club!</p>';
+  html += '</div>';
+  return html;
+}
+function ebUpdatePreview() {
+  var prev = document.getElementById('eb-preview');
+  if (prev) prev.innerHTML = ebBuildHtml();
+}
+
+function ebSaveAndSync() {
+  var f = ebFieldVals();
+  var cdata = Object.assign({}, ebConditionsCache, {
+    notice: f.todayNotice, tomorrowNotice: f.tomorrowNotice,
+    clubhouseHours: f.clubhouseHours, poolHours: f.poolHours,
+    updatedAt: new Date().toISOString()
+  });
+  ebConditionsCache = cdata;
+  try { window.storage.set('daily-update', JSON.stringify(cdata)); } catch(e) {}
+  WHCC_SYNC.saveConditions(cdata, function() {});
+
+  var mdata = menuLoad();
+  mdata.weeklySpecial = Object.assign({}, mdata.weeklySpecial, { name: f.lunchName, desc: f.lunchDesc, drinkSpecial: f.drinkSpecial });
+  mdata.fridayNight = Object.assign({}, mdata.fridayNight, { name: f.fridayName, desc: f.fridayDesc });
+  ebMenusCache = mdata;
+  menuSave(mdata);
+
+  var status = document.getElementById('eb-save-status');
+  if (status) {
+    status.style.display = 'block';
+    status.textContent = '✓ Saved. Website updated.';
+    setTimeout(function() { status.style.display = 'none'; }, 4000);
+  }
+  ebUpdatePreview();
+}
+
+function ebRefreshRecipientCount() {
+  var el = document.getElementById('eb-recipient-count');
+  if (!el) return;
+  el.textContent = 'Checking member list…';
+  WHCC_SYNC.memberEmailCount(function(r, err) {
+    if (!el) return;
+    if (err || !r || !r.ok) { el.textContent = '⚠ Could not reach server to check member list.'; return; }
+    _ebRecipientCount = r.count;
+    el.textContent = r.count > 0
+      ? r.count + ' member' + (r.count === 1 ? '' : 's') + ' on file will receive this email.'
+      : '⚠ No member emails on file yet — sending to all members will fail until the Members sheet is populated.';
+  });
+}
+
+function ebSendStatus(msg, ok) {
+  var status = document.getElementById('eb-send-status');
+  if (!status) return;
+  status.style.display = 'block';
+  status.style.color = ok ? '#8fcc8f' : '#cc8888';
+  status.textContent = msg;
+}
+function ebSendTest() {
+  ebSendStatus('Sending test…', true);
+  WHCC_SYNC.sendDailyEmail({ test: true, subject: ebBuildSubject(), html: ebBuildHtml() }, function(r, err) {
+    if (err || !r || !r.ok) { ebSendStatus('⚠ ' + ((r && r.error) || 'Could not send test email.'), false); return; }
+    ebSendStatus('✓ Test email sent.', true);
+  });
+}
+function ebSendAll() {
+  var count = _ebRecipientCount;
+  var msg = count
+    ? 'Send this email to all ' + count + ' member' + (count === 1 ? '' : 's') + ' on file? This cannot be undone.'
+    : 'Send this email to all members on file? This cannot be undone.';
+  if (!confirm(msg)) return;
+  ebSendStatus('Sending…', true);
+  WHCC_SYNC.sendDailyEmail({ test: false, subject: ebBuildSubject(), html: ebBuildHtml() }, function(r, err) {
+    if (err || !r || !r.ok) { ebSendStatus('⚠ ' + ((r && r.error) || 'Could not send email.'), false); return; }
+    ebSendStatus('✓ Sent to ' + r.sent + ' member' + (r.sent === 1 ? '' : 's') + '.', true);
+    ebRefreshRecipientCount();
+  });
+}
+
 function smRenderEditorLists(data){
   smRenderItemList('smg-starters-list',data.grill.starters,'grill.starters',true,false);
   smRenderItemList('smg-sandwiches-list',data.grill.sandwiches,'grill.sandwiches',true,false);
@@ -5721,7 +5999,7 @@ var _svDropOpen = null;
 var _svViewGroups = {
   reservations: ['today','calendar','upcoming','pending','guests'],
   golf:         ['registrations','pairings','daily','scoring','lessons'],
-  admin:        ['menus','settings','launch'],
+  admin:        ['menus','email','settings','launch'],
   website:      ['events','announcements','heroes','contact','photos','pool','stats','faq','probio']
 };
 function svToggleDrop(name) {
@@ -5757,7 +6035,7 @@ function staffView(view, btn, useSecondary) {
   var menuItem = document.getElementById('svb-' + view);
   if (menuItem) menuItem.classList.add('active-view');
 
-  ['today','calendar','upcoming','pending','search','guests','settings','scoring','daily','menus','registrations','pairings','lessons','events','announcements','heroes','contact','photos','pool','stats','faq','probio','launch'].forEach(v => {
+  ['today','calendar','upcoming','pending','search','guests','settings','scoring','daily','menus','email','registrations','pairings','lessons','events','announcements','heroes','contact','photos','pool','stats','faq','probio','launch'].forEach(v => {
     const el = document.getElementById('sv-' + v);
     if (el) el.style.display = v === view ? 'block' : 'none';
   });
@@ -5774,6 +6052,7 @@ function staffView(view, btn, useSecondary) {
   if (view === 'scoring') lsAdminLoad();
   if (view === 'daily') duAdminLoad();
   if (view === 'menus') smLoad();
+  if (view === 'email') ebLoad();
   if (view === 'registrations') staffViewRegistrations();
   if (view === 'pairings') pairViewLoad();
   if (view === 'events')        { cmsEvLoad(); }
