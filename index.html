@@ -2001,7 +2001,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
           <button class="sv-drop-btn" id="sv-drop-admin" onclick="svToggleDrop('admin')">Admin ▾</button>
           <div class="sv-drop-menu" id="sv-menu-admin">
             <button id="svb-menus" onclick="staffView('menus');svCloseDrop()">Menus</button>
-            <button id="svb-email" onclick="staffView('email');svCloseDrop()">✉️ Daily Email</button>
+            <button id="svb-email" onclick="staffView('email');svCloseDrop()">Daily Email</button>
             <button id="svb-settings" onclick="staffView('settings');svCloseDrop()">Settings</button>
             <button id="svb-launch" onclick="staffView('launch');svCloseDrop()" style="color:#e07070;">🚀 Launch Site</button>
           </div>
@@ -5436,14 +5436,14 @@ function ebBuildHtml() {
     return '<h3 style="font-size:20px;color:#1a2b1f;margin:22px 0 10px;">' + title + '</h3>' + inner + '<hr style="border:none;border-top:1px solid #ddd;margin:18px 0;">';
   };
   var html = '<div style="font-family:Georgia,serif;max-width:640px;color:#222;">';
-  html += sec('⛳ TODAY AT THE CLUB', '<p>' + (esc(f.todayNotice).replace(/\n/g, '<br>') || '<em>—</em>') + '</p>');
-  html += sec('📅 TOMORROW AT THE CLUB', '<p>' + (esc(f.tomorrowNotice).replace(/\n/g, '<br>') || '<em>—</em>') + '</p>');
+  html += sec('TODAY AT THE CLUB', '<p>' + (esc(f.todayNotice).replace(/\n/g, '<br>') || '<em>—</em>') + '</p>');
+  html += sec('TOMORROW AT THE CLUB', '<p>' + (esc(f.tomorrowNotice).replace(/\n/g, '<br>') || '<em>—</em>') + '</p>');
   var specials = '<p>Be sure to stop by the clubhouse and enjoy our weekly restaurant specials.</p>';
   specials += '<p><strong>Weekly Special:</strong> ' + esc(f.weeklyName) + (f.weeklyDesc ? ' - ' + esc(f.weeklyDesc) : '') + '</p>';
   specials += '<p><strong>Weekly Drink Special:</strong> ' + esc(f.drinkSpecial) + '</p>';
   specials += '<p><strong>Friday Night Dinner Special:</strong> ' + esc(f.fridayName) + (f.fridayDesc ? ' - ' + esc(f.fridayDesc) : '') + '</p>';
   specials += '<p><em>Specials are subject to availability and may change.</em></p>';
-  html += sec('🍽️ WEEKLY RESTAURANT SPECIALS', specials);
+  html += sec('WEEKLY RESTAURANT SPECIALS', specials);
   var hours = '<p>' +
     '<strong>Course Opens:</strong> ' + esc(f.courseOpens) + '<br>' +
     '<strong>Cart Policy:</strong> ' + esc(f.cartRules) + '<br>' +
@@ -5454,10 +5454,10 @@ function ebBuildHtml() {
     '<strong>Pool:</strong> ' + esc(f.poolHours) +
     '</p><p><strong>Please help us take care of the golf course:</strong></p>' +
     '<p>• Repair all ball marks.<br>• Sand all divots.<br>• Keep carts out of native areas.</p>';
-  html += sec('🌱 COURSE &amp; FACILITY UPDATE', hours);
+  html += sec('COURSE &amp; FACILITY UPDATE', hours);
   var events = ebUpcomingEvents();
   var evHtml = events.length ? events.map(function(l) { return '<div>' + esc(l) + '</div>'; }).join('') : '<p><em>No upcoming events on file.</em></p>';
-  html += '<h3 style="font-size:20px;color:#1a2b1f;margin:22px 0 10px;">📆 UPCOMING EVENTS</h3>' + evHtml;
+  html += '<h3 style="font-size:20px;color:#1a2b1f;margin:22px 0 10px;">UPCOMING EVENTS</h3>' + evHtml;
   html += '<p style="color:#c0392b;font-weight:bold;margin-top:20px;">Reminder: The golf course is closed on Mondays.</p>';
   html += '<p>Thank you for being a part of Westwood Hills Country Club. We appreciate your continued support and look forward to seeing you at the club!</p>';
   html += '</div>';
