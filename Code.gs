@@ -1375,32 +1375,57 @@ function doPost(e) {
     var emailSubject = data.subject || 'Course Conditions & Events';
     if (!emailHtml.trim()) return jsonResponse({ ok: false, error: 'No email content provided.' });
 
+    var ADMIN_TO_ = 'sctr1217@gmail.com';
+
     if (data.test) {
       try {
-        MailApp.sendEmail({ to: 'sctr1217@gmail.com', subject: '[TEST] ' + emailSubject, htmlBody: emailHtml });
+        MailApp.sendEmail({ to: ADMIN_TO_, subject: '[TEST] ' + emailSubject, htmlBody: emailHtml });
+        Logger.log('send-daily-email: test send ok');
         return jsonResponse({ ok: true, sent: 1, test: true });
       } catch (testMailErr) {
+        Logger.log('send-daily-email: test send FAILED — ' + testMailErr.toString());
         return jsonResponse({ ok: false, error: testMailErr.toString() });
       }
     }
 
     var memberEmails = getMemberEmails_();
+    Logger.log('send-daily-email: ' + memberEmails.length + ' member(s) on file: ' + JSON.stringify(memberEmails));
     if (!memberEmails.length) return jsonResponse({ ok: false, error: 'No member emails on file in the Members sheet yet.' });
-    var mailQuota = MailApp.getRemainingDailyQuota();
+    var mailQuota;
+    try { mailQuota = MailApp.getRemainingDailyQuota(); } catch (quotaErr) {
+      Logger.log('send-daily-email: quota check FAILED — ' + quotaErr.toString());
+      return jsonResponse({ ok: false, error: 'Could not check mail quota: ' + quotaErr.toString() });
+    }
+    Logger.log('send-daily-email: remaining daily quota = ' + mailQuota);
     if (mailQuota < 1) return jsonResponse({ ok: false, error: 'Daily email quota exhausted — try again tomorrow.' });
     if (memberEmails.length > mailQuota) {
       return jsonResponse({ ok: false, error: 'Recipient list (' + memberEmails.length + ') exceeds today\'s remaining send quota (' + mailQuota + ').' });
     }
     var sendLock = LockService.getScriptLock();
-    try { sendLock.waitLock(10000); } catch (sendLockErr) { return jsonResponse({ ok: false, error: 'busy' }); }
+    try { sendLock.waitLock(10000); } catch (sendLockErr) {
+      Logger.log('send-daily-email: script lock busy — ' + sendLockErr.toString());
+      return jsonResponse({ ok: false, error: 'busy' });
+    }
     try {
       var BATCH_SIZE = 80; // keep each BCC header comfortably under mail-server limits
+      var sentCount = 0;
       for (var bi = 0; bi < memberEmails.length; bi += BATCH_SIZE) {
         var batch = memberEmails.slice(bi, bi + BATCH_SIZE);
-        MailApp.sendEmail({ to: 'sctr1217@gmail.com', bcc: batch.join(','), subject: emailSubject, htmlBody: emailHtml });
+        // A member's email can be the same address as ADMIN_TO_ (e.g. staff
+        // testing with their own account on the roster) — MailApp can choke
+        // on a duplicate address across To and Bcc, so keep them exclusive.
+        var bccList = batch.filter(function(em) { return em !== ADMIN_TO_; });
+        if (bccList.length) {
+          MailApp.sendEmail({ to: ADMIN_TO_, bcc: bccList.join(','), subject: emailSubject, htmlBody: emailHtml });
+        } else {
+          MailApp.sendEmail({ to: ADMIN_TO_, subject: emailSubject, htmlBody: emailHtml });
+        }
+        sentCount += batch.length;
       }
-      return jsonResponse({ ok: true, sent: memberEmails.length });
+      Logger.log('send-daily-email: sent ok to ' + sentCount + ' member(s)');
+      return jsonResponse({ ok: true, sent: sentCount });
     } catch (sendErr) {
+      Logger.log('send-daily-email: SEND FAILED — ' + sendErr.toString());
       return jsonResponse({ ok: false, error: sendErr.toString() });
     } finally { sendLock.releaseLock(); }
   }
