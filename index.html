@@ -5573,13 +5573,19 @@ function ebSendAll() {
   var msg = count
     ? 'Save changes and send this email to all ' + count + ' member' + (count === 1 ? '' : 's') + ' on file? This cannot be undone.'
     : 'Save changes and send this email to all members on file? This cannot be undone.';
-  if (!confirm(msg)) return;
-  ebSendStatus('Saving photos & sending…', true);
-  ebSaveAndSync(function() {
-    WHCC_SYNC.sendDailyEmail({ test: false, subject: ebBuildSubject(), html: ebBuildHtml() }, function(r, err) {
-      if (err || !r || !r.ok) { ebSendStatus('⚠ ' + ((r && r.error) || 'Could not send email.'), false); return; }
-      ebSendStatus('✓ Sent to ' + r.sent + ' member' + (r.sent === 1 ? '' : 's') + '.', true);
-      ebRefreshRecipientCount();
+  // Uses the site's own confirm modal (staffConfirmShow) rather than the
+  // native confirm() — after a few native dialogs Chrome offers "Prevent
+  // this page from creating additional dialogs," and if that's ever been
+  // checked every later confirm() call silently returns false with no
+  // dialog and no error, which looks exactly like the button doing nothing.
+  staffConfirmShow('Send to All Members?', msg, 'Send', function() {
+    ebSendStatus('Saving photos & sending…', true);
+    ebSaveAndSync(function() {
+      WHCC_SYNC.sendDailyEmail({ test: false, subject: ebBuildSubject(), html: ebBuildHtml() }, function(r, err) {
+        if (err || !r || !r.ok) { ebSendStatus('⚠ ' + ((r && r.error) || 'Could not send email.'), false); return; }
+        ebSendStatus('✓ Sent to ' + r.sent + ' member' + (r.sent === 1 ? '' : 's') + '.', true);
+        ebRefreshRecipientCount();
+      });
     });
   });
 }
