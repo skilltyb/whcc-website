@@ -5342,6 +5342,13 @@ function menuRenderAll(data){
 }
 // Initialize menus on page load
 menuRenderAll();
+// menuRenderAll() above only has local/default data synchronously available --
+// the real synced data (e.g. this week's specials) previously only arrived via
+// a 5-minute polling interval or when a staff member opened the Specials tab,
+// so a visitor's first page load could show stale/empty specials for up to
+// 5 minutes after they were saved. Fetch immediately too, same as
+// loadDailyUpdate() and the site content fetch already do.
+menuFetch();
 
 // ── STAFF MENU PANEL ──
 function smLoad(){
