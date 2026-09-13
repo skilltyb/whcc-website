@@ -1377,13 +1377,23 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 
   <!-- ── WEEKLY SPECIAL (shown when active) ── -->
   <div id="dining-weekly-special" style="display:none;background:var(--cream);padding:56px 80px;text-align:center;">
-    <p class="eyebrow">This Week's Feature</p>
+    <p class="eyebrow">Weekly Lunch Special</p>
     <div style="max-width:600px;margin:20px auto 0;border:1px solid rgba(184,151,106,.35);padding:40px;">
       <img class="sf-img" src="" alt="" style="width:100%;max-height:320px;object-fit:cover;display:none;margin-bottom:24px;border-radius:2px;"/>
       <h3 class="sf-name" style="font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:400;color:var(--deep);letter-spacing:.02em;"></h3>
       <p class="sf-desc" style="font-size:14px;color:var(--muted);margin:14px 0 8px;line-height:1.85;max-width:460px;margin-left:auto;margin-right:auto;"></p>
       <p class="sf-wine" style="font-size:12px;font-style:italic;color:var(--gold);margin-bottom:8px;display:none;"></p>
       <p class="sf-price" style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--gold);margin-top:4px;"></p>
+    </div>
+  </div>
+
+  <!-- ── WEDNESDAY NIGHT BUFFET (shown when active, Wednesdays only) ── -->
+  <div id="dining-wednesday-buffet" style="display:none;background:var(--forest);padding:56px 80px;text-align:center;">
+    <p class="eyebrow lt">Wednesday Night Buffet</p>
+    <div style="max-width:600px;margin:20px auto 0;border:1px solid rgba(184,151,106,.25);padding:40px;">
+      <h3 class="sf-name" style="font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:400;color:var(--cream);letter-spacing:.02em;"></h3>
+      <p class="sf-desc" style="font-size:14px;color:rgba(245,240,232,.6);margin:14px 0 8px;line-height:1.85;max-width:460px;margin-left:auto;margin-right:auto;"></p>
+      <p class="sf-price" style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--gold-lt);margin-top:4px;"></p>
     </div>
   </div>
 
@@ -1415,7 +1425,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
       <div class="hoovers-res-info fade-up">
         <div class="hoovers-rule" style="margin:0;"></div>
         <h2 class="hoovers-res-title">Reserve Your<br><em>Table</em></h2>
-        <p class="hoovers-res-body">The Westwood Grill is open to members Tuesday through Sunday, 11 AM – 8 PM.</p>
+        <p class="hoovers-res-body">The Westwood Grill is open to members Tuesday through Sunday, 11 a.m. – 8 p.m.</p>
         <div class="hoovers-res-details">
           <div class="hoovers-res-detail">
             <span class="hoovers-res-detail-label">Reservations</span>
@@ -1573,7 +1583,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
       <h2 class="sec-title">Where little ones <em>love to be</em></h2>
       <p class="sec-body full">Grab your sunscreen and your littles — the Westwood Hills pool is the coolest spot in Poplar Bluff all summer long. With a professional lifeguard on duty and a welcoming, community atmosphere, it's the kind of place where kids make memories and moms finally get to exhale.</p>
       <div class="pool-feats" id="pool-hours" style="margin-top:28px;">
-        <div class="pf-item"><div class="pf-name">Tuesday – Sunday</div><div class="pf-sub">Open 10:00 AM – 5:00 PM</div></div>
+        <div class="pf-item"><div class="pf-name">Tuesday – Sunday</div><div class="pf-sub">Open 10 a.m. – 5 p.m.</div></div>
         <div class="pf-item"><div class="pf-name">Monday</div><div class="pf-sub">Closed</div></div>
         <div class="pf-item"><div class="pf-name">Memorial Day</div><div class="pf-sub">through Labor Day</div></div>
       </div>
@@ -1602,7 +1612,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <div class="fade-up d3" style="text-align:center;margin-top:48px;">
       <button onclick="document.getElementById('pool-policies').style.display=document.getElementById('pool-policies').style.display==='none'?'block':'none'" style="background:none;border:none;color:var(--forest);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;opacity:.5;text-decoration:underline;text-underline-offset:4px;">Pool Policies</button>
       <div id="pool-policies" style="display:none;max-width:680px;margin:28px auto 0;text-align:left;background:rgba(26,43,31,.06);border-radius:6px;padding:28px 32px;">
-        <p style="font-size:.82rem;color:var(--forest);line-height:1.8;margin:0 0 10px;"><strong>Lifeguard on duty</strong> Tuesday–Sunday, 10 AM–5 PM. Pool is closed Mondays and when the lifeguard is off duty or on break.</p>
+        <p style="font-size:.82rem;color:var(--forest);line-height:1.8;margin:0 0 10px;"><strong>Lifeguard on duty</strong> Tuesday–Sunday, 10 a.m. – 5 p.m. Pool is closed Mondays and when the lifeguard is off duty or on break.</p>
         <p style="font-size:.82rem;color:var(--forest);line-height:1.8;margin:0 0 10px;"><strong>Children under 12</strong> must be accompanied by a parent or adult at all times.</p>
         <p style="font-size:.82rem;color:var(--forest);line-height:1.8;margin:0 0 10px;"><strong>Guest policy:</strong> Local guests (Butler &amp; surrounding counties) may swim Wednesdays with a $2 fee. Non-local guests may swim Tuesday–Sunday with a $2 fee. Grandchildren and nannies are always free.</p>
         <p style="font-size:.82rem;color:var(--forest);line-height:1.8;margin:0 0 10px;"><strong>Pool rentals</strong> are available in 2-hour increments for $100 (up to 25 guests). Contact the Pro Shop for details.</p>
@@ -1648,98 +1658,98 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <!-- League schedules available in the Member App -->
     <div style="display:none;margin-top:40px;background:rgba(26,43,31,.5);border:1px solid rgba(184,151,106,.2);padding:24px 28px;" class="fade-up">
       <p class="eyebrow" style="margin-bottom:12px;">Men's League 2026</p>
-      <p style="font-size:13px;color:rgba(245,240,232,.6);margin-bottom:18px;">Every Thursday · 5:00 PM shotgun · May 7 – August 20 &nbsp;·&nbsp; 16 weeks</p>
+      <p style="font-size:13px;color:rgba(245,240,232,.6);margin-bottom:18px;">Every Thursday · 5 p.m. shotgun · May 7 – August 20 &nbsp;·&nbsp; 16 weeks</p>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;">
-        <a class="ml-week-link" data-date="2026-05-07" onclick="openRegModal('Men\'s League — May 7','May 7 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 7</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 1</div></a>
-        <a class="ml-week-link" data-date="2026-05-14" onclick="openRegModal('Men\'s League — May 14','May 14 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 14</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 2</div></a>
-        <a class="ml-week-link" data-date="2026-05-21" onclick="openRegModal('Men\'s League — May 21','May 21 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 21</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 3</div></a>
-        <a class="ml-week-link" data-date="2026-05-28" onclick="openRegModal('Men\'s League — May 28','May 28 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 28</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 4</div></a>
-        <a class="ml-week-link" data-date="2026-06-04" onclick="openRegModal('Men\'s League — Jun 4','Jun 4 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 4</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 5</div></a>
-        <a class="ml-week-link" data-date="2026-06-11" onclick="openRegModal('Men\'s League — Jun 11','Jun 11 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 11</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 6</div></a>
-        <a class="ml-week-link" data-date="2026-06-18" onclick="openRegModal('Men\'s League — Jun 18','Jun 18 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 18</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 7</div></a>
-        <a class="ml-week-link" data-date="2026-06-25" onclick="openRegModal('Men\'s League — Jun 25','Jun 25 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 25</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 8</div></a>
-        <a class="ml-week-link" data-date="2026-07-02" onclick="openRegModal('Men\'s League — Jul 2','Jul 2 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 2</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 9</div></a>
-        <a class="ml-week-link" data-date="2026-07-09" onclick="openRegModal('Men\'s League — Jul 9','Jul 9 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 9</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 10</div></a>
-        <a class="ml-week-link" data-date="2026-07-16" onclick="openRegModal('Men\'s League — Jul 16','Jul 16 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 16</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 11</div></a>
-        <a class="ml-week-link" data-date="2026-07-23" onclick="openRegModal('Men\'s League — Jul 23','Jul 23 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 23</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 12</div></a>
-        <a class="ml-week-link" data-date="2026-07-30" onclick="openRegModal('Men\'s League — Jul 30','Jul 30 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 30</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 13</div></a>
-        <a class="ml-week-link" data-date="2026-08-06" onclick="openRegModal('Men\'s League — Aug 6','Aug 6 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 6</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 14</div></a>
-        <a class="ml-week-link" data-date="2026-08-13" onclick="openRegModal('Men\'s League — Aug 13','Aug 13 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 13</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 15</div></a>
-        <a class="ml-week-link" data-date="2026-08-20" onclick="openRegModal('Men\'s League — Aug 20','Aug 20 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 20</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 16 — Final</div></a>
+        <a class="ml-week-link" data-date="2026-05-07" onclick="openRegModal('Men\'s League — May 7','May 7 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 7</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 1</div></a>
+        <a class="ml-week-link" data-date="2026-05-14" onclick="openRegModal('Men\'s League — May 14','May 14 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 14</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 2</div></a>
+        <a class="ml-week-link" data-date="2026-05-21" onclick="openRegModal('Men\'s League — May 21','May 21 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 21</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 3</div></a>
+        <a class="ml-week-link" data-date="2026-05-28" onclick="openRegModal('Men\'s League — May 28','May 28 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 28</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 4</div></a>
+        <a class="ml-week-link" data-date="2026-06-04" onclick="openRegModal('Men\'s League — Jun 4','Jun 4 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 4</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 5</div></a>
+        <a class="ml-week-link" data-date="2026-06-11" onclick="openRegModal('Men\'s League — Jun 11','Jun 11 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 11</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 6</div></a>
+        <a class="ml-week-link" data-date="2026-06-18" onclick="openRegModal('Men\'s League — Jun 18','Jun 18 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 18</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 7</div></a>
+        <a class="ml-week-link" data-date="2026-06-25" onclick="openRegModal('Men\'s League — Jun 25','Jun 25 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 25</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 8</div></a>
+        <a class="ml-week-link" data-date="2026-07-02" onclick="openRegModal('Men\'s League — Jul 2','Jul 2 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 2</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 9</div></a>
+        <a class="ml-week-link" data-date="2026-07-09" onclick="openRegModal('Men\'s League — Jul 9','Jul 9 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 9</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 10</div></a>
+        <a class="ml-week-link" data-date="2026-07-16" onclick="openRegModal('Men\'s League — Jul 16','Jul 16 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 16</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 11</div></a>
+        <a class="ml-week-link" data-date="2026-07-23" onclick="openRegModal('Men\'s League — Jul 23','Jul 23 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 23</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 12</div></a>
+        <a class="ml-week-link" data-date="2026-07-30" onclick="openRegModal('Men\'s League — Jul 30','Jul 30 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 30</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 13</div></a>
+        <a class="ml-week-link" data-date="2026-08-06" onclick="openRegModal('Men\'s League — Aug 6','Aug 6 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 6</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 14</div></a>
+        <a class="ml-week-link" data-date="2026-08-13" onclick="openRegModal('Men\'s League — Aug 13','Aug 13 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 13</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 15</div></a>
+        <a class="ml-week-link" data-date="2026-08-20" onclick="openRegModal('Men\'s League — Aug 20','Aug 20 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 20</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 16 — Final</div></a>
       </div>
     </div>
 
     <div style="display:none;margin-top:20px;background:rgba(26,43,31,.5);border:1px solid rgba(184,151,106,.2);padding:24px 28px;" class="fade-up">
       <p class="eyebrow" style="margin-bottom:12px;">Ladies Night 2026</p>
-      <p style="font-size:13px;color:rgba(245,240,232,.6);margin-bottom:18px;">Every Tuesday · 5:00 PM · May 5 – August 18 &nbsp;·&nbsp; 16 weeks</p>
+      <p style="font-size:13px;color:rgba(245,240,232,.6);margin-bottom:18px;">Every Tuesday · 5 p.m. · May 5 – August 18 &nbsp;·&nbsp; 16 weeks</p>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;">
-        <a class="ml-week-link" data-date="2026-05-05" onclick="openRegModal('Ladies Night — May 5','May 5 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 5</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 1</div></a>
-        <a class="ml-week-link" data-date="2026-05-12" onclick="openRegModal('Ladies Night — May 12','May 12 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 12</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 2</div></a>
-        <a class="ml-week-link" data-date="2026-05-19" onclick="openRegModal('Ladies Night — May 19','May 19 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 19</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 3</div></a>
-        <a class="ml-week-link" data-date="2026-05-26" onclick="openRegModal('Ladies Night — May 26','May 26 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 26</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 4</div></a>
-        <a class="ml-week-link" data-date="2026-06-02" onclick="openRegModal('Ladies Night — Jun 2','Jun 2 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 2</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 5</div></a>
-        <a class="ml-week-link" data-date="2026-06-09" onclick="openRegModal('Ladies Night — Jun 9','Jun 9 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 9</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 6</div></a>
-        <a class="ml-week-link" data-date="2026-06-16" onclick="openRegModal('Ladies Night — Jun 16','Jun 16 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 16</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 7</div></a>
-        <a class="ml-week-link" data-date="2026-06-23" onclick="openRegModal('Ladies Night — Jun 23','Jun 23 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 23</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 8</div></a>
-        <a class="ml-week-link" data-date="2026-06-30" onclick="openRegModal('Ladies Night — Jun 30','Jun 30 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 30</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 9</div></a>
-        <a class="ml-week-link" data-date="2026-07-07" onclick="openRegModal('Ladies Night — Jul 7','Jul 7 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 7</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 10</div></a>
-        <a class="ml-week-link" data-date="2026-07-14" onclick="openRegModal('Ladies Night — Jul 14','Jul 14 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 14</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 11</div></a>
-        <a class="ml-week-link" data-date="2026-07-21" onclick="openRegModal('Ladies Night — Jul 21','Jul 21 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 21</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 12</div></a>
-        <a class="ml-week-link" data-date="2026-07-28" onclick="openRegModal('Ladies Night — Jul 28','Jul 28 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 28</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 13</div></a>
-        <a class="ml-week-link" data-date="2026-08-04" onclick="openRegModal('Ladies Night — Aug 4','Aug 4 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 4</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 14</div></a>
-        <a class="ml-week-link" data-date="2026-08-11" onclick="openRegModal('Ladies Night — Aug 11','Aug 11 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 11</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 15</div></a>
-        <a class="ml-week-link" data-date="2026-08-18" onclick="openRegModal('Ladies Night — Aug 18','Aug 18 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 18</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 16 — Final</div></a>
+        <a class="ml-week-link" data-date="2026-05-05" onclick="openRegModal('Ladies Night — May 5','May 5 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 5</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 1</div></a>
+        <a class="ml-week-link" data-date="2026-05-12" onclick="openRegModal('Ladies Night — May 12','May 12 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 12</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 2</div></a>
+        <a class="ml-week-link" data-date="2026-05-19" onclick="openRegModal('Ladies Night — May 19','May 19 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 19</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 3</div></a>
+        <a class="ml-week-link" data-date="2026-05-26" onclick="openRegModal('Ladies Night — May 26','May 26 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 26</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 4</div></a>
+        <a class="ml-week-link" data-date="2026-06-02" onclick="openRegModal('Ladies Night — Jun 2','Jun 2 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 2</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 5</div></a>
+        <a class="ml-week-link" data-date="2026-06-09" onclick="openRegModal('Ladies Night — Jun 9','Jun 9 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 9</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 6</div></a>
+        <a class="ml-week-link" data-date="2026-06-16" onclick="openRegModal('Ladies Night — Jun 16','Jun 16 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 16</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 7</div></a>
+        <a class="ml-week-link" data-date="2026-06-23" onclick="openRegModal('Ladies Night — Jun 23','Jun 23 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 23</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 8</div></a>
+        <a class="ml-week-link" data-date="2026-06-30" onclick="openRegModal('Ladies Night — Jun 30','Jun 30 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 30</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 9</div></a>
+        <a class="ml-week-link" data-date="2026-07-07" onclick="openRegModal('Ladies Night — Jul 7','Jul 7 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 7</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 10</div></a>
+        <a class="ml-week-link" data-date="2026-07-14" onclick="openRegModal('Ladies Night — Jul 14','Jul 14 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 14</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 11</div></a>
+        <a class="ml-week-link" data-date="2026-07-21" onclick="openRegModal('Ladies Night — Jul 21','Jul 21 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 21</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 12</div></a>
+        <a class="ml-week-link" data-date="2026-07-28" onclick="openRegModal('Ladies Night — Jul 28','Jul 28 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 28</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 13</div></a>
+        <a class="ml-week-link" data-date="2026-08-04" onclick="openRegModal('Ladies Night — Aug 4','Aug 4 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 4</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 14</div></a>
+        <a class="ml-week-link" data-date="2026-08-11" onclick="openRegModal('Ladies Night — Aug 11','Aug 11 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 11</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 15</div></a>
+        <a class="ml-week-link" data-date="2026-08-18" onclick="openRegModal('Ladies Night — Aug 18','Aug 18 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 18</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 16 — Final</div></a>
       </div>
     </div>
 
     <div style="display:none;margin-top:20px;background:rgba(26,43,31,.5);border:1px solid rgba(184,151,106,.2);padding:24px 28px;" class="fade-up">
       <p class="eyebrow" style="margin-bottom:12px;">Hit &amp; Giggle 2026</p>
-      <p style="font-size:13px;color:rgba(245,240,232,.6);margin-bottom:18px;">Every Wednesday · 5:00 PM · May 6 – August 19 &nbsp;·&nbsp; 16 weeks</p>
+      <p style="font-size:13px;color:rgba(245,240,232,.6);margin-bottom:18px;">Every Wednesday · 5 p.m. · May 6 – August 19 &nbsp;·&nbsp; 16 weeks</p>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;">
-        <a class="ml-week-link" data-date="2026-05-06" onclick="openRegModal('Hit &amp; Giggle — May 6','May 6 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 6</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 1</div></a>
-        <a class="ml-week-link" data-date="2026-05-13" onclick="openRegModal('Hit &amp; Giggle — May 13','May 13 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 13</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 2</div></a>
-        <a class="ml-week-link" data-date="2026-05-20" onclick="openRegModal('Hit &amp; Giggle — May 20','May 20 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 20</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 3</div></a>
-        <a class="ml-week-link" data-date="2026-05-27" onclick="openRegModal('Hit &amp; Giggle — May 27','May 27 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 27</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 4</div></a>
-        <a class="ml-week-link" data-date="2026-06-03" onclick="openRegModal('Hit &amp; Giggle — Jun 3','Jun 3 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 3</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 5</div></a>
-        <a class="ml-week-link" data-date="2026-06-10" onclick="openRegModal('Hit &amp; Giggle — Jun 10','Jun 10 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 10</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 6</div></a>
-        <a class="ml-week-link" data-date="2026-06-17" onclick="openRegModal('Hit &amp; Giggle — Jun 17','Jun 17 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 17</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 7</div></a>
-        <a class="ml-week-link" data-date="2026-06-24" onclick="openRegModal('Hit &amp; Giggle — Jun 24','Jun 24 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 24</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 8</div></a>
-        <a class="ml-week-link" data-date="2026-07-01" onclick="openRegModal('Hit &amp; Giggle — Jul 1','Jul 1 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 1</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 9</div></a>
-        <a class="ml-week-link" data-date="2026-07-08" onclick="openRegModal('Hit &amp; Giggle — Jul 8','Jul 8 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 8</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 10</div></a>
-        <a class="ml-week-link" data-date="2026-07-15" onclick="openRegModal('Hit &amp; Giggle — Jul 15','Jul 15 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 15</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 11</div></a>
-        <a class="ml-week-link" data-date="2026-07-22" onclick="openRegModal('Hit &amp; Giggle — Jul 22','Jul 22 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 22</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 12</div></a>
-        <a class="ml-week-link" data-date="2026-07-29" onclick="openRegModal('Hit &amp; Giggle — Jul 29','Jul 29 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 29</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 13</div></a>
-        <a class="ml-week-link" data-date="2026-08-05" onclick="openRegModal('Hit &amp; Giggle — Aug 5','Aug 5 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 5</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 14</div></a>
-        <a class="ml-week-link" data-date="2026-08-12" onclick="openRegModal('Hit &amp; Giggle — Aug 12','Aug 12 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 12</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 15</div></a>
-        <a class="ml-week-link" data-date="2026-08-19" onclick="openRegModal('Hit &amp; Giggle — Aug 19','Aug 19 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 19</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 16 — Final</div></a>
+        <a class="ml-week-link" data-date="2026-05-06" onclick="openRegModal('Hit &amp; Giggle — May 6','May 6 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 6</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 1</div></a>
+        <a class="ml-week-link" data-date="2026-05-13" onclick="openRegModal('Hit &amp; Giggle — May 13','May 13 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 13</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 2</div></a>
+        <a class="ml-week-link" data-date="2026-05-20" onclick="openRegModal('Hit &amp; Giggle — May 20','May 20 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 20</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 3</div></a>
+        <a class="ml-week-link" data-date="2026-05-27" onclick="openRegModal('Hit &amp; Giggle — May 27','May 27 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 27</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 4</div></a>
+        <a class="ml-week-link" data-date="2026-06-03" onclick="openRegModal('Hit &amp; Giggle — Jun 3','Jun 3 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 3</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 5</div></a>
+        <a class="ml-week-link" data-date="2026-06-10" onclick="openRegModal('Hit &amp; Giggle — Jun 10','Jun 10 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 10</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 6</div></a>
+        <a class="ml-week-link" data-date="2026-06-17" onclick="openRegModal('Hit &amp; Giggle — Jun 17','Jun 17 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 17</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 7</div></a>
+        <a class="ml-week-link" data-date="2026-06-24" onclick="openRegModal('Hit &amp; Giggle — Jun 24','Jun 24 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 24</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 8</div></a>
+        <a class="ml-week-link" data-date="2026-07-01" onclick="openRegModal('Hit &amp; Giggle — Jul 1','Jul 1 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 1</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 9</div></a>
+        <a class="ml-week-link" data-date="2026-07-08" onclick="openRegModal('Hit &amp; Giggle — Jul 8','Jul 8 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 8</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 10</div></a>
+        <a class="ml-week-link" data-date="2026-07-15" onclick="openRegModal('Hit &amp; Giggle — Jul 15','Jul 15 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 15</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 11</div></a>
+        <a class="ml-week-link" data-date="2026-07-22" onclick="openRegModal('Hit &amp; Giggle — Jul 22','Jul 22 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 22</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 12</div></a>
+        <a class="ml-week-link" data-date="2026-07-29" onclick="openRegModal('Hit &amp; Giggle — Jul 29','Jul 29 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 29</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 13</div></a>
+        <a class="ml-week-link" data-date="2026-08-05" onclick="openRegModal('Hit &amp; Giggle — Aug 5','Aug 5 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 5</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 14</div></a>
+        <a class="ml-week-link" data-date="2026-08-12" onclick="openRegModal('Hit &amp; Giggle — Aug 12','Aug 12 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 12</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 15</div></a>
+        <a class="ml-week-link" data-date="2026-08-19" onclick="openRegModal('Hit &amp; Giggle — Aug 19','Aug 19 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 19</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 16 — Final</div></a>
       </div>
     </div>
 
     <div style="display:none;margin-top:20px;background:rgba(26,43,31,.5);border:1px solid rgba(184,151,106,.2);padding:24px 28px;" class="fade-up">
       <p class="eyebrow" style="margin-bottom:12px;">Friday Night Fights 2026</p>
-      <p style="font-size:13px;color:rgba(245,240,232,.6);margin-bottom:18px;">Every Friday · 5:00 PM · May 8 – August 21 &nbsp;·&nbsp; 16 weeks</p>
+      <p style="font-size:13px;color:rgba(245,240,232,.6);margin-bottom:18px;">Every Friday · 5 p.m. · May 8 – August 21 &nbsp;·&nbsp; 16 weeks</p>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;">
-        <a class="ml-week-link" data-date="2026-05-08" onclick="openRegModal('Friday Night Fights — May 8','May 8 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 8</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 1</div></a>
-        <a class="ml-week-link" data-date="2026-05-15" onclick="openRegModal('Friday Night Fights — May 15','May 15 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 15</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 2</div></a>
-        <a class="ml-week-link" data-date="2026-05-22" onclick="openRegModal('Friday Night Fights — May 22','May 22 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 22</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 3</div></a>
-        <a class="ml-week-link" data-date="2026-05-29" onclick="openRegModal('Friday Night Fights — May 29','May 29 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 29</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 4</div></a>
-        <a class="ml-week-link" data-date="2026-06-05" onclick="openRegModal('Friday Night Fights — Jun 5','Jun 5 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 5</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 5</div></a>
-        <a class="ml-week-link" data-date="2026-06-12" onclick="openRegModal('Friday Night Fights — Jun 12','Jun 12 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 12</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 6</div></a>
-        <a class="ml-week-link" data-date="2026-06-19" onclick="openRegModal('Friday Night Fights — Jun 19','Jun 19 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 19</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 7</div></a>
-        <a class="ml-week-link" data-date="2026-06-26" onclick="openRegModal('Friday Night Fights — Jun 26','Jun 26 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 26</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 8</div></a>
-        <a class="ml-week-link" data-date="2026-07-03" onclick="openRegModal('Friday Night Fights — Jul 3','Jul 3 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 3</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 9</div></a>
-        <a class="ml-week-link" data-date="2026-07-10" onclick="openRegModal('Friday Night Fights — Jul 10','Jul 10 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 10</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 10</div></a>
-        <a class="ml-week-link" data-date="2026-07-17" onclick="openRegModal('Friday Night Fights — Jul 17','Jul 17 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 17</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 11</div></a>
-        <a class="ml-week-link" data-date="2026-07-24" onclick="openRegModal('Friday Night Fights — Jul 24','Jul 24 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 24</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 12</div></a>
-        <a class="ml-week-link" data-date="2026-07-31" onclick="openRegModal('Friday Night Fights — Jul 31','Jul 31 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 31</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 13</div></a>
-        <a class="ml-week-link" data-date="2026-08-07" onclick="openRegModal('Friday Night Fights — Aug 7','Aug 7 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 7</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 14</div></a>
-        <a class="ml-week-link" data-date="2026-08-14" onclick="openRegModal('Friday Night Fights — Aug 14','Aug 14 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 14</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 15</div></a>
-        <a class="ml-week-link" data-date="2026-08-21" onclick="openRegModal('Friday Night Fights — Aug 21','Aug 21 · 5:00 PM',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 21</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 16 — Final</div></a>
+        <a class="ml-week-link" data-date="2026-05-08" onclick="openRegModal('Friday Night Fights — May 8','May 8 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 8</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 1</div></a>
+        <a class="ml-week-link" data-date="2026-05-15" onclick="openRegModal('Friday Night Fights — May 15','May 15 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 15</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 2</div></a>
+        <a class="ml-week-link" data-date="2026-05-22" onclick="openRegModal('Friday Night Fights — May 22','May 22 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 22</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 3</div></a>
+        <a class="ml-week-link" data-date="2026-05-29" onclick="openRegModal('Friday Night Fights — May 29','May 29 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">MAY 29</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 4</div></a>
+        <a class="ml-week-link" data-date="2026-06-05" onclick="openRegModal('Friday Night Fights — Jun 5','Jun 5 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 5</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 5</div></a>
+        <a class="ml-week-link" data-date="2026-06-12" onclick="openRegModal('Friday Night Fights — Jun 12','Jun 12 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 12</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 6</div></a>
+        <a class="ml-week-link" data-date="2026-06-19" onclick="openRegModal('Friday Night Fights — Jun 19','Jun 19 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 19</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 7</div></a>
+        <a class="ml-week-link" data-date="2026-06-26" onclick="openRegModal('Friday Night Fights — Jun 26','Jun 26 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUN 26</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 8</div></a>
+        <a class="ml-week-link" data-date="2026-07-03" onclick="openRegModal('Friday Night Fights — Jul 3','Jul 3 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 3</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 9</div></a>
+        <a class="ml-week-link" data-date="2026-07-10" onclick="openRegModal('Friday Night Fights — Jul 10','Jul 10 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 10</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 10</div></a>
+        <a class="ml-week-link" data-date="2026-07-17" onclick="openRegModal('Friday Night Fights — Jul 17','Jul 17 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 17</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 11</div></a>
+        <a class="ml-week-link" data-date="2026-07-24" onclick="openRegModal('Friday Night Fights — Jul 24','Jul 24 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 24</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 12</div></a>
+        <a class="ml-week-link" data-date="2026-07-31" onclick="openRegModal('Friday Night Fights — Jul 31','Jul 31 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">JUL 31</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 13</div></a>
+        <a class="ml-week-link" data-date="2026-08-07" onclick="openRegModal('Friday Night Fights — Aug 7','Aug 7 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 7</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 14</div></a>
+        <a class="ml-week-link" data-date="2026-08-14" onclick="openRegModal('Friday Night Fights — Aug 14','Aug 14 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 14</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 15</div></a>
+        <a class="ml-week-link" data-date="2026-08-21" onclick="openRegModal('Friday Night Fights — Aug 21','Aug 21 · 5 p.m.',false)" style="display:block;padding:8px 12px;background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);cursor:pointer;text-decoration:none;"><span style="font-size:11px;color:var(--gold);letter-spacing:.1em;">AUG 21</span><div style="font-size:12px;color:rgba(245,240,232,.7);margin-top:2px;">Week 16 — Final</div></a>
       </div>
     </div>
 
     <div style="text-align:center;margin-top:32px;" class="fade-up">
-      <p style="font-size:12px;color:var(--muted);">Recurring events: <strong>Men's League</strong> (Thursdays) · <strong>Ladies Night</strong> (Tuesdays at 5:00 PM) · <strong>Hit &amp; Giggle</strong> (Wednesdays at 5:00 PM) · <strong>Friday Night Fights</strong> (Fridays at 5:00 PM)</p>
+      <p style="font-size:12px;color:var(--muted);">Recurring events: <strong>Men's League</strong> (Thursdays) · <strong>Ladies Night</strong> (Tuesdays at 5 p.m.) · <strong>Hit &amp; Giggle</strong> (Wednesdays at 5 p.m.) · <strong>Friday Night Fights</strong> (Fridays at 5 p.m.)</p>
       <p style="font-size:12px;color:var(--muted);margin-top:8px;"><a href="https://docs.google.com/spreadsheets/d/1ClR_iOZMuIKySrMSozBBO9JvI30j3E0oSND4kHOzXFQ/edit?usp=sharing" style="color:var(--gold);text-decoration:none;" target="_blank">View SEMO Cup Points Standings →</a></p>
     </div>
   </div>
@@ -1957,7 +1967,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
         <div class="cb"><div class="cb-lbl">Golf Shop</div><div class="cb-val" data-wh-contact="phone_golf">(573) 785-8211</div><div class="cb-sub">Tee times, lessons, green fees</div></div>
         <div class="cb"><div class="cb-lbl">Clubhouse &amp; Events</div><div class="cb-val" data-wh-contact="phone_main">(573) 785-5253</div><div class="cb-sub">Reservations, membership, events</div></div>
         <div class="cb"><div class="cb-lbl">Email</div><div class="cb-val" style="font-size:17px;" data-wh-contact="email"><a href="mailto:info@westwoodhillscountryclub.com" style="color:inherit;text-decoration:none;">info@westwoodhillscountryclub.com</a></div></div>
-        <div class="cb"><div class="cb-lbl">Office Hours</div><div class="cb-sub" style="font-size:14px;color:var(--text);"><span data-wh-contact="hours_weekday">Mon – Fri: 8:00 AM – 5:00 PM</span><br><span data-wh-contact="hours_saturday">Saturday: 8:00 AM – 2:00 PM</span><br><span data-wh-contact="hours_sunday">Sunday: Closed (Golf Shop open)</span></div></div>
+        <div class="cb"><div class="cb-lbl">Office Hours</div><div class="cb-sub" style="font-size:14px;color:var(--text);"><span data-wh-contact="hours_weekday">Mon – Fri: 8 a.m. – 5 p.m.</span><br><span data-wh-contact="hours_saturday">Saturday: 8 a.m. – 2 p.m.</span><br><span data-wh-contact="hours_sunday">Sunday: Closed (Golf Shop open)</span></div></div>
       </div>
       <div class="fade-up d2">
         <div class="cf-g"><label class="cf-l" for="cf-name">Full Name</label><input class="cf-i" id="cf-name" type="text" placeholder="Your name" /></div>
@@ -2204,7 +2214,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
             <div class="hrf-row">
               <div class="hrf-group">
                 <label class="hrf-label">Course Opens</label>
-                <input class="hrf-input" id="du-ed-opens" placeholder="e.g. 9:00 AM" oninput="duUpdatePreview()" />
+                <input class="hrf-input" id="du-ed-opens" placeholder="e.g. 9 a.m." oninput="duUpdatePreview()" />
               </div>
               <div class="hrf-group">
                 <label class="hrf-label">Cart Path Rules</label>
@@ -2229,32 +2239,32 @@ nav.staff-mode .nav-site-back{display:flex!important;}
               </div>
               <div class="hrf-group">
                 <label class="hrf-label">Range Hours</label>
-                <input class="hrf-input" id="du-ed-range-hours" placeholder="e.g. 8:30 AM – 5:00 PM" oninput="duUpdatePreview()" />
+                <input class="hrf-input" id="du-ed-range-hours" placeholder="e.g. 8:30 a.m. – 5 p.m." oninput="duUpdatePreview()" />
               </div>
             </div>
             <div class="hrf-row">
               <div class="hrf-group">
                 <label class="hrf-label">Putting Green</label>
-                <input class="hrf-input" id="du-ed-putting" placeholder="e.g. 9:00 AM – Dusk" oninput="duUpdatePreview()" />
+                <input class="hrf-input" id="du-ed-putting" placeholder="e.g. 9 a.m. – Dusk" oninput="duUpdatePreview()" />
               </div>
               <div class="hrf-group">
                 <label class="hrf-label">Pro Shop Hours</label>
-                <input class="hrf-input" id="du-ed-proshop" placeholder="e.g. 8:30 AM – 6:00 PM" oninput="duUpdatePreview()" />
+                <input class="hrf-input" id="du-ed-proshop" placeholder="e.g. 8:30 a.m. – 6 p.m." oninput="duUpdatePreview()" />
               </div>
             </div>
             <div class="hrf-row">
               <div class="hrf-group">
                 <label class="hrf-label">Clubhouse Hours</label>
-                <input class="hrf-input" id="du-ed-clubhouse" placeholder="e.g. 10:00 AM – 11:00 PM" oninput="duUpdatePreview()" />
+                <input class="hrf-input" id="du-ed-clubhouse" placeholder="e.g. 10 a.m. – 11 p.m." oninput="duUpdatePreview()" />
               </div>
               <div class="hrf-group">
                 <label class="hrf-label">Pool Hours</label>
-                <input class="hrf-input" id="du-ed-pool" placeholder="e.g. 11:00 AM – 7:00 PM, or Closed for the season" oninput="duUpdatePreview()" />
+                <input class="hrf-input" id="du-ed-pool" placeholder="e.g. 11 a.m. – 7 p.m., or Closed for the season" oninput="duUpdatePreview()" />
               </div>
             </div>
             <div class="hrf-group" style="width:100%;margin-top:8px;">
               <label class="hrf-label">Special Notice (optional)</label>
-              <input class="hrf-input" id="du-ed-notice" placeholder="e.g. Frost delay until 10 AM, Cart path only holes 3-5, etc." oninput="duUpdatePreview()" />
+              <input class="hrf-input" id="du-ed-notice" placeholder="e.g. Frost delay until 10 a.m., Cart path only holes 3-5, etc." oninput="duUpdatePreview()" />
             </div>
             <div style="margin-top:14px;padding:12px;background:rgba(184,151,106,.06);border:1px solid rgba(184,151,106,.15);border-radius:4px;">
               <div style="font-size:10px;color:rgba(245,240,232,.45);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;">Golf Page Downloads</div>
@@ -2300,13 +2310,13 @@ nav.staff-mode .nav-site-back{display:flex!important;}
           <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-bottom:16px;">
             <div class="staff-tag" style="margin-bottom:10px;">Today &amp; Tomorrow</div>
             <div class="hrf-group" style="width:100%;"><label class="hrf-label" for="eb-today-notice">Today at the Club</label><textarea class="hrf-textarea" id="eb-today-notice" rows="3" oninput="ebOnEdit()" placeholder="e.g. The course is open for play today! No events scheduled — great day to get out."></textarea></div>
-            <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-tomorrow-notice">Tomorrow at the Club</label><textarea class="hrf-textarea" id="eb-tomorrow-notice" rows="3" oninput="ebOnEdit()" placeholder="e.g. Friday Night Fights - 5:15 PM Start Time"></textarea></div>
+            <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-tomorrow-notice">Tomorrow at the Club</label><textarea class="hrf-textarea" id="eb-tomorrow-notice" rows="3" oninput="ebOnEdit()" placeholder="e.g. Friday Night Fights - 5:15 p.m. Start Time"></textarea></div>
           </div>
 
           <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-bottom:16px;">
             <div class="staff-tag" style="margin-bottom:10px;">Weekly Restaurant Specials</div>
-            <div class="hrf-group" style="width:100%;"><label class="hrf-label" for="eb-weekly-name">Weekly Special</label><input class="hrf-input" id="eb-weekly-name" oninput="ebOnEdit()" placeholder="e.g. Steak Sandwich" /></div>
-            <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-weekly-desc">Weekly Special Description</label><textarea class="hrf-textarea" id="eb-weekly-desc" rows="2" oninput="ebOnEdit()" placeholder="e.g. served on a hoagie bun with homemade sauce &amp; your choice of side"></textarea></div>
+            <div class="hrf-group" style="width:100%;"><label class="hrf-label" for="eb-weekly-name">Weekly Lunch Special</label><input class="hrf-input" id="eb-weekly-name" oninput="ebOnEdit()" placeholder="e.g. Steak Sandwich" /></div>
+            <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-weekly-desc">Weekly Lunch Special Description</label><textarea class="hrf-textarea" id="eb-weekly-desc" rows="2" oninput="ebOnEdit()" placeholder="e.g. served on a hoagie bun with homemade sauce &amp; your choice of side"></textarea></div>
             <div style="margin-top:8px;">
               <label class="hrf-label">Photo (optional)</label>
               <div id="sm-ws-img-preview" style="display:none;position:relative;margin-bottom:8px;">
@@ -2318,7 +2328,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
                 📷 Upload Photo<input type="file" accept="image/*" style="display:none;" onchange="smLoadImage(this,'ws')">
               </label>
             </div>
-            <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">Same photo shown on the Dining page's Weekly Special — one photo, edited here only.</div>
+            <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">Same photo shown on the Dining page's Weekly Lunch Special — one photo, edited here only.</div>
             <div class="hrf-group" style="width:100%;margin-top:14px;"><label class="hrf-label" for="eb-drink-special">Weekly Drink Special</label><input class="hrf-input" id="eb-drink-special" oninput="ebOnEdit()" placeholder="e.g. Strawberry Margarita" /></div>
             <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">Syncs to the Dining page's Weekly Drink Special name. Turn it on (or off) and set the description/price from <a href="#" onclick="staffView('menus',document.getElementById('svb-menus'));return false;" style="color:var(--gold-lt);">Menus → Specials</a>.</div>
             <div class="hrf-group" style="width:100%;margin-top:14px;"><label class="hrf-label" for="eb-friday-name">Friday Night Dinner Special</label><input class="hrf-input" id="eb-friday-name" oninput="ebOnEdit()" placeholder="Leave blank most days — fill in by Friday" /></div>
@@ -2334,7 +2344,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
                 📷 Upload Photo<input type="file" accept="image/*" style="display:none;" onchange="smLoadImage(this,'fn')">
               </label>
             </div>
-            <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">These sync to the Weekly Special &amp; Friday Night Special shown on the Dining page — same photo &amp; text in both places.</div>
+            <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">These sync to the Weekly Lunch Special &amp; Friday Night Special shown on the Dining page — same photo &amp; text in both places.</div>
           </div>
 
           <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-bottom:16px;">
@@ -2342,7 +2352,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
             <div class="hrf-row">
               <div class="hrf-group">
                 <label class="hrf-label">Course Opens</label>
-                <input class="hrf-input" id="eb-ed-opens" placeholder="e.g. 9:00 AM" oninput="ebOnEdit()" />
+                <input class="hrf-input" id="eb-ed-opens" placeholder="e.g. 9 a.m." oninput="ebOnEdit()" />
               </div>
               <div class="hrf-group">
                 <label class="hrf-label">Cart Path Rules</label>
@@ -2367,23 +2377,23 @@ nav.staff-mode .nav-site-back{display:flex!important;}
               </div>
               <div class="hrf-group">
                 <label class="hrf-label">Range Hours</label>
-                <input class="hrf-input" id="eb-ed-range-hours" placeholder="e.g. 8:30 AM – 5:00 PM" oninput="ebOnEdit()" />
+                <input class="hrf-input" id="eb-ed-range-hours" placeholder="e.g. 8:30 a.m. – 5 p.m." oninput="ebOnEdit()" />
               </div>
             </div>
             <div class="hrf-row">
               <div class="hrf-group">
                 <label class="hrf-label">Putting Green</label>
-                <input class="hrf-input" id="eb-ed-putting" placeholder="e.g. 9:00 AM – Dusk" oninput="ebOnEdit()" />
+                <input class="hrf-input" id="eb-ed-putting" placeholder="e.g. 9 a.m. – Dusk" oninput="ebOnEdit()" />
               </div>
               <div class="hrf-group">
                 <label class="hrf-label">Pro Shop Hours</label>
-                <input class="hrf-input" id="eb-ed-proshop" placeholder="e.g. 8:30 AM – 6:00 PM" oninput="ebOnEdit()" />
+                <input class="hrf-input" id="eb-ed-proshop" placeholder="e.g. 8:30 a.m. – 6 p.m." oninput="ebOnEdit()" />
               </div>
             </div>
             <div style="font-size:10px;color:rgba(245,240,232,.35);margin:4px 0 12px;">Linked with the <a href="#" onclick="staffView('daily',document.getElementById('svb-daily'));return false;" style="color:var(--gold-lt);">Daily Sheet</a> tab — editing here updates there too, and vice versa.</div>
             <div class="hrf-row">
-              <div class="hrf-group"><label class="hrf-label" for="eb-clubhouse-hours">Clubhouse Hours</label><input class="hrf-input" id="eb-clubhouse-hours" oninput="ebOnEdit()" placeholder="e.g. 10:00 AM – 11:00 PM" /></div>
-              <div class="hrf-group"><label class="hrf-label" for="eb-pool-hours">Pool Hours</label><input class="hrf-input" id="eb-pool-hours" oninput="ebOnEdit()" placeholder="e.g. 11:00 AM – 7:00 PM" /></div>
+              <div class="hrf-group"><label class="hrf-label" for="eb-clubhouse-hours">Clubhouse Hours</label><input class="hrf-input" id="eb-clubhouse-hours" oninput="ebOnEdit()" placeholder="e.g. 10 a.m. – 11 p.m." /></div>
+              <div class="hrf-group"><label class="hrf-label" for="eb-pool-hours">Pool Hours</label><input class="hrf-input" id="eb-pool-hours" oninput="ebOnEdit()" placeholder="e.g. 11 a.m. – 7 p.m." /></div>
             </div>
           </div>
 
@@ -2434,10 +2444,10 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 
           <!-- ── SPECIALS PANEL ── -->
           <div id="sm-specials">
-            <!-- Weekly Special -->
+            <!-- Weekly Lunch Special -->
             <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-bottom:16px;">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-                <div class="staff-tag">Weekly Special</div>
+                <div class="staff-tag">Weekly Lunch Special</div>
                 <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:rgba(245,240,232,.55);cursor:pointer;">
                   <input type="checkbox" id="sm-ws-active"> Active on Dining page
                 </label>
@@ -2448,9 +2458,24 @@ nav.staff-mode .nav-site-back{display:flex!important;}
                 <div class="hrf-group"><label class="hrf-label" for="sm-ws-price">Price (optional)</label><input class="hrf-input" id="sm-ws-price" placeholder="e.g. $36" /></div>
                 <div class="hrf-group"><label class="hrf-label" for="sm-ws-wine">Wine Pairing (optional)</label><input class="hrf-input" id="sm-ws-wine" placeholder="e.g. Pinot Noir or Chardonnay" /></div>
               </div>
-              <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:8px;">Photo is managed under <strong style="color:var(--gold-lt);">Admin → Daily Email</strong> so the Dining page and the email always show the same picture.</div>
-              <button class="btn-p" style="width:100%;margin-top:12px;" onclick="smSaveSpecials()">Save Weekly Special</button>
+              <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:8px;">Leave the dish name blank and turn this off to hide the section entirely — useful in winter when there's no weekly special. Photo is managed under <strong style="color:var(--gold-lt);">Admin → Daily Email</strong> so the Dining page and the email always show the same picture.</div>
+              <button class="btn-p" style="width:100%;margin-top:12px;" onclick="smSaveSpecials()">Save Weekly Lunch Special</button>
               <div id="sm-ws-status" style="font-size:11px;color:#8fcc8f;margin-top:6px;display:none;"></div>
+            </div>
+            <!-- Wednesday Night Buffet -->
+            <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-bottom:16px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                <div class="staff-tag">Wednesday Night Buffet</div>
+                <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:rgba(245,240,232,.55);cursor:pointer;">
+                  <input type="checkbox" id="sm-wb-active"> Active on Dining page
+                </label>
+              </div>
+              <div class="hrf-group" style="width:100%;"><label class="hrf-label" for="sm-wb-name">Buffet Name / Theme</label><input class="hrf-input" id="sm-wb-name" placeholder="e.g. Wednesday Night Buffet" /></div>
+              <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="sm-wb-desc">Description</label><textarea class="hrf-textarea" id="sm-wb-desc" rows="3" placeholder="Brief description of what's on the buffet..."></textarea></div>
+              <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="sm-wb-price">Price (optional)</label><input class="hrf-input" id="sm-wb-price" placeholder="e.g. $18 per person" /></div>
+              <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:8px;">Only shows on the Dining page on Wednesdays. Leave the name blank and turn this off to hide it entirely — useful when the buffet isn't running that week.</div>
+              <button class="btn-p" style="width:100%;margin-top:12px;" onclick="smSaveWednesday()">Save Wednesday Night Buffet</button>
+              <div id="sm-wb-status" style="font-size:11px;color:#8fcc8f;margin-top:6px;display:none;"></div>
             </div>
             <!-- Friday Night Special -->
             <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;">
@@ -2832,7 +2857,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
           <div id="ph-assign" class="ph-panel" style="display:none;">
             <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">Paste a URL from the Library, or type a filename like <code style="color:var(--gold-lt);font-size:11px;">images/golf-hero.jpg</code></div>
             <div style="background:rgba(184,151,106,.08);border:1px solid rgba(184,151,106,.2);border-radius:6px;padding:10px 14px;font-size:11px;color:rgba(245,240,232,.55);margin-bottom:16px;">
-              💡 <strong style="color:var(--gold-lt);">Weekly Special &amp; Friday Night Special photos</strong> are managed under <strong style="color:var(--gold-lt);">Admin → Daily Email</strong> — scroll to the specials section and use the 📷 Upload Photo button there.
+              💡 <strong style="color:var(--gold-lt);">Weekly Lunch Special &amp; Friday Night Special photos</strong> are managed under <strong style="color:var(--gold-lt);">Admin → Daily Email</strong> — scroll to the specials section and use the 📷 Upload Photo button there.
             </div>
             <div id="cms-photos-list" style="display:grid;gap:6px;max-width:640px;"></div>
           </div>
@@ -3067,7 +3092,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
           <div id="staff-form-date-label" class="staff-detail-date" style="margin-bottom:16px;"></div>
           <div class="hrf-row"><div class="hrf-group"><label class="hrf-label" for="sf-fname">First Name</label><input class="hrf-input" id="sf-fname" /></div><div class="hrf-group"><label class="hrf-label" for="sf-lname">Last Name</label><input class="hrf-input" id="sf-lname" /></div></div>
           <div class="hrf-row"><div class="hrf-group"><label class="hrf-label" for="sf-email">Email</label><input class="hrf-input" id="sf-email" /></div><div class="hrf-group"><label class="hrf-label" for="sf-phone">Phone</label><input class="hrf-input" id="sf-phone" /></div></div>
-          <div class="hrf-row"><div class="hrf-group"><label class="hrf-label" for="sf-time">Time</label><select class="hrf-select" id="sf-time"><option value="">Select...</option><option>5:00 PM</option><option>5:30 PM</option><option>6:00 PM</option><option>6:30 PM</option><option>7:00 PM</option><option>7:30 PM</option><option>8:00 PM</option><option>8:30 PM</option></select></div><div class="hrf-group"><label class="hrf-label" for="sf-party">Party Size</label><input class="hrf-input" id="sf-party" value="2" /></div></div>
+          <div class="hrf-row"><div class="hrf-group"><label class="hrf-label" for="sf-time">Time</label><select class="hrf-select" id="sf-time"><option value="">Select...</option><option>5 p.m.</option><option>5:30 p.m.</option><option>6 p.m.</option><option>6:30 p.m.</option><option>7 p.m.</option><option>7:30 p.m.</option><option>8 p.m.</option><option>8:30 p.m.</option></select></div><div class="hrf-group"><label class="hrf-label" for="sf-party">Party Size</label><input class="hrf-input" id="sf-party" value="2" /></div></div>
           <div class="hrf-row"><div class="hrf-group"><label class="hrf-label" for="sf-member">Member?</label><select class="hrf-select" id="sf-member"><option value="member">Member</option><option value="nonmember">Non-Member</option></select></div><div class="hrf-group"><label class="hrf-label" for="sf-status">Status</label><select class="hrf-select" id="sf-status"><option value="pending">Pending</option><option value="confirmed">Confirmed</option><option value="cancelled">Cancelled</option></select></div></div>
           <div class="hrf-group" style="width:100%;margin-top:4px;"><label class="hrf-label" for="sf-notes">Notes</label><textarea class="hrf-textarea" id="sf-notes"></textarea></div>
           <!-- Guest note match -->
@@ -3082,7 +3107,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
           <div class="staff-tag">Add to Waitlist</div>
           <div id="staff-wl-date-label" class="staff-detail-date" style="margin-bottom:16px;"></div>
           <div class="hrf-row"><div class="hrf-group"><label class="hrf-label" for="wl-name">Name</label><input class="hrf-input" id="wl-name" /></div><div class="hrf-group"><label class="hrf-label" for="wl-phone">Phone</label><input class="hrf-input" id="wl-phone" /></div></div>
-          <div class="hrf-row"><div class="hrf-group"><label class="hrf-label" for="wl-party">Party Size</label><input class="hrf-input" id="wl-party" value="2" /></div><div class="hrf-group"><label class="hrf-label" for="wl-time">Preferred Time</label><select class="hrf-select" id="wl-time"><option value="">Any</option><option>5:00 PM</option><option>5:30 PM</option><option>6:00 PM</option><option>6:30 PM</option><option>7:00 PM</option><option>7:30 PM</option><option>8:00 PM</option><option>8:30 PM</option></select></div></div>
+          <div class="hrf-row"><div class="hrf-group"><label class="hrf-label" for="wl-party">Party Size</label><input class="hrf-input" id="wl-party" value="2" /></div><div class="hrf-group"><label class="hrf-label" for="wl-time">Preferred Time</label><select class="hrf-select" id="wl-time"><option value="">Any</option><option>5 p.m.</option><option>5:30 p.m.</option><option>6 p.m.</option><option>6:30 p.m.</option><option>7 p.m.</option><option>7:30 p.m.</option><option>8 p.m.</option><option>8:30 p.m.</option></select></div></div>
           <div style="display:flex;gap:8px;margin-top:14px;">
             <button class="btn-p" style="flex:1;" onclick="staffSaveWaitlist()">Add to Waitlist</button>
             <button class="staff-cancel-btn" onclick="staffCancelWlForm()">Cancel</button>
@@ -3145,48 +3170,48 @@ var WH_SITE_CONTENT = null; // loaded from Sheets on init
 
 var WH_SITE_DEFAULTS = {
   events: [
-    { id:'ev1',  name:"St. Patty's Shootout",       month:'Mar', day:'14',   year:'2026', type:'golf',       detail:"10:30 AM \u2013 2:30 PM \u00b7 Fun format to kick off the season \u00b7 All members welcome",          cta:'Sign Up',  regMeta:"Mar 14 \u00b7 10:30 AM \u2013 2:30 PM",         active:true,  featured:false },
-    { id:'ev2',  name:"Ladies Opening Day",          month:'Apr', day:'7',    year:'2026', type:'golf',       detail:"9:00 AM \u2013 1:00 PM \u00b7 Kick off the season with our ladies opening day event",                  cta:'Sign Up',  regMeta:"Apr 7 \u00b7 9:00 AM \u2013 1:00 PM",           active:true,  featured:false },
-    { id:'ev3',  name:"Masters Dinner",              month:'Apr', day:'8',    year:'2026', type:'social',     detail:"6:30 \u2013 9:30 PM \u00b7 Annual Masters watch party & dinner \u00b7 Great food, great company",       cta:'RSVP',     regMeta:"Apr 8 \u00b7 6:30 \u2013 9:30 PM",              active:true,  featured:false },
-    { id:'ev4',  name:"Mules Invitational",          month:'Apr', day:'13',   year:'2026', type:'tournament', detail:"9:00 AM \u2013 2:00 PM \u00b7 Supporting Poplar Bluff athletics",                                       cta:'Register', regMeta:"Apr 13 \u00b7 9:00 AM \u2013 2:00 PM",          active:true,  featured:false },
-    { id:'ev5',  name:"MGA Draft Day",               month:'Apr', day:'17',   year:'2026', type:'golf',       detail:"6:00 \u2013 10:00 PM \u00b7 Men\u2019s Golf Association season draft night",                           cta:'Sign Up',  regMeta:"Apr 17 \u00b7 6:00 \u2013 10:00 PM",            active:true,  featured:false },
-    { id:'ev6',  name:"Men\u2019s Opening Day",      month:'Apr', day:'18',   year:'2026', type:'golf',       detail:"9:30 AM \u2013 2:00 PM \u00b7 Registration deadline April 16 at 5:00 PM",                              cta:'Sign Up',  regMeta:"Apr 18 \u00b7 9:30 AM \u2013 2:00 PM",          active:true,  featured:true  },
+    { id:'ev1',  name:"St. Patty's Shootout",       month:'Mar', day:'14',   year:'2026', type:'golf',       detail:"10:30 a.m. – 2:30 p.m. \u00b7 Fun format to kick off the season \u00b7 All members welcome",          cta:'Sign Up',  regMeta:"Mar 14 \u00b7 10:30 a.m. – 2:30 p.m.",         active:true,  featured:false },
+    { id:'ev2',  name:"Ladies Opening Day",          month:'Apr', day:'7',    year:'2026', type:'golf',       detail:"9 a.m. – 1 p.m. \u00b7 Kick off the season with our ladies opening day event",                  cta:'Sign Up',  regMeta:"Apr 7 \u00b7 9 a.m. – 1 p.m.",           active:true,  featured:false },
+    { id:'ev3',  name:"Masters Dinner",              month:'Apr', day:'8',    year:'2026', type:'social',     detail:"6:30 – 9:30 p.m. \u00b7 Annual Masters watch party & dinner \u00b7 Great food, great company",       cta:'RSVP',     regMeta:"Apr 8 \u00b7 6:30 – 9:30 p.m.",              active:true,  featured:false },
+    { id:'ev4',  name:"Mules Invitational",          month:'Apr', day:'13',   year:'2026', type:'tournament', detail:"9 a.m. – 2 p.m. \u00b7 Supporting Poplar Bluff athletics",                                       cta:'Register', regMeta:"Apr 13 \u00b7 9 a.m. – 2 p.m.",          active:true,  featured:false },
+    { id:'ev5',  name:"MGA Draft Day",               month:'Apr', day:'17',   year:'2026', type:'golf',       detail:"6 – 10 p.m. \u00b7 Men\u2019s Golf Association season draft night",                           cta:'Sign Up',  regMeta:"Apr 17 \u00b7 6 – 10 p.m.",            active:true,  featured:false },
+    { id:'ev6',  name:"Men\u2019s Opening Day",      month:'Apr', day:'18',   year:'2026', type:'golf',       detail:"9:30 a.m. – 2 p.m. \u00b7 Registration deadline April 16 at 5 p.m.",                              cta:'Sign Up',  regMeta:"Apr 18 \u00b7 9:30 a.m. – 2 p.m.",          active:true,  featured:true  },
     { id:'ev7',  name:"Ozark Invitational",          month:'Apr', day:'25',   year:'2026', type:'tournament', detail:"2-day tournament \u00b7 Apr 25\u201326 \u00b7 Westwood Hills\u2019 signature invitational event",        cta:'Register', regMeta:"Apr 25\u201326 \u00b7 2-Day Tournament",         active:true,  featured:true  },
-    { id:'ev8',  name:"Friday Night Fights Begins",  month:'May', day:'1',    year:'2026', type:'golf',       detail:"6:00 \u2013 10:00 PM \u00b7 Weekly competitive series kicks off \u00b7 Runs through the season",        cta:'Sign Up',  regMeta:"May 1 \u00b7 6:00 \u2013 10:00 PM",             active:true,  featured:false },
-    { id:'ev9',  name:"Hit & Giggle",                month:'May', day:'6',    year:'2026', type:'social',     detail:"7:00 \u2013 11:00 PM \u00b7 Recurring social golf series \u00b7 A great way to socialize on and off the course", cta:'Sign Up', regMeta:"May 6 \u00b7 7:00 \u2013 11:00 PM",      active:true,  featured:false },
-    { id:'ev10', name:"Men\u2019s League Opening Night", month:'May', day:'7', year:'2026', type:'golf',      detail:"5:00 \u2013 9:00 PM \u00b7 Weekly men\u2019s league begins \u00b7 Every Thursday through the season",   cta:'Sign Up',  regMeta:"May 7 \u00b7 5:00 \u2013 9:00 PM",              active:true,  featured:true  },
-    { id:'ev11', name:"Spring 2-Man Scramble",       month:'May', day:'16',   year:'2026', type:'tournament', detail:"2-day event \u00b7 May 16\u201317 \u00b7 8:00 AM shotgun start",                                        cta:'Register', regMeta:"May 16\u201317 \u00b7 8:00 AM Shotgun",         active:true,  featured:true  },
-    { id:'ev12', name:"MGA 2-Man Best Ball",         month:'May', day:'23',   year:'2026', type:'golf',       detail:"8:00 AM \u2013 12:00 PM \u00b7 Men\u2019s Golf Association event",                                      cta:'Sign Up',  regMeta:"May 23 \u00b7 8:00 AM \u2013 12:00 PM",         active:true,  featured:false },
-    { id:'ev13', name:"Memorial Day Wing Ding",      month:'May', day:'25',   year:'2026', type:'social',     detail:"10:00 AM \u2013 2:00 PM \u00b7 Annual Memorial Day celebration \u00b7 Food, fun, & fellowship",         cta:'RSVP',     regMeta:"May 25 \u00b7 10:00 AM \u2013 2:00 PM",         active:true,  featured:false },
-    { id:'ev14', name:"UCAN Golf Outing",            month:'Jun', day:'5',    year:'2026', type:'tournament', detail:"9:30 AM \u2013 1:30 PM \u00b7 Charity tournament raising money for local cancer patients",               cta:'Register', regMeta:"Jun 5 \u00b7 9:30 AM \u2013 1:30 PM",           active:true,  featured:true  },
-    { id:'ev15', name:"Ladies Cup Challenge Matches",month:'Jun', day:'6',    year:'2026', type:'golf',       detail:"9:00 AM \u2013 1:00 PM \u00b7 Annual ladies match play competition",                                    cta:'Sign Up',  regMeta:"Jun 6 \u00b7 9:00 AM \u2013 1:00 PM",           active:true,  featured:false },
-    { id:'ev16', name:"Ladies Powder Puff",          month:'Jun', day:'9',    year:'2026', type:'golf',       detail:"9:00 AM \u2013 1:00 PM \u00b7 Ladies 2-player scramble",                                                cta:'Sign Up',  regMeta:"Jun 9 \u00b7 9:00 AM \u2013 1:00 PM",           active:true,  featured:false },
-    { id:'ev17', name:"Three Rivers College Outing", month:'Jun', day:'12',   year:'2026', type:'tournament', detail:"9:30 AM \u2013 2:00 PM \u00b7 Supporting Three Rivers College",                                         cta:'Register', regMeta:"Jun 12 \u00b7 9:30 AM \u2013 2:00 PM",         active:true,  featured:false },
-    { id:'ev18', name:"Steak Stag \u2014 SEMO Qualifier", month:'Jun', day:'18', year:'2026', type:'tournament', detail:"6:00 \u2013 10:00 PM \u00b7 SEMO Cup qualifying event \u00b7 Steak dinner included",              cta:'Register', regMeta:"Jun 18 \u00b7 6:00 \u2013 10:00 PM",            active:true,  featured:false },
-    { id:'ev19', name:"Parent\u2013Child Championship", month:'Jun', day:'20', year:'2026', type:'tournament', detail:"2-day event \u00b7 Jun 20\u201321 \u00b7 8:30 AM shotgun start",                                   cta:'Register', regMeta:"Jun 20\u201321 \u00b7 8:30 AM Shotgun",          active:true,  featured:true  },
-    { id:'ev21', name:"MGA Alternate Shot",              month:'Jun', day:'27', year:'2026', type:'golf',       detail:"8:30 AM \u00b7 Men\u2019s Golf Association event",                                                      cta:'Sign Up',  regMeta:"Jun 27 \u00b7 8:30 AM",                          active:true,  featured:false },
+    { id:'ev8',  name:"Friday Night Fights Begins",  month:'May', day:'1',    year:'2026', type:'golf',       detail:"6 – 10 p.m. \u00b7 Weekly competitive series kicks off \u00b7 Runs through the season",        cta:'Sign Up',  regMeta:"May 1 \u00b7 6 – 10 p.m.",             active:true,  featured:false },
+    { id:'ev9',  name:"Hit & Giggle",                month:'May', day:'6',    year:'2026', type:'social',     detail:"7 – 11 p.m. \u00b7 Recurring social golf series \u00b7 A great way to socialize on and off the course", cta:'Sign Up', regMeta:"May 6 \u00b7 7 – 11 p.m.",      active:true,  featured:false },
+    { id:'ev10', name:"Men\u2019s League Opening Night", month:'May', day:'7', year:'2026', type:'golf',      detail:"5 – 9 p.m. \u00b7 Weekly men\u2019s league begins \u00b7 Every Thursday through the season",   cta:'Sign Up',  regMeta:"May 7 \u00b7 5 – 9 p.m.",              active:true,  featured:true  },
+    { id:'ev11', name:"Spring 2-Man Scramble",       month:'May', day:'16',   year:'2026', type:'tournament', detail:"2-day event \u00b7 May 16\u201317 \u00b7 8 a.m. shotgun start",                                        cta:'Register', regMeta:"May 16\u201317 \u00b7 8 a.m. Shotgun",         active:true,  featured:true  },
+    { id:'ev12', name:"MGA 2-Man Best Ball",         month:'May', day:'23',   year:'2026', type:'golf',       detail:"8 a.m. – noon \u00b7 Men\u2019s Golf Association event",                                      cta:'Sign Up',  regMeta:"May 23 \u00b7 8 a.m. – noon",         active:true,  featured:false },
+    { id:'ev13', name:"Memorial Day Wing Ding",      month:'May', day:'25',   year:'2026', type:'social',     detail:"10 a.m. – 2 p.m. \u00b7 Annual Memorial Day celebration \u00b7 Food, fun, & fellowship",         cta:'RSVP',     regMeta:"May 25 \u00b7 10 a.m. – 2 p.m.",         active:true,  featured:false },
+    { id:'ev14', name:"UCAN Golf Outing",            month:'Jun', day:'5',    year:'2026', type:'tournament', detail:"9:30 a.m. – 1:30 p.m. \u00b7 Charity tournament raising money for local cancer patients",               cta:'Register', regMeta:"Jun 5 \u00b7 9:30 a.m. – 1:30 p.m.",           active:true,  featured:true  },
+    { id:'ev15', name:"Ladies Cup Challenge Matches",month:'Jun', day:'6',    year:'2026', type:'golf',       detail:"9 a.m. – 1 p.m. \u00b7 Annual ladies match play competition",                                    cta:'Sign Up',  regMeta:"Jun 6 \u00b7 9 a.m. – 1 p.m.",           active:true,  featured:false },
+    { id:'ev16', name:"Ladies Powder Puff",          month:'Jun', day:'9',    year:'2026', type:'golf',       detail:"9 a.m. – 1 p.m. \u00b7 Ladies 2-player scramble",                                                cta:'Sign Up',  regMeta:"Jun 9 \u00b7 9 a.m. – 1 p.m.",           active:true,  featured:false },
+    { id:'ev17', name:"Three Rivers College Outing", month:'Jun', day:'12',   year:'2026', type:'tournament', detail:"9:30 a.m. – 2 p.m. \u00b7 Supporting Three Rivers College",                                         cta:'Register', regMeta:"Jun 12 \u00b7 9:30 a.m. – 2 p.m.",         active:true,  featured:false },
+    { id:'ev18', name:"Steak Stag \u2014 SEMO Qualifier", month:'Jun', day:'18', year:'2026', type:'tournament', detail:"6 – 10 p.m. \u00b7 SEMO Cup qualifying event \u00b7 Steak dinner included",              cta:'Register', regMeta:"Jun 18 \u00b7 6 – 10 p.m.",            active:true,  featured:false },
+    { id:'ev19', name:"Parent\u2013Child Championship", month:'Jun', day:'20', year:'2026', type:'tournament', detail:"2-day event \u00b7 Jun 20\u201321 \u00b7 8:30 a.m. shotgun start",                                   cta:'Register', regMeta:"Jun 20\u201321 \u00b7 8:30 a.m. Shotgun",          active:true,  featured:true  },
+    { id:'ev21', name:"MGA Alternate Shot",              month:'Jun', day:'27', year:'2026', type:'golf',       detail:"8:30 a.m. \u00b7 Men\u2019s Golf Association event",                                                      cta:'Sign Up',  regMeta:"Jun 27 \u00b7 8:30 a.m.",                          active:true,  featured:false },
     { id:'ev22', name:"PGA Junior Series Event",         month:'Jul', day:'1',  year:'2026', type:'tournament', detail:"Junior golfer competition \u00b7 Full day event",                                                       cta:'Register', regMeta:"Jul 1 \u00b7 Full Day",                           active:true,  featured:false },
     { id:'ev23', name:"4th of July Wing Ding",           month:'Jul', day:'4',  year:'2026', type:'social',     detail:"Annual Independence Day celebration \u00b7 Food, fun & fellowship for the whole family",                 cta:'RSVP',     regMeta:"Jul 4 \u00b7 Full Day",                           active:true,  featured:true  },
     { id:'ev24', name:"MGA Match Play",                  month:'Jul', day:'10', year:'2026', type:'golf',       detail:"Men\u2019s Golf Association match play event",                                                          cta:'Sign Up',  regMeta:"Jul 10",                                         active:true,  featured:false },
-    { id:'ev25', name:"Mules Booster Club Outing",       month:'Aug', day:'7',  year:'2026', type:'tournament', detail:"9:00 AM \u00b7 Supporting Poplar Bluff Mules athletics",                                                cta:'Register', regMeta:"Aug 7 \u00b7 9:00 AM",                           active:true,  featured:false },
+    { id:'ev25', name:"Mules Booster Club Outing",       month:'Aug', day:'7',  year:'2026', type:'tournament', detail:"9 a.m. \u00b7 Supporting Poplar Bluff Mules athletics",                                                cta:'Register', regMeta:"Aug 7 \u00b7 9 a.m.",                           active:true,  featured:false },
     { id:'ev26', name:"Ladies Sweet Treat",              month:'Aug', day:'11', year:'2026', type:'golf',       detail:"4-player ladies scramble \u00b7 Full day event",                                                        cta:'Sign Up',  regMeta:"Aug 11 \u00b7 Full Day",                          active:true,  featured:false },
     { id:'ev27', name:"SEMO Cup \u2014 Thursday Qualifier", month:'Aug', day:'13', year:'2026', type:'tournament', detail:"SEMO Cup qualifying round \u00b7 Thursday tee times",                                             cta:'Register', regMeta:"Aug 13",                                         active:true,  featured:false },
     { id:'ev28', name:"Muleskinner Member\u2013Member",  month:'Aug', day:'20', year:'2026', type:'tournament', detail:"Men\u2019s member-member tournament \u00b7 Full day event",                                             cta:'Register', regMeta:"Aug 20 \u00b7 Full Day",                          active:true,  featured:true  },
-    { id:'ev29', name:"Labor Day Wing Ding",             month:'Sep', day:'7',  year:'2026', type:'social',     detail:"12:00 \u2013 4:00 PM \u00b7 Annual Labor Day celebration \u00b7 Food, fun & fellowship",                  cta:'RSVP',     regMeta:"Sep 7 \u00b7 12:00 \u2013 4:00 PM",              active:true,  featured:false },
-    { id:'ev43', name:"SEMO Cup \u2014 Qualifier #5",    month:'Sep', day:'10', year:'2026', type:'tournament', detail:"8:00 AM \u00b7 SEMO Cup qualifying round",                                                              cta:'Register', regMeta:"Sep 10 \u00b7 8:00 AM",                          active:true,  featured:false },
-    { id:'ev30', name:"Friday Night Fights \u2014 Tournament of Champions", month:'Sep', day:'11', year:'2026', type:'tournament', detail:"4:30 PM \u00b7 Season-ending FNF championship \u00b7 Top competitors from all season", cta:'Register', regMeta:"Sep 11 \u00b7 4:30 PM",                          active:true,  featured:true  },
-    { id:'ev31', name:"WHCC Mixed Pairs Scramble",       month:'Sep', day:'12', year:'2026', type:'golf',       detail:"2-day event \u00b7 Sep 12\u201313 \u00b7 8:00 AM shotgun start \u00b7 2-person mixed scramble",           cta:'Sign Up',  regMeta:"Sep 12\u201313 \u00b7 8:00 AM Shotgun",         active:true,  featured:false },
+    { id:'ev29', name:"Labor Day Wing Ding",             month:'Sep', day:'7',  year:'2026', type:'social',     detail:"noon – 4 p.m. \u00b7 Annual Labor Day celebration \u00b7 Food, fun & fellowship",                  cta:'RSVP',     regMeta:"Sep 7 \u00b7 noon – 4 p.m.",              active:true,  featured:false },
+    { id:'ev43', name:"SEMO Cup \u2014 Qualifier #5",    month:'Sep', day:'10', year:'2026', type:'tournament', detail:"8 a.m. \u00b7 SEMO Cup qualifying round",                                                              cta:'Register', regMeta:"Sep 10 \u00b7 8 a.m.",                          active:true,  featured:false },
+    { id:'ev30', name:"Friday Night Fights \u2014 Tournament of Champions", month:'Sep', day:'11', year:'2026', type:'tournament', detail:"4:30 p.m. \u00b7 Season-ending FNF championship \u00b7 Top competitors from all season", cta:'Register', regMeta:"Sep 11 \u00b7 4:30 p.m.",                          active:true,  featured:true  },
+    { id:'ev31', name:"WHCC Mixed Pairs Scramble",       month:'Sep', day:'12', year:'2026', type:'golf',       detail:"2-day event \u00b7 Sep 12\u201313 \u00b7 8 a.m. shotgun start \u00b7 2-person mixed scramble",           cta:'Sign Up',  regMeta:"Sep 12\u201313 \u00b7 8 a.m. Shotgun",         active:true,  featured:false },
     { id:'ev32', name:"Missouri Amateur \u2014 Men\u2019s Senior Am", month:'Sep', day:'14', year:'2026', type:'tournament', detail:"3-day event \u00b7 Sep 14\u201316 \u00b7 Missouri Amateur Golf Association \u00b7 Senior division", cta:'Register', regMeta:"Sep 14\u201316",                                 active:true,  featured:false },
-    { id:'ev33', name:"Poplar Bluff Chamber of Commerce Outing", month:'Sep', day:'18', year:'2026', type:'tournament', detail:"10:30 AM \u00b7 Poplar Bluff Chamber of Commerce annual golf outing",                       cta:'Register', regMeta:"Sep 18 \u00b7 10:30 AM",                         active:true,  featured:false },
+    { id:'ev33', name:"Poplar Bluff Chamber of Commerce Outing", month:'Sep', day:'18', year:'2026', type:'tournament', detail:"10:30 a.m. \u00b7 Poplar Bluff Chamber of Commerce annual golf outing",                       cta:'Register', regMeta:"Sep 18 \u00b7 10:30 a.m.",                         active:true,  featured:false },
     { id:'ev34', name:"Club Championships",              month:'Sep', day:'19', year:'2026', type:'tournament', detail:"2-day event \u00b7 Sep 19\u201320 \u00b7 Annual member club championship",                               cta:'Register', regMeta:"Sep 19\u201320",                                 active:true,  featured:true  },
-    { id:'ev37', name:"Calcutta Bidding \u2014 Bourbon Tasting", month:'Sep', day:'24', year:'2026', type:'social', detail:"6:00 PM \u00b7 Calcutta bidding night paired with a bourbon tasting event",                 cta:'RSVP',     regMeta:"Sep 24 \u00b7 6:00 PM",                          active:true,  featured:false },
-    { id:'ev38', name:"Men\u2019s Calcutta",             month:'Sep', day:'26', year:'2026', type:'tournament', detail:"8:00 AM \u00b7 Annual men\u2019s calcutta tournament",                                                   cta:'Register', regMeta:"Sep 26 \u00b7 8:00 AM",                          active:true,  featured:false },
+    { id:'ev37', name:"Calcutta Bidding \u2014 Bourbon Tasting", month:'Sep', day:'24', year:'2026', type:'social', detail:"6 p.m. \u00b7 Calcutta bidding night paired with a bourbon tasting event",                 cta:'RSVP',     regMeta:"Sep 24 \u00b7 6 p.m.",                          active:true,  featured:false },
+    { id:'ev38', name:"Men\u2019s Calcutta",             month:'Sep', day:'26', year:'2026', type:'tournament', detail:"8 a.m. \u00b7 Annual men\u2019s calcutta tournament",                                                   cta:'Register', regMeta:"Sep 26 \u00b7 8 a.m.",                          active:true,  featured:false },
     { id:'ev35', name:"WHCC Fall 2-Man Scramble",        month:'Oct', day:'3',  year:'2026', type:'tournament', detail:"2-day event \u00b7 Oct 3\u20134 \u00b7 2-player scramble format",                                        cta:'Register', regMeta:"Oct 3\u20134",                                   active:true,  featured:false },
-    { id:'ev36', name:"Ladies Calcutta",                 month:'Oct', day:'10', year:'2026', type:'golf',       detail:"9:30 AM \u00b7 Annual ladies calcutta tournament",                                                       cta:'Sign Up',  regMeta:"Oct 10 \u00b7 9:30 AM",                          active:true,  featured:false },
-    { id:'ev39', name:"Men\u2019s Rib Stag \u2014 Pro\u2019s Cup Draft Party", month:'Oct', day:'22', year:'2026', type:'social', detail:"5:00 PM \u00b7 Men\u2019s rib stag dinner & Pro\u2019s Cup draft party",              cta:'RSVP',     regMeta:"Oct 22 \u00b7 5:00 PM",                          active:true,  featured:false },
+    { id:'ev36', name:"Ladies Calcutta",                 month:'Oct', day:'10', year:'2026', type:'golf',       detail:"9:30 a.m. \u00b7 Annual ladies calcutta tournament",                                                       cta:'Sign Up',  regMeta:"Oct 10 \u00b7 9:30 a.m.",                          active:true,  featured:false },
+    { id:'ev39', name:"Men\u2019s Rib Stag \u2014 Pro\u2019s Cup Draft Party", month:'Oct', day:'22', year:'2026', type:'social', detail:"5 p.m. \u00b7 Men\u2019s rib stag dinner & Pro\u2019s Cup draft party",              cta:'RSVP',     regMeta:"Oct 22 \u00b7 5 p.m.",                          active:true,  featured:false },
     { id:'ev40', name:"Pro\u2019s Cup",                  month:'Oct', day:'24', year:'2026', type:'tournament', detail:"2-day event \u00b7 Oct 24\u201325 \u00b7 Signature end-of-season tournament",                             cta:'Register', regMeta:"Oct 24\u201325",                                 active:true,  featured:true  },
-    { id:'ev41', name:"Gobbler",                         month:'Nov', day:'27', year:'2026', type:'golf',       detail:"10:30 AM \u2013 2:30 PM \u00b7 Thanksgiving weekend golf event \u00b7 Annual tradition",                cta:'Sign Up',  regMeta:"Nov 27 \u00b7 10:30 AM \u2013 2:30 PM",          active:true,  featured:false },
-    { id:'ev42', name:"Yule Tide Classic",               month:'Dec', day:'19', year:'2026', type:'golf',       detail:"10:00 AM \u2013 2:00 PM \u00b7 Year-end holiday golf celebration \u00b7 All members welcome",             cta:'Sign Up',  regMeta:"Dec 19 \u00b7 10:00 AM \u2013 2:00 PM",          active:true,  featured:false }
+    { id:'ev41', name:"Gobbler",                         month:'Nov', day:'27', year:'2026', type:'golf',       detail:"10:30 a.m. – 2:30 p.m. \u00b7 Thanksgiving weekend golf event \u00b7 Annual tradition",                cta:'Sign Up',  regMeta:"Nov 27 \u00b7 10:30 a.m. – 2:30 p.m.",          active:true,  featured:false },
+    { id:'ev42', name:"Yule Tide Classic",               month:'Dec', day:'19', year:'2026', type:'golf',       detail:"10 a.m. – 2 p.m. \u00b7 Year-end holiday golf celebration \u00b7 All members welcome",             cta:'Sign Up',  regMeta:"Dec 19 \u00b7 10 a.m. – 2 p.m.",          active:true,  featured:false }
   ],
   announcements: [],
   heroes: {
@@ -3203,18 +3228,18 @@ var WH_SITE_DEFAULTS = {
     phone_main:       '(573) 785-5253',
     email:            'info@westwoodhillscountryclub.com',
     address:          '1 Birdie Ln, Poplar Bluff, Missouri 63901',
-    hours_weekday:    'Mon\u2013Fri: 8:00 AM \u2013 5:00 PM',
-    hours_saturday:   'Saturday: 8:00 AM \u2013 2:00 PM',
+    hours_weekday:    'Mon\u2013Fri: 8 a.m. – 5 p.m.',
+    hours_saturday:   'Saturday: 8 a.m. – 2 p.m.',
     hours_sunday:     'Sunday: Closed (Golf Shop open)',
-    hoovers_hours:    'Thursday\u2013Saturday, 5 PM \u2013 9 PM',
+    hoovers_hours:    'Thursday\u2013Saturday, 5 p.m. – 9 p.m.',
     hoovers_public:   '3rd Saturday of each month',
-    grill_hours:      'Casual \u00b7 Tue\u2013Sun 11 AM\u20138 PM'
+    grill_hours:      'Casual \u00b7 Tue\u2013Sun 11 a.m. – 8 p.m.'
   },
   pool: {
     season_label: 'Memorial Day through Labor Day',
     hours: [
       { days: 'Monday',           time: 'Closed',              note: '' },
-      { days: 'Tuesday \u2013 Sunday', time: '10:00 AM \u2013 5:00 PM', note: '' }
+      { days: 'Tuesday \u2013 Sunday', time: '10 a.m. – 5 p.m.', note: '' }
     ]
   },
   about_stats: {
@@ -3474,6 +3499,35 @@ function renderProBio(pb) {
   if (daysDisplay) daysDisplay.textContent = '📅 ' + (pb.availableDays || 'Call Pro Shop to schedule');
 }
 
+// Converts "8:00 AM" / "8:30 PM" style times to AP style ("8 a.m." / "8:30 p.m.")
+// for display, without touching the underlying stored text. Staff can type
+// times normally in the Events admin; this reformats them wherever events render.
+function apTime(str) {
+  if (!str) return str;
+  function bareOrWord(h, m, mer) {
+    if (h === 12 && m === 0) return mer === 'PM' ? 'noon' : 'midnight';
+    return m === 0 ? String(h) : (h + ':' + (m < 10 ? '0' : '') + m);
+  }
+  function convNum(h, m, mer) {
+    if (h === 12 && m === 0) return mer === 'PM' ? 'noon' : 'midnight';
+    var suffix = mer === 'AM' ? 'a.m.' : 'p.m.';
+    return m === 0 ? (h + ' ' + suffix) : (h + ':' + (m < 10 ? '0' : '') + m + ' ' + suffix);
+  }
+  var DASH = '–';
+  str = str.replace(new RegExp('\\b(\\d{1,2})(?::(\\d{2}))?\\s?(AM|PM)\\s*' + DASH + '\\s*(\\d{1,2})(?::(\\d{2}))?\\s?(AM|PM)\\b', 'g'),
+    function(_, h1, m1, mer1, h2, m2, mer2) {
+      return convNum(+h1, +(m1 || 0), mer1) + ' ' + DASH + ' ' + convNum(+h2, +(m2 || 0), mer2);
+    });
+  str = str.replace(new RegExp('\\b(\\d{1,2})(?::(\\d{2}))?\\s*' + DASH + '\\s*(\\d{1,2})(?::(\\d{2}))?\\s?(AM|PM)\\b', 'g'),
+    function(_, h1, m1, h2, m2, mer) {
+      return bareOrWord(+h1, +(m1 || 0), mer) + ' ' + DASH + ' ' + convNum(+h2, +(m2 || 0), mer);
+    });
+  str = str.replace(/\b(\d{1,2})(?::(\d{2}))?\s(AM|PM)\b/g, function(_, h, m, mer) {
+    return convNum(+h, +(m || 0), mer);
+  });
+  return str;
+}
+
 function renderEventsGrid(events) {
   var grid = document.getElementById('ev-cal-grid');
   if (!grid) return;
@@ -3483,7 +3537,7 @@ function renderEventsGrid(events) {
     var typeClass = ev.type || 'golf';
     var delay = delays[i % 3];
     var nameEsc = (ev.name || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
-    var metaEsc = (ev.regMeta || '').replace(/'/g, "\\'");
+    var metaEsc = apTime(ev.regMeta || '').replace(/'/g, "\\'");
     var isFullReg = ev.type === 'tournament' || ev.type === 'golf';
     var evDateStr = (ev.month||'') + ' ' + (ev.day||'') + ', ' + (ev.year||'2026');
     var evDateEsc = evDateStr.replace(/'/g, "\\'");
@@ -3496,7 +3550,7 @@ function renderEventsGrid(events) {
         '<div class="ev-card-date"><span class="ecd-mo">' + (ev.month||'') + '</span><span class="ecd-d">' + (ev.day||'') + '</span><span class="ecd-y">' + (ev.year||'2026') + '</span></div>' +
         '<span class="ev-type ' + typeClass + '">' + typeClass.charAt(0).toUpperCase() + typeClass.slice(1) + '</span>' +
       '</div>' +
-      '<div class="ev-card-body"><div class="ev-card-name">' + (ev.name||'') + '</div><div class="ev-card-detail">' + (ev.detail||'') + '</div></div>' +
+      '<div class="ev-card-body"><div class="ev-card-name">' + (ev.name||'') + '</div><div class="ev-card-detail">' + apTime(ev.detail||'') + '</div></div>' +
       '<div class="ev-card-footer"><a class="ev-cta" onclick="' + ctaOnclick + '" style="cursor:pointer">' + ctaLabel + ' \u2192</a></div>' +
     '</div>';
   }).join('');
@@ -3519,7 +3573,7 @@ function renderHomeEvents(events) {
   list.innerHTML = featured.map(function(ev) {
     return '<div class="event-item">' +
       '<div class="ev-date-box"><div class="ev-mo">' + (ev.month||'') + '</div><div class="ev-d">' + (ev.day||'') + '</div></div>' +
-      '<div><div class="ev-name">' + (ev.name||'') + '</div><div class="ev-sub">' + (ev.detail||'') + '</div></div>' +
+      '<div><div class="ev-name">' + (ev.name||'') + '</div><div class="ev-sub">' + apTime(ev.detail||'') + '</div></div>' +
       '<span class="ev-tag">' + (typeLabels[ev.type] || 'Golf') + '</span>' +
     '</div>';
   }).join('');
@@ -5058,8 +5112,8 @@ function resetResForm() {
 // DAILY UPDATE
 // ════════════════════════════════════════════════════
 var duDefaults = {
-  courseOpens: '9:00 AM', cartRules: 'Off Path', rangeStatus: 'Open — Mats Only',
-  rangeHours: '8:30 AM – 5:00 PM', puttingGreen: '9:00 AM – Dusk', proShop: '8:30 AM – 6:00 PM', notice: '',
+  courseOpens: '9 a.m.', cartRules: 'Off Path', rangeStatus: 'Open — Mats Only',
+  rangeHours: '8:30 a.m. – 5 p.m.', puttingGreen: '9 a.m. – Dusk', proShop: '8:30 a.m. – 6 p.m.', notice: '',
   clubhouseHours: '', poolHours: ''
 };
 
@@ -5128,9 +5182,10 @@ loadDailyUpdate();
 // MENU MANAGEMENT
 // ════════════════════════════════════════════════════
 // Bump this string whenever WH_MENU_DEFAULTS changes to auto-clear stale caches
-var WH_MENU_VERSION = '5';
+var WH_MENU_VERSION = '6';
 var WH_MENU_DEFAULTS = {
   weeklySpecial:{active:false,name:'',desc:'',price:'',wine:''},
+  wednesdayBuffet:{active:false,name:'',desc:'',price:''},
   fridayNight:{active:false,name:'',desc:'',price:'',wine:''},
   drinkSpecial:{active:false,name:'',desc:'',price:''},
   grill:{
@@ -5254,9 +5309,11 @@ function menuRenderGrill(g){
 }
 function menuRenderSpecials(data){
   var wsEl=document.getElementById('dining-weekly-special');
+  var wbEl=document.getElementById('dining-wednesday-buffet');
   var fnEl=document.getElementById('dining-friday-special');
   var dsEl=document.getElementById('dining-drink-special');
   var ws=data.weeklySpecial||{};
+  var wb=data.wednesdayBuffet||{};
   var fn=data.fridayNight||{};
   var ds=data.drinkSpecial||{};
   function fillSpecial(el,spec,requireDay){
@@ -5274,6 +5331,7 @@ function menuRenderSpecials(data){
     } else el.style.display='none';
   }
   fillSpecial(wsEl,ws);
+  fillSpecial(wbEl,wb,3); // 3 = Wednesday — auto-hides on other days
   fillSpecial(fnEl,fn,5); // 5 = Friday — auto-hides if staff forgets to toggle it off after Friday
   fillSpecial(dsEl,ds);
 }
@@ -5288,11 +5346,13 @@ menuRenderAll();
 // ── STAFF MENU PANEL ──
 function smLoad(){
   var data=menuLoad();
-  var ws=data.weeklySpecial||{};var fn=data.fridayNight||{};var ds=data.drinkSpecial||{};
+  var ws=data.weeklySpecial||{};var wb=data.wednesdayBuffet||{};var fn=data.fridayNight||{};var ds=data.drinkSpecial||{};
   function setVal(id,val){var e=document.getElementById(id);if(e) e.value=val||'';}
   function setChk(id,val){var e=document.getElementById(id);if(e) e.checked=!!val;}
   setChk('sm-ws-active',ws.active);setVal('sm-ws-name',ws.name);setVal('sm-ws-desc',ws.desc);
   setVal('sm-ws-price',ws.price);setVal('sm-ws-wine',ws.wine);
+  setChk('sm-wb-active',wb.active);setVal('sm-wb-name',wb.name);setVal('sm-wb-desc',wb.desc);
+  setVal('sm-wb-price',wb.price);
   setChk('sm-fn-active',fn.active);setVal('sm-fn-name',fn.name);setVal('sm-fn-desc',fn.desc);
   setVal('sm-fn-price',fn.price);setVal('sm-fn-wine',fn.wine);
   setChk('sm-ds-active',ds.active);setVal('sm-ds-name',ds.name);setVal('sm-ds-desc',ds.desc);
@@ -5373,6 +5433,16 @@ function smSaveSpecials(){
     image: existingImage };
   menuSave(data);
   var st = document.getElementById('sm-ws-status');
+  if (st) { st.textContent = 'Saved — dining page updated!'; st.style.display = 'block'; setTimeout(function(){ st.style.display='none'; }, 2500); }
+}
+function smSaveWednesday(){
+  var data = menuLoad();
+  data.wednesdayBuffet = { active: document.getElementById('sm-wb-active').checked,
+    name: document.getElementById('sm-wb-name').value.trim(),
+    desc: document.getElementById('sm-wb-desc').value.trim(),
+    price: document.getElementById('sm-wb-price').value.trim() };
+  menuSave(data);
+  var st = document.getElementById('sm-wb-status');
   if (st) { st.textContent = 'Saved — dining page updated!'; st.style.display = 'block'; setTimeout(function(){ st.style.display='none'; }, 2500); }
 }
 function smSaveFriday(){
@@ -5478,7 +5548,7 @@ function ebUpcomingEvents() {
   events.sort(function(a, b) { return new Date(a.date) - new Date(b.date); });
   return events.slice(0, 20).map(function(e) {
     var d = new Date(e.date + 'T00:00:00');
-    return months[d.getMonth()] + ' ' + d.getDate() + ' — ' + (e.name || '') + (e.time ? ' | ' + e.time : '');
+    return months[d.getMonth()] + ' ' + d.getDate() + ' — ' + (e.name || '') + (e.time ? ' | ' + apTime(e.time) : '');
   });
 }
 
@@ -5518,7 +5588,7 @@ function ebBuildHtml() {
     return src ? '<img src="' + src + '" alt="' + esc(alt) + '" style="max-width:100%;height:auto;border-radius:6px;margin:6px 0 14px;display:block;">' : '';
   };
   var specials = '<p>Be sure to stop by the clubhouse and enjoy our weekly restaurant specials.</p>';
-  specials += '<p><strong>Weekly Special:</strong> ' + esc(f.weeklyName) + (f.weeklyDesc ? ' - ' + esc(f.weeklyDesc) : '') + '</p>';
+  specials += '<p><strong>Weekly Lunch Special:</strong> ' + esc(f.weeklyName) + (f.weeklyDesc ? ' - ' + esc(f.weeklyDesc) : '') + '</p>';
   specials += img(f.weeklyImage, f.weeklyName);
   specials += '<p><strong>Weekly Drink Special:</strong> ' + esc(f.drinkSpecial) + '</p>';
   specials += '<p><strong>Friday Night Dinner Special:</strong> ' + esc(f.fridayName) + (f.fridayDesc ? ' - ' + esc(f.fridayDesc) : '') + '</p>';
@@ -5858,46 +5928,46 @@ async function duAdminSave() {
 
 function duPreset(type) {
   if (type === 'normal') {
-    document.getElementById('du-ed-opens').value = '9:00 AM';
+    document.getElementById('du-ed-opens').value = '9 a.m.';
     document.getElementById('du-ed-cart').value = 'Off Path';
     document.getElementById('du-ed-range-status').value = 'Open — Mats Only';
-    document.getElementById('du-ed-range-hours').value = '8:30 AM – 5:00 PM';
-    document.getElementById('du-ed-putting').value = '9:00 AM – Dusk';
-    document.getElementById('du-ed-proshop').value = '8:30 AM – 6:00 PM';
+    document.getElementById('du-ed-range-hours').value = '8:30 a.m. – 5 p.m.';
+    document.getElementById('du-ed-putting').value = '9 a.m. – Dusk';
+    document.getElementById('du-ed-proshop').value = '8:30 a.m. – 6 p.m.';
     document.getElementById('du-ed-notice').value = '';
   } else if (type === 'fall') {
-    document.getElementById('du-ed-opens').value = '8:00 AM';
+    document.getElementById('du-ed-opens').value = '8 a.m.';
     document.getElementById('du-ed-cart').value = 'Off Path';
     document.getElementById('du-ed-range-status').value = 'Open — Grass & Mats';
-    document.getElementById('du-ed-range-hours').value = '8:00 AM – Dusk';
-    document.getElementById('du-ed-putting').value = '8:00 AM – Dusk';
-    document.getElementById('du-ed-proshop').value = '8:00 AM – 7:00 PM';
-    document.getElementById('du-ed-clubhouse').value = '10:00 AM – 11:00 PM';
+    document.getElementById('du-ed-range-hours').value = '8 a.m. – Dusk';
+    document.getElementById('du-ed-putting').value = '8 a.m. – Dusk';
+    document.getElementById('du-ed-proshop').value = '8 a.m. – 7 p.m.';
+    document.getElementById('du-ed-clubhouse').value = '10 a.m. – 11 p.m.';
     document.getElementById('du-ed-pool').value = 'Closed for the season';
     document.getElementById('du-ed-notice').value = '';
   } else if (type === 'frost') {
-    document.getElementById('du-ed-opens').value = '10:00 AM (Frost Delay)';
+    document.getElementById('du-ed-opens').value = '10 a.m. (Frost Delay)';
     document.getElementById('du-ed-cart').value = 'Cart Path Only';
     document.getElementById('du-ed-range-status').value = 'Open — Mats Only';
-    document.getElementById('du-ed-range-hours').value = '9:30 AM – 5:00 PM';
-    document.getElementById('du-ed-putting').value = '10:00 AM – Dusk';
-    document.getElementById('du-ed-proshop').value = '9:00 AM – 6:00 PM';
+    document.getElementById('du-ed-range-hours').value = '9:30 a.m. – 5 p.m.';
+    document.getElementById('du-ed-putting').value = '10 a.m. – Dusk';
+    document.getElementById('du-ed-proshop').value = '9 a.m. – 6 p.m.';
     document.getElementById('du-ed-notice').value = 'Frost delay in effect. Course will open when conditions allow.';
   } else if (type === 'cartpath') {
-    document.getElementById('du-ed-opens').value = '9:00 AM';
+    document.getElementById('du-ed-opens').value = '9 a.m.';
     document.getElementById('du-ed-cart').value = 'Cart Path Only';
     document.getElementById('du-ed-range-status').value = 'Open — Mats Only';
-    document.getElementById('du-ed-range-hours').value = '8:30 AM – 5:00 PM';
-    document.getElementById('du-ed-putting').value = '9:00 AM – Dusk';
-    document.getElementById('du-ed-proshop').value = '8:30 AM – 6:00 PM';
+    document.getElementById('du-ed-range-hours').value = '8:30 a.m. – 5 p.m.';
+    document.getElementById('du-ed-putting').value = '9 a.m. – Dusk';
+    document.getElementById('du-ed-proshop').value = '8:30 a.m. – 6 p.m.';
     document.getElementById('du-ed-notice').value = 'Cart path only due to wet conditions.';
   } else if (type === 'tournament') {
-    document.getElementById('du-ed-opens').value = '8:00 AM (Tournament)';
+    document.getElementById('du-ed-opens').value = '8 a.m. (Tournament)';
     document.getElementById('du-ed-cart').value = 'Off Path';
     document.getElementById('du-ed-range-status').value = 'Closed — Tournament';
     document.getElementById('du-ed-range-hours').value = 'Closed for tournament';
-    document.getElementById('du-ed-putting').value = '7:00 AM – Dusk';
-    document.getElementById('du-ed-proshop').value = '7:30 AM – 7:00 PM';
+    document.getElementById('du-ed-putting').value = '7 a.m. – Dusk';
+    document.getElementById('du-ed-proshop').value = '7:30 a.m. – 7 p.m.';
     document.getElementById('du-ed-notice').value = 'Tournament in progress. Course closed to general play.';
   } else if (type === 'closed') {
     document.getElementById('du-ed-opens').value = 'Closed Today';
@@ -7653,7 +7723,7 @@ function cmsEvShowForm(ev) {
       '<div><label class="hrf-label" for="cef-month">Month</label><input class="hrf-input" id="cef-month" value="' + menuEsc(ev.month||'') + '" placeholder="Apr" /></div>' +
       '<div><label class="hrf-label" for="cef-day">Day</label><input class="hrf-input" id="cef-day" value="' + menuEsc(ev.day||'') + '" placeholder="18" /></div>' +
       '<div><label class="hrf-label" for="cef-year">Year</label><input class="hrf-input" id="cef-year" value="' + menuEsc(ev.year||String(new Date().getFullYear())) + '" placeholder="' + new Date().getFullYear() + '" /></div>' +
-      '<div><label class="hrf-label" for="cef-time">Time (optional)</label><input class="hrf-input" id="cef-time" value="' + menuEsc(ev.time||'') + '" placeholder="1:00 PM" /></div>' +
+      '<div><label class="hrf-label" for="cef-time">Time (optional)</label><input class="hrf-input" id="cef-time" value="' + menuEsc(ev.time||'') + '" placeholder="1 p.m." /></div>' +
     '</div>' +
     '<div style="margin-bottom:10px;"><label class="hrf-label" for="cef-name">Event Name</label><input class="hrf-input" id="cef-name" value="' + menuEsc(ev.name||'') + '" placeholder="e.g. Spring Scramble" /></div>' +
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">' +
@@ -10166,9 +10236,9 @@ function tsBuild() {
       var mins  = totalMin + i * interval;
       var h     = Math.floor(mins / 60) % 24;
       var m     = mins % 60;
-      var ampm  = h >= 12 ? 'PM' : 'AM';
+      var ampm  = h >= 12 ? 'p.m.' : 'a.m.';
       var h12   = h % 12 || 12;
-      var timeStr = h12 + ':' + (m < 10 ? '0' : '') + m + ' ' + ampm;
+      var timeStr = h12 + (m ? ':' + (m < 10 ? '0' : '') + m : '') + ' ' + ampm;
       var hole  = ((startHole - 1 + i) % 18) + 1;
       teeSheet.push({ teeTime: timeStr, hole: hole, team: team });
     });
@@ -10176,9 +10246,9 @@ function tsBuild() {
     // Shotgun: same clock time, different starting holes
     var h    = Math.floor(totalMin / 60) % 24;
     var m    = totalMin % 60;
-    var ampm = h >= 12 ? 'PM' : 'AM';
+    var ampm = h >= 12 ? 'p.m.' : 'a.m.';
     var h12  = h % 12 || 12;
-    var timeStr = h12 + ':' + (m < 10 ? '0' : '') + m + ' ' + ampm;
+    var timeStr = h12 + (m ? ':' + (m < 10 ? '0' : '') + m : '') + ' ' + ampm;
     ordered.forEach(function(team, i) {
       var hole = ((startHole - 1 + i) % 18) + 1;
       teeSheet.push({ teeTime: timeStr, hole: hole, team: team });
