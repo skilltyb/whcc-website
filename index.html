@@ -2330,7 +2330,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
             </div>
             <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">Same photo shown on the Dining page's Weekly Lunch Special — one photo, edited here only.</div>
             <div class="hrf-group" style="width:100%;margin-top:14px;"><label class="hrf-label" for="eb-drink-special">Weekly Drink Special</label><input class="hrf-input" id="eb-drink-special" oninput="ebOnEdit()" placeholder="e.g. Strawberry Margarita" /></div>
-            <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">Syncs to the Dining page's Weekly Drink Special name. Turn it on (or off) and set the description/price from <a href="#" onclick="staffView('menus',document.getElementById('svb-menus'));return false;" style="color:var(--gold-lt);">Menus → Specials</a>.</div>
+            <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">Appears on the Dining page automatically once saved here — clear this field to hide it. Set a description or price from <a href="#" onclick="staffView('menus',document.getElementById('svb-menus'));return false;" style="color:var(--gold-lt);">Menus → Specials</a>.</div>
             <div class="hrf-group" style="width:100%;margin-top:14px;"><label class="hrf-label" for="eb-friday-name">Friday Night Dinner Special</label><input class="hrf-input" id="eb-friday-name" oninput="ebOnEdit()" placeholder="Leave blank most days — fill in by Friday" /></div>
             <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-friday-desc">Friday Special Description</label><textarea class="hrf-textarea" id="eb-friday-desc" rows="2" oninput="ebOnEdit()" placeholder="e.g. Panko Crusted Salmon with Roasted Potatoes &amp; Seared Veggies"></textarea></div>
             <div style="margin-top:8px;">
@@ -2344,7 +2344,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
                 📷 Upload Photo<input type="file" accept="image/*" style="display:none;" onchange="smLoadImage(this,'fn')">
               </label>
             </div>
-            <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">These sync to the Weekly Lunch Special &amp; Friday Night Special shown on the Dining page — same photo &amp; text in both places.</div>
+            <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">These sync to the Weekly Lunch Special &amp; Friday Night Special shown on the Dining page — same photo &amp; text in both places, and each appears automatically once its name is filled in (clear the name to hide it again).</div>
           </div>
 
           <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-bottom:16px;">
@@ -5652,10 +5652,14 @@ function ebSaveAndSync(cb) {
   ebUploadPhotoIfNeeded_('ws', function(wsUrl) {
     ebUploadPhotoIfNeeded_('fn', function(fnUrl) {
       var mdata = menuLoad();
-      mdata.weeklySpecial = Object.assign({}, mdata.weeklySpecial, { name: f.weeklyName, desc: f.weeklyDesc, image: wsUrl });
-      mdata.fridayNight = Object.assign({}, mdata.fridayNight, { name: f.fridayName, desc: f.fridayDesc, image: fnUrl });
-      // Only the name syncs from the email field; active/desc/price stay under Menus → Specials control.
-      mdata.drinkSpecial = Object.assign({}, mdata.drinkSpecial, { name: f.drinkSpecial });
+      // Typing a name here is what staff actually use day-to-day, so auto-activate
+      // on save whenever there's a name (and auto-hide when the field is cleared) —
+      // otherwise content gets saved but silently stays invisible on the Dining page
+      // until someone separately remembers to flip the checkbox under Menus → Specials.
+      mdata.weeklySpecial = Object.assign({}, mdata.weeklySpecial, { name: f.weeklyName, desc: f.weeklyDesc, image: wsUrl, active: !!f.weeklyName });
+      mdata.fridayNight = Object.assign({}, mdata.fridayNight, { name: f.fridayName, desc: f.fridayDesc, image: fnUrl, active: !!f.fridayName });
+      // Only the name syncs from the email field; desc/price stay under Menus → Specials control.
+      mdata.drinkSpecial = Object.assign({}, mdata.drinkSpecial, { name: f.drinkSpecial, active: !!f.drinkSpecial });
       ebMenusCache = mdata;
       menuSave(mdata);
 
