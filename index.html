@@ -628,7 +628,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 .du-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
 .du-title{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--cream);letter-spacing:.03em}
 .du-date{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold)}
-.du-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:rgba(184,151,106,.1)}
+.du-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(184,151,106,.1)}
 .du-item{background:var(--deep);padding:12px 14px;text-align:center}
 .du-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
 .du-value{font-size:14px;color:var(--cream);font-weight:400}
@@ -1070,6 +1070,8 @@ nav.staff-mode .nav-site-back{display:flex!important;}
         <div class="du-item"><div class="du-label">Range Hours</div><div class="du-value" id="du-range-hours">—</div></div>
         <div class="du-item"><div class="du-label">Putting Green</div><div class="du-value" id="du-putting-green">—</div></div>
         <div class="du-item"><div class="du-label">Pro Shop</div><div class="du-value" id="du-pro-shop">—</div></div>
+        <div class="du-item"><div class="du-label">Clubhouse Hours</div><div class="du-value" id="du-clubhouse-hours">—</div></div>
+        <div class="du-item"><div class="du-label">Pool Hours</div><div class="du-value" id="du-pool-hours">—</div></div>
       </div>
       <div class="du-notice" id="du-notice" style="display:none;"></div>
     </div>
@@ -1394,6 +1396,16 @@ nav.staff-mode .nav-site-back{display:flex!important;}
       <p class="sf-desc" style="font-size:14px;color:rgba(245,240,232,.6);margin:14px 0 8px;line-height:1.85;max-width:460px;margin-left:auto;margin-right:auto;"></p>
       <p class="sf-wine" style="font-size:12px;font-style:italic;color:var(--gold-lt);margin-bottom:8px;display:none;"></p>
       <p class="sf-price" style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--gold-lt);margin-top:4px;"></p>
+    </div>
+  </div>
+
+  <!-- ── WEEKLY DRINK SPECIAL (shown when active) ── -->
+  <div id="dining-drink-special" style="display:none;background:var(--cream);padding:56px 80px;text-align:center;">
+    <p class="eyebrow">Weekly Drink Special</p>
+    <div style="max-width:600px;margin:20px auto 0;border:1px solid rgba(184,151,106,.35);padding:40px;">
+      <h3 class="sf-name" style="font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:400;color:var(--deep);letter-spacing:.02em;"></h3>
+      <p class="sf-desc" style="font-size:14px;color:var(--muted);margin:14px 0 8px;line-height:1.85;max-width:460px;margin-left:auto;margin-right:auto;"></p>
+      <p class="sf-price" style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--gold);margin-top:4px;"></p>
     </div>
   </div>
 
@@ -2230,6 +2242,16 @@ nav.staff-mode .nav-site-back{display:flex!important;}
                 <input class="hrf-input" id="du-ed-proshop" placeholder="e.g. 8:30 AM – 6:00 PM" oninput="duUpdatePreview()" />
               </div>
             </div>
+            <div class="hrf-row">
+              <div class="hrf-group">
+                <label class="hrf-label">Clubhouse Hours</label>
+                <input class="hrf-input" id="du-ed-clubhouse" placeholder="e.g. 10:00 AM – 11:00 PM" oninput="duUpdatePreview()" />
+              </div>
+              <div class="hrf-group">
+                <label class="hrf-label">Pool Hours</label>
+                <input class="hrf-input" id="du-ed-pool" placeholder="e.g. 11:00 AM – 7:00 PM, or Closed for the season" oninput="duUpdatePreview()" />
+              </div>
+            </div>
             <div class="hrf-group" style="width:100%;margin-top:8px;">
               <label class="hrf-label">Special Notice (optional)</label>
               <input class="hrf-input" id="du-ed-notice" placeholder="e.g. Frost delay until 10 AM, Cart path only holes 3-5, etc." oninput="duUpdatePreview()" />
@@ -2261,6 +2283,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
             <div class="staff-tag" style="margin-bottom:8px;">Quick Presets</div>
             <div style="display:flex;gap:6px;flex-wrap:wrap;">
               <button class="staff-mini-btn" onclick="duPreset('normal')">Normal Day</button>
+              <button class="staff-mini-btn" onclick="duPreset('fall')">Fall Hours</button>
               <button class="staff-mini-btn" onclick="duPreset('frost')">Frost Delay</button>
               <button class="staff-mini-btn" onclick="duPreset('cartpath')">Cart Path Only</button>
               <button class="staff-mini-btn" onclick="duPreset('tournament')">Tournament Day</button>
@@ -2297,7 +2320,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
             </div>
             <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">Same photo shown on the Dining page's Weekly Special — one photo, edited here only.</div>
             <div class="hrf-group" style="width:100%;margin-top:14px;"><label class="hrf-label" for="eb-drink-special">Weekly Drink Special</label><input class="hrf-input" id="eb-drink-special" oninput="ebOnEdit()" placeholder="e.g. Strawberry Margarita" /></div>
-            <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">Drink special appears in the email only — there's no cocktail menu section on the site to sync it to.</div>
+            <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">Syncs to the Dining page's Weekly Drink Special name. Turn it on (or off) and set the description/price from <a href="#" onclick="staffView('menus',document.getElementById('svb-menus'));return false;" style="color:var(--gold-lt);">Menus → Specials</a>.</div>
             <div class="hrf-group" style="width:100%;margin-top:14px;"><label class="hrf-label" for="eb-friday-name">Friday Night Dinner Special</label><input class="hrf-input" id="eb-friday-name" oninput="ebOnEdit()" placeholder="Leave blank most days — fill in by Friday" /></div>
             <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-friday-desc">Friday Special Description</label><textarea class="hrf-textarea" id="eb-friday-desc" rows="2" oninput="ebOnEdit()" placeholder="e.g. Panko Crusted Salmon with Roasted Potatoes &amp; Seared Veggies"></textarea></div>
             <div style="margin-top:8px;">
@@ -2446,6 +2469,21 @@ nav.staff-mode .nav-site-back{display:flex!important;}
               <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:8px;">Photo is managed under <strong style="color:var(--gold-lt);">Admin → Daily Email</strong> so the Dining page and the email always show the same picture.</div>
               <button class="btn-p" style="width:100%;margin-top:12px;" onclick="smSaveFriday()">Save Friday Night Special</button>
               <div id="sm-fn-status" style="font-size:11px;color:#8fcc8f;margin-top:6px;display:none;"></div>
+            </div>
+            <!-- Weekly Drink Special -->
+            <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-top:16px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                <div class="staff-tag">Weekly Drink Special</div>
+                <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:rgba(245,240,232,.55);cursor:pointer;">
+                  <input type="checkbox" id="sm-ds-active"> Active on Dining page
+                </label>
+              </div>
+              <div class="hrf-group" style="width:100%;"><label class="hrf-label" for="sm-ds-name">Drink Name</label><input class="hrf-input" id="sm-ds-name" placeholder="e.g. Strawberry Margarita" /></div>
+              <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="sm-ds-desc">Description (optional)</label><textarea class="hrf-textarea" id="sm-ds-desc" rows="2" placeholder="Brief description..."></textarea></div>
+              <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="sm-ds-price">Price (optional)</label><input class="hrf-input" id="sm-ds-price" placeholder="e.g. $9" /></div>
+              <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:8px;">The name here stays in sync with the <strong style="color:var(--gold-lt);">Admin → Daily Email</strong> drink special field — editing either one updates the other.</div>
+              <button class="btn-p" style="width:100%;margin-top:12px;" onclick="smSaveDrink()">Save Drink Special</button>
+              <div id="sm-ds-status" style="font-size:11px;color:#8fcc8f;margin-top:6px;display:none;"></div>
             </div>
           </div>
 
@@ -5021,7 +5059,8 @@ function resetResForm() {
 // ════════════════════════════════════════════════════
 var duDefaults = {
   courseOpens: '9:00 AM', cartRules: 'Off Path', rangeStatus: 'Open — Mats Only',
-  rangeHours: '8:30 AM – 5:00 PM', puttingGreen: '9:00 AM – Dusk', proShop: '8:30 AM – 6:00 PM', notice: ''
+  rangeHours: '8:30 AM – 5:00 PM', puttingGreen: '9:00 AM – Dusk', proShop: '8:30 AM – 6:00 PM', notice: '',
+  clubhouseHours: '', poolHours: ''
 };
 
 async function loadDailyUpdate() {
@@ -5046,6 +5085,8 @@ async function loadDailyUpdate() {
     document.getElementById('du-range-hours').textContent   = remote.rangeHours   || '—';
     document.getElementById('du-putting-green').textContent = remote.puttingGreen || '—';
     document.getElementById('du-pro-shop').textContent      = remote.proShop      || '—';
+    document.getElementById('du-clubhouse-hours').textContent = remote.clubhouseHours || '—';
+    document.getElementById('du-pool-hours').textContent      = remote.poolHours      || '—';
     var noticeEl = document.getElementById('du-notice');
     if (remote.notice && remote.notice.trim()) { noticeEl.textContent = remote.notice; noticeEl.style.display = 'block'; }
     else { noticeEl.style.display = 'none'; }
@@ -5068,6 +5109,8 @@ async function loadDailyUpdate() {
   document.getElementById('du-range-hours').textContent = data.rangeHours || '—';
   document.getElementById('du-putting-green').textContent = data.puttingGreen || '—';
   document.getElementById('du-pro-shop').textContent = data.proShop || '—';
+  document.getElementById('du-clubhouse-hours').textContent = data.clubhouseHours || '—';
+  document.getElementById('du-pool-hours').textContent = data.poolHours || '—';
 
   var noticeEl = document.getElementById('du-notice');
   if (data.notice && data.notice.trim()) {
@@ -5085,10 +5128,11 @@ loadDailyUpdate();
 // MENU MANAGEMENT
 // ════════════════════════════════════════════════════
 // Bump this string whenever WH_MENU_DEFAULTS changes to auto-clear stale caches
-var WH_MENU_VERSION = '4';
+var WH_MENU_VERSION = '5';
 var WH_MENU_DEFAULTS = {
   weeklySpecial:{active:false,name:'',desc:'',price:'',wine:''},
   fridayNight:{active:false,name:'',desc:'',price:'',wine:''},
+  drinkSpecial:{active:false,name:'',desc:'',price:''},
   grill:{
     starters:[
       {name:'Fried Green Beans',desc:'Served with house-made ranch or chipotle ranch',price:'$10'},
@@ -5211,8 +5255,10 @@ function menuRenderGrill(g){
 function menuRenderSpecials(data){
   var wsEl=document.getElementById('dining-weekly-special');
   var fnEl=document.getElementById('dining-friday-special');
+  var dsEl=document.getElementById('dining-drink-special');
   var ws=data.weeklySpecial||{};
   var fn=data.fridayNight||{};
+  var ds=data.drinkSpecial||{};
   function fillSpecial(el,spec,requireDay){
     if(!el) return;
     var dayOk = requireDay === undefined || new Date().getDay() === requireDay;
@@ -5229,6 +5275,7 @@ function menuRenderSpecials(data){
   }
   fillSpecial(wsEl,ws);
   fillSpecial(fnEl,fn,5); // 5 = Friday — auto-hides if staff forgets to toggle it off after Friday
+  fillSpecial(dsEl,ds);
 }
 function menuRenderAll(data){
   data=data||menuLoad();
@@ -5241,13 +5288,15 @@ menuRenderAll();
 // ── STAFF MENU PANEL ──
 function smLoad(){
   var data=menuLoad();
-  var ws=data.weeklySpecial||{};var fn=data.fridayNight||{};
+  var ws=data.weeklySpecial||{};var fn=data.fridayNight||{};var ds=data.drinkSpecial||{};
   function setVal(id,val){var e=document.getElementById(id);if(e) e.value=val||'';}
   function setChk(id,val){var e=document.getElementById(id);if(e) e.checked=!!val;}
   setChk('sm-ws-active',ws.active);setVal('sm-ws-name',ws.name);setVal('sm-ws-desc',ws.desc);
   setVal('sm-ws-price',ws.price);setVal('sm-ws-wine',ws.wine);
   setChk('sm-fn-active',fn.active);setVal('sm-fn-name',fn.name);setVal('sm-fn-desc',fn.desc);
   setVal('sm-fn-price',fn.price);setVal('sm-fn-wine',fn.wine);
+  setChk('sm-ds-active',ds.active);setVal('sm-ds-name',ds.name);setVal('sm-ds-desc',ds.desc);
+  setVal('sm-ds-price',ds.price);
   smRenderEditorLists(data);
   // Reset to specials tab
   smTab('specials',document.getElementById('sm-tab-specials'));
@@ -5341,6 +5390,16 @@ function smSaveFriday(){
   var st = document.getElementById('sm-fn-status');
   if (st) { st.textContent = 'Saved — dining page updated!'; st.style.display = 'block'; setTimeout(function(){ st.style.display='none'; }, 2500); }
 }
+function smSaveDrink(){
+  var data = menuLoad();
+  data.drinkSpecial = { active: document.getElementById('sm-ds-active').checked,
+    name: document.getElementById('sm-ds-name').value.trim(),
+    desc: document.getElementById('sm-ds-desc').value.trim(),
+    price: document.getElementById('sm-ds-price').value.trim() };
+  menuSave(data);
+  var st = document.getElementById('sm-ds-status');
+  if (st) { st.textContent = 'Saved — dining page updated!'; st.style.display = 'block'; setTimeout(function(){ st.style.display='none'; }, 2500); }
+}
 
 // ════════════════════════════════════════════════════
 // DAILY EMAIL BUILDER
@@ -5376,14 +5435,14 @@ async function ebLoad() {
 
 function ebPopulateFields() {
   var c = ebConditionsCache || {}, m = ebMenusCache || {};
-  var ws = m.weeklySpecial || {}, fn = m.fridayNight || {};
+  var ws = m.weeklySpecial || {}, fn = m.fridayNight || {}, ds = m.drinkSpecial || {};
   function setVal(id, val) { var e = document.getElementById(id); if (e) e.value = val || ''; }
   setVal('eb-today-notice', c.notice);
   setVal('eb-tomorrow-notice', c.tomorrowNotice);
   setVal('eb-weekly-name', ws.name);
   setVal('eb-weekly-desc', ws.desc);
   smRestoreImgPreview('ws', ws.image);
-  setVal('eb-drink-special', ws.drinkSpecial);
+  setVal('eb-drink-special', ds.name);
   setVal('eb-friday-name', fn.name);
   setVal('eb-friday-desc', fn.desc);
   smRestoreImgPreview('fn', fn.image);
@@ -5523,8 +5582,10 @@ function ebSaveAndSync(cb) {
   ebUploadPhotoIfNeeded_('ws', function(wsUrl) {
     ebUploadPhotoIfNeeded_('fn', function(fnUrl) {
       var mdata = menuLoad();
-      mdata.weeklySpecial = Object.assign({}, mdata.weeklySpecial, { name: f.weeklyName, desc: f.weeklyDesc, drinkSpecial: f.drinkSpecial, image: wsUrl });
+      mdata.weeklySpecial = Object.assign({}, mdata.weeklySpecial, { name: f.weeklyName, desc: f.weeklyDesc, image: wsUrl });
       mdata.fridayNight = Object.assign({}, mdata.fridayNight, { name: f.fridayName, desc: f.fridayDesc, image: fnUrl });
+      // Only the name syncs from the email field; active/desc/price stay under Menus → Specials control.
+      mdata.drinkSpecial = Object.assign({}, mdata.drinkSpecial, { name: f.drinkSpecial });
       ebMenusCache = mdata;
       menuSave(mdata);
 
@@ -5702,6 +5763,8 @@ async function duAdminLoad() {
   document.getElementById('du-ed-range-hours').value = data.rangeHours || '';
   document.getElementById('du-ed-putting').value = data.puttingGreen || '';
   document.getElementById('du-ed-proshop').value = data.proShop || '';
+  document.getElementById('du-ed-clubhouse').value = data.clubhouseHours || '';
+  document.getElementById('du-ed-pool').value = data.poolHours || '';
   document.getElementById('du-ed-notice').value = data.notice || '';
   var scEl = document.getElementById('du-ed-scorecard-url');
   var psEl = document.getElementById('du-ed-pinsheet-url');
@@ -5719,6 +5782,8 @@ async function duAdminLoad() {
     document.getElementById('du-ed-range-hours').value  = remote.rangeHours  || '';
     document.getElementById('du-ed-putting').value      = remote.puttingGreen || '';
     document.getElementById('du-ed-proshop').value      = remote.proShop     || '';
+    document.getElementById('du-ed-clubhouse').value    = remote.clubhouseHours || '';
+    document.getElementById('du-ed-pool').value         = remote.poolHours      || '';
     document.getElementById('du-ed-notice').value       = remote.notice      || '';
     var scElR = document.getElementById('du-ed-scorecard-url');
     var psElR = document.getElementById('du-ed-pinsheet-url');
@@ -5737,6 +5802,8 @@ function duUpdatePreview() {
   var rangeH  = document.getElementById('du-ed-range-hours') ? document.getElementById('du-ed-range-hours').value.trim() : '';
   var putting = document.getElementById('du-ed-putting') ? document.getElementById('du-ed-putting').value.trim() : '';
   var proshop = document.getElementById('du-ed-proshop') ? document.getElementById('du-ed-proshop').value.trim() : '';
+  var clubhouse = document.getElementById('du-ed-clubhouse') ? document.getElementById('du-ed-clubhouse').value.trim() : '';
+  var pool    = document.getElementById('du-ed-pool') ? document.getElementById('du-ed-pool').value.trim() : '';
   var notice  = document.getElementById('du-ed-notice') ? document.getElementById('du-ed-notice').value.trim() : '';
   if (!opens && !cart && !range) { prev.innerHTML = '<em style="color:rgba(245,240,232,.3);">Fill in fields above to see preview…</em>'; return; }
   var rows = [];
@@ -5746,6 +5813,8 @@ function duUpdatePreview() {
   rows.push(row('RANGE', range + (rangeH ? ' · ' + rangeH : '')));
   rows.push(row('PUTTING GREEN', putting));
   rows.push(row('PRO SHOP', proshop));
+  rows.push(row('CLUBHOUSE', clubhouse));
+  rows.push(row('POOL', pool));
   var html = rows.filter(Boolean).join('');
   if (notice) html += '<div style="margin-top:10px;background:rgba(184,151,106,.1);border-left:3px solid var(--gold);padding:8px 10px;font-size:11px;color:var(--gold);">⚠ ' + notice + '</div>';
   prev.innerHTML = html || '<em style="color:rgba(245,240,232,.3);">Fill in fields above to see preview…</em>';
@@ -5755,8 +5824,8 @@ async function duAdminSave() {
   var scEl = document.getElementById('du-ed-scorecard-url');
   var psEl = document.getElementById('du-ed-pinsheet-url');
   // Merge onto the latest known data (not overwrite) — otherwise saving here
-  // would wipe out fields only the Daily Email tab edits (tomorrowNotice,
-  // clubhouseHours, poolHours), since save-conditions replaces the whole blob.
+  // would wipe out fields only the Daily Email tab edits (tomorrowNotice),
+  // since save-conditions replaces the whole blob.
   var existing = Object.assign({}, duDefaults);
   try {
     var r = await window.storage.get('daily-update');
@@ -5769,6 +5838,8 @@ async function duAdminSave() {
     rangeHours: document.getElementById('du-ed-range-hours').value.trim(),
     puttingGreen: document.getElementById('du-ed-putting').value.trim(),
     proShop: document.getElementById('du-ed-proshop').value.trim(),
+    clubhouseHours: document.getElementById('du-ed-clubhouse').value.trim(),
+    poolHours: document.getElementById('du-ed-pool').value.trim(),
     notice: document.getElementById('du-ed-notice').value.trim(),
     scorecardUrl: scEl ? scEl.value.trim() : '',
     pinSheetUrl: psEl ? psEl.value.trim() : '',
@@ -5793,6 +5864,16 @@ function duPreset(type) {
     document.getElementById('du-ed-range-hours').value = '8:30 AM – 5:00 PM';
     document.getElementById('du-ed-putting').value = '9:00 AM – Dusk';
     document.getElementById('du-ed-proshop').value = '8:30 AM – 6:00 PM';
+    document.getElementById('du-ed-notice').value = '';
+  } else if (type === 'fall') {
+    document.getElementById('du-ed-opens').value = '8:00 AM';
+    document.getElementById('du-ed-cart').value = 'Off Path';
+    document.getElementById('du-ed-range-status').value = 'Open — Grass & Mats';
+    document.getElementById('du-ed-range-hours').value = '8:00 AM – Dusk';
+    document.getElementById('du-ed-putting').value = '8:00 AM – Dusk';
+    document.getElementById('du-ed-proshop').value = '8:00 AM – 7:00 PM';
+    document.getElementById('du-ed-clubhouse').value = '10:00 AM – 11:00 PM';
+    document.getElementById('du-ed-pool').value = 'Closed for the season';
     document.getElementById('du-ed-notice').value = '';
   } else if (type === 'frost') {
     document.getElementById('du-ed-opens').value = '10:00 AM (Frost Delay)';
