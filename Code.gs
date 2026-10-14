@@ -31,6 +31,28 @@ function makeStaffMember() {
   Logger.log('Account not found.');
 }
 
+// Run this ONCE from the Apps Script editor (select it in the function
+// dropdown, click Run) to promote an account to the 'admin' role, the only
+// role that can save/edit/delete anything after the Staff/Admin split.
+// Change ADMIN_EMAIL_ below before running for anyone other than the GM.
+function makeAdmin() {
+  var ADMIN_EMAIL_ = 'sctr1217@gmail.com';
+  var ss  = SpreadsheetApp.getActiveSpreadsheet();
+  var sh  = ss.getSheetByName('App Users');
+  var rows = sh.getDataRange().getValues();
+  var hdr  = rows[0];
+  var eCol = hdr.indexOf('Email');
+  var rCol = hdr.indexOf('Role');
+  for (var i = 1; i < rows.length; i++) {
+    if (String(rows[i][eCol]).toLowerCase() === ADMIN_EMAIL_.toLowerCase()) {
+      sh.getRange(i+1, rCol+1).setValue('admin');
+      Logger.log('Promoted to admin: ' + rows[i][eCol]);
+      return;
+    }
+  }
+  Logger.log('Account not found: ' + ADMIN_EMAIL_);
+}
+
 function getMemberEmails_() {
   var mSh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Members');
   if (!mSh || mSh.getLastRow() < 2) return [];
@@ -367,8 +389,12 @@ function escapeHtml_(v) {
 //
 // The mobile app authenticates per-person (App Users email+PIN) rather than
 // via the single shared portal PIN, so it never has data.staffPin to send.
-// As a second path, accept a valid staff/both-role App User's own email +
+// As a second path, accept a valid staff/both/admin-role App User's own email +
 // PIN (data.staffEmail / data.staffUserPin) as equivalent proof of authority.
+//
+// This gate is VIEW-LEVEL only (read actions, plus the shared portal PIN
+// itself only ever grants view-level access). Anything that writes data
+// must use requireAdminAuth_ instead — see below.
 function requireStaffAuth_(data) {
   var stored = opsGet_('staff_pin');
   if (stored !== null && stored !== '' && String(data.staffPin || '') === String(stored)) return true;
@@ -385,7 +411,30 @@ function requireStaffAuth_(data) {
   for (var i = 1; i < rows.length; i++) {
     if (String(rows[i][emailCol]).toLowerCase().trim() === email && String(rows[i][pinCol]).trim() === pin) {
       var role = String(rows[i][roleCol] || '').toLowerCase();
-      return role === 'staff' || role === 'both';
+      return role === 'staff' || role === 'both' || role === 'admin';
+    }
+  }
+  return false;
+}
+
+// Gate for every WRITE action (saves, deletes, sends). Unlike requireStaffAuth_,
+// this does NOT accept the shared portal PIN — that PIN is now a view-only
+// credential shared by every staff member, so it can no longer prove someone
+// is specifically an admin. Only an individual App Users row with role
+// 'admin', proven via that person's own email + PIN, is accepted.
+function requireAdminAuth_(data) {
+  var email = String(data.staffEmail || '').toLowerCase().trim();
+  var pin   = String(data.staffUserPin || '').trim();
+  if (!email || !pin) return false;
+  var authSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('App Users');
+  if (!authSheet) return false;
+  var rows = authSheet.getDataRange().getValues();
+  var hdrs = rows[0];
+  var emailCol = hdrs.indexOf('Email'), pinCol = hdrs.indexOf('PIN'), roleCol = hdrs.indexOf('Role');
+  if (emailCol < 0 || pinCol < 0 || roleCol < 0) return false;
+  for (var i = 1; i < rows.length; i++) {
+    if (String(rows[i][emailCol]).toLowerCase().trim() === email && String(rows[i][pinCol]).trim() === pin) {
+      return String(rows[i][roleCol] || '').toLowerCase() === 'admin';
     }
   }
   return false;
@@ -643,8 +692,8 @@ function doGet(e) {
         clearPinFailures_(loginRlKey);
         var role = String(row[aRole] || 'member').toLowerCase();
         var acct = { role: role, name: String(row[aName] || '') };
-        if (role === 'staff') {
-          acct.title = String(row[aTitle] || 'Staff');
+        if (role === 'staff' || role === 'admin') {
+          acct.title = String(row[aTitle] || (role === 'admin' ? 'Admin' : 'Staff'));
         } else {
           acct.memberNumber = String(row[aMemNum] || '');
           acct.membership   = String(row[aMem]    || '');
@@ -984,7 +1033,7 @@ function doPost(e) {
   }
 
   if (data.action === 'upload-photo') {
-    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
+    if (!requireAdminAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     try {
       var folders = DriveApp.getFoldersByName('WHCC Photos');
       var root = folders.hasNext() ? folders.next() : DriveApp.createFolder('WHCC Photos');
@@ -1009,7 +1058,7 @@ function doPost(e) {
   }
 
   if (data.action === 'make-photos-public') {
-    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
+    if (!requireAdminAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     try {
       var mpFolders = DriveApp.getFoldersByName('WHCC Photos');
       if (!mpFolders.hasNext()) return jsonResponse({ ok: true, count: 0 });
@@ -1032,7 +1081,7 @@ function doPost(e) {
   }
 
   if (data.action === 'delete-photo') {
-    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
+    if (!requireAdminAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     try {
       var dpFile = DriveApp.getFileById(data.fileId);
       // The script runs as the site owner's Drive account, so without this
@@ -1048,7 +1097,7 @@ function doPost(e) {
   }
 
   if (data.action === 'delete') {
-    if (!requireStaffAuth_(data)) return jsonResponse({ status: 'not authorized' });
+    if (!requireAdminAuth_(data)) return jsonResponse({ status: 'not authorized' });
     var sh = getRegSheet();
     var rows = sh.getDataRange().getValues();
     // IDs here are client-generated Date.now().toString() values (numeric
@@ -1065,7 +1114,7 @@ function doPost(e) {
   }
 
   if (data.action === 'save-teesheet') {
-    if (!requireStaffAuth_(data)) return jsonResponse({ status: 'not authorized' });
+    if (!requireAdminAuth_(data)) return jsonResponse({ status: 'not authorized' });
     var teeLock = LockService.getScriptLock();
     try { teeLock.waitLock(10000); } catch (teeLockErr) { return jsonResponse({ status: 'busy' }); }
     try {
@@ -1086,7 +1135,7 @@ function doPost(e) {
   }
 
   if (data.action === 'save-scores') {
-    if (!requireStaffAuth_(data)) return jsonResponse({ status: 'not authorized' });
+    if (!requireAdminAuth_(data)) return jsonResponse({ status: 'not authorized' });
     var scoreLock = LockService.getScriptLock();
     try { scoreLock.waitLock(10000); } catch (scoreLockErr) { return jsonResponse({ status: 'busy' }); }
     try {
@@ -1246,7 +1295,7 @@ function doPost(e) {
   }
 
   if (data.action === 'update-dining') {
-    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
+    if (!requireAdminAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     var dSheet2 = getOrCreateDiningSheet();
     var dRows   = dSheet2.getDataRange().getValues();
     var dHdr    = dRows[0];
@@ -1320,7 +1369,7 @@ function doPost(e) {
   }
 
   if (data.action === 'save-specials') {
-    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
+    if (!requireAdminAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     var ssSheet = getOrCreateSpecialsSheet_();
     setSpecialsValue_(ssSheet, 'weeklySpecial', data.weeklySpecial || {});
     setSpecialsValue_(ssSheet, 'fridayNight',   data.fridayNight   || {});
@@ -1328,7 +1377,7 @@ function doPost(e) {
   }
 
   if (data.action === 'save-conditions') {
-    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
+    if (!requireAdminAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     var condLock = LockService.getScriptLock();
     try { condLock.waitLock(10000); } catch (condLockErr) { return jsonResponse({ ok: false, error: 'busy' }); }
     try {
@@ -1342,7 +1391,7 @@ function doPost(e) {
   }
 
   if (data.action === 'save-menus') {
-    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
+    if (!requireAdminAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     var menuLock = LockService.getScriptLock();
     try { menuLock.waitLock(10000); } catch (menuLockErr) { return jsonResponse({ ok: false, error: 'busy' }); }
     try {
@@ -1356,7 +1405,7 @@ function doPost(e) {
   }
 
   if (data.action === 'save-site-content') {
-    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
+    if (!requireAdminAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     var scLock = LockService.getScriptLock();
     try { scLock.waitLock(10000); } catch (scLockErr) { return jsonResponse({ ok: false, error: 'busy' }); }
     try {
@@ -1370,7 +1419,7 @@ function doPost(e) {
   }
 
   if (data.action === 'send-daily-email') {
-    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
+    if (!requireAdminAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     var emailHtml = data.html || '';
     var emailSubject = data.subject || 'Course Conditions & Events';
     if (!emailHtml.trim()) return jsonResponse({ ok: false, error: 'No email content provided.' });
@@ -1497,7 +1546,7 @@ function doPost(e) {
   }
 
   if (data.action === 'save-ops-data') {
-    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
+    if (!requireAdminAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     if (!data.key) return jsonResponse({ ok: false, error: 'missing key' });
     if (data.key === 'staff_pin') return jsonResponse({ ok: false, error: 'forbidden' });
     opsSave_(data.key, data.data);
@@ -1505,7 +1554,7 @@ function doPost(e) {
   }
 
   if (data.action === 'save-live-scoring') {
-    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
+    if (!requireAdminAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     opsSave_('live_scoring', data);
     return jsonResponse({ ok: true });
   }
@@ -1595,7 +1644,7 @@ function doPost(e) {
   }
 
   if (data.action === 'update-lesson-status') {
-    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
+    if (!requireAdminAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     var lSh2 = ss.getSheetByName('Lesson Requests');
     if (!lSh2) return jsonResponse({ ok: false, error: 'sheet not found' });
     var lRows = lSh2.getDataRange().getValues();
@@ -1617,7 +1666,7 @@ function doPost(e) {
   }
 
   if (data.action === 'delete-dining') {
-    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
+    if (!requireAdminAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     var dDel = getOrCreateDiningSheet();
     var dDelRows = dDel.getDataRange().getValues();
     var dDelHdr  = dDelRows[0];
@@ -1634,7 +1683,7 @@ function doPost(e) {
   }
 
   if (data.action === 'update-dining-full') {
-    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
+    if (!requireAdminAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     var dFull = getOrCreateDiningSheet();
     var dFRows = dFull.getDataRange().getValues();
     var dFHdr  = dFRows[0];
@@ -1666,19 +1715,19 @@ function doPost(e) {
   }
 
   if (data.action === 'save-waitlist') {
-    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
+    if (!requireAdminAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     opsSave_('waitlist', data.data);
     return jsonResponse({ ok: true });
   }
 
   if (data.action === 'save-guest-notes') {
-    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
+    if (!requireAdminAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     opsSave_('guest_notes', data.data);
     return jsonResponse({ ok: true });
   }
 
   if (data.action === 'save-pairings') {
-    if (!requireStaffAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
+    if (!requireAdminAuth_(data)) return jsonResponse({ ok: false, error: 'Not authorized.' });
     opsSave_('pairings', data.data);
     return jsonResponse({ ok: true });
   }
@@ -1796,11 +1845,13 @@ function doPost(e) {
   if (data.action === 'save-pin') {
     if (pinRateLimited_('staffpin_fail')) return jsonResponse({ ok: false, error: 'Too many attempts. Try again later.', locked: true });
     if (!data.pin || !/^\d{4}$/.test(String(data.pin))) return jsonResponse({ ok: false, error: 'invalid pin' });
-    // Changing the PIN requires the current PIN or the Board recovery code;
-    // setting it is open only while no PIN exists at all.
+    // Changing the shared portal PIN requires admin credentials or the Board
+    // recovery code; setting it is open only while no PIN exists at all.
+    // Knowing the current PIN is no longer enough on its own — every staff
+    // member knows it (it's the shared view-only credential), so that alone
+    // must not let a non-admin rotate it.
     var existingPin = opsGet_('staff_pin');
-    var pinAuthorized = existingPin === null || existingPin === '' ||
-                        String(data.current || '') === String(existingPin);
+    var pinAuthorized = existingPin === null || existingPin === '' || requireAdminAuth_(data);
     if (!pinAuthorized && data.boardCode) {
       var setSh = ss.getSheetByName('Settings');
       var recovery = setSh ? String(setSh.getRange('B1').getValue()).trim() : '';
