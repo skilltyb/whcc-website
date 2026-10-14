@@ -2381,7 +2381,7 @@ button[data-admin-only]:disabled{opacity:.4;cursor:not-allowed}
 
           <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-bottom:16px;">
             <div class="staff-tag" style="margin-bottom:6px;">Weekly Restaurant Specials</div>
-            <div style="font-size:10px;color:rgba(245,240,232,.45);margin-bottom:10px;">These clear from the website automatically at 12 a.m. every Monday (the course is closed) — fill in new ones each week. Leave one blank if there isn't a special.</div>
+            <div style="font-size:10px;color:rgba(245,240,232,.45);margin-bottom:10px;">These clear from the website automatically at 12 a.m. every Monday (the course is closed) — fill in new ones each week. Leave one blank if there isn't a special. These are the same specials as <a href="#" onclick="staffView('menus',document.getElementById('svb-menus'));return false;" style="color:var(--gold-lt);">Admin &rarr; Menus &rarr; Specials</a> &mdash; edit them in either place.</div>
             <div id="eb-specials-empty" style="display:none;font-size:11px;color:#e0b070;background:rgba(224,176,112,.08);border:1px solid rgba(224,176,112,.3);padding:8px 10px;margin-bottom:10px;line-height:1.5;">No specials are entered for this week, so the email and the Dining page leave the specials (and their photos) out. Last week's specials cleared automatically at 12 a.m. Monday — add this week's below.</div>
             <div class="hrf-group" style="width:100%;"><label class="hrf-label" for="eb-weekly-name">Weekly Lunch Special</label><input class="hrf-input" id="eb-weekly-name" oninput="ebOnEdit()" placeholder="e.g. Steak Sandwich" /></div>
             <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-weekly-desc">Weekly Lunch Special Description</label><textarea class="hrf-textarea" id="eb-weekly-desc" rows="2" oninput="ebOnEdit()" placeholder="e.g. served on a hoagie bun with homemade sauce &amp; your choice of side"></textarea></div>
@@ -2530,24 +2530,88 @@ button[data-admin-only]:disabled{opacity:.4;cursor:not-allowed}
 
           <!-- ── SPECIALS PANEL ── -->
           <div id="sm-specials">
+            <div style="font-size:11px;color:rgba(245,240,232,.55);margin-bottom:14px;line-height:1.6;">These three specials are the same ones in the <strong style="color:var(--gold-lt);">Daily Email</strong> and on the <strong style="color:var(--gold-lt);">Dining page</strong> &mdash; editing them here updates both, and edits made on the Daily Email page show up here. A special appears once it has a name, and all three clear automatically at 12 a.m. every Monday.</div>
+
             <!-- Weekly Lunch Special -->
             <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-bottom:16px;">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-                <div class="staff-tag">Weekly Lunch Special</div>
-                <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:rgba(245,240,232,.55);cursor:pointer;">
-                  <input type="checkbox" id="sm-ws-active"> Active on Dining page
-                </label>
-              </div>
-              <div class="hrf-group" style="width:100%;"><label class="hrf-label" for="sm-ws-name">Dish Name</label><input class="hrf-input" id="sm-ws-name" placeholder="e.g. Pan-Seared Halibut" /></div>
-              <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="sm-ws-desc">Description</label><textarea class="hrf-textarea" id="sm-ws-desc" rows="3" placeholder="Brief description of the dish..."></textarea></div>
+              <div class="staff-tag" style="margin-bottom:12px;">Weekly Lunch Special</div>
+              <div class="hrf-group" style="width:100%;"><label class="hrf-label" for="sm-ws-name">Dish Name</label><input class="hrf-input" id="sm-ws-name" oninput="smSpecialsEdited()" placeholder="e.g. Pan-Seared Halibut" /></div>
+              <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="sm-ws-desc">Description</label><textarea class="hrf-textarea" id="sm-ws-desc" rows="3" oninput="smSpecialsEdited()" placeholder="Brief description of the dish..."></textarea></div>
               <div class="hrf-row" style="margin-top:8px;">
                 <div class="hrf-group"><label class="hrf-label" for="sm-ws-price">Price (optional)</label><input class="hrf-input" id="sm-ws-price" placeholder="e.g. $36" /></div>
                 <div class="hrf-group"><label class="hrf-label" for="sm-ws-wine">Wine Pairing (optional)</label><input class="hrf-input" id="sm-ws-wine" placeholder="e.g. Pinot Noir or Chardonnay" /></div>
               </div>
-              <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:8px;">Leave the dish name blank and turn this off to hide the section entirely — useful in winter when there's no weekly special. Photo is managed under <strong style="color:var(--gold-lt);">Admin → Daily Email</strong> so the Dining page and the email always show the same picture.</div>
-              <button class="btn-p" style="width:100%;margin-top:12px;" onclick="smSaveSpecials()">Save Weekly Lunch Special</button>
-              <div id="sm-ws-status" style="font-size:11px;color:#8fcc8f;margin-top:6px;display:none;"></div>
+              <div style="margin-top:10px;">
+                <label class="hrf-label">Photo (optional)</label>
+                <div id="sm-mws-img-preview" style="display:none;position:relative;margin-bottom:8px;">
+                  <img id="sm-mws-img" src="" style="width:100%;max-height:160px;object-fit:cover;border-radius:4px;display:block;"/>
+                  <button type="button" onclick="smRemoveImage('mws')" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,.7);color:#fff;border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:13px;line-height:22px;padding:0;">✕</button>
+                </div>
+                <input type="hidden" id="sm-mws-img-data"/>
+                <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,240,232,.55);border:1px solid rgba(245,240,232,.2);padding:6px 12px;border-radius:2px;">
+                  📷 Upload Photo<input type="file" accept="image/*" style="display:none;" onchange="smLoadImage(this,'mws')">
+                </label>
+                <button type="button" onclick="ebOpenLibrary('mws')" style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,240,232,.55);background:none;border:1px solid rgba(245,240,232,.2);padding:6px 12px;border-radius:2px;margin-left:8px;font-family:inherit;">🖼 Choose from Library</button>
+                <div id="sm-photo-hint-mws" style="display:none;font-size:10px;color:#e0b070;margin-top:6px;"></div>
+              </div>
             </div>
+
+            <!-- Weekly Drink Special -->
+            <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-bottom:16px;">
+              <div class="staff-tag" style="margin-bottom:12px;">Weekly Drink Special</div>
+              <div class="hrf-group" style="width:100%;"><label class="hrf-label" for="sm-ds-name">Drink Name</label><input class="hrf-input" id="sm-ds-name" oninput="smSpecialsEdited()" placeholder="e.g. Strawberry Margarita" /></div>
+              <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="sm-ds-desc">Description (optional)</label><textarea class="hrf-textarea" id="sm-ds-desc" rows="2" oninput="smSpecialsEdited()" placeholder="Brief description..."></textarea></div>
+              <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="sm-ds-price">Price (optional)</label><input class="hrf-input" id="sm-ds-price" placeholder="e.g. $9" /></div>
+              <div style="margin-top:10px;">
+                <label class="hrf-label">Photo (optional)</label>
+                <div id="sm-mds-img-preview" style="display:none;position:relative;margin-bottom:8px;">
+                  <img id="sm-mds-img" src="" style="width:100%;max-height:160px;object-fit:cover;border-radius:4px;display:block;"/>
+                  <button type="button" onclick="smRemoveImage('mds')" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,.7);color:#fff;border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:13px;line-height:22px;padding:0;">✕</button>
+                </div>
+                <input type="hidden" id="sm-mds-img-data"/>
+                <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,240,232,.55);border:1px solid rgba(245,240,232,.2);padding:6px 12px;border-radius:2px;">
+                  📷 Upload Photo<input type="file" accept="image/*" style="display:none;" onchange="smLoadImage(this,'mds')">
+                </label>
+                <button type="button" onclick="ebOpenLibrary('mds')" style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,240,232,.55);background:none;border:1px solid rgba(245,240,232,.2);padding:6px 12px;border-radius:2px;margin-left:8px;font-family:inherit;">🖼 Choose from Library</button>
+                <div id="sm-photo-hint-mds" style="display:none;font-size:10px;color:#e0b070;margin-top:6px;"></div>
+              </div>
+            </div>
+
+            <!-- Friday Night Special -->
+            <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-bottom:16px;">
+              <div class="staff-tag" style="margin-bottom:12px;">Friday Night Special</div>
+              <div class="hrf-group" style="width:100%;"><label class="hrf-label" for="sm-fn-name">Dish Name</label><input class="hrf-input" id="sm-fn-name" oninput="smSpecialsEdited()" placeholder="e.g. Surf &amp; Turf Fridays" /></div>
+              <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="sm-fn-desc">Description</label><textarea class="hrf-textarea" id="sm-fn-desc" rows="3" oninput="smSpecialsEdited()" placeholder="Brief description..."></textarea></div>
+              <div class="hrf-row" style="margin-top:8px;">
+                <div class="hrf-group"><label class="hrf-label" for="sm-fn-price">Price (optional)</label><input class="hrf-input" id="sm-fn-price" placeholder="e.g. $42" /></div>
+                <div class="hrf-group"><label class="hrf-label" for="sm-fn-wine">Wine Pairing (optional)</label><input class="hrf-input" id="sm-fn-wine" placeholder="e.g. Cabernet or Bordeaux" /></div>
+              </div>
+              <div style="margin-top:10px;">
+                <label class="hrf-label">Photo (optional)</label>
+                <div id="sm-mfn-img-preview" style="display:none;position:relative;margin-bottom:8px;">
+                  <img id="sm-mfn-img" src="" style="width:100%;max-height:160px;object-fit:cover;border-radius:4px;display:block;"/>
+                  <button type="button" onclick="smRemoveImage('mfn')" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,.7);color:#fff;border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:13px;line-height:22px;padding:0;">✕</button>
+                </div>
+                <input type="hidden" id="sm-mfn-img-data"/>
+                <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,240,232,.55);border:1px solid rgba(245,240,232,.2);padding:6px 12px;border-radius:2px;">
+                  📷 Upload Photo<input type="file" accept="image/*" style="display:none;" onchange="smLoadImage(this,'mfn')">
+                </label>
+                <button type="button" onclick="ebOpenLibrary('mfn')" style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,240,232,.55);background:none;border:1px solid rgba(245,240,232,.2);padding:6px 12px;border-radius:2px;margin-left:8px;font-family:inherit;">🖼 Choose from Library</button>
+                <div id="sm-photo-hint-mfn" style="display:none;font-size:10px;color:#e0b070;margin-top:6px;"></div>
+              </div>
+            </div>
+
+            <button class="btn-p" id="sm-weekly-save" data-admin-only style="width:100%;" onclick="smSaveWeeklySpecials()">Save This Week's Specials</button>
+            <div id="sm-weekly-status" style="font-size:11px;color:#8fcc8f;margin-top:6px;display:none;"></div>
+            <div style="font-size:10px;color:rgba(245,240,232,.35);margin:6px 0 16px;">Saving updates the Dining page and the Daily Email together. Leave a name blank for any special that isn't running this week &mdash; it won't appear on the Dining page or in the email.</div>
+
+            <!-- Daily Email preview (specials section) -->
+            <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-bottom:16px;">
+              <div class="staff-tag" style="margin-bottom:10px;">Daily Email &mdash; specials section</div>
+              <div id="sm-email-preview" style="background:#fff;border-radius:6px;padding:16px;font-size:12px;color:#222;line-height:1.7;max-height:380px;overflow-y:auto;"></div>
+              <div style="font-size:10px;color:rgba(245,240,232,.4);margin-top:8px;">This is how the specials will read in the daily email. The rest of the email (today &amp; tomorrow, hours, events) and sending it are on <a href="#" onclick="staffView('email',document.getElementById('svb-email'));return false;" style="color:var(--gold-lt);">Admin &rarr; Daily Email</a>.</div>
+            </div>
+
             <!-- Wednesday Night Buffet -->
             <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-bottom:16px;">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
@@ -2560,42 +2624,10 @@ button[data-admin-only]:disabled{opacity:.4;cursor:not-allowed}
               <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="sm-wb-desc">Description</label><textarea class="hrf-textarea" id="sm-wb-desc" rows="3" placeholder="Brief description of what's on the buffet..."></textarea></div>
               <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="sm-wb-price">Price (optional)</label><input class="hrf-input" id="sm-wb-price" placeholder="e.g. $18 per person" /></div>
               <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:8px;">Only shows on the Dining page on Wednesdays. Leave the name blank and turn this off to hide it entirely — useful when the buffet isn't running that week.</div>
-              <button class="btn-p" style="width:100%;margin-top:12px;" onclick="smSaveWednesday()">Save Wednesday Night Buffet</button>
+              <button class="btn-p" style="width:100%;margin-top:12px;" data-admin-only onclick="smSaveWednesday()">Save Wednesday Night Buffet</button>
               <div id="sm-wb-status" style="font-size:11px;color:#8fcc8f;margin-top:6px;display:none;"></div>
             </div>
-            <!-- Friday Night Special -->
-            <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-                <div class="staff-tag">Friday Night Special</div>
-                <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:rgba(245,240,232,.55);cursor:pointer;">
-                  <input type="checkbox" id="sm-fn-active"> Active on Dining page
-                </label>
-              </div>
-              <div class="hrf-group" style="width:100%;"><label class="hrf-label" for="sm-fn-name">Dish Name</label><input class="hrf-input" id="sm-fn-name" placeholder="e.g. Surf &amp; Turf Fridays" /></div>
-              <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="sm-fn-desc">Description</label><textarea class="hrf-textarea" id="sm-fn-desc" rows="3" placeholder="Brief description..."></textarea></div>
-              <div class="hrf-row" style="margin-top:8px;">
-                <div class="hrf-group"><label class="hrf-label" for="sm-fn-price">Price (optional)</label><input class="hrf-input" id="sm-fn-price" placeholder="e.g. $42" /></div>
-                <div class="hrf-group"><label class="hrf-label" for="sm-fn-wine">Wine Pairing (optional)</label><input class="hrf-input" id="sm-fn-wine" placeholder="e.g. Cabernet or Bordeaux" /></div>
-              </div>
-              <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:8px;">Photo is managed under <strong style="color:var(--gold-lt);">Admin → Daily Email</strong> so the Dining page and the email always show the same picture.</div>
-              <button class="btn-p" style="width:100%;margin-top:12px;" onclick="smSaveFriday()">Save Friday Night Special</button>
-              <div id="sm-fn-status" style="font-size:11px;color:#8fcc8f;margin-top:6px;display:none;"></div>
-            </div>
-            <!-- Weekly Drink Special -->
-            <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-top:16px;">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-                <div class="staff-tag">Weekly Drink Special</div>
-                <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:rgba(245,240,232,.55);cursor:pointer;">
-                  <input type="checkbox" id="sm-ds-active"> Active on Dining page
-                </label>
-              </div>
-              <div class="hrf-group" style="width:100%;"><label class="hrf-label" for="sm-ds-name">Drink Name</label><input class="hrf-input" id="sm-ds-name" placeholder="e.g. Strawberry Margarita" /></div>
-              <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="sm-ds-desc">Description (optional)</label><textarea class="hrf-textarea" id="sm-ds-desc" rows="2" placeholder="Brief description..."></textarea></div>
-              <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="sm-ds-price">Price (optional)</label><input class="hrf-input" id="sm-ds-price" placeholder="e.g. $9" /></div>
-              <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:8px;">The name here stays in sync with the <strong style="color:var(--gold-lt);">Admin → Daily Email</strong> drink special field — editing either one updates the other.</div>
-              <button class="btn-p" style="width:100%;margin-top:12px;" onclick="smSaveDrink()">Save Drink Special</button>
-              <div id="sm-ds-status" style="font-size:11px;color:#8fcc8f;margin-top:6px;display:none;"></div>
-            </div>
+
           </div>
 
           <!-- ── HOOVER'S MENU PANEL ── -->
@@ -5568,7 +5600,7 @@ function menuLoad(){
   catch(e){return JSON.parse(JSON.stringify(WH_MENU_DEFAULTS));}
 }
 function menuSave(data){data._version=WH_MENU_VERSION;localStorage.setItem('wh_menus',JSON.stringify(data));menuRenderAll(data);WHCC_SYNC.saveMenus(data,function(r,err){if(err&&typeof staffToast==='function')staffToast('Saved locally — could not reach server.','error');});}
-function menuFetch(){WHCC_SYNC.fetchMenus(function(remote,err){if(!remote||err||typeof remote!=='object')return;remote._version=WH_MENU_VERSION;localStorage.setItem('wh_menus',JSON.stringify(remote));menuRenderAll(remote);smRenderEditorLists(remote);});}
+function menuFetch(){WHCC_SYNC.fetchMenus(function(remote,err){if(!remote||err||typeof remote!=='object')return;remote._version=WH_MENU_VERSION;localStorage.setItem('wh_menus',JSON.stringify(remote));menuRenderAll(remote);smRenderEditorLists(remote);if(typeof smLoadSpecialFields==='function')smLoadSpecialFields();});}
 function menuEsc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 function menuItemHTML(item,hasPrice){
@@ -5641,20 +5673,80 @@ function smLoad(){
   var ws=data.weeklySpecial||{};var wb=data.wednesdayBuffet||{};var fn=data.fridayNight||{};var ds=data.drinkSpecial||{};
   function setVal(id,val){var e=document.getElementById(id);if(e) e.value=val||'';}
   function setChk(id,val){var e=document.getElementById(id);if(e) e.checked=!!val;}
-  setChk('sm-ws-active',ws.active);setVal('sm-ws-name',ws.name);setVal('sm-ws-desc',ws.desc);
-  setVal('sm-ws-price',ws.price);setVal('sm-ws-wine',ws.wine);
+  smLoadSpecialFields(true);
   setChk('sm-wb-active',wb.active);setVal('sm-wb-name',wb.name);setVal('sm-wb-desc',wb.desc);
   setVal('sm-wb-price',wb.price);
-  setChk('sm-fn-active',fn.active);setVal('sm-fn-name',fn.name);setVal('sm-fn-desc',fn.desc);
-  setVal('sm-fn-price',fn.price);setVal('sm-fn-wine',fn.wine);
-  setChk('sm-ds-active',ds.active);setVal('sm-ds-name',ds.name);setVal('sm-ds-desc',ds.desc);
-  setVal('sm-ds-price',ds.price);
   smRenderEditorLists(data);
   // Reset to specials tab
   smTab('specials',document.getElementById('sm-tab-specials'));
   // Sync latest menus from Apps Script
   menuFetch();
 }
+// Menus -> Specials: lunch, drink and Friday specials (text + photos), straight from the shared menu data.
+// Background refreshes (another device saved, the 5-minute poll) leave anything being typed alone.
+var _smSpecialsDirty = false;
+function smSpecialsEdited() { _smSpecialsDirty = true; smUpdateEmailPreview(); }
+function smLoadSpecialFields(force) {
+  if (_smSpecialsDirty && !force) return;
+  var data = whFreshSpecials(menuLoad()), ws = data.weeklySpecial, fn = data.fridayNight, ds = data.drinkSpecial;
+  function setVal(id, val) { var e = document.getElementById(id); if (e) e.value = val || ''; }
+  setVal('sm-ws-name', ws.name); setVal('sm-ws-desc', ws.desc); setVal('sm-ws-price', ws.price); setVal('sm-ws-wine', ws.wine);
+  setVal('sm-ds-name', ds.name); setVal('sm-ds-desc', ds.desc); setVal('sm-ds-price', ds.price);
+  setVal('sm-fn-name', fn.name); setVal('sm-fn-desc', fn.desc); setVal('sm-fn-price', fn.price); setVal('sm-fn-wine', fn.wine);
+  smRestoreImgPreview('mws', ws.image);
+  smRestoreImgPreview('mds', ds.image);
+  smRestoreImgPreview('mfn', fn.image);
+  if (force) _smSpecialsDirty = false;
+  smUpdateEmailPreview();
+}
+// Both editors' email previews follow any photo change
+function specialsPreviewsRefresh_() {
+  if (typeof ebUpdatePreview === 'function') ebUpdatePreview();
+  smUpdateEmailPreview();
+}
+// The specials part of the daily email, as it will be sent
+function smUpdateEmailPreview() {
+  function v(id) { var e = document.getElementById(id); return e ? e.value.trim() : ''; }
+  var f = { weeklyName: v('sm-ws-name'), weeklyDesc: v('sm-ws-desc'), weeklyImage: v('sm-mws-img-data'),
+            drinkSpecial: v('sm-ds-name'), drinkDesc: v('sm-ds-desc'), drinkImage: v('sm-mds-img-data'),
+            fridayName: v('sm-fn-name'), fridayDesc: v('sm-fn-desc'), fridayImage: v('sm-mfn-img-data') };
+  var prev = document.getElementById('sm-email-preview');
+  if (prev) prev.innerHTML = ebSpecialsSectionHtml_(f) || '<p><em>No specials entered for this week \u2014 the email leaves this section out.</em></p>';
+  [['mws', f.weeklyName, f.weeklyImage], ['mds', f.drinkSpecial, f.drinkImage], ['mfn', f.fridayName, f.fridayImage]].forEach(function(it) {
+    var el = document.getElementById('sm-photo-hint-' + it[0]);
+    if (!el) return;
+    var orphan = !!it[2] && !it[1];
+    el.style.display = orphan ? 'block' : 'none';
+    el.textContent = orphan ? '\u26a0 Add this special\u2019s name above \u2014 a photo on its own is not included in the email or on the website.' : '';
+  });
+}
+// One save for the three specials: updates the Dining page and the Daily Email data together
+function smSaveWeeklySpecials() {
+  var btn = document.getElementById('sm-weekly-save');
+  if (btn) { btn.disabled = true; btn.textContent = 'Saving\u2026'; }
+  ebUploadPhotoIfNeeded_('mws', function(wsUrl) {
+    ebUploadPhotoIfNeeded_('mfn', function(fnUrl) {
+      ebUploadPhotoIfNeeded_('mds', function(dsUrl) {
+        function v(id) { var e = document.getElementById(id); return e ? e.value.trim() : ''; }
+        var data = menuLoad(), fresh = whFreshSpecials(data), stamp = new Date().toISOString();
+        data.weeklySpecial = Object.assign({}, fresh.weeklySpecial, { name: v('sm-ws-name'), desc: v('sm-ws-desc'), price: v('sm-ws-price'), wine: v('sm-ws-wine'), image: wsUrl, active: !!v('sm-ws-name'), updatedAt: stamp });
+        data.drinkSpecial  = Object.assign({}, fresh.drinkSpecial,  { name: v('sm-ds-name'), desc: v('sm-ds-desc'), price: v('sm-ds-price'), image: dsUrl, active: !!v('sm-ds-name'), updatedAt: stamp });
+        data.fridayNight   = Object.assign({}, fresh.fridayNight,   { name: v('sm-fn-name'), desc: v('sm-fn-desc'), price: v('sm-fn-price'), wine: v('sm-fn-wine'), image: fnUrl, active: !!v('sm-fn-name'), updatedAt: stamp });
+        ebMenusCache = data;
+        menuSave(data);
+        // Both editors now show the saved values, so the Daily Email page is already up to date
+        smLoadSpecialFields(true);
+        ebPopulateSpecialFields_(data);
+        ebUpdatePreview();
+        if (btn) { btn.disabled = (typeof adminAuthed !== 'undefined' && !adminAuthed); btn.textContent = "Save This Week's Specials"; }
+        var st = document.getElementById('sm-weekly-status');
+        if (st) { st.textContent = '\u2713 Saved \u2014 the Dining page and the Daily Email are updated.'; st.style.display = 'block'; setTimeout(function() { st.style.display = 'none'; }, 4000); }
+        if (typeof staffToast === 'function') staffToast('Specials saved \u2014 Dining page and Daily Email updated.', 'success');
+      });
+    });
+  });
+}
+
 function smTab(tab,btn){
   ['specials','grill'].forEach(function(t){
     var el=document.getElementById('sm-'+t);if(el) el.style.display=t===tab?'block':'none';
@@ -5683,8 +5775,8 @@ function smLoadImage(input, prefix) {
     if (dataEl) dataEl.value = dataUrl;
     if (imgEl)  imgEl.src   = dataUrl;
     if (prevEl) prevEl.style.display = 'block';
-    if (typeof _ebDirty !== 'undefined') _ebDirty = true;
-    if (typeof ebUpdatePreview === 'function') ebUpdatePreview();
+    if (prefix.charAt(0) === 'm') _smSpecialsDirty = true; else if (typeof _ebDirty !== 'undefined') _ebDirty = true;
+    specialsPreviewsRefresh_();
   };
   reader.readAsDataURL(file);
 }
@@ -5695,8 +5787,8 @@ function smRemoveImage(prefix) {
   if (dataEl) dataEl.value = '';
   if (imgEl)  imgEl.src   = '';
   if (prevEl) prevEl.style.display = 'none';
-  if (typeof _ebDirty !== 'undefined') _ebDirty = true;
-  if (typeof ebUpdatePreview === 'function') ebUpdatePreview();
+  if (prefix.charAt(0) === 'm') _smSpecialsDirty = true; else if (typeof _ebDirty !== 'undefined') _ebDirty = true;
+  specialsPreviewsRefresh_();
 }
 function smRestoreImgPreview(prefix, imageData) {
   var dataEl = document.getElementById('sm-' + prefix + '-img-data');
@@ -5713,21 +5805,6 @@ function smRestoreImgPreview(prefix, imageData) {
     if (prevEl) prevEl.style.display = 'none';
   }
 }
-function smSaveSpecials(){
-  // Photo is edited from the Daily Email tab now (single shared field) —
-  // preserve whatever image is already stored instead of touching it here.
-  var data = menuLoad();
-  var existingImage = whFreshSpecials(data).weeklySpecial.image || '';
-  data.weeklySpecial = { active: document.getElementById('sm-ws-active').checked,
-    name: document.getElementById('sm-ws-name').value.trim(),
-    desc: document.getElementById('sm-ws-desc').value.trim(),
-    price: document.getElementById('sm-ws-price').value.trim(),
-    wine: document.getElementById('sm-ws-wine').value.trim(),
-    image: existingImage, updatedAt: new Date().toISOString() };
-  menuSave(data);
-  var st = document.getElementById('sm-ws-status');
-  if (st) { st.textContent = 'Saved — dining page updated!'; st.style.display = 'block'; setTimeout(function(){ st.style.display='none'; }, 2500); }
-}
 function smSaveWednesday(){
   var data = menuLoad();
   data.wednesdayBuffet = { active: document.getElementById('sm-wb-active').checked,
@@ -5738,35 +5815,6 @@ function smSaveWednesday(){
   var st = document.getElementById('sm-wb-status');
   if (st) { st.textContent = 'Saved — dining page updated!'; st.style.display = 'block'; setTimeout(function(){ st.style.display='none'; }, 2500); }
 }
-function smSaveFriday(){
-  // Photo is edited from the Daily Email tab now (single shared field) —
-  // preserve whatever image is already stored instead of touching it here.
-  var data = menuLoad();
-  var existingImage = whFreshSpecials(data).fridayNight.image || '';
-  data.fridayNight = { active: document.getElementById('sm-fn-active').checked,
-    name: document.getElementById('sm-fn-name').value.trim(),
-    desc: document.getElementById('sm-fn-desc').value.trim(),
-    price: document.getElementById('sm-fn-price').value.trim(),
-    wine: document.getElementById('sm-fn-wine').value.trim(),
-    image: existingImage, updatedAt: new Date().toISOString() };
-  menuSave(data);
-  var st = document.getElementById('sm-fn-status');
-  if (st) { st.textContent = 'Saved — dining page updated!'; st.style.display = 'block'; setTimeout(function(){ st.style.display='none'; }, 2500); }
-}
-function smSaveDrink(){
-  var data = menuLoad();
-  // The drink photo is edited from the Daily Email tab; keep this week's, never last week's
-  var existingImage = whFreshSpecials(data).drinkSpecial.image || '';
-  data.drinkSpecial = { active: document.getElementById('sm-ds-active').checked,
-    name: document.getElementById('sm-ds-name').value.trim(),
-    desc: document.getElementById('sm-ds-desc').value.trim(),
-    price: document.getElementById('sm-ds-price').value.trim(),
-    image: existingImage, updatedAt: new Date().toISOString() };
-  menuSave(data);
-  var st = document.getElementById('sm-ds-status');
-  if (st) { st.textContent = 'Saved — dining page updated!'; st.style.display = 'block'; setTimeout(function(){ st.style.display='none'; }, 2500); }
-}
-
 // ════════════════════════════════════════════════════
 // DAILY EMAIL BUILDER
 // ════════════════════════════════════════════════════
@@ -5799,12 +5847,10 @@ async function ebLoad() {
   ebRefreshRecipientCount();
 }
 
-function ebPopulateFields() {
-  var c = ebConditionsCache || {}, m = whFreshSpecials(ebMenusCache || {});
-  var ws = m.weeklySpecial || {}, fn = m.fridayNight || {}, ds = m.drinkSpecial || {};
+// Fills the three specials (text and photos) on the Daily Email page from the shared menu data
+function ebPopulateSpecialFields_(menus) {
+  var m = whFreshSpecials(menus || {}), ws = m.weeklySpecial, fn = m.fridayNight, ds = m.drinkSpecial;
   function setVal(id, val) { var e = document.getElementById(id); if (e) e.value = val || ''; }
-  setVal('eb-today-notice', c.notice);
-  setVal('eb-tomorrow-notice', c.tomorrowNotice);
   setVal('eb-weekly-name', ws.name);
   setVal('eb-weekly-desc', ws.desc);
   smRestoreImgPreview('ws', ws.image);
@@ -5814,6 +5860,15 @@ function ebPopulateFields() {
   setVal('eb-friday-name', fn.name);
   setVal('eb-friday-desc', fn.desc);
   smRestoreImgPreview('fn', fn.image);
+}
+
+function ebPopulateFields() {
+  var c = ebConditionsCache || {}, m = whFreshSpecials(ebMenusCache || {});
+  var ws = m.weeklySpecial || {}, fn = m.fridayNight || {}, ds = m.drinkSpecial || {};
+  function setVal(id, val) { var e = document.getElementById(id); if (e) e.value = val || ''; }
+  setVal('eb-today-notice', c.notice);
+  setVal('eb-tomorrow-notice', c.tomorrowNotice);
+  ebPopulateSpecialFields_(m);
   setVal('eb-ed-opens', c.courseOpens);
   setVal('eb-ed-cart', c.cartRules || 'Off Path');
   setVal('eb-ed-range-status', c.rangeStatus || 'Open — Mats Only');
@@ -5873,15 +5928,10 @@ function ebFieldVals() {
     clubhouseHours: val('eb-clubhouse-hours'), poolHours: val('eb-pool-hours')
   };
 }
-function ebBuildHtml() {
-  var f = ebFieldVals();
+// The "Weekly Restaurant Specials" part of the email. Used by the Daily Email page and by the
+// Menus -> Specials preview so both always show exactly what will be sent.
+function ebSpecialsSectionHtml_(f) {
   var esc = menuEsc;
-  var sec = function(title, inner) {
-    return '<h3 style="font-size:20px;color:#1a2b1f;margin:22px 0 10px;">' + title + '</h3>' + inner + '<hr style="border:none;border-top:1px solid #ddd;margin:18px 0;">';
-  };
-  var html = '<div style="font-family:Georgia,serif;max-width:640px;color:#222;">';
-  html += sec('TODAY AT THE CLUB', '<p>' + (esc(f.todayNotice).replace(/\n/g, '<br>') || '<em>—</em>') + '</p>');
-  html += sec('TOMORROW AT THE CLUB', '<p>' + (esc(f.tomorrowNotice).replace(/\n/g, '<br>') || '<em>—</em>') + '</p>');
   var img = function(src, alt) {
     return src ? '<img src="' + whDriveImg(src) + '" alt="' + esc(alt) + '" style="max-width:100%;height:auto;border-radius:6px;margin:6px 0 14px;display:block;">' : '';
   };
@@ -5899,9 +5949,23 @@ function ebBuildHtml() {
     specials += '<p><strong>Friday Night Dinner Special:</strong> ' + esc(f.fridayName) + (f.fridayDesc ? ' - ' + esc(f.fridayDesc) : '') + '</p>';
     specials += img(f.fridayImage, f.fridayName);
   }
-  if (specials) {
-    html += sec('WEEKLY RESTAURANT SPECIALS', '<p>Be sure to stop by the clubhouse and enjoy our weekly restaurant specials.</p>' + specials + '<p><em>Specials are subject to availability and may change.</em></p>');
-  }
+  if (!specials) return '';
+  return '<h3 style="font-size:20px;color:#1a2b1f;margin:22px 0 10px;">WEEKLY RESTAURANT SPECIALS</h3>' +
+    '<p>Be sure to stop by the clubhouse and enjoy our weekly restaurant specials.</p>' + specials +
+    '<p><em>Specials are subject to availability and may change.</em></p>' +
+    '<hr style="border:none;border-top:1px solid #ddd;margin:18px 0;">';
+}
+
+function ebBuildHtml() {
+  var f = ebFieldVals();
+  var esc = menuEsc;
+  var sec = function(title, inner) {
+    return '<h3 style="font-size:20px;color:#1a2b1f;margin:22px 0 10px;">' + title + '</h3>' + inner + '<hr style="border:none;border-top:1px solid #ddd;margin:18px 0;">';
+  };
+  var html = '<div style="font-family:Georgia,serif;max-width:640px;color:#222;">';
+  html += sec('TODAY AT THE CLUB', '<p>' + (esc(f.todayNotice).replace(/\n/g, '<br>') || '<em>—</em>') + '</p>');
+  html += sec('TOMORROW AT THE CLUB', '<p>' + (esc(f.tomorrowNotice).replace(/\n/g, '<br>') || '<em>—</em>') + '</p>');
+  html += ebSpecialsSectionHtml_(f);
   var hours = '<p>' +
     '<strong>Course Opens:</strong> ' + esc(f.courseOpens) + '<br>' +
     '<strong>Cart Policy:</strong> ' + esc(f.cartRules) + '<br>' +
@@ -5997,6 +6061,7 @@ function ebSaveAndSync(cb) {
         setTimeout(function() { status.style.display = 'none'; }, 4000);
       }
       ebUpdatePreview();
+      smLoadSpecialFields(true);
       if (cb) cb();
      });
     });
@@ -8740,9 +8805,9 @@ function phPickerChoose(title, category, callback) {
 function ebOpenLibrary(prefix) {
   phPickerChoose('Choose a Photo from the Library', '', function(url) {
     smRestoreImgPreview(prefix, url);
-    if (typeof _ebDirty !== 'undefined') _ebDirty = true;
-    ebUpdatePreview();
-    staffToast('Photo selected \u2014 click Save & Update Website to publish it.', 'info');
+    if (prefix.charAt(0) === 'm') _smSpecialsDirty = true; else if (typeof _ebDirty !== 'undefined') _ebDirty = true;
+    specialsPreviewsRefresh_();
+    staffToast('Photo selected \u2014 click Save to publish it.', 'info');
   });
 }
 
