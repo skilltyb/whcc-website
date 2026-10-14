@@ -1437,7 +1437,7 @@ button[data-admin-only]:disabled{opacity:.4;cursor:not-allowed}
   <div id="dining-weekly-special" style="display:none;background:var(--cream);padding:56px 80px;text-align:center;">
     <p class="eyebrow">Weekly Lunch Special</p>
     <div style="max-width:600px;margin:20px auto 0;border:1px solid rgba(184,151,106,.35);padding:40px;">
-      <img class="sf-img" src="" alt="" style="width:100%;max-height:320px;object-fit:cover;display:none;margin-bottom:24px;border-radius:2px;"/>
+      <img class="sf-img" src="" alt="" style="width:100%;max-height:480px;object-fit:contain;display:none;margin-bottom:24px;border-radius:2px;"/>
       <h3 class="sf-name" style="font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:400;color:var(--deep);letter-spacing:.02em;"></h3>
       <p class="sf-desc" style="font-size:14px;color:var(--muted);margin:14px 0 8px;line-height:1.85;max-width:460px;margin-left:auto;margin-right:auto;"></p>
       <p class="sf-wine" style="font-size:12px;font-style:italic;color:var(--gold);margin-bottom:8px;display:none;"></p>
@@ -1459,7 +1459,7 @@ button[data-admin-only]:disabled{opacity:.4;cursor:not-allowed}
   <div id="dining-friday-special" style="display:none;background:var(--forest);padding:56px 80px;text-align:center;">
     <p class="eyebrow lt">Friday Night Special</p>
     <div style="max-width:600px;margin:20px auto 0;border:1px solid rgba(184,151,106,.25);padding:40px;">
-      <img class="sf-img" src="" alt="" style="width:100%;max-height:320px;object-fit:cover;display:none;margin-bottom:24px;border-radius:2px;"/>
+      <img class="sf-img" src="" alt="" style="width:100%;max-height:480px;object-fit:contain;display:none;margin-bottom:24px;border-radius:2px;"/>
       <h3 class="sf-name" style="font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:400;color:var(--cream);letter-spacing:.02em;"></h3>
       <p class="sf-desc" style="font-size:14px;color:rgba(245,240,232,.6);margin:14px 0 8px;line-height:1.85;max-width:460px;margin-left:auto;margin-right:auto;"></p>
       <p class="sf-wine" style="font-size:12px;font-style:italic;color:var(--gold-lt);margin-bottom:8px;display:none;"></p>
@@ -1471,7 +1471,7 @@ button[data-admin-only]:disabled{opacity:.4;cursor:not-allowed}
   <div id="dining-drink-special" style="display:none;background:var(--cream);padding:56px 80px;text-align:center;">
     <p class="eyebrow">Weekly Drink Special</p>
     <div style="max-width:600px;margin:20px auto 0;border:1px solid rgba(184,151,106,.35);padding:40px;">
-      <img class="sf-img" src="" alt="" style="width:100%;max-height:320px;object-fit:cover;display:none;margin-bottom:24px;border-radius:2px;"/>
+      <img class="sf-img" src="" alt="" style="width:100%;max-height:480px;object-fit:contain;display:none;margin-bottom:24px;border-radius:2px;"/>
       <h3 class="sf-name" style="font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:400;color:var(--deep);letter-spacing:.02em;"></h3>
       <p class="sf-desc" style="font-size:14px;color:var(--muted);margin:14px 0 8px;line-height:1.85;max-width:460px;margin-left:auto;margin-right:auto;"></p>
       <p class="sf-price" style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--gold);margin-top:4px;"></p>
@@ -2380,6 +2380,7 @@ button[data-admin-only]:disabled{opacity:.4;cursor:not-allowed}
           <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-bottom:16px;">
             <div class="staff-tag" style="margin-bottom:6px;">Weekly Restaurant Specials</div>
             <div style="font-size:10px;color:rgba(245,240,232,.45);margin-bottom:10px;">These clear from the website automatically at 12 a.m. every Monday (the course is closed) — fill in new ones each week. Leave one blank if there isn't a special.</div>
+            <div id="eb-specials-empty" style="display:none;font-size:11px;color:#e0b070;background:rgba(224,176,112,.08);border:1px solid rgba(224,176,112,.3);padding:8px 10px;margin-bottom:10px;line-height:1.5;">No specials are entered for this week, so the email and the Dining page leave the specials (and their photos) out. Last week's specials cleared automatically at 12 a.m. Monday — add this week's below.</div>
             <div class="hrf-group" style="width:100%;"><label class="hrf-label" for="eb-weekly-name">Weekly Lunch Special</label><input class="hrf-input" id="eb-weekly-name" oninput="ebOnEdit()" placeholder="e.g. Steak Sandwich" /></div>
             <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-weekly-desc">Weekly Lunch Special Description</label><textarea class="hrf-textarea" id="eb-weekly-desc" rows="2" oninput="ebOnEdit()" placeholder="e.g. served on a hoagie bun with homemade sauce &amp; your choice of side"></textarea></div>
             <div style="margin-top:8px;">
@@ -2393,9 +2394,11 @@ button[data-admin-only]:disabled{opacity:.4;cursor:not-allowed}
                 📷 Upload Photo<input type="file" accept="image/*" style="display:none;" onchange="smLoadImage(this,'ws')">
               </label>
               <button type="button" onclick="ebOpenLibrary('ws')" style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,240,232,.55);background:none;border:1px solid rgba(245,240,232,.2);padding:6px 12px;border-radius:2px;margin-left:8px;font-family:inherit;">🖼 Choose from Library</button>
+              <div id="eb-photo-hint-ws" style="display:none;font-size:10px;color:#e0b070;margin-top:6px;"></div>
             </div>
             <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">Same photo shown on the Dining page's Weekly Lunch Special — one photo, edited here only.</div>
             <div class="hrf-group" style="width:100%;margin-top:14px;"><label class="hrf-label" for="eb-drink-special">Weekly Drink Special</label><input class="hrf-input" id="eb-drink-special" oninput="ebOnEdit()" placeholder="e.g. Strawberry Margarita" /></div>
+            <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-drink-desc">Weekly Drink Special Description</label><textarea class="hrf-textarea" id="eb-drink-desc" rows="2" oninput="ebOnEdit()" placeholder="e.g. Bourbon, muddled blackberries, mint and a splash of lemon"></textarea></div>
             <div style="margin-top:8px;">
               <label class="hrf-label">Photo (optional)</label>
               <div id="sm-ds-img-preview" style="display:none;position:relative;margin-bottom:8px;">
@@ -2407,8 +2410,9 @@ button[data-admin-only]:disabled{opacity:.4;cursor:not-allowed}
                 📷 Upload Photo<input type="file" accept="image/*" style="display:none;" onchange="smLoadImage(this,'ds')">
               </label>
               <button type="button" onclick="ebOpenLibrary('ds')" style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,240,232,.55);background:none;border:1px solid rgba(245,240,232,.2);padding:6px 12px;border-radius:2px;margin-left:8px;font-family:inherit;">🖼 Choose from Library</button>
+              <div id="eb-photo-hint-ds" style="display:none;font-size:10px;color:#e0b070;margin-top:6px;"></div>
             </div>
-            <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">Appears on the Dining page automatically once saved here — clear this field to hide it. Set a description or price from <a href="#" onclick="staffView('menus',document.getElementById('svb-menus'));return false;" style="color:var(--gold-lt);">Menus → Specials</a>.</div>
+            <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">Name, description and photo appear on the Dining page automatically once saved here — clear the name to hide it. Set a price from <a href="#" onclick="staffView('menus',document.getElementById('svb-menus'));return false;" style="color:var(--gold-lt);">Menus → Specials</a>.</div>
             <div class="hrf-group" style="width:100%;margin-top:14px;"><label class="hrf-label" for="eb-friday-name">Friday Night Dinner Special</label><input class="hrf-input" id="eb-friday-name" oninput="ebOnEdit()" placeholder="Leave blank most days — fill in by Friday" /></div>
             <div class="hrf-group" style="width:100%;margin-top:8px;"><label class="hrf-label" for="eb-friday-desc">Friday Special Description</label><textarea class="hrf-textarea" id="eb-friday-desc" rows="2" oninput="ebOnEdit()" placeholder="e.g. Panko Crusted Salmon with Roasted Potatoes &amp; Seared Veggies"></textarea></div>
             <div style="margin-top:8px;">
@@ -2422,6 +2426,7 @@ button[data-admin-only]:disabled{opacity:.4;cursor:not-allowed}
                 📷 Upload Photo<input type="file" accept="image/*" style="display:none;" onchange="smLoadImage(this,'fn')">
               </label>
               <button type="button" onclick="ebOpenLibrary('fn')" style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,240,232,.55);background:none;border:1px solid rgba(245,240,232,.2);padding:6px 12px;border-radius:2px;margin-left:8px;font-family:inherit;">🖼 Choose from Library</button>
+              <div id="eb-photo-hint-fn" style="display:none;font-size:10px;color:#e0b070;margin-top:6px;"></div>
             </div>
             <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:4px;">These sync to the Weekly Lunch Special &amp; Friday Night Special shown on the Dining page — same photo &amp; text in both places, and each appears automatically once its name is filled in (clear the name to hide it again).</div>
           </div>
@@ -5607,7 +5612,7 @@ function menuRenderSpecials(data){
   }
   fillSpecial(wsEl,ws);
   fillSpecial(wbEl,wb,3); // 3 = Wednesday — auto-hides on other days
-  fillSpecial(fnEl,fn,5); // 5 = Friday — auto-hides if staff forgets to toggle it off after Friday
+  fillSpecial(fnEl,fn); // same rules as the lunch and drink specials: shows once it has a name, clears Monday 12 a.m.
   fillSpecial(dsEl,ds);
 }
 function menuRenderAll(data){
@@ -5799,6 +5804,7 @@ function ebPopulateFields() {
   setVal('eb-weekly-desc', ws.desc);
   smRestoreImgPreview('ws', ws.image);
   setVal('eb-drink-special', ds.name);
+  setVal('eb-drink-desc', ds.desc);
   smRestoreImgPreview('ds', ds.image);
   setVal('eb-friday-name', fn.name);
   setVal('eb-friday-desc', fn.desc);
@@ -5854,7 +5860,7 @@ function ebFieldVals() {
   return {
     todayNotice: val('eb-today-notice'), tomorrowNotice: val('eb-tomorrow-notice'),
     weeklyName: val('eb-weekly-name'), weeklyDesc: val('eb-weekly-desc'), weeklyImage: val('sm-ws-img-data'),
-    drinkSpecial: val('eb-drink-special'), drinkImage: val('sm-ds-img-data'),
+    drinkSpecial: val('eb-drink-special'), drinkDesc: val('eb-drink-desc'), drinkImage: val('sm-ds-img-data'),
     fridayName: val('eb-friday-name'), fridayDesc: val('eb-friday-desc'), fridayImage: val('sm-fn-img-data'),
     courseOpens: val('eb-ed-opens'), cartRules: val('eb-ed-cart'),
     rangeStatus: val('eb-ed-range-status'), rangeHours: val('eb-ed-range-hours'),
@@ -5881,7 +5887,7 @@ function ebBuildHtml() {
     specials += img(f.weeklyImage, f.weeklyName);
   }
   if (f.drinkSpecial) {
-    specials += '<p><strong>Weekly Drink Special:</strong> ' + esc(f.drinkSpecial) + '</p>';
+    specials += '<p><strong>Weekly Drink Special:</strong> ' + esc(f.drinkSpecial) + (f.drinkDesc ? ' - ' + esc(f.drinkDesc) : '') + '</p>';
     specials += img(f.drinkImage, f.drinkSpecial);
   }
   if (f.fridayName) {
@@ -5913,6 +5919,21 @@ function ebBuildHtml() {
 function ebUpdatePreview() {
   var prev = document.getElementById('eb-preview');
   if (prev) prev.innerHTML = ebBuildHtml();
+  ebSpecialsHints_();
+}
+// A special only appears (email and website) when it has a name, so warn about a photo with no name
+// and say plainly when nothing is filled in for the week.
+function ebSpecialsHints_() {
+  var f = ebFieldVals();
+  [['ws', f.weeklyName, f.weeklyImage], ['fn', f.fridayName, f.fridayImage], ['ds', f.drinkSpecial, f.drinkImage]].forEach(function(it) {
+    var el = document.getElementById('eb-photo-hint-' + it[0]);
+    if (!el) return;
+    var orphan = !!it[2] && !it[1];
+    el.style.display = orphan ? 'block' : 'none';
+    el.textContent = orphan ? '\u26a0 Add this special\u2019s name above \u2014 a photo on its own is not included in the email or on the website.' : '';
+  });
+  var box = document.getElementById('eb-specials-empty');
+  if (box) box.style.display = (!f.weeklyName && !f.drinkSpecial && !f.fridayName) ? 'block' : 'none';
 }
 
 function ebUploadPhotoIfNeeded_(prefix, cb) {
@@ -5926,6 +5947,7 @@ function ebUploadPhotoIfNeeded_(prefix, cb) {
       filename: 'special-' + prefix + '-' + Date.now() + '.jpg', category: 'Dining', staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin })
   }).then(function(r){ return r.json(); }).then(function(d) {
     var url = (d && d.ok) ? whDriveImg(d.url) : imgData;
+    if (d && d.ok) phLibCacheClear();
     if (d && d.ok && dataEl) dataEl.value = url;
     cb(url);
   }).catch(function(){ cb(imgData); });
@@ -5958,8 +5980,8 @@ function ebSaveAndSync(cb) {
       // until someone separately remembers to flip the checkbox under Menus → Specials.
       mdata.weeklySpecial = Object.assign({}, fresh.weeklySpecial, { name: f.weeklyName, desc: f.weeklyDesc, image: wsUrl, active: !!f.weeklyName, updatedAt: stamp });
       mdata.fridayNight = Object.assign({}, fresh.fridayNight, { name: f.fridayName, desc: f.fridayDesc, image: fnUrl, active: !!f.fridayName, updatedAt: stamp });
-      // The name and photo sync from the email field; desc/price stay under Menus → Specials control.
-      mdata.drinkSpecial = Object.assign({}, fresh.drinkSpecial, { name: f.drinkSpecial, image: dsUrl, active: !!f.drinkSpecial, updatedAt: stamp });
+      // The name, description and photo sync from the email field; price stays under Menus → Specials control.
+      mdata.drinkSpecial = Object.assign({}, fresh.drinkSpecial, { name: f.drinkSpecial, desc: f.drinkDesc, image: dsUrl, active: !!f.drinkSpecial, updatedAt: stamp });
       ebMenusCache = mdata;
       menuSave(mdata);
 
@@ -8438,7 +8460,7 @@ function phUploadAll() {
       .then(function(r){ return r.json(); })
       .then(function(data) {
         if (data && data.ok) {
-          item.status = 'done'; item.url = data.url; done++;
+          item.status = 'done'; item.url = data.url; done++; phLibCacheClear();
         } else {
           item.status = 'error';
           item.errorMsg = (data && data.error) ? data.error : 'Unknown error';
@@ -8682,6 +8704,7 @@ var _phPickerCallback = null; // set when the picker is choosing a photo for som
 
 function phPickerResetMode_() {
   _phPickerCallback = null;
+  var cs = document.getElementById('ph-picker-cat'); if (cs) cs.value = '';
   var t = document.getElementById('ph-picker-title'); if (t) t.textContent = 'Replace Photo';
   var u = document.getElementById('ph-picker-upload-btn'); if (u) u.style.display = '';
   var h = document.getElementById('ph-picker-hint'); if (h) h.textContent = 'or choose from your library below';
@@ -8710,7 +8733,7 @@ function phPickerChoose(title, category, callback) {
 
 // Daily Email page: pick a photo for the Weekly Lunch ('ws') or Friday Night ('fn') special
 function ebOpenLibrary(prefix) {
-  phPickerChoose('Choose a Photo from the Library', 'Dining', function(url) {
+  phPickerChoose('Choose a Photo from the Library', '', function(url) {
     smRestoreImgPreview(prefix, url);
     if (typeof _ebDirty !== 'undefined') _ebDirty = true;
     ebUpdatePreview();
@@ -8751,6 +8774,7 @@ function phPickerUpload() {
       .then(function(data) {
         if (slot) slot.style.opacity = '1';
         if (data && data.ok) {
+          phLibCacheClear();
           var sc = cmsGetContent();
           if (!sc.photos) sc.photos = {};
           sc.photos[key] = whDriveImg(data.url);
@@ -8775,38 +8799,52 @@ function phPickerUpload() {
   input.click();
 }
 
+var _phPickerReq = 0;       // bumps on every load, so a slow earlier reply can't overwrite a newer one
+var _phLibCache = {};        // category -> { at, photos }; cleared whenever a photo is uploaded
+function phLibCacheClear() { _phLibCache = {}; }
+
 function phPickerLoadLib() {
   var cat = (document.getElementById('ph-picker-cat') || {}).value || '';
   var grid = document.getElementById('ph-picker-grid');
   var status = document.getElementById('ph-picker-status');
   if (!grid) return;
+  var myReq = ++_phPickerReq;
   grid.innerHTML = '';
-  status.textContent = 'Loading…';
+
+  function show(photos) {
+    if (myReq !== _phPickerReq) return;
+    if (!Array.isArray(photos) || photos.length === 0) {
+      status.textContent = 'No photos in library yet. Upload some first.';
+      return;
+    }
+    status.textContent = photos.length + ' photo' + (photos.length === 1 ? '' : 's') + (_phPickerCallback ? ' \u2014 click one to use it' : ' \u2014 click one to assign it');
+    grid.innerHTML = '';
+    photos.forEach(function(p) {
+      var card = document.createElement('div');
+      card.style.cssText = 'cursor:pointer;border-radius:6px;overflow:hidden;border:2px solid transparent;transition:border-color .2s;';
+      card.innerHTML = '<img src="' + whDriveImg(p.url, 400) + '" loading="lazy" style="width:100%;height:100px;object-fit:cover;display:block;">' +
+        '<div style="padding:5px 6px;font-size:9px;color:rgba(245,240,232,.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + menuEsc(p.name || '') + '</div>';
+      card.onmouseover = function(){ card.style.borderColor = 'rgba(184,151,106,.7)'; };
+      card.onmouseout  = function(){ card.style.borderColor = 'transparent'; };
+      card.onclick = function(){
+        if (_phPickerCallback) { var cb = _phPickerCallback; phPickerClose(); cb(p.url); }
+        else phAssignFromLibrary(_phPickerKey, p.url);
+      };
+      grid.appendChild(card);
+    });
+  }
+
+  var hit = _phLibCache[cat];
+  if (hit && Date.now() - hit.at < 120000) { show(hit.photos); return; }
+  status.textContent = 'Loading\u2026';
   var url = WHCC_SCRIPT_URL + '?action=get-photos' + (cat ? '&category=' + encodeURIComponent(cat) : '');
   fetch(url)
     .then(function(r){ return r.json(); })
     .then(function(photos) {
-      if (!Array.isArray(photos) || photos.length === 0) {
-        status.textContent = 'No photos in library yet. Upload some first.';
-        return;
-      }
-      status.textContent = photos.length + ' photo' + (photos.length === 1 ? '' : 's') + (_phPickerCallback ? ' \u2014 click one to use it' : ' \u2014 click one to assign it');
-      grid.innerHTML = '';
-      photos.forEach(function(p) {
-        var card = document.createElement('div');
-        card.style.cssText = 'cursor:pointer;border-radius:6px;overflow:hidden;border:2px solid transparent;transition:border-color .2s;';
-        card.innerHTML = '<img src="' + whDriveImg(p.url, 400) + '" loading="lazy" style="width:100%;height:100px;object-fit:cover;display:block;">' +
-          '<div style="padding:5px 6px;font-size:9px;color:rgba(245,240,232,.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + p.name + '</div>';
-        card.onmouseover = function(){ card.style.borderColor = 'rgba(184,151,106,.7)'; };
-        card.onmouseout  = function(){ card.style.borderColor = 'transparent'; };
-        card.onclick = function(){
-          if (_phPickerCallback) { var cb = _phPickerCallback; phPickerClose(); cb(p.url); }
-          else phAssignFromLibrary(_phPickerKey, p.url);
-        };
-        grid.appendChild(card);
-      });
+      if (Array.isArray(photos)) _phLibCache[cat] = { at: Date.now(), photos: photos };
+      show(photos);
     })
-    .catch(function(){ status.textContent = 'Could not load library.'; });
+    .catch(function(){ if (myReq === _phPickerReq) status.textContent = 'Could not load library.'; });
 }
 
 function phAssignFromLibrary(key, url) {
