@@ -66,6 +66,23 @@ for route in routes:
     with open(os.path.join(ROOT, route + '.html'), 'w', encoding='utf-8') as out:
         out.write(page)
 
+# /staff: the staff sign-in page. Same site, but kept out of search results.
+if 'staff' in meta:
+    title, desc = meta['staff']
+    t, d, url = html.escape(title), html.escape(desc), ORIGIN + '/staff'
+    page = src
+    page = swap(page, r'<title>.*?</title>', '<title>%s</title>' % t)
+    page = swap(page, r'<meta name="description" content=".*?" />', '<meta name="description" content="%s" />' % d)
+    page = swap(page, r'<meta property="og:title" content=".*?" />', '<meta property="og:title" content="%s" />' % t)
+    page = swap(page, r'<meta property="og:description" content=".*?" />', '<meta property="og:description" content="%s" />' % d)
+    page = swap(page, r'<meta property="og:url" content=".*?" />', '<meta property="og:url" content="%s" />' % url)
+    page = swap(page, r'<link rel="canonical" href=".*?" />', '<link rel="canonical" href="%s" />' % url)
+    page = swap(page, r'<meta charset="UTF-8" />', '<meta charset="UTF-8" /><meta name="robots" content="noindex, nofollow" />')
+    with open(os.path.join(ROOT, 'staff.html'), 'w', encoding='utf-8') as out:
+        out.write(page)
+else:
+    sys.exit('build-routes: no staff page metadata found in index.html')
+
 STUB = '''<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -86,4 +103,4 @@ for slug, target in LEGACY.items():
     with open(os.path.join(folder, 'index.html'), 'w', encoding='utf-8') as out:
         out.write(STUB.format(origin=ORIGIN, target=target))
 
-print('build-routes: %d route pages, %d redirect pages' % (len(routes), len(LEGACY)))
+print('build-routes: %d route pages, staff page, %d redirect pages' % (len(routes), len(LEGACY)))

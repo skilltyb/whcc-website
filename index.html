@@ -1037,6 +1037,14 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 .event-item.clickable:hover .ev-name{color:var(--gold-dk)}
 #wh-toast{position:fixed;left:50%;bottom:calc(72px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(12px);background:rgba(17,26,20,.96);color:var(--cream);border:1px solid rgba(184,151,106,.4);padding:11px 20px;font-size:13px;z-index:700;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
 #wh-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* -- STAFF LOGIN: Admin / Staff tabs, view-only bar -- */
+.login-tabs{display:flex;margin:0 0 22px;border:1px solid rgba(184,151,106,.35)}
+.login-tab{flex:1;padding:10px 6px;background:transparent;border:0;color:rgba(245,240,232,.55);font:600 11px 'Raleway',sans-serif;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;line-height:1.35}
+.login-tab small{display:block;font-weight:400;font-size:9px;letter-spacing:.06em;text-transform:none;opacity:.85}
+.login-tab.active{background:var(--gold);color:var(--deep)}
+#staff-viewonly-bar{display:none;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;background:rgba(184,151,106,.14);border-bottom:1px solid rgba(184,151,106,.4);color:var(--cream);font-size:12px;line-height:1.5;padding:10px 24px}
+#staff-viewonly-bar button{background:var(--gold);color:var(--deep);border:0;padding:8px 16px;font:700 10px 'Raleway',sans-serif;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;white-space:nowrap}
+button[data-admin-only]:disabled{opacity:.4;cursor:not-allowed}
 </style>
 </head>
 <body>
@@ -2103,6 +2111,11 @@ nav.staff-mode .nav-site-back{display:flex!important;}
       </div>
     </div>
 
+    <div id="staff-viewonly-bar">
+      <span><strong>View only.</strong> You're signed in with the shared staff PIN, so you can look at everything but can't save changes or send emails.</span>
+      <button type="button" onclick="staffSwitchToAdmin()">Log in as Admin</button>
+    </div>
+
     <div class="staff-layout">
       <!-- Left panel -->
       <div class="staff-left" id="staff-left">
@@ -2453,7 +2466,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
             <div style="font-size:10px;color:rgba(245,240,232,.35);margin-top:8px;">Pulled automatically from <a href="#" onclick="staffView('events',document.getElementById('svb-events'));return false;" style="color:var(--gold-lt);">Website → Events</a>. Edit the list there.</div>
           </div>
 
-          <button class="btn-p" style="width:100%;" onclick="ebSaveAndSync()">Save &amp; Update Website</button>
+          <button class="btn-p" style="width:100%;" data-admin-only onclick="ebSaveAndSync()">Save &amp; Update Website</button>
           <div id="eb-save-status" style="font-size:11px;color:#8fcc8f;margin-top:8px;display:none;"></div>
 
           <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-top:16px;">
@@ -2464,8 +2477,8 @@ nav.staff-mode .nav-site-back{display:flex!important;}
           <div style="background:rgba(255,255,255,.03);border:1px solid rgba(184,151,106,.12);padding:16px;margin-top:16px;">
             <div class="staff-tag" style="margin-bottom:10px;">Send</div>
             <div id="eb-recipient-count" style="font-size:11px;color:rgba(245,240,232,.5);margin-bottom:10px;">Checking member list…</div>
-            <button class="staff-mini-btn" style="width:100%;margin-bottom:8px;" onclick="ebSendTest()">Send Test Email</button>
-            <button class="btn-p" style="width:100%;background:#8f3a3a;color:#f5f0e8;" onclick="ebSendAll()">Send to All Members</button>
+            <button class="staff-mini-btn" style="width:100%;margin-bottom:8px;" data-admin-only onclick="ebSendTest()">Send Test Email</button>
+            <button class="btn-p" style="width:100%;background:#8f3a3a;color:#f5f0e8;" data-admin-only onclick="ebSendAll()">Send to All Members</button>
             <div id="eb-send-status" style="font-size:11px;margin-top:8px;display:none;"></div>
           </div>
         </div>
@@ -4751,7 +4764,9 @@ var _pageMeta = {
   membership: { title: 'Membership — Westwood Hills Country Club',
                 desc:  'Join Westwood Hills Country Club — golf, dining, aquatics, and community in Poplar Bluff, Missouri.' },
   about:      { title: 'About — Westwood Hills Country Club',
-                desc:  'Founded in 1936, Westwood Hills Country Club has been the premier private club in Southeast Missouri for nearly nine decades.' }
+                desc:  'Founded in 1936, Westwood Hills Country Club has been the premier private club in Southeast Missouri for nearly nine decades.' },
+  staff:      { title: 'Staff Portal — Westwood Hills Country Club',
+                desc:  'Staff sign-in for Westwood Hills Country Club.' }
 };
 
 // Detect subdirectory base path so relative image URLs still resolve correctly
@@ -4773,7 +4788,8 @@ var _pageUrlMap = {
   aquatics:   _basePath + '/aquatics',
   events:     _basePath + '/events',
   membership: _basePath + '/membership',
-  about:      _basePath + '/about'
+  about:      _basePath + '/about',
+  staff:      _basePath + '/staff'
 };
 
 function navigate(page, skipPushState) {
@@ -4883,6 +4899,14 @@ function _urlToPage(path) {
 // Also handles GitHub Pages 404 redirect (path stored in sessionStorage by 404.html)
 (function() {
   var redirect = sessionStorage.getItem('spa_redirect');
+  if (_urlToPage(redirect || location.pathname) === 'staff') {
+    // /staff goes straight to the sign-in. Stay on the home page until it succeeds, so the staff
+    // screen itself is never shown before login (see the DOMContentLoaded hook near navigate()).
+    if (redirect) sessionStorage.removeItem('spa_redirect');
+    window.__staffDeepLink = true;
+    history.replaceState({ page: 'home' }, '', _pageUrlMap.staff + location.search + location.hash);
+    return;
+  }
   if (redirect) {
     sessionStorage.removeItem('spa_redirect');
     var pg = _urlToPage(redirect);
@@ -5890,19 +5914,36 @@ function ebSendStatus(msg, ok) {
   status.style.color = ok ? '#8fcc8f' : '#cc8888';
   status.textContent = msg;
 }
+var _ebSending = false;
+// Result of a send: inline message + a pop-up toast, so it can't be missed
+function ebFinishSend(ok, msg) {
+  _ebSending = false;
+  ebSendStatus((ok ? '\u2713 ' : '\u26a0 ') + msg, ok);
+  staffToast(msg, ok ? 'success' : 'error');
+  var st = document.getElementById('eb-send-status');
+  if (st && st.scrollIntoView) st.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+}
+function ebSendError_(r, fallback) {
+  var e = r && r.error;
+  if (/^not authorized/i.test(e || '')) return 'Admins only \u2014 log in as Admin to send email.';
+  return e || fallback;
+}
 function ebSendTest() {
+  if (_ebSending) return;
+  _ebSending = true;
   // Save first so any photo still sitting as unsaved base64 gets uploaded to
   // Drive — most email clients strip inline data: URIs, so the sent email
   // must reference a real hosted URL, not the raw upload.
-  ebSendStatus('Saving photos & sending test…', true);
+  ebSendStatus('Saving photos & sending test\u2026', true);
   ebSaveAndSync(function() {
     WHCC_SYNC.sendDailyEmail({ test: true, subject: ebBuildSubject(), html: ebBuildHtml() }, function(r, err) {
-      if (err || !r || !r.ok) { ebSendStatus('⚠ ' + ((r && r.error) || 'Could not send test email.'), false); return; }
-      ebSendStatus('✓ Test email sent.', true);
+      if (err || !r || !r.ok) { ebFinishSend(false, ebSendError_(r, 'Could not send test email.')); return; }
+      ebFinishSend(true, 'Test email sent to the admin inbox.');
     });
   });
 }
 function ebSendAll() {
+  if (_ebSending) return;
   var count = _ebRecipientCount;
   var msg = count
     ? 'Save changes and send this email to all ' + count + ' member' + (count === 1 ? '' : 's') + ' on file? This cannot be undone.'
@@ -5913,11 +5954,12 @@ function ebSendAll() {
   // checked every later confirm() call silently returns false with no
   // dialog and no error, which looks exactly like the button doing nothing.
   staffConfirmShow('Send to All Members?', msg, 'Send', function() {
-    ebSendStatus('Saving photos & sending…', true);
+    _ebSending = true;
+    ebSendStatus('Saving photos & sending\u2026', true);
     ebSaveAndSync(function() {
       WHCC_SYNC.sendDailyEmail({ test: false, subject: ebBuildSubject(), html: ebBuildHtml() }, function(r, err) {
-        if (err || !r || !r.ok) { ebSendStatus('⚠ ' + ((r && r.error) || 'Could not send email.'), false); return; }
-        ebSendStatus('✓ Sent to ' + r.sent + ' member' + (r.sent === 1 ? '' : 's') + '.', true);
+        if (err || !r || !r.ok) { ebFinishSend(false, ebSendError_(r, 'Could not send email.')); return; }
+        ebFinishSend(true, 'Sent to ' + r.sent + ' member' + (r.sent === 1 ? '' : 's') + '.');
         ebRefreshRecipientCount();
       });
     });
@@ -9016,10 +9058,22 @@ function cmsProBioSave() {
   if (st) { st.style.display='block'; st.textContent='✓ Pro bio updated on the Golf page.'; setTimeout(function(){ st.style.display='none'; }, 4000); }
 }
 
+// View-only sessions get a clear bar, a badge, and disabled Save/Send buttons
+function staffApplyRole() {
+  var viewOnly = staffAuthed && !adminAuthed;
+  var badge = document.getElementById('staff-view-only-badge');
+  if (badge) badge.style.display = viewOnly ? '' : 'none';
+  var bar = document.getElementById('staff-viewonly-bar');
+  if (bar) bar.style.display = viewOnly ? 'flex' : 'none';
+  document.querySelectorAll('[data-admin-only]').forEach(function(btn) {
+    btn.disabled = viewOnly;
+    btn.title = viewOnly ? 'Admins only — log in as Admin to use this' : '';
+  });
+}
+
 // ── INIT ──
 function initStaffDashboard() {
-  var voBadge = document.getElementById('staff-view-only-badge');
-  if (voBadge) voBadge.style.display = (staffAuthed && !adminAuthed) ? '' : 'none';
+  staffApplyRole();
   staffLoadData().then(function() { staffRenderCal(); staffRenderStats(); staffUpdatePendingBadge(); staffRenderToday(); });
 
   // Poll every 3 minutes so sheet edits (reservation changes, new lesson requests) appear without reload
@@ -9048,55 +9102,73 @@ var _pinSetupStep = 0; // 0=normal, 1=create new, 2=confirm new
 var _pinSetupFirst = '';
 var _adminLoginMode = false; // true while the PIN overlay is showing the admin email+PIN form
 
+var _loginMode = 'admin';
+
 function staffPinShow(page) {
   _pinBuffer = '';
   _pinTarget = page;
   _pinSetupStep = 0;
   _pinSetupFirst = '';
-  _adminLoginMode = false;
-  // Always open in login mode — create mode is only offered when the server
-  // confirms no PIN exists anywhere (see pinSubmit), never per-device.
-  var titleEl = document.getElementById('pin-title');
-  var subEl   = document.getElementById('pin-sub');
-  if (titleEl) titleEl.textContent = 'Staff Portal';
-  if (subEl)   subEl.textContent   = 'Westwood Hills Country Club';
-  pinUpdateDots();
-  document.getElementById('pin-error').textContent = '';
-  var adminForm = document.getElementById('admin-login-form');
-  if (adminForm) adminForm.style.display = 'none';
-  var pinPad = document.getElementById('pin-pad');
-  if (pinPad) pinPad.style.display = '';
+  // Open on whichever tab this device used last (Admin the first time). Create-PIN mode is only
+  // offered when the server confirms no PIN exists anywhere (see pinSubmit), never per-device.
+  var saved = 'admin';
+  try { saved = localStorage.getItem('wh_login_mode') === 'staff' ? 'staff' : 'admin'; } catch (e) {}
+  loginMode(saved, true);
   document.getElementById('staff-pin-overlay').classList.add('active');
   document.body.style.overflow = 'hidden';
+  if (saved === 'admin') focusAdminField();
 }
 
-// Toggles the PIN overlay between "shared view-only PIN" entry and
-// "individual admin email + PIN" entry. Admins need their own login because
-// the shared PIN can no longer prove admin-level identity.
-function adminLoginToggle() {
-  _adminLoginMode = !_adminLoginMode;
+// Two logins, shown as two clearly labelled tabs:
+//   Admin = your own email + personal PIN  -> can edit, save and send email
+//   Staff = the shared 4-digit PIN         -> view only
+function loginMode(mode, skipSave) {
+  _loginMode = (mode === 'staff') ? 'staff' : 'admin';
+  _adminLoginMode = (_loginMode === 'admin');
+  var admin = _adminLoginMode;
   var titleEl = document.getElementById('pin-title');
   var subEl   = document.getElementById('pin-sub');
-  var pinPad  = document.getElementById('pin-pad');
+  if (titleEl) titleEl.textContent = admin ? 'Admin Login' : 'Staff Login';
+  if (subEl)   subEl.textContent   = admin ? 'Edit the site and send email' : 'View only \u2014 shared staff PIN';
+  var pinPad = document.getElementById('pin-pad');
   var adminForm = document.getElementById('admin-login-form');
+  if (pinPad) pinPad.style.display = admin ? 'none' : '';
+  if (adminForm) adminForm.style.display = admin ? '' : 'none';
+  var ta = document.getElementById('lt-admin'), ts = document.getElementById('lt-staff');
+  if (ta) { ta.classList.toggle('active', admin); ta.setAttribute('aria-selected', admin ? 'true' : 'false'); }
+  if (ts) { ts.classList.toggle('active', !admin); ts.setAttribute('aria-selected', admin ? 'false' : 'true'); }
   var errEl = document.getElementById('pin-error');
   if (errEl) errEl.textContent = '';
-  var toggleLink = document.getElementById('admin-login-toggle-link');
-  if (_adminLoginMode) {
-    if (titleEl) titleEl.textContent = 'Admin Login';
-    if (subEl)   subEl.textContent   = 'Enter your email and personal PIN';
-    if (pinPad)  pinPad.style.display = 'none';
-    if (adminForm) adminForm.style.display = '';
-    if (toggleLink) toggleLink.textContent = 'Back to Staff PIN';
-  } else {
-    if (titleEl) titleEl.textContent = 'Staff Portal';
-    if (subEl)   subEl.textContent   = 'Westwood Hills Country Club';
-    if (pinPad)  pinPad.style.display = '';
-    if (adminForm) adminForm.style.display = 'none';
-    if (toggleLink) toggleLink.textContent = 'Log in as Admin instead';
-    _pinBuffer = '';
-    pinUpdateDots();
+  _pinBuffer = '';
+  _pinSetupStep = 0;
+  _pinSetupFirst = '';
+  pinUpdateDots();
+  if (!skipSave) {
+    try { localStorage.setItem('wh_login_mode', _loginMode); } catch (e) {}
+    if (admin) focusAdminField();
   }
+}
+
+// Remembers the admin's email (never the PIN) on this device so signing in is one field
+function focusAdminField() {
+  var emailEl = document.getElementById('admin-login-email');
+  var pinEl = document.getElementById('admin-login-pin');
+  if (!emailEl || !pinEl) return;
+  var saved = '';
+  try { saved = localStorage.getItem('wh_admin_email') || ''; } catch (e) {}
+  if (saved && !emailEl.value) emailEl.value = saved;
+  setTimeout(function() { (emailEl.value ? pinEl : emailEl).focus(); }, 60);
+}
+
+// From the view-only bar (or after a refused save): sign out of view-only and open the Admin tab
+function staffSwitchToAdmin() {
+  staffAuthed = false;
+  adminAuthed = false;
+  _staffSessionPin = '';
+  _adminEmail = '';
+  _adminPin = '';
+  staffPinShow('staff');
+  loginMode('admin');
 }
 
 function adminLoginSubmit() {
@@ -9106,13 +9178,14 @@ function adminLoginSubmit() {
   var email = emailEl ? emailEl.value.trim() : '';
   var pin   = pinEl ? pinEl.value.trim() : '';
   if (!email || !pin) { errEl.textContent = 'Enter both email and PIN.'; return; }
-  errEl.textContent = 'Checking…';
+  errEl.textContent = 'Checking\u2026';
   WHCC_SYNC.validateLogin(email, pin, function(res) {
     if (res && res.ok && res.account && res.account.role === 'admin') {
       _adminEmail = email;
       _adminPin = pin;
       staffAuthed = true;
       adminAuthed = true;
+      try { localStorage.setItem('wh_admin_email', email); } catch (e) {}
       staffPinHide();
       if (pinEl) pinEl.value = '';
       _origNavigate(_pinTarget || 'staff');
@@ -9120,9 +9193,10 @@ function adminLoginSubmit() {
       return;
     }
     if (res && res.ok) {
-      errEl.textContent = 'This account is not an admin — view-only staff should use the Staff PIN instead.';
+      errEl.textContent = 'That account is not an admin. Use the Staff tab to look around (view only), or ask an admin to change your role.';
       return;
     }
+    if (res && res.locked) { errEl.textContent = 'Too many tries. Wait a few minutes and try again.'; return; }
     errEl.textContent = 'Incorrect email or PIN.';
   });
 }
@@ -9134,7 +9208,12 @@ function staffPinHide() {
 
 function pinKey(k) {
   var err = document.getElementById('pin-error');
-  if (k === 'cancel') { staffPinHide(); return; }
+  if (k === 'cancel') {
+    staffPinHide();
+    // Backing out of a sign-in (e.g. after opening /staff directly) should not leave the staff page up
+    if (!staffAuthed && (_urlToPage(location.pathname) === 'staff' || document.getElementById('page-staff').classList.contains('active'))) navigate('home');
+    return;
+  }
   if (k === 'back') { _pinBuffer = _pinBuffer.slice(0, -1); pinUpdateDots(); err.textContent = ''; return; }
   if (_pinBuffer.length >= 4) return;
   _pinBuffer += k;
@@ -9368,7 +9447,7 @@ document.addEventListener('keydown', function(e) {
   if (!document.getElementById('staff-pin-overlay').classList.contains('active')) return;
   if (_adminLoginMode) {
     if (e.key === 'Enter') adminLoginSubmit();
-    else if (e.key === 'Escape') adminLoginToggle();
+    else if (e.key === 'Escape') pinKey('cancel');
     return;
   }
   if (e.key >= '0' && e.key <= '9') pinKey(e.key);
@@ -9378,15 +9457,52 @@ document.addEventListener('keydown', function(e) {
 
 // ── NAVIGATE WITH AUTH ──
 var _origNavigate = navigate;
-navigate = function(page) {
+navigate = function(page, skipPushState) {
   if (page === 'staff') {
     if (!staffAuthed) { staffPinShow('staff'); return; }
-    _origNavigate(page);
+    _origNavigate(page, skipPushState);
     initStaffDashboard();
   } else {
-    _origNavigate(page);
+    _origNavigate(page, skipPushState);
   }
 };
+
+// Opening /staff directly: show the sign-in first (never the staff page itself)
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.__staffDeepLink) { window.__staffDeepLink = false; navigate('staff'); }
+});
+
+// If the server refuses a SAVE or SEND, say why in plain words instead of failing quietly
+// (the usual cause: signed in with the shared view-only PIN instead of as an admin).
+var _naShownAt = 0;
+function whNotAuthorized() {
+  if (!staffAuthed || Date.now() - _naShownAt < 5000) return;
+  _naShownAt = Date.now();
+  if (!adminAuthed) {
+    staffConfirmShow('Admin login needed', "You're signed in with the shared staff PIN, which is view only. To save changes or send email, log in as an admin.", 'Log in as Admin', staffSwitchToAdmin);
+  } else {
+    staffToast('Your admin login was not accepted. Please log in again.', 'error');
+    staffSwitchToAdmin();
+  }
+}
+(function() {
+  var nativeFetch = window.fetch;
+  window.fetch = function(url, opts) {
+    var p = nativeFetch.apply(this, arguments);
+    try {
+      if (String(url).indexOf(WHCC_SCRIPT_URL) === 0 && opts && opts.method === 'POST') {
+        var action = '';
+        try { action = JSON.parse(opts.body).action || ''; } catch (e) {}
+        if (action && action.indexOf('get-') !== 0 && action.indexOf('validate-') !== 0 && action !== 'save-pin') {
+          p.then(function(r) { return r.clone().json(); }).then(function(j) {
+            if (j && (/^not authorized/i.test(j.error || '') || /^not authorized/i.test(j.status || ''))) whNotAuthorized();
+          }).catch(function() {});
+        }
+      }
+    } catch (e) {}
+    return p;
+  };
+})();
 
 // ── TOAST ──
 function staffToast(msg, type) {
@@ -11197,6 +11313,10 @@ function launchFire() {
     <div id="pin-main">
       <div class="pin-title" id="pin-title">Staff Portal</div>
       <div class="pin-sub" id="pin-sub">Westwood Hills Country Club</div>
+      <div class="login-tabs" role="tablist">
+        <button type="button" class="login-tab" id="lt-admin" role="tab" onclick="loginMode('admin')">Admin<small>edit &amp; send email</small></button>
+        <button type="button" class="login-tab" id="lt-staff" role="tab" onclick="loginMode('staff')">Staff<small>view only</small></button>
+      </div>
       <div id="pin-pad">
         <div class="pin-dots">
           <div class="pin-dot" id="pd0"></div>
@@ -11229,10 +11349,10 @@ function launchFire() {
         <input id="admin-login-pin" type="password" placeholder="Your 4-digit PIN" maxlength="4" pattern="[0-9]*" inputmode="numeric" autocomplete="current-password"
           style="width:100%;padding:11px 14px;border:1.5px solid rgba(245,240,232,.2);border-radius:8px;background:rgba(245,240,232,.08);color:var(--cream);font-size:1.1rem;text-align:center;letter-spacing:.3em;outline:none;margin-bottom:8px;">
         <button onclick="adminLoginSubmit()" style="width:100%;padding:12px;background:var(--gold);color:var(--forest);border:none;border-radius:8px;font-weight:700;font-size:.9rem;cursor:pointer;margin-bottom:8px;">Log In</button>
+        <p onclick="pinKey('cancel')" style="text-align:center;font-size:11px;color:rgba(245,240,232,.4);margin-top:6px;cursor:pointer;letter-spacing:.06em;">Cancel</p>
       </div>
 
       <div class="pin-error" id="pin-error"></div>
-      <p onclick="adminLoginToggle()" style="text-align:center;font-size:11px;color:rgba(245,240,232,.35);margin-top:14px;cursor:pointer;letter-spacing:.04em;" id="admin-login-toggle-link">Log in as Admin instead</p>
       <p onclick="boardOverrideShow()" style="text-align:center;font-size:11px;color:rgba(245,240,232,.2);margin-top:6px;cursor:pointer;letter-spacing:.04em;">Board override</p>
     </div>
 
