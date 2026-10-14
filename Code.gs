@@ -230,6 +230,53 @@ function installArchivePastEventsTrigger() {
   }
 }
 
+// The restaurant specials last one week. Every Monday at 12 a.m. (the course
+// is closed) this blanks the weekly lunch, drink and Friday-night specials —
+// name, description, price and photo — so the website and mobile app never show
+// last week's specials if staff forgets, or if there is no new special that
+// week. The Wednesday Night Buffet is a standing weekly offering and is left alone.
+// (The website also hides any special not saved since Monday 12 a.m. by itself,
+// so it is exact to the minute even before this job runs.)
+var WEEKLY_SPECIAL_KEYS_ = ['weeklySpecial', 'fridayNight', 'drinkSpecial'];
+function resetWeeklySpecials() {
+  var mSh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Menus');
+  if (!mSh || mSh.getLastRow() < 2) return;
+  var lock = LockService.getScriptLock();
+  try { lock.waitLock(10000); } catch (lockErr) { Logger.log('resetWeeklySpecials: lock busy — ' + lockErr); return; }
+  try {
+    var menus;
+    try { menus = JSON.parse(String(mSh.getRange(2, 1).getValue())); } catch (e) { Logger.log('resetWeeklySpecials: bad JSON'); return; }
+    if (!menus || typeof menus !== 'object') return;
+    var cleared = 0;
+    WEEKLY_SPECIAL_KEYS_.forEach(function(k) {
+      var cur = menus[k] || {};
+      if (cur.active || cur.name || cur.desc || cur.price || cur.wine || cur.image) {
+        menus[k] = { active: false, name: '', desc: '', price: '', wine: '', image: '' };
+        cleared++;
+      }
+    });
+    if (cleared > 0) mSh.getRange(2, 1, 1, 2).setValues([[JSON.stringify(menus), new Date().toISOString()]]);
+    Logger.log('resetWeeklySpecials: cleared ' + cleared + ' special(s)');
+  } finally { lock.releaseLock(); }
+}
+
+// Run this ONCE from the Apps Script editor to schedule resetWeeklySpecials()
+// for every Monday just after 12 a.m. Central time (Apps Script runs it at some
+// point during the 12 a.m. hour). Removes any existing trigger for it first so
+// re-running this doesn't stack up duplicates.
+function installWeeklySpecialsResetTrigger() {
+  ScriptApp.getProjectTriggers().forEach(function(t) {
+    if (t.getHandlerFunction() === 'resetWeeklySpecials') ScriptApp.deleteTrigger(t);
+  });
+  ScriptApp.newTrigger('resetWeeklySpecials').timeBased()
+    .onWeekDay(ScriptApp.WeekDay.MONDAY).atHour(0).inTimezone('America/Chicago').create();
+  try {
+    SpreadsheetApp.getUi().alert('Scheduled resetWeeklySpecials to run every Monday around 12 a.m. Central.');
+  } catch (e) {
+    Logger.log('installWeeklySpecialsResetTrigger: trigger created (alert unavailable outside bound-sheet UI context)');
+  }
+}
+
 // ── HELPERS ───────────────────────────────────────────────────────────────────
 
 // Sheets that are never the registration store, even though some of them
