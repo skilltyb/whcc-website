@@ -4,14 +4,21 @@
   <meta charset="utf-8">
   <title>Westwood Hills Country Club</title>
   <script>
-    // GitHub Pages SPA routing: redirect 404s back to index with the path encoded.
-    // For project sites (user.github.io/repo/), keep the first path segment so we
-    // land at /repo/ rather than the server root /.
+    // GitHub Pages SPA routing: send unknown addresses back to the site with the
+    // intended page remembered, so index.html can open it.
     var path = location.pathname;
+    // Old Wix event pages (/event-details-registration/...) -> the Events page
+    if (path.indexOf('/event-details-registration/') === 0) path = '/events';
+    path = path.replace(/\.html$/, '').replace(/(.)\/$/, '$1');
     sessionStorage.setItem('spa_redirect', path);
-    var segs = path.split('/').filter(Boolean);
-    var base = (segs.length > 1) ? '/' + segs[0] + '/' : '/';
-    location.replace(base);
+    // On the temporary github.io preview the site lives under /<repo>/; on the
+    // real domain it lives at the root.
+    var base = '/';
+    if (/\.github\.io$/.test(location.hostname)) {
+      var segs = path.split('/').filter(Boolean);
+      if (segs.length > 1) base = '/' + segs[0] + '/';
+    }
+    location.replace(base + location.search + location.hash);
   </script>
 </head>
 <body></body>

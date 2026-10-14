@@ -26,6 +26,9 @@ jobs:
         with:
           submodules: false
 
+      - name: Generate route pages and old-address redirects
+        run: python3 build-routes.py .
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 

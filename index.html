@@ -7,11 +7,12 @@
 <meta property="og:site_name" content="Westwood Hills Country Club" />
 <meta property="og:title" content="Westwood Hills Country Club — Poplar Bluff, Missouri" />
 <meta property="og:description" content="Southeast Missouri's finest private country club — 18 championship holes, exceptional dining, and a community built over nine decades." />
-<meta property="og:image" content="https://skilltyb.github.io/whcc-website/images/hero-clubhouse.jpg" />
-<meta property="og:url" content="https://skilltyb.github.io/whcc-website/" />
+<meta property="og:image" content="https://westwoodhillscountryclub.com/images/hero-clubhouse.jpg" />
+<meta property="og:url" content="https://westwoodhillscountryclub.com/" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://westwoodhillscountryclub.com/images/hero-clubhouse.jpg" />
 <title>Westwood Hills Country Club — Poplar Bluff, Missouri</title>
-<link rel="canonical" href="https://skilltyb.github.io/whcc-website/" />
+<link rel="canonical" href="https://westwoodhillscountryclub.com/" />
 <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png" />
 <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16.png" />
 <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192.png" />
@@ -20,9 +21,29 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="Westwood Hills" />
-<!-- Google Analytics — replace G-XXXXXXXXXX with your Measurement ID -->
-<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script> -->
+<!-- Google Analytics 4 (free). Paste the Measurement ID (looks like G-ABC123XYZ9) between the quotes
+     below to turn tracking on; leave it empty and nothing loads and nothing is tracked. -->
+<script>
+var WHCC_GA_ID = '';
+(function(){
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function(){ dataLayer.push(arguments); };
+  if (!/^G-[A-Z0-9]{6,}$/.test(WHCC_GA_ID)) return;
+  var s = document.createElement('script');
+  s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + WHCC_GA_ID;
+  document.head.appendChild(s);
+  gtag('js', new Date());
+  // Page views are sent manually on every in-site page change (see navigate), since the site is a single page.
+  gtag('config', WHCC_GA_ID, { send_page_view: false });
+})();
+// Safe to call anywhere — does nothing until WHCC_GA_ID is set.
+function whTrack(name, params) {
+  try { if (/^G-/.test(WHCC_GA_ID)) gtag('event', name, params || {}); } catch(e) {}
+}
+</script>
+<!-- Google Search Console: verify the domain with a DNS TXT record (no code needed), or paste the
+     meta tag Google gives you here:
+<meta name="google-site-verification" content="PASTE_CODE_HERE" /> -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -32,7 +53,8 @@
   "@type": "GolfCourse",
   "name": "Westwood Hills Country Club",
   "description": "Poplar Bluff, Missouri's premier private country club since 1936. Championship golf, fine dining, aquatics, and family membership in Southeast Missouri.",
-  "url": "https://skilltyb.github.io/whcc-website/",
+  "url": "https://westwoodhillscountryclub.com/",
+  "image": "https://westwoodhillscountryclub.com/images/hero-clubhouse.jpg",
   "telephone": "+1-573-785-5253",
   "priceRange": "$$$",
   "address": {
@@ -994,6 +1016,27 @@ nav.staff-mode .nav-site-back{display:flex!important;}
 .reg-success-icon{font-size:48px;margin-bottom:16px}
 .reg-success-title{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--forest);margin-bottom:8px}
 .reg-success-body{font-size:13px;color:var(--muted);line-height:1.7}
+/* -- QUICK-ACTION BAR (mobile): tap-to-call + membership info -- */
+.m-cta-bar{display:none}
+@media(max-width:768px){
+  .m-cta-bar{position:fixed;left:0;right:0;bottom:0;z-index:190;display:flex;gap:1px;background:rgba(184,151,106,.35);border-top:1px solid rgba(184,151,106,.35);padding-bottom:env(safe-area-inset-bottom)}
+  .m-cta-bar a,.m-cta-bar button{flex:1;display:flex;align-items:center;justify-content:center;min-height:52px;background:rgba(17,26,20,.97);color:var(--gold-lt);font:600 12px 'Raleway',sans-serif;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;border:0;cursor:pointer}
+  .m-cta-bar .m-cta-primary{background:var(--gold);color:var(--deep)}
+  body{padding-bottom:calc(52px + env(safe-area-inset-bottom))}
+  body.on-staff{padding-bottom:0}
+  body.on-staff .m-cta-bar{display:none}
+}
+.hero-call{margin-top:18px;font-size:13px;color:rgba(245,240,232,.7)}
+.hero-call a{color:var(--gold-lt);text-decoration:none;border-bottom:1px solid rgba(212,180,131,.4)}
+/* -- EVENTS: share + deep links -- */
+.ev-card-footer{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ev-share{font-family:'Raleway',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);cursor:pointer;background:none;border:0;padding:6px 0}
+.ev-share:hover{color:var(--forest)}
+.ev-card.ev-flash{box-shadow:0 0 0 2px var(--gold),0 14px 34px rgba(26,43,31,.2)}
+.event-item.clickable{cursor:pointer}
+.event-item.clickable:hover .ev-name{color:var(--gold-dk)}
+#wh-toast{position:fixed;left:50%;bottom:calc(72px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(12px);background:rgba(17,26,20,.96);color:var(--cream);border:1px solid rgba(184,151,106,.4);padding:11px 20px;font-size:13px;z-index:700;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
+#wh-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
@@ -1030,6 +1073,12 @@ nav.staff-mode .nav-site-back{display:flex!important;}
   </ul>
 </div>
 
+<div class="m-cta-bar" id="m-cta-bar">
+  <a href="tel:+15737855253" onclick="whTrack('call_tap',{location:'mobile_bar'})">Call Us</a>
+  <button class="m-cta-primary" onclick="whTrack('membership_inquiry_click',{location:'mobile_bar'});openMemberInquiry('')">Membership Info</button>
+</div>
+<div id="wh-toast" role="status" aria-live="polite"></div>
+
 <div id="app">
 
 <!-- ═══════════════════════════════════════
@@ -1045,9 +1094,10 @@ nav.staff-mode .nav-site-back{display:flex!important;}
       <h1 class="hero-title">Where <em>legends</em><br>are made</h1>
       <p class="hero-sub">Southeast Missouri's finest private country club — 18 championship holes, exceptional dining, and a community built over nine decades.</p>
       <div class="hero-actions">
-        <button class="btn-p" onclick="navigate('membership')">Explore Membership</button>
-        <button class="btn-g" style="color:var(--cream);border-color:rgba(245,240,232,.35)" onclick="navigate('about')">Plan Your Visit</button>
+        <button class="btn-p" onclick="whTrack('membership_inquiry_click',{location:'hero'});openMemberInquiry('')">Request Membership Info</button>
+        <button class="btn-g" style="color:var(--cream);border-color:rgba(245,240,232,.35)" onclick="navigate('membership')">Explore Membership</button>
       </div>
+      <p class="hero-call">Questions? <a href="tel:+15737855253" onclick="whTrack('call_tap',{location:'hero'})">Call (573) 785-5253</a></p>
     </div>
   </section>
 
@@ -1074,6 +1124,19 @@ nav.staff-mode .nav-site-back{display:flex!important;}
         <div class="du-item"><div class="du-label">Pool Hours</div><div class="du-value" id="du-pool-hours">—</div></div>
       </div>
       <div class="du-notice" id="du-notice" style="display:none;"></div>
+    </div>
+  </div>
+
+  <div class="events-section">
+    <p class="eyebrow fade-up">Upcoming Events</p>
+    <h2 class="sec-title fade-up d1">Always something<br>to <em>look forward to</em></h2>
+    <div class="events-layout">
+      <div class="fade-up d2">
+        <p class="sec-body">From weekly Men's League on Thursdays to the prestigious Ozark Invitational, Friday Night Fights, and Hit &amp; Giggle socials, Westwood Hills keeps a full calendar of events for golfers, families, and social members throughout the season.</p>
+        <button class="btn-p" onclick="navigate('events')">Full Calendar</button>
+      </div>
+      <div class="fade-up d3" id="home-events-list">
+      </div>
     </div>
   </div>
 
@@ -1142,19 +1205,6 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     </div>
   </div>
 
-  <div class="events-section">
-    <p class="eyebrow fade-up">Social Calendar</p>
-    <h2 class="sec-title fade-up d1">Always something<br>to <em>look forward to</em></h2>
-    <div class="events-layout">
-      <div class="fade-up d2">
-        <p class="sec-body">From weekly Men's League on Thursdays to the prestigious Ozark Invitational, Friday Night Fights, and Hit &amp; Giggle socials, Westwood Hills keeps a full calendar of events for golfers, families, and social members throughout the season.</p>
-        <button class="btn-p" onclick="navigate('events')">Full Calendar</button>
-      </div>
-      <div class="fade-up d3" id="home-events-list">
-      </div>
-    </div>
-  </div>
-
   <div class="dining-cta" data-wh-photo="hoovers_cta">
     <div class="fade-up">
       <p class="eyebrow lt">Dining &amp; Events</p>
@@ -1176,20 +1226,20 @@ nav.staff-mode .nav-site-back{display:flex!important;}
         <div class="mem-type">Full Access</div><div class="mem-name">Full Family</div>
         <p class="mem-desc">Complete access to the championship course, aquatics, dining, events, and all club amenities.</p>
         <ul class="mem-feats"><li class="mem-feat">Unlimited golf rounds</li><li class="mem-feat">Full practice facility access</li><li class="mem-feat">Aquatics, dining &amp; events</li><li class="mem-feat">Member tournaments</li></ul>
-        <button class="btn-g" style="width:100%" onclick="navigate('membership')">Inquire Now</button>
+        <button class="btn-g" style="width:100%" onclick="whTrack('membership_inquiry_click',{location:'home_card',type:'Full Family'});openMemberInquiry('Full Family')">Inquire Now</button>
       </div>
       <div class="mem-card feat fade-up d2">
         <div class="mem-badge">Featured</div>
         <div class="mem-type">Under 35</div><div class="mem-name">Junior<br>Executive</div>
         <p class="mem-desc">All the benefits of full membership at a reduced rate — designed for younger members building their careers and families.</p>
         <ul class="mem-feats"><li class="mem-feat">All golf privileges</li><li class="mem-feat">Full club access</li><li class="mem-feat">Reduced initiation</li><li class="mem-feat">Ages 18–34</li></ul>
-        <button class="btn-p" style="width:100%" onclick="navigate('membership')">Inquire Now</button>
+        <button class="btn-p" style="width:100%" onclick="whTrack('membership_inquiry_click',{location:'home_card',type:'Junior Executive'});openMemberInquiry('Junior Executive')">Inquire Now</button>
       </div>
       <div class="mem-card fade-up d3">
         <div class="mem-type">Community</div><div class="mem-name">Social Membership</div>
         <p class="mem-desc">Dining, aquatics, and social events — ideal for those who love the club lifestyle beyond golf.</p>
         <ul class="mem-feats"><li class="mem-feat">Dining &amp; bar access</li><li class="mem-feat">Aquatics complex</li><li class="mem-feat">Social event calendar</li><li class="mem-feat">Golf at guest rates</li></ul>
-        <button class="btn-g" style="width:100%" onclick="navigate('membership')">Inquire Now</button>
+        <button class="btn-g" style="width:100%" onclick="whTrack('membership_inquiry_click',{location:'home_card',type:'Social'});openMemberInquiry('Social')">Inquire Now</button>
       </div>
     </div>
   </div>
@@ -1354,12 +1404,12 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <p class="eyebrow fade-up">Life on the Course</p>
     <h2 class="sec-title fade-up d1">Moments worth <em>chasing</em></h2>
     <div class="golf-gallery fade-up d2" id="golf-gallery-container">
-      <div class="gg-img tall"><img data-wh-photo="golf_gallery_1" src="images/golf-swing.jpg" alt="Golf swing" loading="lazy"></div>
-      <div class="gg-img"><img data-wh-photo="golf_gallery_2" src="images/golf-fairway.jpg" alt="Course fairway" loading="lazy"></div>
-      <div class="gg-img"><img data-wh-photo="golf_gallery_3" src="images/golf-green.png" alt="Putting green" loading="lazy"></div>
-      <div class="gg-img"><img data-wh-photo="golf_gallery_4" src="images/golf-carts-sunset.jpg" alt="Golf carts at sunset" loading="lazy"></div>
-      <div class="gg-img"><img data-wh-photo="golf_gallery_5" src="images/golf-group.jpg" alt="Group round" loading="lazy"></div>
-      <div class="gg-img tall"><img data-wh-photo="golf_gallery_6" src="images/golf-sunset-group.jpg" alt="Sunset on the course" loading="lazy"></div>
+      <div class="gg-img tall"><img data-wh-photo="golf_gallery_1" src="images/golf-tournament-1.jpg" alt="Golf swing" loading="lazy"></div>
+      <div class="gg-img"><img data-wh-photo="golf_gallery_2" src="images/golf-tournament-2.jpg" alt="Course fairway" loading="lazy"></div>
+      <div class="gg-img"><img data-wh-photo="golf_gallery_3" src="images/golf-tournament-3.jpg" alt="Putting green" loading="lazy"></div>
+      <div class="gg-img"><img data-wh-photo="golf_gallery_4" src="images/golf-tournament-4.jpg" alt="Golf carts at sunset" loading="lazy"></div>
+      <div class="gg-img"><img data-wh-photo="golf_gallery_5" src="images/golf-tournament-5.jpg" alt="Group round" loading="lazy"></div>
+      <div class="gg-img tall"><img data-wh-photo="golf_gallery_6" src="images/golf-tournament-6.jpg" alt="Sunset on the course" loading="lazy"></div>
     </div>
   </div>
 
@@ -1832,7 +1882,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <p class="wj-cta-sub">Schedule a personal tour and play a complimentary round — no strings attached. If you don't see the value, you'll know. But most people who walk the property end up asking for an application before they leave.</p>
     <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:20px;">
       <button class="btn-p" onclick="navigate('about')">Schedule a Tour</button>
-      <button class="btn-g">Call (573) 785-5253</button>
+      <a class="btn-g" href="tel:+15737855253" onclick="whTrack('call_tap',{location:'membership_page'})" style="text-decoration:none;display:inline-block">Call (573) 785-5253</a>
     </div>
   </div>
 
@@ -1995,7 +2045,7 @@ nav.staff-mode .nav-site-back{display:flex!important;}
     <!-- Dashboard header -->
     <div class="staff-header">
       <div>
-        <div class="staff-tag">Staff Dashboard</div>
+        <div class="staff-tag">Staff Dashboard <span id="staff-view-only-badge" style="display:none;margin-left:8px;background:rgba(212,180,131,.15);color:#d4b483;font-size:9px;font-weight:700;letter-spacing:.08em;border:1px solid rgba(212,180,131,.35);border-radius:8px;padding:2px 7px;vertical-align:middle;">VIEW ONLY</span></div>
         <div class="staff-title">Westwood Grill <em>Reservations</em></div>
       </div>
       <div class="staff-views">
@@ -3407,6 +3457,7 @@ function applySiteContent(sc) {
   if (sc.events) {
     renderEventsGrid(sc.events);
     renderHomeEvents(sc.events);
+    whUpdateEventSchema(sc.events);
   }
   // Announcements banner
   if (sc.announcements && sc.announcements.length > 0) {
@@ -3528,6 +3579,89 @@ function apTime(str) {
   return str;
 }
 
+function whEvSlug(ev) {
+  return ((ev.name || '') + ' ' + (ev.date || '')).toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+function whToast(msg) {
+  var t = document.getElementById('wh-toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(whToast._t);
+  whToast._t = setTimeout(function() { t.classList.remove('show'); }, 2400);
+}
+
+// Link to a single event: opens the Events page scrolled to (and highlighting) that card.
+function whEventUrl(slug) {
+  return location.origin + (_pageUrlMap.events || '/events') + '#' + slug;
+}
+
+function shareEvent(slug, name) {
+  var url = whEventUrl(slug);
+  whTrack('share', { content_type: 'event', item_id: slug });
+  if (navigator.share) {
+    navigator.share({ title: name + ' \u2014 Westwood Hills Country Club', url: url }).catch(function() {});
+    return;
+  }
+  var done = function() { whToast('Event link copied'); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, function() { window.prompt('Copy this link:', url); });
+  else window.prompt('Copy this link:', url);
+}
+
+function goToEvent(slug) {
+  navigate('events');
+  try { history.replaceState({ page: 'events' }, '', (_pageUrlMap.events || '/events') + '#' + slug); } catch (e) {}
+  setTimeout(whScrollToHashEvent, 150);
+}
+
+function whScrollToHashEvent() {
+  var slug = (location.hash || '').replace(/^#/, '');
+  if (!slug) return;
+  var card = document.getElementById('ev-' + slug);
+  if (!card) return;
+  if (!document.getElementById('page-events').classList.contains('active')) navigate('events', true);
+  card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  card.classList.add('ev-flash');
+  setTimeout(function() { card.classList.remove('ev-flash'); }, 2600);
+}
+
+// Machine-readable event data so Google can show upcoming events in search.
+function whUpdateEventSchema(events) {
+  var todayISO = localDateStr();
+  var upcoming = (events || [])
+    .filter(function(e) { return e.active !== false && !e.archived && e.date && e.date >= todayISO; })
+    .sort(function(a, b) { return a.date.localeCompare(b.date); })
+    .slice(0, 40);
+  var old = document.getElementById('ld-events');
+  if (old) old.remove();
+  if (!upcoming.length) return;
+  var data = upcoming.map(function(ev) {
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'Event',
+      name: ev.name,
+      startDate: ev.date,
+      description: apTime(ev.detail || '') || ev.name,
+      eventStatus: 'https://schema.org/EventScheduled',
+      eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+      url: 'https://westwoodhillscountryclub.com/events#' + whEvSlug(ev),
+      image: 'https://westwoodhillscountryclub.com/images/hero-clubhouse.jpg',
+      location: {
+        '@type': 'Place',
+        name: 'Westwood Hills Country Club',
+        address: { '@type': 'PostalAddress', streetAddress: '1 Birdie Ln', addressLocality: 'Poplar Bluff', addressRegion: 'MO', postalCode: '63901', addressCountry: 'US' }
+      },
+      organizer: { '@type': 'Organization', name: 'Westwood Hills Country Club', url: 'https://westwoodhillscountryclub.com/' }
+    };
+  });
+  var el = document.createElement('script');
+  el.type = 'application/ld+json';
+  el.id = 'ld-events';
+  el.textContent = JSON.stringify(data);
+  document.head.appendChild(el);
+}
+
 function renderEventsGrid(events) {
   var grid = document.getElementById('ev-cal-grid');
   if (!grid) return;
@@ -3545,15 +3679,23 @@ function renderEventsGrid(events) {
     var ctaOnclick = isFullReg
       ? "openRegModal('" + nameEsc + "','" + metaEsc + "',false)"
       : "openRsvpModal('" + nameEsc + "','" + evDateEsc + "')";
-    return '<div class="ev-card fade-up ' + delay + '">' +
+    var evSlug = whEvSlug(ev);
+    var nameShare = (ev.name || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    return '<div class="ev-card fade-up ' + delay + '" id="ev-' + evSlug + '">' +
       '<div class="ev-card-top">' +
         '<div class="ev-card-date"><span class="ecd-mo">' + (ev.month||'') + '</span><span class="ecd-d">' + (ev.day||'') + '</span><span class="ecd-y">' + (ev.year||'2026') + '</span></div>' +
         '<span class="ev-type ' + typeClass + '">' + typeClass.charAt(0).toUpperCase() + typeClass.slice(1) + '</span>' +
       '</div>' +
       '<div class="ev-card-body"><div class="ev-card-name">' + (ev.name||'') + '</div><div class="ev-card-detail">' + apTime(ev.detail||'') + '</div></div>' +
-      '<div class="ev-card-footer"><a class="ev-cta" onclick="' + ctaOnclick + '" style="cursor:pointer">' + ctaLabel + ' \u2192</a></div>' +
+      '<div class="ev-card-footer"><a class="ev-cta" onclick="' + ctaOnclick + '" style="cursor:pointer">' + ctaLabel + ' \u2192</a>' +
+        '<button type="button" class="ev-share" onclick="shareEvent(\'' + evSlug + '\',\'' + nameShare + '\')" aria-label="Share ' + (ev.name||'').replace(/"/g,'&quot;') + '">Share</button></div>' +
     '</div>';
   }).join('');
+  // A shared link (/events#event-name-date) lands on its card once the cards exist
+  if (location.hash && !renderEventsGrid._hashDone) {
+    renderEventsGrid._hashDone = true;
+    setTimeout(whScrollToHashEvent, 250);
+  }
 }
 
 function renderHomeEvents(events) {
@@ -3567,11 +3709,14 @@ function renderHomeEvents(events) {
   var upcoming = (events || [])
     .filter(function(e) { return e.active !== false && !e.archived && e.date >= todayISO; })
     .sort(function(a, b) { return (a.date || '').localeCompare(b.date || ''); });
+  // Featured events lead the list, then the next upcoming events fill it out to five
+  // (previously a single featured event meant the home page showed just one).
   var featured = upcoming.filter(function(e) { return e.featured; }).slice(0, 5);
-  if (featured.length === 0) featured = upcoming.slice(0, 5);
+  upcoming.forEach(function(e) { if (featured.length < 5 && featured.indexOf(e) === -1) featured.push(e); });
+  featured.sort(function(a, b) { return (a.date || '').localeCompare(b.date || ''); });
   var typeLabels = { golf:'Golf', tournament:'Tournament', social:'Social', aquatics:'Aquatics', weekly:'Weekly' };
   list.innerHTML = featured.map(function(ev) {
-    return '<div class="event-item">' +
+    return '<div class="event-item clickable" role="link" tabindex="0" onclick="goToEvent(\'' + whEvSlug(ev) + '\')" onkeydown="if(event.key===\'Enter\')goToEvent(\'' + whEvSlug(ev) + '\')">' +
       '<div class="ev-date-box"><div class="ev-mo">' + (ev.month||'') + '</div><div class="ev-d">' + (ev.day||'') + '</div></div>' +
       '<div><div class="ev-name">' + (ev.name||'') + '</div><div class="ev-sub">' + apTime(ev.detail||'') + '</div></div>' +
       '<span class="ev-tag">' + (typeLabels[ev.type] || 'Golf') + '</span>' +
@@ -3776,7 +3921,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'delete', id: id, staffPin: _staffSessionPin })
+      body: JSON.stringify({ action: 'delete', id: id, staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin })
     })
     .then(function(r) { return r.json(); })
     .then(function(res) { if (cb) cb(res); })
@@ -3785,14 +3930,14 @@ var WHCC_SYNC = {
 
   saveTeeSheet: function(event, round, date, config, groups, cb) {
     var body = JSON.stringify({ action: 'save-teesheet', event: event, round: round,
-      date: date, config: config, groups: groups, staffPin: _staffSessionPin });
+      date: date, config: config, groups: groups, staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin });
     fetch(WHCC_SCRIPT_URL, { method: 'POST', headers: {'Content-Type':'text/plain'}, body: body })
       .then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
   },
   saveScores: function(event, round, scores, cb) {
-    var body = JSON.stringify({ action: 'save-scores', event: event, round: round, scores: scores, staffPin: _staffSessionPin });
+    var body = JSON.stringify({ action: 'save-scores', event: event, round: round, scores: scores, staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin });
     fetch(WHCC_SCRIPT_URL, { method: 'POST', headers: {'Content-Type':'text/plain'}, body: body })
       .then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
@@ -3802,7 +3947,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'get-teesheets', event: event, staffPin: _staffSessionPin })
+      body: JSON.stringify({ action: 'get-teesheets', event: event, staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -3813,7 +3958,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'save-conditions', data: data, staffPin: _staffSessionPin })
+      body: JSON.stringify({ action: 'save-conditions', data: data, staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -3830,7 +3975,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'save-menus', data: data, staffPin: _staffSessionPin })
+      body: JSON.stringify({ action: 'save-menus', data: data, staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -3847,7 +3992,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(Object.assign({ action: 'send-daily-email', staffPin: _staffSessionPin }, payload))
+      body: JSON.stringify(Object.assign({ action: 'send-daily-email', staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin }, payload))
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -3873,7 +4018,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'get-dining', staffPin: _staffSessionPin })
+      body: JSON.stringify({ action: 'get-dining', staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin })
     }).then(function(r){ return r.json(); })
       .then(function(rows){ if (cb) cb(rows, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -3882,7 +4027,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'update-dining', id: id, status: status, staffPin: _staffSessionPin })
+      body: JSON.stringify({ action: 'update-dining', id: id, status: status, staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -3891,7 +4036,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(Object.assign({ action: 'update-dining-full', staffPin: _staffSessionPin }, res))
+      body: JSON.stringify(Object.assign({ action: 'update-dining-full', staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin }, res))
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -3900,7 +4045,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'delete-dining', id: id, staffPin: _staffSessionPin })
+      body: JSON.stringify({ action: 'delete-dining', id: id, staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -3909,7 +4054,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'save-live-scoring', data: data, staffPin: _staffSessionPin })
+      body: JSON.stringify({ action: 'save-live-scoring', data: data, staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -3918,7 +4063,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'get-live-scoring', staffPin: _staffSessionPin })
+      body: JSON.stringify({ action: 'get-live-scoring', staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -3929,7 +4074,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'save-waitlist', data: data, staffPin: _staffSessionPin })
+      body: JSON.stringify({ action: 'save-waitlist', data: data, staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -3938,7 +4083,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'get-waitlist', staffPin: _staffSessionPin })
+      body: JSON.stringify({ action: 'get-waitlist', staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -3949,7 +4094,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'save-guest-notes', data: data, staffPin: _staffSessionPin })
+      body: JSON.stringify({ action: 'save-guest-notes', data: data, staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -3958,7 +4103,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'get-guest-notes', staffPin: _staffSessionPin })
+      body: JSON.stringify({ action: 'get-guest-notes', staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -3969,7 +4114,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'save-pairings', data: data, staffPin: _staffSessionPin })
+      body: JSON.stringify({ action: 'save-pairings', data: data, staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -3978,7 +4123,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'get-pairings', staffPin: _staffSessionPin })
+      body: JSON.stringify({ action: 'get-pairings', staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -3987,7 +4132,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'get-event-rsvps', staffPin: _staffSessionPin })
+      body: JSON.stringify({ action: 'get-event-rsvps', staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -4007,7 +4152,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'get-lessons', staffPin: _staffSessionPin })
+      body: JSON.stringify({ action: 'get-lessons', staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -4016,7 +4161,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'update-lesson-status', id: id, status: status, staffPin: _staffSessionPin })
+      body: JSON.stringify({ action: 'update-lesson-status', id: id, status: status, staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -4027,7 +4172,7 @@ var WHCC_SYNC = {
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'save-site-content', data: data, staffPin: _staffSessionPin })
+      body: JSON.stringify({ action: 'save-site-content', data: data, staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin })
     }).then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -4044,6 +4189,8 @@ var WHCC_SYNC = {
     var payload = { action: 'save-pin', pin: pin };
     if (auth && auth.current)   payload.current   = auth.current;
     if (auth && auth.boardCode) payload.boardCode = auth.boardCode;
+    if (auth && auth.staffEmail)   payload.staffEmail   = auth.staffEmail;
+    if (auth && auth.staffUserPin) payload.staffUserPin = auth.staffUserPin;
     fetch(WHCC_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
@@ -4058,6 +4205,14 @@ var WHCC_SYNC = {
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({ action: 'validate-staff-pin', pin: pin })
     }).then(function(r){ return r.json(); })
+      .then(function(d){ if (cb) cb(d || null, null); })
+      .catch(function(e){ if (cb) cb(null, e); });
+  },
+  // Individual email+PIN login (used for the Admin login form) — same
+  // action the mobile app uses, returns { ok, account: { role, name, ... } }.
+  validateLogin: function(email, pin, cb) {
+    fetch(WHCC_SCRIPT_URL + '?action=validate-login&email=' + encodeURIComponent(email) + '&pin=' + encodeURIComponent(pin))
+      .then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d || null, null); })
       .catch(function(e){ if (cb) cb(null, e); });
   },
@@ -4145,6 +4300,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function openRegModal(eventTitle, eventMeta, isTeam) {
+  whTrack('event_signup_open', { event_name: eventTitle || '', kind: 'registration' });
   var info = getEventInfo(eventTitle);
   var evType = info.type;
   currentRegEvent = { title: eventTitle, meta: eventMeta, type: evType, capacity: info.capacity, fee: info.fee };
@@ -4220,6 +4376,7 @@ var _rsvpEventName = '';
 var _rsvpEventDate = '';
 
 function openRsvpModal(evtName, evtDate) {
+  whTrack('event_signup_open', { event_name: evtName || '', kind: 'rsvp' });
   _rsvpEventName = evtName || '';
   _rsvpEventDate = evtDate || '';
   document.getElementById('rsvp-event-title').textContent = _rsvpEventName;
@@ -4271,6 +4428,7 @@ function submitEventRsvp(e) {
       document.getElementById('rsvp-form-wrap').style.display = 'none';
       document.getElementById('rsvp-success-body').textContent = "We've got you down for " + _rsvpEventName + ". A confirmation email is on its way.";
       document.getElementById('rsvp-success').style.display = 'block';
+      whTrack('event_signup_complete', { event_name: _rsvpEventName, kind: 'rsvp' });
     } else {
       errEl.textContent = 'Something went wrong — please try again or call (573) 785-5253.';
     }
@@ -4398,6 +4556,7 @@ function submitContactForm() {
     .then(function(r){ return r.json(); })
     .then(function(data) {
       if (data && data.ok !== false) {
+        whTrack('generate_lead', { form: 'contact', subject: subject });
         submitBtn.textContent = '✓ Message Sent';
         statusEl.textContent  = 'Thank you! We\'ll be in touch soon.';
         statusEl.style.color  = '#2e7d32';
@@ -4443,6 +4602,7 @@ function submitPrivateInquiry() {
     .then(function(r){ return r.json(); })
     .then(function(data) {
       if (data && data.ok !== false) {
+        whTrack('generate_lead', { form: 'private_event' });
         submitBtn.textContent = '✓ Inquiry Sent';
         statusEl.textContent  = 'Thank you! Our events team will be in touch soon.';
         statusEl.style.color  = '#2e7d32'; statusEl.style.display = 'block';
@@ -4555,6 +4715,7 @@ function submitRegForm(e) {
   btn.disabled = false;
   document.getElementById('reg-form-wrap').style.display = 'none';
   document.getElementById('reg-success').style.display = 'block';
+  whTrack('event_signup_complete', { event_name: reg.event, kind: 'registration' });
   document.getElementById('reg-success-body').textContent = isOverCapacity
     ? 'This event is full, so you\'ve been added to the waitlist for ' + reg.event + '. The Pro Shop will reach out at ' + (reg.email || reg.phone || 'the contact provided') + ' if a spot opens up.'
     : 'You\'re signed up for ' + reg.event + '. The Pro Shop will confirm your registration within 24 hours at ' + (reg.email || reg.phone || 'the contact provided') + '.';
@@ -4596,8 +4757,13 @@ var _pageMeta = {
 // Detect subdirectory base path so relative image URLs still resolve correctly
 // when deployed under a sub-path like /whcc-website/ on GitHub Pages.
 var _basePath = (function() {
-  var p = location.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '');
-  return p; // e.g. '/whcc-website' on GH Pages, '' on a root custom domain
+  // Only the temporary github.io preview serves the site from a sub-folder (/whcc-website/).
+  // On the real domain (and locally) it is always at the root, so /golf is a page, not a folder.
+  if (/\.github\.io$/.test(location.hostname)) {
+    var seg = location.pathname.split('/').filter(Boolean)[0];
+    return seg ? '/' + seg : '';
+  }
+  return '';
 })();
 
 var _pageUrlMap = {
@@ -4631,6 +4797,7 @@ function navigate(page, skipPushState) {
   // Toggle staff mode on nav (hides public links, shows ← Back)
   var nav = document.getElementById('main-nav');
   if (nav) nav.classList.toggle('staff-mode', page === 'staff');
+  document.body.classList.toggle('on-staff', page === 'staff');
   // Update nav active state
   document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
   document.querySelectorAll('.nav-links a').forEach(a => {
@@ -4662,12 +4829,27 @@ function navigate(page, skipPushState) {
     if (_ogTitle) _ogTitle.setAttribute('content', _m.title);
     var _ogDesc = document.querySelector('meta[property="og:description"]');
     if (_ogDesc) _ogDesc.setAttribute('content', _m.desc);
+    // Always point at the real domain (not the temporary github.io preview address),
+    // with any sub-path stripped so previews and the live site agree.
+    var _canonPath = (_pageUrlMap[page] || _basePath + '/').slice(_basePath.length) || '/';
+    var _canonUrl = 'https://westwoodhillscountryclub.com' + _canonPath;
     var _ogUrl = document.querySelector('meta[property="og:url"]');
-    if (_ogUrl) _ogUrl.setAttribute('content', 'https://skilltyb.github.io' + (_pageUrlMap[page] || _basePath + '/'));
+    if (_ogUrl) _ogUrl.setAttribute('content', _canonUrl);
     var _canonical = document.querySelector('link[rel="canonical"]');
-    if (_canonical) _canonical.setAttribute('href', 'https://skilltyb.github.io' + (_pageUrlMap[page] || _basePath + '/'));
+    if (_canonical) _canonical.setAttribute('href', _canonUrl);
   }
+  // Analytics: one page view per in-site page change (public pages only, never the staff portal)
+  if (page !== 'staff') whTrack('page_view', { page_title: document.title, page_location: location.href, page_path: location.pathname });
 }
+
+// Count taps on phone numbers and the IBS Vision member portal
+document.addEventListener('click', function(e) {
+  var a = e.target.closest && e.target.closest('a[href]');
+  if (!a || a.getAttribute('onclick')) return;
+  var h = a.getAttribute('href') || '';
+  if (h.indexOf('tel:') === 0) whTrack('call_tap', { location: 'link', number: h.slice(4) });
+  else if (h.indexOf('goibsvision.com') !== -1) whTrack('member_portal_click', { location: 'link' });
+});
 
 // Handle browser back/forward
 window.addEventListener('popstate', function(e) {
@@ -4689,6 +4871,8 @@ window.addEventListener('popstate', function(e) {
 })();
 
 function _urlToPage(path) {
+  // /golf, /golf/ and /golf.html all mean the same page
+  path = (path || '').replace(/\.html$/, '').replace(/(.)\/$/, '$1');
   for (var pg in _pageUrlMap) {
     if (_pageUrlMap[pg] === path) return pg;
   }
@@ -4703,15 +4887,18 @@ function _urlToPage(path) {
     sessionStorage.removeItem('spa_redirect');
     var pg = _urlToPage(redirect);
     navigate(pg, true);
-    history.replaceState({ page: pg }, '', _pageUrlMap[pg] || _basePath + '/');
+    // Keep ?utm_ campaign tags and #event links — analytics and shared event links need them
+    history.replaceState({ page: pg }, '', (_pageUrlMap[pg] || _basePath + '/') + location.search + location.hash);
     return;
   }
   var initial = _urlToPage(location.pathname);
   if (initial !== 'home') {
     navigate(initial, true);
-    history.replaceState({ page: initial }, '', _pageUrlMap[initial]);
+    history.replaceState({ page: initial }, '', _pageUrlMap[initial] + location.search + location.hash);
   } else {
-    history.replaceState({ page: 'home' }, '', _basePath + '/');
+    history.replaceState({ page: 'home' }, '', _basePath + '/' + location.search + location.hash);
+    // navigate() isn't called for a direct landing on the home page, so count it here
+    whTrack('page_view', { page_title: document.title, page_location: location.href, page_path: location.pathname });
   }
 })();
 
@@ -5634,7 +5821,7 @@ function ebUploadPhotoIfNeeded_(prefix, cb) {
   fetch(WHCC_SCRIPT_URL, { method:'POST', headers:{'Content-Type':'text/plain'},
     body: JSON.stringify({ action:'upload-photo', base64: imgData.split(',')[1],
       mimeType: imgData.split(';')[0].split(':')[1] || 'image/jpeg',
-      filename: 'special-' + prefix + '-' + Date.now() + '.jpg', category: 'Dining', staffPin: _staffSessionPin })
+      filename: 'special-' + prefix + '-' + Date.now() + '.jpg', category: 'Dining', staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin })
   }).then(function(r){ return r.json(); }).then(function(d) {
     var url = (d && d.ok) ? d.url : imgData;
     if (d && d.ok && dataEl) dataEl.value = url;
@@ -8120,7 +8307,7 @@ function phUploadAll() {
           action: 'upload-photo',
           base64: base64,
           mimeType: mime,
-          filename: item.filename, category: item.category, staffPin: _staffSessionPin
+          filename: item.filename, category: item.category, staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin
         })
       })
       .then(function(r){ return r.json(); })
@@ -8225,7 +8412,7 @@ function phMakePublic() {
   if (status) status.textContent = 'Making photos public…';
   fetch(WHCC_SCRIPT_URL, {
     method: 'POST', headers: { 'Content-Type': 'text/plain' },
-    body: JSON.stringify({ action: 'make-photos-public', staffPin: _staffSessionPin })
+    body: JSON.stringify({ action: 'make-photos-public', staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin })
   })
   .then(function(r) { return r.json(); })
   .then(function(d) {
@@ -8254,7 +8441,7 @@ function phDelete(fileId, btn) {
   fetch(WHCC_SCRIPT_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain' },
-    body: JSON.stringify({ action: 'delete-photo', fileId: fileId, staffPin: _staffSessionPin })
+    body: JSON.stringify({ action: 'delete-photo', fileId: fileId, staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin })
   })
   .then(function(r) { return r.json(); })
   .then(function(data) {
@@ -8399,7 +8586,7 @@ function phPickerUpload() {
           mimeType: mime,
           filename: key + '-' + file.name.replace(/\s+/g,'-').toLowerCase(),
           category: key.startsWith('dining_food') ? 'Dining' : key.startsWith('golf_gallery') ? 'Golf' : (key.startsWith('pool') || key.startsWith('events') || key.startsWith('venue')) ? 'Pool & Events' : 'Banners',
-          staffPin: _staffSessionPin
+          staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin
         })
       })
       .then(function(r){return r.json();})
@@ -8527,7 +8714,7 @@ function phAddToSection(prefix, sectionId) {
           base64: ev.target.result.split(',')[1],
           mimeType: file.type || 'image/jpeg',
           filename: key + '-' + file.name.replace(/\s+/g,'-').toLowerCase(),
-          category: cat, staffPin: _staffSessionPin
+          category: cat, staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin
         })
       })
       .then(function(r){return r.json();})
@@ -8831,6 +9018,8 @@ function cmsProBioSave() {
 
 // ── INIT ──
 function initStaffDashboard() {
+  var voBadge = document.getElementById('staff-view-only-badge');
+  if (voBadge) voBadge.style.display = (staffAuthed && !adminAuthed) ? '' : 'none';
   staffLoadData().then(function() { staffRenderCal(); staffRenderStats(); staffUpdatePendingBadge(); staffRenderToday(); });
 
   // Poll every 3 minutes so sheet edits (reservation changes, new lesson requests) appear without reload
@@ -8846,17 +9035,25 @@ function initStaffDashboard() {
 
 // ── STAFF AUTH ──
 var staffAuthed = false;
+// True only when an individual 'admin'-role App User has logged in with their
+// own email + PIN (see adminLoginSubmit). The shared portal PIN below only
+// ever proves view-only staff access, never admin/write access.
+var adminAuthed = false;
 var _staffSessionPin = ''; // PIN that authenticated this session; sent as proof when changing it
+var _adminEmail = ''; // email of the logged-in admin, if any (sent as staffEmail on writes)
+var _adminPin   = ''; // that admin's own PIN, sent as staffUserPin on writes
 var _pinBuffer = '';
 var _pinTarget = null;
 var _pinSetupStep = 0; // 0=normal, 1=create new, 2=confirm new
 var _pinSetupFirst = '';
+var _adminLoginMode = false; // true while the PIN overlay is showing the admin email+PIN form
 
 function staffPinShow(page) {
   _pinBuffer = '';
   _pinTarget = page;
   _pinSetupStep = 0;
   _pinSetupFirst = '';
+  _adminLoginMode = false;
   // Always open in login mode — create mode is only offered when the server
   // confirms no PIN exists anywhere (see pinSubmit), never per-device.
   var titleEl = document.getElementById('pin-title');
@@ -8865,8 +9062,69 @@ function staffPinShow(page) {
   if (subEl)   subEl.textContent   = 'Westwood Hills Country Club';
   pinUpdateDots();
   document.getElementById('pin-error').textContent = '';
+  var adminForm = document.getElementById('admin-login-form');
+  if (adminForm) adminForm.style.display = 'none';
+  var pinPad = document.getElementById('pin-pad');
+  if (pinPad) pinPad.style.display = '';
   document.getElementById('staff-pin-overlay').classList.add('active');
   document.body.style.overflow = 'hidden';
+}
+
+// Toggles the PIN overlay between "shared view-only PIN" entry and
+// "individual admin email + PIN" entry. Admins need their own login because
+// the shared PIN can no longer prove admin-level identity.
+function adminLoginToggle() {
+  _adminLoginMode = !_adminLoginMode;
+  var titleEl = document.getElementById('pin-title');
+  var subEl   = document.getElementById('pin-sub');
+  var pinPad  = document.getElementById('pin-pad');
+  var adminForm = document.getElementById('admin-login-form');
+  var errEl = document.getElementById('pin-error');
+  if (errEl) errEl.textContent = '';
+  var toggleLink = document.getElementById('admin-login-toggle-link');
+  if (_adminLoginMode) {
+    if (titleEl) titleEl.textContent = 'Admin Login';
+    if (subEl)   subEl.textContent   = 'Enter your email and personal PIN';
+    if (pinPad)  pinPad.style.display = 'none';
+    if (adminForm) adminForm.style.display = '';
+    if (toggleLink) toggleLink.textContent = 'Back to Staff PIN';
+  } else {
+    if (titleEl) titleEl.textContent = 'Staff Portal';
+    if (subEl)   subEl.textContent   = 'Westwood Hills Country Club';
+    if (pinPad)  pinPad.style.display = '';
+    if (adminForm) adminForm.style.display = 'none';
+    if (toggleLink) toggleLink.textContent = 'Log in as Admin instead';
+    _pinBuffer = '';
+    pinUpdateDots();
+  }
+}
+
+function adminLoginSubmit() {
+  var emailEl = document.getElementById('admin-login-email');
+  var pinEl   = document.getElementById('admin-login-pin');
+  var errEl   = document.getElementById('pin-error');
+  var email = emailEl ? emailEl.value.trim() : '';
+  var pin   = pinEl ? pinEl.value.trim() : '';
+  if (!email || !pin) { errEl.textContent = 'Enter both email and PIN.'; return; }
+  errEl.textContent = 'Checking…';
+  WHCC_SYNC.validateLogin(email, pin, function(res) {
+    if (res && res.ok && res.account && res.account.role === 'admin') {
+      _adminEmail = email;
+      _adminPin = pin;
+      staffAuthed = true;
+      adminAuthed = true;
+      staffPinHide();
+      if (pinEl) pinEl.value = '';
+      _origNavigate(_pinTarget || 'staff');
+      initStaffDashboard();
+      return;
+    }
+    if (res && res.ok) {
+      errEl.textContent = 'This account is not an admin — view-only staff should use the Staff PIN instead.';
+      return;
+    }
+    errEl.textContent = 'Incorrect email or PIN.';
+  });
 }
 
 function staffPinHide() {
@@ -8999,6 +9257,9 @@ function srTab(name) {
 
 function staffLockDashboard() {
   staffAuthed = false;
+  adminAuthed = false;
+  _adminEmail = '';
+  _adminPin = '';
   navigate('home');
 }
 
@@ -9010,8 +9271,9 @@ function staffChangePin() {
   if (np !== cp) { msg.style.color = '#e07070'; msg.textContent = 'PINs do not match.'; return; }
   msg.style.color = '#d4b483';
   msg.textContent = 'Syncing…';
-  // The server requires the current PIN as proof — only persist on success
-  WHCC_SYNC.savePin(np, { current: _staffSessionPin }, function(ok) {
+  // The server now requires admin credentials (or the Board recovery code) as
+  // proof — only persist on success
+  WHCC_SYNC.savePin(np, { staffEmail: _adminEmail, staffUserPin: _adminPin }, function(ok) {
     if (ok) {
       localStorage.setItem('staff-pin', np);
       _staffSessionPin = np;
@@ -9104,6 +9366,11 @@ function boardSetPin() {
 
 document.addEventListener('keydown', function(e) {
   if (!document.getElementById('staff-pin-overlay').classList.contains('active')) return;
+  if (_adminLoginMode) {
+    if (e.key === 'Enter') adminLoginSubmit();
+    else if (e.key === 'Escape') adminLoginToggle();
+    return;
+  }
   if (e.key >= '0' && e.key <= '9') pinKey(e.key);
   else if (e.key === 'Backspace') pinKey('back');
   else if (e.key === 'Escape') pinKey('cancel');
@@ -10930,28 +11197,43 @@ function launchFire() {
     <div id="pin-main">
       <div class="pin-title" id="pin-title">Staff Portal</div>
       <div class="pin-sub" id="pin-sub">Westwood Hills Country Club</div>
-      <div class="pin-dots">
-        <div class="pin-dot" id="pd0"></div>
-        <div class="pin-dot" id="pd1"></div>
-        <div class="pin-dot" id="pd2"></div>
-        <div class="pin-dot" id="pd3"></div>
+      <div id="pin-pad">
+        <div class="pin-dots">
+          <div class="pin-dot" id="pd0"></div>
+          <div class="pin-dot" id="pd1"></div>
+          <div class="pin-dot" id="pd2"></div>
+          <div class="pin-dot" id="pd3"></div>
+        </div>
+        <div class="pin-keys">
+          <button class="pin-key" onclick="pinKey('1')">1</button>
+          <button class="pin-key" onclick="pinKey('2')">2</button>
+          <button class="pin-key" onclick="pinKey('3')">3</button>
+          <button class="pin-key" onclick="pinKey('4')">4</button>
+          <button class="pin-key" onclick="pinKey('5')">5</button>
+          <button class="pin-key" onclick="pinKey('6')">6</button>
+          <button class="pin-key" onclick="pinKey('7')">7</button>
+          <button class="pin-key" onclick="pinKey('8')">8</button>
+          <button class="pin-key" onclick="pinKey('9')">9</button>
+          <button class="pin-key" onclick="pinKey('back')" style="font-size:14px;">⌫</button>
+          <button class="pin-key" onclick="pinKey('0')">0</button>
+          <button class="pin-key" onclick="pinKey('cancel')" style="font-size:10px;letter-spacing:.08em;color:rgba(245,240,232,.45);">Cancel</button>
+        </div>
       </div>
-      <div class="pin-keys">
-        <button class="pin-key" onclick="pinKey('1')">1</button>
-        <button class="pin-key" onclick="pinKey('2')">2</button>
-        <button class="pin-key" onclick="pinKey('3')">3</button>
-        <button class="pin-key" onclick="pinKey('4')">4</button>
-        <button class="pin-key" onclick="pinKey('5')">5</button>
-        <button class="pin-key" onclick="pinKey('6')">6</button>
-        <button class="pin-key" onclick="pinKey('7')">7</button>
-        <button class="pin-key" onclick="pinKey('8')">8</button>
-        <button class="pin-key" onclick="pinKey('9')">9</button>
-        <button class="pin-key" onclick="pinKey('back')" style="font-size:14px;">⌫</button>
-        <button class="pin-key" onclick="pinKey('0')">0</button>
-        <button class="pin-key" onclick="pinKey('cancel')" style="font-size:10px;letter-spacing:.08em;color:rgba(245,240,232,.45);">Cancel</button>
+
+      <!-- Individual admin login — email + personal PIN, the only credential
+           that proves admin (write) access; the numeric pad above only logs
+           in as view-only staff. -->
+      <div id="admin-login-form" style="display:none;">
+        <input id="admin-login-email" type="email" placeholder="Email address" autocomplete="username"
+          style="width:100%;padding:11px 14px;border:1.5px solid rgba(245,240,232,.2);border-radius:8px;background:rgba(245,240,232,.08);color:var(--cream);font-size:.95rem;text-align:center;outline:none;margin-bottom:8px;">
+        <input id="admin-login-pin" type="password" placeholder="Your 4-digit PIN" maxlength="4" pattern="[0-9]*" inputmode="numeric" autocomplete="current-password"
+          style="width:100%;padding:11px 14px;border:1.5px solid rgba(245,240,232,.2);border-radius:8px;background:rgba(245,240,232,.08);color:var(--cream);font-size:1.1rem;text-align:center;letter-spacing:.3em;outline:none;margin-bottom:8px;">
+        <button onclick="adminLoginSubmit()" style="width:100%;padding:12px;background:var(--gold);color:var(--forest);border:none;border-radius:8px;font-weight:700;font-size:.9rem;cursor:pointer;margin-bottom:8px;">Log In</button>
       </div>
+
       <div class="pin-error" id="pin-error"></div>
-      <p onclick="boardOverrideShow()" style="text-align:center;font-size:11px;color:rgba(245,240,232,.2);margin-top:14px;cursor:pointer;letter-spacing:.04em;">Board override</p>
+      <p onclick="adminLoginToggle()" style="text-align:center;font-size:11px;color:rgba(245,240,232,.35);margin-top:14px;cursor:pointer;letter-spacing:.04em;" id="admin-login-toggle-link">Log in as Admin instead</p>
+      <p onclick="boardOverrideShow()" style="text-align:center;font-size:11px;color:rgba(245,240,232,.2);margin-top:6px;cursor:pointer;letter-spacing:.04em;">Board override</p>
     </div>
 
     <!-- Board override panel -->
