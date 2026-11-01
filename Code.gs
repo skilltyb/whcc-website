@@ -68,6 +68,36 @@ function getMemberEmails_() {
   return emails;
 }
 
+// Finds a member on the roster ("Members" sheet) by first + last name. Sign-up no longer asks for a
+// member number. If two roster members share a name, the typed email (when the roster has one) tells them
+// apart. Returns { name, memberNumber, membership, handicap } or null when there is no single clear match.
+function findRosterMemberInRows_(rows, first, last, email) {
+  if (!rows || rows.length < 2) return null;
+  var hdr = rows[0];
+  var cNum = hdr.indexOf('Member Number'), cFirst = hdr.indexOf('First Name'), cLast = hdr.indexOf('Last Name'),
+      cMem = hdr.indexOf('Membership'), cHcp = hdr.indexOf('Handicap'), cEmail = hdr.indexOf('Email');
+  var f = String(first || '').trim().toLowerCase();
+  var l = String(last || '').trim().toLowerCase();
+  var em = String(email || '').trim().toLowerCase();
+  if (!f || !l || cFirst < 0 || cLast < 0) return null;
+  var matches = [];
+  for (var i = 1; i < rows.length; i++) {
+    if (String(rows[i][cFirst] || '').trim().toLowerCase() === f &&
+        String(rows[i][cLast]  || '').trim().toLowerCase() === l) matches.push(rows[i]);
+  }
+  if (matches.length > 1 && em && cEmail >= 0) {
+    matches = matches.filter(function(r) { return String(r[cEmail] || '').trim().toLowerCase() === em; });
+  }
+  if (matches.length !== 1) return null;
+  var r = matches[0];
+  return {
+    name:         (String(r[cFirst] || '') + ' ' + String(r[cLast] || '')).trim(),
+    memberNumber: cNum >= 0 ? String(r[cNum] || '').trim() : '',
+    membership:   cMem >= 0 ? String(r[cMem] || '') : '',
+    handicap:     cHcp >= 0 ? String(r[cHcp] || '') : ''
+  };
+}
+
 function normMemberNum_(s) {
   var str = String(s || '').trim().toUpperCase().replace(/^[A-Z]+/, '').split('-')[0];
   return parseInt(str, 10) || 0;
@@ -754,34 +784,15 @@ function doGet(e) {
   }
 
   if (action === 'verify-member') {
-    var memberNum = (e.parameter.memberNum || '').trim();
-    var last      = (e.parameter.last      || '').trim().toLowerCase();
-    if (!memberNum || !last) return jsonResponse({ ok: false, error: 'Missing fields.' });
-    var mSh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Members');
-    if (!mSh) return jsonResponse({ ok: false, error: 'Members list not configured. Contact the Pro Shop.' });
-    var rows  = mSh.getDataRange().getValues();
-    var hdr   = rows[0];
-    var cNum  = hdr.indexOf('Member Number');
-    var cFirst = hdr.indexOf('First Name');
-    var cLast = hdr.indexOf('Last Name');
-    var cMem  = hdr.indexOf('Membership');
-    var cHcp  = hdr.indexOf('Handicap');
-    var inputNum = normMemberNum_(memberNum);
-    for (var i = 1; i < rows.length; i++) {
-      var rowNum  = normMemberNum_(rows[i][cNum]);
-      var rowLast = String(rows[i][cLast] || '').trim().toLowerCase();
-      if (rowNum === inputNum && rowLast === last) {
-        var firstName = String(rows[i][cFirst] || '').trim();
-        var lastName  = String(rows[i][cLast]  || '').trim();
-        return jsonResponse({
-          ok:         true,
-          name:       (firstName + ' ' + lastName).trim(),
-          membership: String(rows[i][cMem] || ''),
-          handicap:   String(rows[i][cHcp] || '')
-        });
-      }
-    }
-    return jsonResponse({ ok: false, error: 'Member not found. Check your member number or contact the Pro Shop.' });
+    var vmFirst = (e.parameter.first || '').trim();
+    var vmLast  = (e.parameter.last  || '').trim();
+    var vmEmail = (e.parameter.email || '').trim();
+    if (!vmFirst || !vmLast) return jsonResponse({ ok: false, error: 'Missing fields.' });
+    var vmSh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Members');
+    if (!vmSh) return jsonResponse({ ok: false, error: 'Members list not configured. Contact the Pro Shop.' });
+    var vmHit = findRosterMemberInRows_(vmSh.getDataRange().getValues(), vmFirst, vmLast, vmEmail);
+    if (vmHit) return jsonResponse({ ok: true, name: vmHit.name, membership: vmHit.membership, handicap: vmHit.handicap });
+    return jsonResponse({ ok: false, error: 'Not found in the member list yet.' });
   }
 
   if (action === 'get-ops-data') {
@@ -1527,47 +1538,24 @@ function doPost(e) {
   }
 
   if (data.action === 'create-pin') {
-    var email     = (data.email     || '').toLowerCase().trim();
-    var memberNum = (data.memberNum || '').trim();
-    var firstName = (data.firstName || '').trim();
-    var lastNameRaw = (data.lastName || '').trim();
-    var lastName  = lastNameRaw.toLowerCase();
-    var pin       = (data.pin       || '').trim();
-    if (!email || !memberNum || !lastName || !/^\d{4}$/.test(pin))
+    var email       = (data.email     || '').toLowerCase().trim();
+    var firstName   = (data.firstName || '').trim();
+    var lastNameRaw = (data.lastName  || '').trim();
+    var pin         = (data.pin       || '').trim();
+    if (!email || email.indexOf('@') === -1 || !firstName || !lastNameRaw || !/^\d{4}$/.test(pin))
       return jsonResponse({ ok: false, error: 'Invalid request.' });
+    // Member numbers are not part of sign-up. Look the person up on the roster by name; when there is
+    // no single clear match the account is flagged "Pending Verification" so staff can reconcile it.
     var mSh = ss.getSheetByName('Members');
-    var inputNum  = normMemberNum_(memberNum);
-    var memberRow = null;
-    var mHdr, cFirst, cLast, cMem, cHcp;
-    if (mSh) {
-      var mRows = mSh.getDataRange().getValues();
-      mHdr   = mRows[0];
-      var cNum = mHdr.indexOf('Member Number');
-      cFirst = mHdr.indexOf('First Name');
-      cLast  = mHdr.indexOf('Last Name');
-      cMem   = mHdr.indexOf('Membership');
-      cHcp   = mHdr.indexOf('Handicap');
-      for (var i = 1; i < mRows.length; i++) {
-        // Require both member number AND last name to match — member numbers are
-        // predictable/sequential, so number alone isn't proof of identity.
-        if (normMemberNum_(mRows[i][cNum]) === inputNum && String(mRows[i][cLast] || '').trim().toLowerCase() === lastName) {
-          memberRow = mRows[i];
-          break;
-        }
-      }
-    }
-    // The member roster isn't fully populated in the Sheet yet, so a missing
-    // match no longer blocks account creation — it's flagged "Pending
-    // Verification" instead of hard-failing, so staff can reconcile it once
-    // the roster catches up. Remove this fallback once onboarding is done.
+    var rosterHit = mSh ? findRosterMemberInRows_(mSh.getDataRange().getValues(), firstName, lastNameRaw, email) : null;
     var storedNum, fullName, membership, handicap;
-    if (memberRow) {
-      storedNum  = String(memberRow[cNum] || '').trim();
-      fullName   = (String(memberRow[cFirst] || '') + ' ' + String(memberRow[cLast] || '')).trim();
-      membership = String(memberRow[cMem] || '');
-      handicap   = String(memberRow[cHcp] || '');
+    if (rosterHit) {
+      storedNum  = rosterHit.memberNumber;
+      fullName   = rosterHit.name;
+      membership = rosterHit.membership;
+      handicap   = rosterHit.handicap;
     } else {
-      storedNum  = memberNum;
+      storedNum  = '';
       fullName   = (firstName + ' ' + lastNameRaw).trim();
       membership = 'Pending Verification';
       handicap   = '';
@@ -1579,17 +1567,13 @@ function doPost(e) {
       auSh.setFrozenRows(1);
     }
     var auRows = auSh.getDataRange().getValues();
-    var auHdr  = auRows[0];
-    var auEmail = auHdr.indexOf('Email');
-    var auNum   = auHdr.indexOf('Member Number');
+    var auEmail = auRows[0].indexOf('Email');
     for (var j = 1; j < auRows.length; j++) {
-      var existEmail = String(auRows[j][auEmail]).toLowerCase();
-      var existNum   = normMemberNum_(auRows[j][auNum]);
-      if (existEmail === email || existNum === inputNum)
-        return jsonResponse({ ok: false, error: 'An account already exists for this member. Use Forgot your PIN or contact the Pro Shop.' });
+      if (String(auRows[j][auEmail]).toLowerCase().trim() === email)
+        return jsonResponse({ ok: false, error: 'An account already exists for this email. Sign in, or contact the Pro Shop if you forgot your PIN.' });
     }
     auSh.appendRow(sanitizeRow_([email, pin, 'member', fullName, '', storedNum, membership, handicap]));
-    return jsonResponse({ ok: true });
+    return jsonResponse({ ok: true, account: { name: fullName, memberNumber: storedNum, membership: membership, handicap: handicap } });
   }
 
   if (data.action === 'save-ops-data') {
