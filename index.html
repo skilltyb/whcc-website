@@ -5605,11 +5605,22 @@ function menuSave(data){data._version=WH_MENU_VERSION;localStorage.setItem('wh_m
 function menuFetch(){WHCC_SYNC.fetchMenus(function(remote,err){if(!remote||err||typeof remote!=='object')return;remote._version=WH_MENU_VERSION;localStorage.setItem('wh_menus',JSON.stringify(remote));menuRenderAll(remote);smRenderEditorLists(remote);if(typeof smLoadSpecialFields==='function')smLoadSpecialFields();});}
 function menuEsc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
+// The dining menus show no prices. Set to true to show them again — the saved prices are untouched.
+var WH_SHOW_MENU_PRICES=false;
+// Drops dollar amounts written into a description (e.g. "Add Chicken or Salmon +$7").
+function menuNoPrice(s){
+  s=s||'';
+  if(WH_SHOW_MENU_PRICES) return s;
+  return s.replace(/\s*\+?\$\s?\d[\d,]*(?:\.\d{2})?(?:\s*(?:per person|per guest|\/\s*person|each))?/gi,'')
+    .replace(/\(\s*\)/g,'').replace(/\s{2,}/g,' ').replace(/^[\s,;:·–—-]+|[\s,;:·–—-]+$/g,'');
+}
+
 function menuItemHTML(item,hasPrice){
   var h='<div class="menu-item"><div><div class="mi-name">'+menuEsc(item.name)+'</div>';
-  if(item.desc) h+='<div class="mi-desc">'+menuEsc(item.desc)+'</div>';
+  var d=menuNoPrice(item.desc);
+  if(d) h+='<div class="mi-desc">'+menuEsc(d)+'</div>';
   h+='</div>';
-  if(hasPrice&&item.price) h+='<div class="mi-price">'+menuEsc(item.price)+'</div>';
+  if(WH_SHOW_MENU_PRICES&&hasPrice&&item.price) h+='<div class="mi-price">'+menuEsc(item.price)+'</div>';
   return h+'</div>';
 }
 function menuRenderGrill(g){
@@ -5637,8 +5648,8 @@ function menuRenderSpecials(data){
     var dayOk = requireDay === undefined || new Date().getDay() === requireDay;
     if(spec.active&&spec.name&&dayOk){
       el.querySelector('.sf-name').textContent=spec.name;
-      el.querySelector('.sf-desc').textContent=spec.desc||'';
-      el.querySelector('.sf-price').textContent=spec.price||'';
+      el.querySelector('.sf-desc').textContent=menuNoPrice(spec.desc);
+      el.querySelector('.sf-price').textContent=WH_SHOW_MENU_PRICES?(spec.price||''):'';
       var wEl=el.querySelector('.sf-wine');
       if(wEl){wEl.textContent=spec.wine?'Pairs with '+spec.wine:'';wEl.style.display=spec.wine?'':'none';}
       var iEl=el.querySelector('.sf-img');
