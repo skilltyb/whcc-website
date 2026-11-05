@@ -3845,20 +3845,51 @@ function whInitSiteContent() {
   // Poll every 5 minutes so conditions, menus, and site content stay current
   // without requiring a page reload when staff makes changes in the Sheet
   if (window._contentSyncInterval) clearInterval(window._contentSyncInterval);
-  window._contentSyncInterval = setInterval(function() {
-    // loadDailyUpdate() both fetches and re-renders the home page's course
-    // conditions display; it previously called a renderConditionsUI()
-    // that was never defined on the website, so this poll silently did
-    // nothing until the visitor manually navigated back to the home page.
-    loadDailyUpdate();
-    menuFetch();
-    WHCC_SYNC.fetchSiteContent(function(remote, err) {
-      if (!remote || err || typeof remote !== 'object' || !remote.events) return;
-      WH_SITE_CONTENT = remote;
-      try { localStorage.setItem('wh_site_content', JSON.stringify(remote)); } catch(e) {}
-      applySiteContent(remote);
-    });
-  }, 5 * 60 * 1000);
+  window._contentSyncInterval = setInterval(whRefreshContent, 5 * 60 * 1000);
+
+  // Faster path: check a tiny "has anything changed" stamp about once a minute (and whenever the
+  // visitor comes back to the tab) and refresh only when an admin has saved something.
+  whStartContentWatch();
+}
+
+// Re-fetches everything staff can edit and repaints it.
+function whRefreshContent() {
+  // loadDailyUpdate() both fetches and re-renders the home page's course
+  // conditions display; it previously called a renderConditionsUI()
+  // that was never defined on the website, so this poll silently did
+  // nothing until the visitor manually navigated back to the home page.
+  loadDailyUpdate();
+  menuFetch();
+  WHCC_SYNC.fetchSiteContent(function(remote, err) {
+    if (!remote || err || typeof remote !== 'object' || !remote.events) return;
+    WH_SITE_CONTENT = remote;
+    try { localStorage.setItem('wh_site_content', JSON.stringify(remote)); } catch(e) {}
+    applySiteContent(remote);
+  });
+}
+
+// Asks the sheet for its content-change stamp. The first answer is the baseline for this visit;
+// a different answer later means an admin saved something, so repaint right away.
+function whCheckContentVersion() {
+  if (document.visibilityState === 'hidden') return;
+  fetch(WHCC_SCRIPT_URL + '?action=content-version', { cache: 'no-store' })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (!d || typeof d.v !== 'string' || !d.v) return;
+      var seen = window._whContentVer;
+      window._whContentVer = d.v;
+      if (seen && seen !== d.v) whRefreshContent();
+    })
+    .catch(function() {});
+}
+
+function whStartContentWatch() {
+  if (window._whContentWatchOn) return;
+  window._whContentWatchOn = true;
+  whCheckContentVersion();
+  window._contentVerInterval = setInterval(whCheckContentVersion, 60 * 1000);
+  document.addEventListener('visibilitychange', function() { if (document.visibilityState === 'visible') whCheckContentVersion(); });
+  window.addEventListener('online', whCheckContentVersion);
 }
 
 // ═══════════════════════════════════════

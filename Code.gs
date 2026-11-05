@@ -560,6 +560,10 @@ function clearPinFailures_(key) {
 function doGet(e) {
   var action = e.parameter.action || '';
 
+  // Registrations for the website and mobile app also come from the per-event tabs (see regsWithEventTabs_).
+  if (action === 'counts' || action === 'all' || action === 'get-regs') return regsWithEventTabs_(action);
+  if (action === 'content-version') return jsonResponse({ v: contentVersion_() });
+
   if (action === 'counts') {
     var rows = getRegSheet().getDataRange().getValues();
     var counts = {};
@@ -2155,4 +2159,96 @@ function sendDailyReminders() {
       } catch(e) { Logger.log('Event reminder error: ' + e.toString()); }
     }
   }
+}
+
+// ── DASHBOARD: CLICK AN EVENT TO LIST ITS PLAYERS ─────────────────────────────
+// Simple trigger (runs on its own, no deployment needed). Clicking an event name
+// in the Dashboard table (A6:H24) copies it into the Event cell (K6) that drives
+// the Registered Players panel. K6 keeps its dropdown, so it can still be set by hand.
+function onSelectionChange(e) {
+  if (!e || !e.range) return;
+  var rng = e.range;
+  var sh = rng.getSheet();
+  if (sh.getName() !== 'Dashboard') return;
+  if (rng.getNumRows() !== 1 || rng.getColumn() > 8) return;
+  var row = rng.getRow();
+  if (row < 6 || row > 24) return;
+  var eventName = sh.getRange(row, 1).getValue();
+  var target = sh.getRange('K6');
+  if (eventName && target.getValue() !== eventName) target.setValue(eventName);
+}
+
+// ── EVENT TABS: READ BY THE WEBSITE AND MOBILE APP ────────────────────────────
+// Registrations can also live on the per-event tabs ("Ozark Inv", "Club Champ", …), for example names
+// imported by hand. The website and mobile app read registrations through ?action=counts, all and
+// get-regs, so those three actions include the event tabs as well as the Registrations sheet.
+// New sign-ups, edits and deletes still go to the Registrations sheet only.
+var EVENT_TABS_ = ['St. Pattys', 'Ladies Opening', 'Ozark Inv', 'Spring 2-Man', 'Ladies Sweet',
+  'Masters Dinner', 'Couples', 'Ladies Inv', 'Mules Inv', 'MGA Draft', 'Mens Opening', '4th of July',
+  'Member-Guest', 'Club Champ', 'Ladies Champ', 'Fall 2-Man', 'Senior', 'Closing Day', 'Halloween'];
+
+function regsWithEventTabs_(action) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var main = getRegSheet();
+  var sheets = [main];
+  EVENT_TABS_.forEach(function(name) {
+    var tab = ss.getSheetByName(name);
+    if (tab && tab.getSheetId() !== main.getSheetId() && tab.getLastRow() > 1) sheets.push(tab);
+  });
+  var out = [], seenIds = {};
+  sheets.forEach(function(sh, idx) {
+    var vals = sh.getDataRange().getValues();
+    if (vals.length < 2) return;
+    var hdrs = vals[0];
+    for (var i = 1; i < vals.length; i++) {
+      var obj = {};
+      for (var j = 0; j < hdrs.length; j++) {
+        obj[hdrs[j]] = String(vals[i][j] === null || vals[i][j] === undefined ? '' : vals[i][j]);
+      }
+      if (idx > 0) {
+        // Event tabs: skip the "No registrations yet" placeholder and any row already counted from Registrations.
+        if (!obj['First Name'] && !obj['Last Name']) continue;
+        if (obj['ID'] && seenIds[obj['ID']]) continue;
+        if (obj['Event Date/Time'] === undefined) obj['Event Date/Time'] = obj['Event Date/Tiime'] || '';
+        if (obj['Partner'] === undefined) obj['Partner'] = obj['Partners'] || '';
+      }
+      if (obj['ID']) seenIds[obj['ID']] = true;
+      out.push(obj);
+    }
+  });
+  if (action === 'counts') {
+    var counts = {};
+    out.forEach(function(r) {
+      var ev = String(r['Event'] || '').trim();
+      if (ev) counts[ev] = (counts[ev] || 0) + 1;
+    });
+    return jsonResponse(counts);
+  }
+  if (action === 'get-regs') {
+    // Mobile app variant of 'all' — includes the column aliases the app reads
+    return jsonResponse(out.filter(function(r) { return r['First Name'] || r['Last Name']; }).map(function(r) {
+      if (r['Partner/Team'] === undefined) r['Partner/Team'] = r['Partner'] || '';
+      if (r['GHIN'] === undefined) r['GHIN'] = r['GHIN Handicap'] || '';
+      return r;
+    }));
+  }
+  return jsonResponse(out);
+}
+
+// ── CONTENT VERSION (website and mobile app refresh) ──────────────────────────
+// Every admin save (menus, site content, daily conditions) stamps the "Updated" cell in row 2 of its tab.
+// The website and app ask for this one small value about once a minute and re-fetch their content
+// only when it has changed, so edits appear within about a minute instead of waiting for a cache or
+// the next 5-minute refresh. Returns the newest ISO timestamp, or '' when none is found.
+function contentVersion_() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var newest = '';
+  ['Menus', 'Site Content', 'Conditions'].forEach(function(name) {
+    var sh = ss.getSheetByName(name);
+    if (!sh || sh.getLastRow() < 2) return;
+    var raw = sh.getRange(2, 2).getValue();
+    var v = raw instanceof Date ? raw.toISOString() : String(raw || '');
+    if (v > newest) newest = v;
+  });
+  return newest;
 }
