@@ -2361,6 +2361,7 @@ button[data-admin-only]:disabled{opacity:.4;cursor:not-allowed}
             <div style="display:flex;gap:6px;flex-wrap:wrap;">
               <button class="staff-mini-btn" onclick="duPreset('normal')">Normal Day</button>
               <button class="staff-mini-btn" onclick="duPreset('fall')">Fall Hours</button>
+              <button class="staff-mini-btn" onclick="duPreset('winter')">Winter Hours</button>
               <button class="staff-mini-btn" onclick="duPreset('frost')">Frost Delay</button>
               <button class="staff-mini-btn" onclick="duPreset('cartpath')">Cart Path Only</button>
               <button class="staff-mini-btn" onclick="duPreset('tournament')">Tournament Day</button>
@@ -6360,6 +6361,15 @@ function duPreset(type) {
     document.getElementById('du-ed-proshop').value = '8 a.m. – 7 p.m.';
     document.getElementById('du-ed-clubhouse').value = '10 a.m. – 11 p.m.';
     document.getElementById('du-ed-pool').value = 'Closed for the season';
+    document.getElementById('du-ed-notice').value = '';
+  } else if (type === 'winter') {
+    document.getElementById('du-ed-opens').value = '8 a.m.';
+    document.getElementById('du-ed-cart').value = 'Off Path';
+    document.getElementById('du-ed-range-status').value = 'Open — Mats Only';
+    document.getElementById('du-ed-range-hours').value = '8 a.m. – 6 p.m.';
+    document.getElementById('du-ed-putting').value = '8 a.m. – Dusk';
+    document.getElementById('du-ed-proshop').value = '8 a.m. – 7 p.m.';
+    document.getElementById('du-ed-clubhouse').value = 'Winter Hours';
     document.getElementById('du-ed-notice').value = '';
   } else if (type === 'frost') {
     document.getElementById('du-ed-opens').value = '10 a.m. (Frost Delay)';
