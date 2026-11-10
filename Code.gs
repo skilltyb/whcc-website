@@ -319,7 +319,8 @@ function installWeeklySpecialsResetTrigger() {
 // into it invisibly instead of reaching the real "Registrations" sheet.
 var NON_REG_SHEETS_ = ['Tee Sheets', 'Dining Reservations', 'Dashboard', 'Event RSVPs',
   'Lesson Requests', 'Ops Data', 'Site Content', 'Menus', 'Conditions',
-  'Contact Inquiries', 'App Users', 'Settings', 'Members', 'Specials', 'League Regs'];
+  'Contact Inquiries', 'App Users', 'Settings', 'Members', 'Specials', 'League Regs',
+  'Reservation Hours'];
 
 function getRegSheet() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -705,7 +706,16 @@ function doGet(e) {
   if (action === 'get-conditions') {
     var cSh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Conditions');
     if (!cSh || cSh.getLastRow() < 2) return jsonResponse({});
-    return ContentService.createTextOutput(String(cSh.getRange(2, 1).getValue())).setMimeType(ContentService.MimeType.JSON);
+    var condRaw = String(cSh.getRange(2, 1).getValue());
+    // Attach the current Reservation Hours rules so the website and mobile app
+    // never need their own copy of the schedule.
+    try {
+      var condObj = JSON.parse(condRaw);
+      condObj.reservationRules = getReservationRules_(condObj.clubhouseHours);
+      return jsonResponse(condObj);
+    } catch (condParseErr) {
+      return ContentService.createTextOutput(condRaw).setMimeType(ContentService.MimeType.JSON);
+    }
   }
 
   if (action === 'get-menus') {
@@ -1273,6 +1283,12 @@ function doPost(e) {
       if (resVenue === 'hoovers') {
         return jsonResponse({ ok: false, error: "Hoover's is no longer open. Please reserve at the Westwood Grill." });
       }
+      // Reservation hours come from the "Reservation Hours" sheet (see getReservationRules_).
+      // Staff-entered bookings (portal / mobile staff) are exempt, like the Monday rule above.
+      if (String(data.source || '').indexOf('staff') !== 0) {
+        var resTimeErr = checkReservationTime_(String(data.date), data.time24 || data.timeDisplay);
+        if (resTimeErr) return jsonResponse({ ok: false, error: resTimeErr });
+      }
     }
     var dSheet = getOrCreateDiningSheet();
     var hdrs = dSheet.getRange(1, 1, 1, dSheet.getLastColumn()).getValues()[0];
@@ -1445,7 +1461,11 @@ function doPost(e) {
     try {
       var cSh = ss.getSheetByName('Conditions');
       if (!cSh) { cSh = ss.insertSheet('Conditions'); cSh.appendRow(['Data','Updated']); cSh.setFrozenRows(1); }
-      var cJson = JSON.stringify(data.data || {});
+      // reservationRules is derived from the Reservation Hours sheet on every read;
+      // never persist a stale copy that a client echoed back.
+      var condToSave = data.data || {};
+      delete condToSave.reservationRules;
+      var cJson = JSON.stringify(condToSave);
       if (cSh.getLastRow() < 2) cSh.appendRow([cJson, new Date().toISOString()]);
       else cSh.getRange(2, 1, 1, 2).setValues([[cJson, new Date().toISOString()]]);
       return jsonResponse({ ok: true });
@@ -2041,6 +2061,125 @@ function getSpecialsValue_(sheet, key) {
     }
   }
   return {};
+}
+
+// ── RESERVATION HOURS ────────────────────────────────────────────────────────
+// Single source of truth for when the Westwood Grill takes reservations. Edit the
+// "Reservation Hours" sheet and the website form, the mobile app and the server-side
+// check in the dining-reservation handler all follow — no code change or redeploy.
+//
+// A row applies when its Season text appears in the Clubhouse Hours setting under
+// Course Conditions / Daily Update (e.g. "Winter Hours" matches the Season "Winter").
+// With no matching rows the clients fall back to: closed Mondays, 11 a.m. – 9 p.m.
+// Times are stored as plain text ("20:00" or "8 p.m."). Put "Closed" in Kitchen Closes
+// for a closed day. The last reservation is Kitchen Closes minus the buffer column.
+var RES_HOURS_SHEET_ = 'Reservation Hours';
+var RES_DAY_NAMES_   = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+
+function getOrCreateReservationHoursSheet_() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(RES_HOURS_SHEET_);
+  if (sh) return sh;
+  sh = ss.insertSheet(RES_HOURS_SHEET_);
+  sh.appendRow(['Season', 'Day', 'First Reservation', 'Kitchen Closes', 'Stop Taking Reservations (min before close)']);
+  sh.setFrozenRows(1);
+  sh.getRange(1, 1, 1, 5).setFontWeight('bold');
+  // Plain text so Sheets never converts "20:00" into a time value
+  sh.getRange(2, 3, 60, 2).setNumberFormat('@');
+  var seed = [
+    ['Winter', 'Sunday',    '11:00', '17:00', 30],
+    ['Winter', 'Monday',    'Closed', 'Closed', ''],
+    ['Winter', 'Tuesday',   '11:00', '20:00', 30],
+    ['Winter', 'Wednesday', '11:00', '20:00', 30],
+    ['Winter', 'Thursday',  '11:00', '20:00', 30],
+    ['Winter', 'Friday',    '11:00', '20:00', 30],
+    ['Winter', 'Saturday',  '11:00', '18:00', 30]
+  ];
+  sh.getRange(2, 1, seed.length, 5).setValues(seed);
+  sh.getRange(1, 7).setValue('How this works').setFontWeight('bold');
+  sh.getRange(2, 7).setValue('A row applies while the Clubhouse Hours setting (Course Conditions) contains its Season text, e.g. "Winter Hours" matches "Winter".');
+  sh.getRange(3, 7).setValue('The last reservation is Kitchen Closes minus the number in the last column. Use "Closed" for a closed day.');
+  sh.getRange(4, 7).setValue('To add another season, copy the rows and change the Season text. Changes reach the website and mobile app the next time they load.');
+  sh.setColumnWidth(5, 260);
+  return sh;
+}
+
+function resPad2_(n) { return (n < 10 ? '0' : '') + n; }
+
+// "17:30", "5:30 PM", "5:30 p.m.", "8 pm" (or a Sheets time value) → "HH:MM", else ''.
+function parseResTime_(v) {
+  if (v === null || v === undefined || v === '') return '';
+  if (Object.prototype.toString.call(v) === '[object Date]') {
+    return Utilities.formatDate(v, SpreadsheetApp.getActiveSpreadsheet().getSpreadsheetTimeZone(), 'HH:mm');
+  }
+  var s = String(v).trim().toLowerCase().replace(/\./g, '');
+  var m = s.match(/^(\d{1,2})(?::(\d{2}))?\s*(am|pm)?$/);
+  if (!m) return '';
+  var h = parseInt(m[1], 10), mi = m[2] ? parseInt(m[2], 10) : 0;
+  if (m[3] === 'pm' && h < 12) h += 12;
+  if (m[3] === 'am' && h === 12) h = 0;
+  if (h > 23 || mi > 59) return '';
+  return resPad2_(h) + ':' + resPad2_(mi);
+}
+
+function shiftResTime_(hhmm, deltaMin) {
+  var p = hhmm.split(':');
+  var t = Math.max(0, parseInt(p[0], 10) * 60 + parseInt(p[1], 10) + deltaMin);
+  return resPad2_(Math.floor(t / 60)) + ':' + resPad2_(t % 60);
+}
+
+function fmtResTime_(hhmm) {
+  var p = hhmm.split(':'), h = parseInt(p[0], 10);
+  return (h % 12 || 12) + (p[1] !== '00' ? ':' + p[1] : '') + ' ' + (h >= 12 ? 'p.m.' : 'a.m.');
+}
+
+// → { season, days: { 0..6: {closed:true} | {closed:false, first, last, kitchenClose} } } or null
+function getReservationRules_(clubhouseHours) {
+  var hrs = String(clubhouseHours || '').toLowerCase();
+  if (!hrs) return null;
+  var vals = getOrCreateReservationHoursSheet_().getDataRange().getValues();
+  var season = null, days = {};
+  for (var i = 1; i < vals.length; i++) {
+    var s = String(vals[i][0] || '').trim();
+    if (!s || hrs.indexOf(s.toLowerCase()) === -1) continue;
+    var dow = RES_DAY_NAMES_.indexOf(String(vals[i][1] || '').trim().toLowerCase());
+    if (dow < 0) continue;
+    if (/closed/i.test(String(vals[i][2])) || /closed/i.test(String(vals[i][3]))) {
+      days[dow] = { closed: true }; season = s; continue;
+    }
+    var close = parseResTime_(vals[i][3]);
+    if (!close) continue;
+    var first = parseResTime_(vals[i][2]) || '11:00';
+    var buf = parseInt(vals[i][4], 10);
+    if (isNaN(buf) || buf < 0) buf = 30;
+    days[dow] = { closed: false, first: first, last: shiftResTime_(close, -buf), kitchenClose: close };
+    season = s;
+  }
+  return season ? { season: season, days: days } : null;
+}
+
+function getClubhouseHours_() {
+  var cSh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Conditions');
+  if (!cSh || cSh.getLastRow() < 2) return '';
+  try { return String(JSON.parse(String(cSh.getRange(2, 1).getValue())).clubhouseHours || ''); }
+  catch (err) { return ''; }
+}
+
+// '' when the time is allowed, otherwise a message to show the guest.
+function checkReservationTime_(dateStr, timeRaw) {
+  var rules = getReservationRules_(getClubhouseHours_());
+  if (!rules) return '';
+  var dow = new Date(dateStr + 'T00:00:00').getDay();
+  var r = rules.days[dow];
+  if (!r) return '';
+  var dayName = RES_DAY_NAMES_[dow].charAt(0).toUpperCase() + RES_DAY_NAMES_[dow].slice(1);
+  if (r.closed) return 'The Westwood Grill is closed on ' + dayName + 's.';
+  var t = parseResTime_(timeRaw);
+  if (!t) return 'Please choose a valid reservation time.';
+  if (t < r.first || t > r.last) {
+    return 'The Westwood Grill takes reservations ' + fmtResTime_(r.first) + ' – ' + fmtResTime_(r.last) + ' on ' + dayName + 's.';
+  }
+  return '';
 }
 
 function getOrCreateEventRsvpSheet_() {
