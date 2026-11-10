@@ -2113,7 +2113,7 @@ function parseResTime_(v) {
     return Utilities.formatDate(v, SpreadsheetApp.getActiveSpreadsheet().getSpreadsheetTimeZone(), 'HH:mm');
   }
   var s = String(v).trim().toLowerCase().replace(/\./g, '');
-  var m = s.match(/^(\d{1,2})(?::(\d{2}))?\s*(am|pm)?$/);
+  var m = s.match(/^(\d{1,2})(?::(\d{2}))?(?::\d{2})?\s*(am|pm)?$/);   // seconds allowed: a time-formatted cell shows \"8:00:00 PM\"
   if (!m) return '';
   var h = parseInt(m[1], 10), mi = m[2] ? parseInt(m[2], 10) : 0;
   if (m[3] === 'pm' && h < 12) h += 12;
@@ -2134,27 +2134,48 @@ function fmtResTime_(hhmm) {
 }
 
 // → { season, days: { 0..6: {closed:true} | {closed:false, first, last, kitchenClose} } } or null
+// Reads the cells as displayed (getDisplayValues) so a time-formatted cell comes back as "8:00:00 PM",
+// not a Date with a skewed 1899 offset. Every row is also checked and the result written to the
+// "Check" column (F) when it changes, so a typo shows up in the sheet instead of being ignored.
 function getReservationRules_(clubhouseHours) {
   var hrs = String(clubhouseHours || '').toLowerCase();
-  if (!hrs) return null;
-  var vals = getOrCreateReservationHoursSheet_().getDataRange().getValues();
-  var season = null, days = {};
+  var sh = getOrCreateReservationHoursSheet_();
+  var vals = sh.getDataRange().getDisplayValues();
+  var season = null, days = {}, checks = [];
   for (var i = 1; i < vals.length; i++) {
     var s = String(vals[i][0] || '').trim();
-    if (!s || hrs.indexOf(s.toLowerCase()) === -1) continue;
-    var dow = RES_DAY_NAMES_.indexOf(String(vals[i][1] || '').trim().toLowerCase());
-    if (dow < 0) continue;
-    if (/closed/i.test(String(vals[i][2])) || /closed/i.test(String(vals[i][3]))) {
-      days[dow] = { closed: true }; season = s; continue;
+    var dayCell = String(vals[i][1] || '').trim().toLowerCase();
+    if (!s && !dayCell) { checks.push(''); continue; }
+    var dow = -1;
+    if (dayCell.length >= 3) {
+      for (var k = 0; k < 7; k++) { if (RES_DAY_NAMES_[k].indexOf(dayCell) === 0) { dow = k; break; } }
     }
-    var close = parseResTime_(vals[i][3]);
-    if (!close) continue;
-    var first = parseResTime_(vals[i][2]) || '11:00';
-    var buf = parseInt(vals[i][4], 10);
-    if (isNaN(buf) || buf < 0) buf = 30;
-    days[dow] = { closed: false, first: first, last: shiftResTime_(close, -buf), kitchenClose: close };
+    var closedRow = /closed/i.test(String(vals[i][2])) || /closed/i.test(String(vals[i][3]));
+    var firstTxt = String(vals[i][2] || '').trim();
+    var close = closedRow ? '' : parseResTime_(vals[i][3]);
+    var first = closedRow ? '' : (firstTxt ? parseResTime_(firstTxt) : '11:00');
+    var bufTxt = String(vals[i][4] || '').trim();
+    var buf = bufTxt === '' ? 30 : parseInt(bufTxt, 10);
+    var problem = '';
+    if (!s) problem = 'Season is blank';
+    else if (dow < 0) problem = 'Day "' + vals[i][1] + '" is not a weekday name';
+    else if (!closedRow && !close) problem = 'Can\'t read Kitchen Closes "' + vals[i][3] + '" (try 8 p.m. or 20:00)';
+    else if (!closedRow && !first) problem = 'Can\'t read First Reservation "' + firstTxt + '" (try 11 a.m. or 11:00)';
+    else if (!closedRow && (isNaN(buf) || buf < 0)) problem = 'Minutes before close "' + bufTxt + '" is not a number';
+    checks.push(problem ? 'NOT USED - ' + problem + '. That day falls back to 11 a.m. - 9 p.m.' : 'OK');
+    if (problem || !hrs || hrs.indexOf(s.toLowerCase()) === -1) continue;
     season = s;
+    days[dow] = closedRow ? { closed: true }
+                          : { closed: false, first: first, last: shiftResTime_(close, -buf), kitchenClose: close };
   }
+  try {
+    var changed = false;
+    for (var c = 0; c < checks.length; c++) { if (checks[c] !== String((vals[c + 1] || [])[5] || '')) { changed = true; break; } }
+    if (changed) {
+      sh.getRange(1, 6).setValue('Check').setFontWeight('bold');
+      sh.getRange(2, 6, checks.length, 1).setValues(checks.map(function(x) { return [x]; }));
+    }
+  } catch (checkErr) { Logger.log('Reservation Hours check not written: ' + checkErr); }
   return season ? { season: season, days: days } : null;
 }
 

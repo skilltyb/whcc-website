@@ -5409,58 +5409,70 @@ async function submitReservation() {
     createdAt: new Date().toISOString()
   };
 
-  // Save to persistent storage — separate keys per venue
+  // Local copy lives under a separate key per venue
   var storageKey = venue === 'grille' ? 'grille-reservations' : 'hoovers-reservations';
+  let existing = {};
   try {
-    let existing = {};
+    const result = await window.storage.get(storageKey);
+    if (result && result.value) existing = JSON.parse(result.value);
+  } catch(e) {}
+  if (!existing[dateVal]) existing[dateVal] = [];
+
+  // Duplicate check: same email or phone already booked on this date
+  var emailLc = email.toLowerCase();
+  var phoneDig = phone.replace(/\D/g, '');
+  var isDup = existing[dateVal].some(function(r) {
+    if (r.status === 'cancelled') return false;
+    if (email && r.email && r.email.toLowerCase() === emailLc) return true;
+    if (phone && r.phone && r.phone.replace(/\D/g, '') === phoneDig && phoneDig.length >= 7) return true;
+    return false;
+  });
+  if (isDup) {
+    errorEl.textContent = 'A reservation already exists for this contact on the selected date. Please call us if you need to make changes.';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Request Reservation';
+    return;
+  }
+
+  // Send to Google Sheets (staff portal + mobile app read from there) and wait for the answer.
+  // The server is the final check on reservation hours, so a rejection or a failed request must
+  // not be shown to the guest as "received".
+  const syncResult = await new Promise(function(resolve) {
     try {
-      const result = await window.storage.get(storageKey);
-      if (result && result.value) existing = JSON.parse(result.value);
-    } catch(e) {}
+      WHCC_SYNC.saveDiningReservation({
+        id: reservation.id,
+        date: dateVal,
+        time24: time,
+        timeDisplay: time,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        phone: phone,
+        party: reservation.partySize,
+        member: member,
+        venue: venue,
+        note: notes,
+        submitted: reservation.createdAt,
+        source: 'website'
+      }, function(d, err) { resolve({ d: d, err: err }); });
+    } catch(e) { resolve({ d: null, err: e }); }
+  });
+  if (syncResult.err || !syncResult.d || syncResult.d.ok === false || syncResult.d.error) {
+    errorEl.textContent = (syncResult.d && syncResult.d.error)
+      ? syncResult.d.error
+      : 'We could not send your request just now. Please try again, or call us at (573) 785-5253.';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Request Reservation';
+    return;
+  }
 
-    if (!existing[dateVal]) existing[dateVal] = [];
-
-    // Duplicate check: same email or phone already booked on this date
-    var emailLc = email.toLowerCase();
-    var phoneDig = phone.replace(/\D/g, '');
-    var isDup = existing[dateVal].some(function(r) {
-      if (r.status === 'cancelled') return false;
-      if (email && r.email && r.email.toLowerCase() === emailLc) return true;
-      if (phone && r.phone && r.phone.replace(/\D/g, '') === phoneDig && phoneDig.length >= 7) return true;
-      return false;
-    });
-    if (isDup) {
-      errorEl.textContent = 'A reservation already exists for this contact on the selected date. Please call us if you need to make changes.';
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Request Reservation';
-      return;
-    }
-
+  // Accepted — keep a local copy
+  try {
     existing[dateVal].push(reservation);
     await window.storage.set(storageKey, JSON.stringify(existing));
   } catch(e) {
     // storage unavailable
   }
-
-  // Sync to Google Sheets so staff portal and mobile app can see it
-  try {
-    WHCC_SYNC.saveDiningReservation({
-      id: reservation.id,
-      date: dateVal,
-      time24: time,
-      timeDisplay: time,
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      phone: phone,
-      party: reservation.partySize,
-      member: member,
-      venue: venue,
-      note: notes,
-      submitted: reservation.createdAt,
-      source: 'website'
-    }, function() {});
-  } catch(e) {}
 
   // Show confirmation
   const venueName = venue === 'grille' ? 'The Westwood Grill' : "Hoover's";
