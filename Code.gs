@@ -2100,6 +2100,39 @@ function resJanuaryClosureRows_() {
   return [['Clubhouse closed', 'All', 'Jan 1', 'Jan 14', 'Closed', 'Closed', '']];
 }
 
+// Closed every year on Christmas, Easter and Thanksgiving. "Easter" and "Thanksgiving" are worked out for each year.
+function resHolidayClosureRows_() {
+  return [
+    ['Christmas',    'All', 'Dec 25',       '', 'Closed', 'Closed', ''],
+    ['Easter',       'All', 'Easter',       '', 'Closed', 'Closed', ''],
+    ['Thanksgiving', 'All', 'Thanksgiving', '', 'Closed', 'Closed', '']
+  ];
+}
+
+// The sheet was already in the dated layout before holiday closures existed: add them once (a marker keeps
+// a deliberate deletion from being undone later).
+function resEnsureHolidayRows_(sh) {
+  var props = PropertiesService.getScriptProperties();
+  if (props.getProperty('resHolidayRows') === '1') return;
+  var rows = resHolidayClosureRows_();
+  sh.getRange(sh.getLastRow() + 1, 1, rows.length, 7).setValues(rows);
+  sh.getRange(8, 10).setValue('Starts can also be "Easter" or "Thanksgiving"; the date is worked out each year.');
+  props.setProperty('resHolidayRows', '1');
+}
+
+// Easter Sunday (Gregorian calendar) and the fourth Thursday of November, as {m, d}.
+function resHoliday_(name, y) {
+  if (name === 'thanksgiving') {
+    var dow = new Date(Date.UTC(y, 10, 1)).getUTCDay();
+    return { m: 11, d: 1 + ((4 - dow + 7) % 7) + 21 };
+  }
+  var a = y % 19, b = Math.floor(y / 100), c = y % 100, d = Math.floor(b / 4), e = b % 4;
+  var f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30;
+  var i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7;
+  var mm = Math.floor((a + 11 * h + 22 * l) / 451);
+  return { m: Math.floor((h + l - 7 * mm + 114) / 31), d: ((h + l - 7 * mm + 114) % 31) + 1 };
+}
+
 function resSeedRows_() {
   return [
     ['Winter', 'Sunday',    'Nov 1', 'Feb 29', '11:00', '17:00', 30],
@@ -2109,7 +2142,7 @@ function resSeedRows_() {
     ['Winter', 'Thursday',  'Nov 1', 'Feb 29', '11:00', '20:00', 30],
     ['Winter', 'Friday',    'Nov 1', 'Feb 29', '11:00', '20:00', 30],
     ['Winter', 'Saturday',  'Nov 1', 'Feb 29', '11:00', '18:00', 30]
-  ].concat(resYearRoundRows_(), resJanuaryClosureRows_());
+  ].concat(resYearRoundRows_(), resJanuaryClosureRows_(), resHolidayClosureRows_());
 }
 
 function getOrCreateReservationHoursSheet_() {
@@ -2117,7 +2150,10 @@ function getOrCreateReservationHoursSheet_() {
   var sh = ss.getSheetByName(RES_HOURS_SHEET_);
   var rows = null, migrated = false;
   if (sh) {
-    if (String(sh.getRange(1, 3).getDisplayValue()) !== 'First Reservation') return sh;   // already the dated layout
+    if (String(sh.getRange(1, 3).getDisplayValue()) !== 'First Reservation') {   // already the dated layout
+      resEnsureHolidayRows_(sh);
+      return sh;
+    }
     migrated = true;
     // First version of this tab (Season | Day | First | Closes | Stop | Check): carry its rows over as dated rows
     var old = sh.getDataRange().getDisplayValues();
@@ -2137,7 +2173,7 @@ function getOrCreateReservationHoursSheet_() {
   } else if (!rows.some(function(r) { return !String(r[2]).trim() && !String(r[3]).trim(); })) {
     rows = rows.concat(resYearRoundRows_());   // make sure something covers the rest of the year
   }
-  if (migrated) rows = rows.concat(resJanuaryClosureRows_());
+  if (migrated) rows = rows.concat(resJanuaryClosureRows_(), resHolidayClosureRows_());
   sh.getRange(1, 1, 1, 8).setValues([['Season', 'Day', 'Starts', 'Ends', 'First Reservation', 'Kitchen Closes',
     'Stop Taking Reservations (min before close)', 'Check']]).setFontWeight('bold');
   sh.setFrozenRows(1);
@@ -2151,6 +2187,8 @@ function getOrCreateReservationHoursSheet_() {
   sh.getRange(5, 10).setValue('The last reservation is Kitchen Closes minus the number in the last column. Use "Closed" in Kitchen Closes for a closed day.');
   sh.getRange(6, 10).setValue('A date no row covers uses 11 a.m. – 8:30 p.m. The Check column explains any row that cannot be read. The Clubhouse Hours text is display-only.');
   sh.getRange(7, 10).setValue('Changes reach the website and mobile app the next time they load.');
+  sh.getRange(8, 10).setValue('Starts can also be "Easter" or "Thanksgiving"; the date is worked out each year.');
+  PropertiesService.getScriptProperties().setProperty('resHolidayRows', '1');
   sh.setColumnWidth(7, 260);
   return sh;
 }
@@ -2187,6 +2225,7 @@ function fmtResTime_(hhmm) {
 // "Nov 1", "November 1", "11/1", "11-1" (yearly) or "2026-12-24", "12/24/2026", "Dec 24, 2026" (one time) → {y, m, d}; y is 0 when no year.
 function parseResDate_(v) {
   var t = String(v === null || v === undefined ? '' : v).trim().toLowerCase().replace(/\./g, '');
+  if (t === 'easter' || t === 'thanksgiving') return { special: t };
   var m, y = 0, mo, d;
   if ((m = t.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/))) { y = +m[1]; mo = +m[2]; d = +m[3]; }
   else if ((m = t.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/))) { mo = +m[1]; d = +m[2]; y = +m[3]; }
@@ -2216,10 +2255,14 @@ function getReservationRows_(writeChecks) {
       for (var k = 0; k < 7; k++) { if (RES_DAY_NAMES_[k].indexOf(dayTxt) === 0) { dows = [k]; break; } }
     }
     var aTxt = String(v[2] || '').trim(), bTxt = String(v[3] || '').trim();
-    var kind = 1, from = 0, to = 0, span = 9999;
+    var kind = 1, from = 0, to = 0, span = 9999, special = '';
     if (aTxt || bTxt) {
       var a = parseResDate_(aTxt || bTxt), b = parseResDate_(bTxt || aTxt);
       if (!a || !b) { problem = 'Can\'t read the dates "' + aTxt + '" / "' + bTxt + '" (try Nov 1 or 2026-12-24)'; }
+      else if (a.special || b.special) {
+        if (a.special !== b.special) { problem = 'Starts and Ends must be the same holiday (or leave Ends blank)'; }
+        else { kind = 2; special = a.special; span = 1; note = ' (every year)'; }
+      }
       else if ((a.y > 0) !== (b.y > 0)) { problem = 'Starts and Ends must both include a year, or neither'; }
       else if (a.y > 0) {
         kind = 3; from = a.y * 10000 + a.m * 100 + a.d; to = b.y * 10000 + b.m * 100 + b.d;
@@ -2249,7 +2292,7 @@ function getReservationRows_(writeChecks) {
     checks.push(problem ? 'NOT USED - ' + problem : 'OK' + note);
     if (problem) continue;
     for (var q = 0; q < dows.length; q++) {
-      rows.push({ idx: i, dow: dows[q], kind: kind, from: from, to: to, span: span, closed: closedRow,
+      rows.push({ idx: i, dow: dows[q], kind: kind, from: from, to: to, span: span, special: special, closed: closedRow,
                   first: first, last: closedRow ? '' : shiftResTime_(close, -buf) });
     }
   }
@@ -2268,6 +2311,7 @@ function getReservationRows_(writeChecks) {
 
 function resRowCovers_(r, y, m, d) {
   if (r.kind === 1) return true;
+  if (r.special) { var hd = resHoliday_(r.special, y); return hd.m === m && hd.d === d; }
   if (r.kind === 3) { var n = y * 10000 + m * 100 + d; return n >= r.from && n <= r.to; }
   var md = m * 100 + d;
   return r.from <= r.to ? (md >= r.from && md <= r.to) : (md >= r.from || md <= r.to);   // Nov 1 – Feb 29 wraps the new year
