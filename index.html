@@ -5113,13 +5113,17 @@ var resDefaultTimesHtml = null;
 var RES_DEFAULT_HINT = 'The Westwood Grill is open Tuesday–Sunday for lunch and dinner.';
 
 function setReservationRules(rules) {
-  resRules = (rules && rules.days) ? rules : null;
+  resRules = (rules && rules.dates) ? rules : null;
   refreshResTimes();
   if (calMonth !== undefined) renderCal();
 }
-function resDayRule(y, m, d) {            // m is 0-based; returns {closed}|{first,last,...}|null
-  if (!resRules) return null;
-  return resRules.days[new Date(y, m, d).getDay()] || null;
+// The script sends a ready-made window for each upcoming date ("closed" or "11:00-19:30"), already
+// resolved from the sheet's seasons, holidays and closures — so this only looks the date up.
+function resDayRule(y, m, d) {            // m is 0-based; returns {closed}|{first,last}|null
+  if (!resRules || !resRules.dates) return null;
+  var v = resRules.dates[y + '-' + String(m + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0')];
+  if (!v) return null;
+  return v === 'closed' ? { closed: true } : { closed: false, first: v.slice(0, 5), last: v.slice(6) };
 }
 function resTo24(label) {                 // "5:30 PM" → "17:30"
   var m = String(label || '').trim().toUpperCase().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/);
@@ -5163,6 +5167,7 @@ function refreshResTimes() {
   }
   if (rule.closed) {
     sel.innerHTML = '<option value="">Closed this day</option>';
+    if (hint) hint.textContent = 'The Westwood Grill is closed on this day. Please choose another date.';
     return;
   }
   var html = '<option value="">Select a time</option>', slots = [];

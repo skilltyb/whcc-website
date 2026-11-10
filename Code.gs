@@ -711,7 +711,7 @@ function doGet(e) {
     // never need their own copy of the schedule.
     try {
       var condObj = JSON.parse(condRaw);
-      condObj.reservationRules = getReservationRules_(condObj.clubhouseHours);
+      condObj.reservationRules = buildReservationRules_();
       return jsonResponse(condObj);
     } catch (condParseErr) {
       return ContentService.createTextOutput(condRaw).setMimeType(ContentService.MimeType.JSON);
@@ -1283,7 +1283,7 @@ function doPost(e) {
       if (resVenue === 'hoovers') {
         return jsonResponse({ ok: false, error: "Hoover's is no longer open. Please reserve at the Westwood Grill." });
       }
-      // Reservation hours come from the "Reservation Hours" sheet (see getReservationRules_).
+      // Reservation hours come from the "Reservation Hours" sheet (see getReservationRows_).
       // Staff-entered bookings (portal / mobile staff) are exempt, like the Monday rule above.
       if (String(data.source || '').indexOf('staff') !== 0) {
         var resTimeErr = checkReservationTime_(String(data.date), data.time24 || data.timeDisplay);
@@ -2068,52 +2068,103 @@ function getSpecialsValue_(sheet, key) {
 // "Reservation Hours" sheet and the website form, the mobile app and the server-side
 // check in the dining-reservation handler all follow — no code change or redeploy.
 //
-// A row applies when its Season text appears in the Clubhouse Hours setting under
-// Course Conditions / Daily Update (e.g. "Winter Hours" matches the Season "Winter").
-// With no matching rows the clients fall back to: closed Mondays, 11 a.m. – 9 p.m.
-// Times are stored as plain text ("20:00" or "8 p.m."). Put "Closed" in Kitchen Closes
-// for a closed day. The last reservation is Kitchen Closes minus the buffer column.
-var RES_HOURS_SHEET_ = 'Reservation Hours';
-var RES_DAY_NAMES_   = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+// Each row is one weekday's hours for a date range. Starts / Ends are a month and day
+// ("Nov 1" – "Feb 29") that repeat every year; leave both blank for the rest of the year.
+// Add a year ("2026-12-24") for a one-time change such as a holiday; a one-day change needs
+// only Starts, and Day can be "All". The narrower range wins over a wider one, and a
+// one-time date wins over a yearly one. The last reservation is Kitchen Closes minus the
+// buffer column. Mondays are always closed. A date no row covers uses RES_FALLBACK_.
+// Times are plain text ("20:00" or "8 p.m."); put "Closed" in Kitchen Closes for a closed day.
+// The Clubhouse Hours text under Course Conditions is display-only and does not affect this.
+var RES_HOURS_SHEET_  = 'Reservation Hours';
+var RES_DAY_NAMES_    = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+var RES_MONTHS_       = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+var RES_CUM_DAYS_     = [0,31,59,90,120,151,181,212,243,273,304,334];
+var RES_FALLBACK_     = { first: '11:00', last: '20:30' };
+var RES_HORIZON_DAYS_ = 400;
+
+function resYearRoundRows_() {
+  return [
+    ['Rest of year', 'Sunday',    '', '', '11:00', '21:00', 30],
+    ['Rest of year', 'Monday',    '', '', 'Closed', 'Closed', ''],
+    ['Rest of year', 'Tuesday',   '', '', '11:00', '21:00', 30],
+    ['Rest of year', 'Wednesday', '', '', '11:00', '21:00', 30],
+    ['Rest of year', 'Thursday',  '', '', '11:00', '21:00', 30],
+    ['Rest of year', 'Friday',    '', '', '11:00', '21:00', 30],
+    ['Rest of year', 'Saturday',  '', '', '11:00', '21:00', 30]
+  ];
+}
+
+// The clubhouse is closed the first two weeks of January every year (narrower than Winter, so it wins).
+function resJanuaryClosureRows_() {
+  return [['Clubhouse closed', 'All', 'Jan 1', 'Jan 14', 'Closed', 'Closed', '']];
+}
+
+function resSeedRows_() {
+  return [
+    ['Winter', 'Sunday',    'Nov 1', 'Feb 29', '11:00', '17:00', 30],
+    ['Winter', 'Monday',    'Nov 1', 'Feb 29', 'Closed', 'Closed', ''],
+    ['Winter', 'Tuesday',   'Nov 1', 'Feb 29', '11:00', '20:00', 30],
+    ['Winter', 'Wednesday', 'Nov 1', 'Feb 29', '11:00', '20:00', 30],
+    ['Winter', 'Thursday',  'Nov 1', 'Feb 29', '11:00', '20:00', 30],
+    ['Winter', 'Friday',    'Nov 1', 'Feb 29', '11:00', '20:00', 30],
+    ['Winter', 'Saturday',  'Nov 1', 'Feb 29', '11:00', '18:00', 30]
+  ].concat(resYearRoundRows_(), resJanuaryClosureRows_());
+}
 
 function getOrCreateReservationHoursSheet_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sh = ss.getSheetByName(RES_HOURS_SHEET_);
-  if (sh) return sh;
-  sh = ss.insertSheet(RES_HOURS_SHEET_);
-  sh.appendRow(['Season', 'Day', 'First Reservation', 'Kitchen Closes', 'Stop Taking Reservations (min before close)']);
+  var rows = null, migrated = false;
+  if (sh) {
+    if (String(sh.getRange(1, 3).getDisplayValue()) !== 'First Reservation') return sh;   // already the dated layout
+    migrated = true;
+    // First version of this tab (Season | Day | First | Closes | Stop | Check): carry its rows over as dated rows
+    var old = sh.getDataRange().getDisplayValues();
+    rows = [];
+    for (var i = 1; i < old.length; i++) {
+      if (!String(old[i][0] || '').trim() && !String(old[i][1] || '').trim()) continue;
+      var win = /winter/i.test(old[i][0]);
+      rows.push([old[i][0], old[i][1], win ? 'Nov 1' : '', win ? 'Feb 29' : '', old[i][2], old[i][3], old[i][4]]);
+    }
+    sh.clear();
+  } else {
+    sh = ss.insertSheet(RES_HOURS_SHEET_);
+  }
+  if (!rows || !rows.length) {
+    rows = resSeedRows_();
+    migrated = false;   // the seed already includes the January closure
+  } else if (!rows.some(function(r) { return !String(r[2]).trim() && !String(r[3]).trim(); })) {
+    rows = rows.concat(resYearRoundRows_());   // make sure something covers the rest of the year
+  }
+  if (migrated) rows = rows.concat(resJanuaryClosureRows_());
+  sh.getRange(1, 1, 1, 8).setValues([['Season', 'Day', 'Starts', 'Ends', 'First Reservation', 'Kitchen Closes',
+    'Stop Taking Reservations (min before close)', 'Check']]).setFontWeight('bold');
   sh.setFrozenRows(1);
-  sh.getRange(1, 1, 1, 5).setFontWeight('bold');
-  // Plain text so Sheets never converts "20:00" into a time value
-  sh.getRange(2, 3, 60, 2).setNumberFormat('@');
-  var seed = [
-    ['Winter', 'Sunday',    '11:00', '17:00', 30],
-    ['Winter', 'Monday',    'Closed', 'Closed', ''],
-    ['Winter', 'Tuesday',   '11:00', '20:00', 30],
-    ['Winter', 'Wednesday', '11:00', '20:00', 30],
-    ['Winter', 'Thursday',  '11:00', '20:00', 30],
-    ['Winter', 'Friday',    '11:00', '20:00', 30],
-    ['Winter', 'Saturday',  '11:00', '18:00', 30]
-  ];
-  sh.getRange(2, 1, seed.length, 5).setValues(seed);
-  sh.getRange(1, 7).setValue('How this works').setFontWeight('bold');
-  sh.getRange(2, 7).setValue('A row applies while the Clubhouse Hours setting (Course Conditions) contains its Season text, e.g. "Winter Hours" matches "Winter".');
-  sh.getRange(3, 7).setValue('The last reservation is Kitchen Closes minus the number in the last column. Use "Closed" for a closed day.');
-  sh.getRange(4, 7).setValue('To add another season, copy the rows and change the Season text. Changes reach the website and mobile app the next time they load.');
-  sh.setColumnWidth(5, 260);
+  // Plain text so Sheets never turns "Nov 1" into a dated cell or "20:00" into a time value
+  sh.getRange(2, 3, 300, 4).setNumberFormat('@');
+  sh.getRange(2, 1, rows.length, 7).setValues(rows);
+  sh.getRange(1, 10).setValue('How this works').setFontWeight('bold');
+  sh.getRange(2, 10).setValue('Each row is one weekday\'s hours for a date range. Starts / Ends are a month and day (e.g. Nov 1 – Feb 29) and repeat every year. Leave both blank for the rest of the year.');
+  sh.getRange(3, 10).setValue('For a one-time change such as a holiday, give a year (e.g. 2026-12-24). A one-day change needs only Starts. Day can be a weekday name or "All".');
+  sh.getRange(4, 10).setValue('The narrower date range wins over a wider one, and a one-time date wins over a yearly one. Mondays are always closed.');
+  sh.getRange(5, 10).setValue('The last reservation is Kitchen Closes minus the number in the last column. Use "Closed" in Kitchen Closes for a closed day.');
+  sh.getRange(6, 10).setValue('A date no row covers uses 11 a.m. – 8:30 p.m. The Check column explains any row that cannot be read. The Clubhouse Hours text is display-only.');
+  sh.getRange(7, 10).setValue('Changes reach the website and mobile app the next time they load.');
+  sh.setColumnWidth(7, 260);
   return sh;
 }
 
 function resPad2_(n) { return (n < 10 ? '0' : '') + n; }
 
-// "17:30", "5:30 PM", "5:30 p.m.", "8 pm" (or a Sheets time value) → "HH:MM", else ''.
+// "17:30", "5:30 PM", "5:30 p.m.", "8 pm", "8:00:00 PM" (or a Sheets time value) → "HH:MM", else ''.
 function parseResTime_(v) {
   if (v === null || v === undefined || v === '') return '';
   if (Object.prototype.toString.call(v) === '[object Date]') {
     return Utilities.formatDate(v, SpreadsheetApp.getActiveSpreadsheet().getSpreadsheetTimeZone(), 'HH:mm');
   }
   var s = String(v).trim().toLowerCase().replace(/\./g, '');
-  var m = s.match(/^(\d{1,2})(?::(\d{2}))?(?::\d{2})?\s*(am|pm)?$/);   // seconds allowed: a time-formatted cell shows \"8:00:00 PM\"
+  var m = s.match(/^(\d{1,2})(?::(\d{2}))?(?::\d{2})?\s*(am|pm)?$/);   // seconds allowed: a time-formatted cell shows "8:00:00 PM"
   if (!m) return '';
   var h = parseInt(m[1], 10), mi = m[2] ? parseInt(m[2], 10) : 0;
   if (m[3] === 'pm' && h < 12) h += 12;
@@ -2133,72 +2184,142 @@ function fmtResTime_(hhmm) {
   return (h % 12 || 12) + (p[1] !== '00' ? ':' + p[1] : '') + ' ' + (h >= 12 ? 'p.m.' : 'a.m.');
 }
 
-// → { season, days: { 0..6: {closed:true} | {closed:false, first, last, kitchenClose} } } or null
-// Reads the cells as displayed (getDisplayValues) so a time-formatted cell comes back as "8:00:00 PM",
-// not a Date with a skewed 1899 offset. Every row is also checked and the result written to the
-// "Check" column (F) when it changes, so a typo shows up in the sheet instead of being ignored.
-function getReservationRules_(clubhouseHours) {
-  var hrs = String(clubhouseHours || '').toLowerCase();
-  var sh = getOrCreateReservationHoursSheet_();
-  var vals = sh.getDataRange().getDisplayValues();
-  var season = null, days = {}, checks = [];
-  for (var i = 1; i < vals.length; i++) {
-    var s = String(vals[i][0] || '').trim();
-    var dayCell = String(vals[i][1] || '').trim().toLowerCase();
-    if (!s && !dayCell) { checks.push(''); continue; }
-    var dow = -1;
-    if (dayCell.length >= 3) {
-      for (var k = 0; k < 7; k++) { if (RES_DAY_NAMES_[k].indexOf(dayCell) === 0) { dow = k; break; } }
-    }
-    var closedRow = /closed/i.test(String(vals[i][2])) || /closed/i.test(String(vals[i][3]));
-    var firstTxt = String(vals[i][2] || '').trim();
-    var close = closedRow ? '' : parseResTime_(vals[i][3]);
-    var first = closedRow ? '' : (firstTxt ? parseResTime_(firstTxt) : '11:00');
-    var bufTxt = String(vals[i][4] || '').trim();
-    var buf = bufTxt === '' ? 30 : parseInt(bufTxt, 10);
-    var problem = '';
-    if (!s) problem = 'Season is blank';
-    else if (dow < 0) problem = 'Day "' + vals[i][1] + '" is not a weekday name';
-    else if (!closedRow && !close) problem = 'Can\'t read Kitchen Closes "' + vals[i][3] + '" (try 8 p.m. or 20:00)';
-    else if (!closedRow && !first) problem = 'Can\'t read First Reservation "' + firstTxt + '" (try 11 a.m. or 11:00)';
-    else if (!closedRow && (isNaN(buf) || buf < 0)) problem = 'Minutes before close "' + bufTxt + '" is not a number';
-    checks.push(problem ? 'NOT USED - ' + problem + '. That day falls back to 11 a.m. - 9 p.m.' : 'OK');
-    if (problem || !hrs || hrs.indexOf(s.toLowerCase()) === -1) continue;
-    season = s;
-    days[dow] = closedRow ? { closed: true }
-                          : { closed: false, first: first, last: shiftResTime_(close, -buf), kitchenClose: close };
-  }
-  try {
-    var changed = false;
-    for (var c = 0; c < checks.length; c++) { if (checks[c] !== String((vals[c + 1] || [])[5] || '')) { changed = true; break; } }
-    if (changed) {
-      sh.getRange(1, 6).setValue('Check').setFontWeight('bold');
-      sh.getRange(2, 6, checks.length, 1).setValues(checks.map(function(x) { return [x]; }));
-    }
-  } catch (checkErr) { Logger.log('Reservation Hours check not written: ' + checkErr); }
-  return season ? { season: season, days: days } : null;
+// "Nov 1", "November 1", "11/1", "11-1" (yearly) or "2026-12-24", "12/24/2026", "Dec 24, 2026" (one time) → {y, m, d}; y is 0 when no year.
+function parseResDate_(v) {
+  var t = String(v === null || v === undefined ? '' : v).trim().toLowerCase().replace(/\./g, '');
+  var m, y = 0, mo, d;
+  if ((m = t.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/))) { y = +m[1]; mo = +m[2]; d = +m[3]; }
+  else if ((m = t.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/))) { mo = +m[1]; d = +m[2]; y = +m[3]; }
+  else if ((m = t.match(/^(\d{1,2})[\/-](\d{1,2})$/))) { mo = +m[1]; d = +m[2]; }
+  else if ((m = t.match(/^([a-z]{3,9})\s+(\d{1,2})(?:,?\s+(\d{4}))?$/))) { mo = RES_MONTHS_.indexOf(m[1].slice(0, 3)) + 1; d = +m[2]; y = m[3] ? +m[3] : 0; }
+  else return null;
+  if (mo < 1 || mo > 12 || d < 1 || d > 31) return null;
+  return { y: y, m: mo, d: d };
 }
 
-function getClubhouseHours_() {
-  var cSh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Conditions');
-  if (!cSh || cSh.getLastRow() < 2) return '';
-  try { return String(JSON.parse(String(cSh.getRange(2, 1).getValue())).clubhouseHours || ''); }
-  catch (err) { return ''; }
+// Reads every row of the Reservation Hours tab (as displayed, so a time-formatted cell comes back as
+// "8:00:00 PM", not a Date with a skewed 1899 offset). Each row is also checked, and the result is written
+// to the Check column (H) when it changes, so a typo shows up in the sheet instead of being ignored.
+function getReservationRows_(writeChecks) {
+  var sh = getOrCreateReservationHoursSheet_();
+  var vals = sh.getDataRange().getDisplayValues();
+  var rows = [], checks = [];
+  for (var i = 1; i < vals.length; i++) {
+    var v = vals[i];
+    var s = String(v[0] || '').trim();
+    var dayTxt = String(v[1] || '').trim().toLowerCase();
+    if (!s && !dayTxt) { checks.push(''); continue; }
+    var problem = '', note = '';
+    var dows = [];
+    if (/^(all|every ?day|daily|\*)$/.test(dayTxt)) { dows = [0, 1, 2, 3, 4, 5, 6]; }
+    else if (dayTxt.length >= 3) {
+      for (var k = 0; k < 7; k++) { if (RES_DAY_NAMES_[k].indexOf(dayTxt) === 0) { dows = [k]; break; } }
+    }
+    var aTxt = String(v[2] || '').trim(), bTxt = String(v[3] || '').trim();
+    var kind = 1, from = 0, to = 0, span = 9999;
+    if (aTxt || bTxt) {
+      var a = parseResDate_(aTxt || bTxt), b = parseResDate_(bTxt || aTxt);
+      if (!a || !b) { problem = 'Can\'t read the dates "' + aTxt + '" / "' + bTxt + '" (try Nov 1 or 2026-12-24)'; }
+      else if ((a.y > 0) !== (b.y > 0)) { problem = 'Starts and Ends must both include a year, or neither'; }
+      else if (a.y > 0) {
+        kind = 3; from = a.y * 10000 + a.m * 100 + a.d; to = b.y * 10000 + b.m * 100 + b.d;
+        if (from > to) { problem = 'Ends is before Starts'; }
+        else {
+          span = Math.round((Date.UTC(b.y, b.m - 1, b.d) - Date.UTC(a.y, a.m - 1, a.d)) / 86400000) + 1;
+          note = ' (one time only)';
+        }
+      } else {
+        kind = 2; from = a.m * 100 + a.d; to = b.m * 100 + b.d;
+        span = ((RES_CUM_DAYS_[b.m - 1] + b.d - (RES_CUM_DAYS_[a.m - 1] + a.d) + 366) % 366) + 1;
+      }
+    }
+    var closedRow = /closed/i.test(String(v[4])) || /closed/i.test(String(v[5]));
+    var firstTxt = String(v[4] || '').trim();
+    var close = closedRow ? '' : parseResTime_(v[5]);
+    var first = closedRow ? '' : (firstTxt ? parseResTime_(firstTxt) : '11:00');
+    var bufTxt = String(v[6] || '').trim();
+    var buf = bufTxt === '' ? 30 : parseInt(bufTxt, 10);
+    if (!problem) {
+      if (!s) problem = 'Season is blank';
+      else if (!dows.length) problem = 'Day "' + v[1] + '" is not a weekday name or "All"';
+      else if (!closedRow && !close) problem = 'Can\'t read Kitchen Closes "' + v[5] + '" (try 8 p.m. or 20:00)';
+      else if (!closedRow && !first) problem = 'Can\'t read First Reservation "' + firstTxt + '" (try 11 a.m. or 11:00)';
+      else if (!closedRow && (isNaN(buf) || buf < 0)) problem = 'Minutes before close "' + bufTxt + '" is not a number';
+    }
+    checks.push(problem ? 'NOT USED - ' + problem : 'OK' + note);
+    if (problem) continue;
+    for (var q = 0; q < dows.length; q++) {
+      rows.push({ idx: i, dow: dows[q], kind: kind, from: from, to: to, span: span, closed: closedRow,
+                  first: first, last: closedRow ? '' : shiftResTime_(close, -buf) });
+    }
+  }
+  if (writeChecks) {
+    try {
+      var changed = false;
+      for (var c = 0; c < checks.length; c++) { if (checks[c] !== String((vals[c + 1] || [])[7] || '')) { changed = true; break; } }
+      if (changed) {
+        sh.getRange(1, 8).setValue('Check').setFontWeight('bold');
+        sh.getRange(2, 8, checks.length, 1).setValues(checks.map(function(x) { return [x]; }));
+      }
+    } catch (checkErr) { Logger.log('Reservation Hours check not written: ' + checkErr); }
+  }
+  return rows;
+}
+
+function resRowCovers_(r, y, m, d) {
+  if (r.kind === 1) return true;
+  if (r.kind === 3) { var n = y * 10000 + m * 100 + d; return n >= r.from && n <= r.to; }
+  var md = m * 100 + d;
+  return r.from <= r.to ? (md >= r.from && md <= r.to) : (md >= r.from || md <= r.to);   // Nov 1 – Feb 29 wraps the new year
+}
+
+// The window for one date (m is 1-12): {closed:true} or {closed:false, first, last}.
+function resolveReservationWindow_(rows, y, m, d) {
+  var dow = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+  if (dow === 1) return { closed: true };   // closed Mondays club-wide
+  var best = null;
+  for (var i = 0; i < rows.length; i++) {
+    var r = rows[i];
+    if (r.dow !== dow || !resRowCovers_(r, y, m, d)) continue;
+    if (!best || r.kind > best.kind || (r.kind === best.kind && (r.span < best.span || (r.span === best.span && r.idx > best.idx)))) best = r;
+  }
+  if (!best) return { closed: false, first: RES_FALLBACK_.first, last: RES_FALLBACK_.last };
+  return best.closed ? { closed: true } : { closed: false, first: best.first, last: best.last };
+}
+
+// What the website and mobile app receive with get-conditions: a ready-made window for each of the
+// next RES_HORIZON_DAYS_ days ("closed" or "11:00-19:30"), so they only look a date up.
+function buildReservationRules_() {
+  var rows = getReservationRows_(true);
+  var tz = SpreadsheetApp.getActiveSpreadsheet().getSpreadsheetTimeZone();
+  var t = Utilities.formatDate(new Date(), tz, 'yyyy-MM-dd').split('-');
+  var base = Date.UTC(+t[0], +t[1] - 1, +t[2]);
+  var dates = {}, from = '', to = '';
+  for (var i = 0; i < RES_HORIZON_DAYS_; i++) {
+    var dt = new Date(base + i * 86400000);
+    var y = dt.getUTCFullYear(), m = dt.getUTCMonth() + 1, d = dt.getUTCDate();
+    var key = y + '-' + resPad2_(m) + '-' + resPad2_(d);
+    var w = resolveReservationWindow_(rows, y, m, d);
+    dates[key] = w.closed ? 'closed' : w.first + '-' + w.last;
+    if (i === 0) from = key;
+    to = key;
+  }
+  return { from: from, to: to, dates: dates };
 }
 
 // '' when the time is allowed, otherwise a message to show the guest.
 function checkReservationTime_(dateStr, timeRaw) {
-  var rules = getReservationRules_(getClubhouseHours_());
-  if (!rules) return '';
-  var dow = new Date(dateStr + 'T00:00:00').getDay();
-  var r = rules.days[dow];
-  if (!r) return '';
+  var p = String(dateStr).split('-');
+  var y = parseInt(p[0], 10), m = parseInt(p[1], 10), d = parseInt(p[2], 10);
+  if (!y || !m || !d) return '';
+  var w = resolveReservationWindow_(getReservationRows_(false), y, m, d);
+  var dow = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
   var dayName = RES_DAY_NAMES_[dow].charAt(0).toUpperCase() + RES_DAY_NAMES_[dow].slice(1);
-  if (r.closed) return 'The Westwood Grill is closed on ' + dayName + 's.';
+  if (w.closed) return 'The Westwood Grill is closed on ' + dayName + 's.';
   var t = parseResTime_(timeRaw);
   if (!t) return 'Please choose a valid reservation time.';
-  if (t < r.first || t > r.last) {
-    return 'The Westwood Grill takes reservations ' + fmtResTime_(r.first) + ' – ' + fmtResTime_(r.last) + ' on ' + dayName + 's.';
+  if (t < w.first || t > w.last) {
+    return 'The Westwood Grill takes reservations ' + fmtResTime_(w.first) + ' – ' + fmtResTime_(w.last) + ' on ' + dayName + 's.';
   }
   return '';
 }
