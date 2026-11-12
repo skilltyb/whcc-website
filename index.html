@@ -4082,7 +4082,7 @@ var WHCC_SYNC = {
       .catch(function(e){ if (cb) cb(null, e); });
   },
   fetchConditions: function(cb) {
-    fetch(WHCC_SCRIPT_URL + '?action=get-conditions')
+    fetch(WHCC_SCRIPT_URL + '?action=get-conditions', { cache: 'no-store' })
       .then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -4099,7 +4099,7 @@ var WHCC_SYNC = {
       .catch(function(e){ if (cb) cb(null, e); });
   },
   fetchMenus: function(cb) {
-    fetch(WHCC_SCRIPT_URL + '?action=get-menus')
+    fetch(WHCC_SCRIPT_URL + '?action=get-menus', { cache: 'no-store' })
       .then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
@@ -4296,7 +4296,7 @@ var WHCC_SYNC = {
       .catch(function(e){ if (cb) cb(null, e); });
   },
   fetchSiteContent: function(cb) {
-    fetch(WHCC_SCRIPT_URL + '?action=get-site-content')
+    fetch(WHCC_SCRIPT_URL + '?action=get-site-content', { cache: 'no-store' })
       .then(function(r){ return r.json(); })
       .then(function(d){ if (cb) cb(d, null); })
       .catch(function(e){ if (cb) cb(null, e); });
