@@ -755,48 +755,7 @@ function doGet(e) {
   }
 
   if (action === 'validate-login') {
-    var loginEmail = (e.parameter.email || '').toLowerCase().trim();
-    var loginPin   = (e.parameter.pin   || '').trim();
-    if (!loginEmail || !loginPin) return jsonResponse({ ok: false, error: 'missing fields' });
-    // Rate-limit per email (not globally) so brute-forcing one member's PIN
-    // doesn't also lock every other member out of logging in.
-    var loginRlKey = 'login_fail_' + loginEmail;
-    if (pinRateLimited_(loginRlKey)) return jsonResponse({ ok: false, error: 'Too many attempts. Try again later.', locked: true });
-    var authSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('App Users');
-    if (!authSheet) {
-      authSheet = SpreadsheetApp.getActiveSpreadsheet().insertSheet('App Users');
-      authSheet.appendRow(['Email','PIN','Role','Name','Title','Member Number','Membership','Handicap']);
-      authSheet.setFrozenRows(1);
-      return jsonResponse({ ok: false, error: 'no users configured' });
-    }
-    var authRows = authSheet.getDataRange().getValues();
-    var authHdr  = authRows[0];
-    var aEmail  = authHdr.indexOf('Email');
-    var aPin    = authHdr.indexOf('PIN');
-    var aRole   = authHdr.indexOf('Role');
-    var aName   = authHdr.indexOf('Name');
-    var aTitle  = authHdr.indexOf('Title');
-    var aMemNum = authHdr.indexOf('Member Number');
-    var aMem    = authHdr.indexOf('Membership');
-    var aHcp    = authHdr.indexOf('Handicap');
-    for (var ai = 1; ai < authRows.length; ai++) {
-      var row = authRows[ai];
-      if (String(row[aEmail]).toLowerCase().trim() === loginEmail && String(row[aPin]).trim() === loginPin) {
-        clearPinFailures_(loginRlKey);
-        var role = String(row[aRole] || 'member').toLowerCase();
-        var acct = { role: role, name: String(row[aName] || '') };
-        if (role === 'staff' || role === 'admin') {
-          acct.title = String(row[aTitle] || (role === 'admin' ? 'Admin' : 'Staff'));
-        } else {
-          acct.memberNumber = String(row[aMemNum] || '');
-          acct.membership   = String(row[aMem]    || '');
-          acct.handicap     = String(row[aHcp]    || '');
-        }
-        return jsonResponse({ ok: true, account: acct });
-      }
-    }
-    recordPinFailure_(loginRlKey);
-    return jsonResponse({ ok: false, error: 'invalid credentials' });
+    return validateLogin_(e.parameter.email, e.parameter.pin);
   }
 
   if (action === 'verify-member') {
@@ -969,6 +928,9 @@ function doGet(e) {
 
 function doPost(e) {
   var data = JSON.parse(e.postData.contents);
+  // Anyone can post these forms, and staff later read the text in the mobile app and the sheet, so
+  // angle brackets are dropped from every text field before anything is stored or emailed.
+  if (PUBLIC_FORM_ACTIONS_.indexOf(String(data.action || '')) !== -1) data = stripAngle_(data);
   var ss   = SpreadsheetApp.getActiveSpreadsheet();
 
   if (data.action === 'addContact') {
@@ -981,7 +943,7 @@ function doPost(e) {
     sh.appendRow(sanitizeRow_([data.submitted || data.timestamp || new Date().toISOString(), data.name, data.email, data.phone, data.subject, data.message, 'New']));
     var isMembershipInquiry = data.subject && data.subject.toLowerCase().indexOf('membership') >= 0;
     try {
-      if (data.email) {
+      if (data.email && guestMailOk_(data.email)) {
         if (isMembershipInquiry) {
           MailApp.sendEmail({
             to: data.email,
@@ -1301,7 +1263,7 @@ function doPost(e) {
       var dateStr    = data.date  || '';
       var timeStr    = data.timeDisplay || data.time24 || '';
       var partyNum   = String(data.party || 1);
-      if (guestEmail) {
+      if (guestEmail && guestMailOk_(guestEmail)) {
         MailApp.sendEmail({
           to: guestEmail,
           subject: 'Your dining reservation — Westwood Hills Country Club',
@@ -1392,7 +1354,7 @@ function doPost(e) {
       var rFirst = data.firstName || 'Guest';
       var rEvt   = data.eventName || 'the event';
       var rDate  = data.eventDate || '';
-      if (rEmail) {
+      if (rEmail && guestMailOk_(rEmail)) {
         MailApp.sendEmail({
           to: rEmail,
           subject: 'You\'re attending ' + rEvt + ' — Westwood Hills Country Club',
@@ -1626,9 +1588,8 @@ function doPost(e) {
     setLes('Submitted',      data.timestamp     || new Date().toISOString());
     lSh.appendRow(sanitizeRow_(lRow));
     try {
-      var proEmail = data.proEmail || '';
+      // Recipients are fixed here: a request must never be able to add its own address to the list
       var notifyAddrs = ['sctr1217@gmail.com', 'mfiehtner@westwoodhillscountryclub.com'];
-      if (proEmail) notifyAddrs.push(proEmail);
       var typeMap = { private:'Private (1-on-1)', playing:'Playing Lesson', group:'Group Clinic', junior:'Junior Program', other:'Other' };
       var skillMap = { beginner:'Beginner', intermediate:'Intermediate', low:'Low Handicap', junior:'Junior' };
       MailApp.sendEmail({
@@ -1644,7 +1605,7 @@ function doPost(e) {
           'Notes: '         + (data.notes || '-') + '\n\n' +
           'Submitted: ' + (data.timestamp || '')
       });
-      if (data.email) {
+      if (data.email && guestMailOk_(data.email)) {
         MailApp.sendEmail({
           to: data.email,
           subject: 'Lesson Request Received - Westwood Hills Country Club',
@@ -1839,6 +1800,10 @@ function doPost(e) {
   if (data.action === 'get-members') {
     if (!requireStaffAuth_(data)) return jsonResponse({ error: 'Not authorized.' });
     return membersResponse_();
+  }
+
+  if (data.action === 'validate-login') {
+    return validateLogin_(data.email, data.pin);
   }
 
   if (data.action === 'get-dining') {
@@ -2594,6 +2559,87 @@ function membersResponse_() {
   }
   return jsonResponse(gmOut);
 }
+
+// ── PUBLIC-FORM GUARDS ────────────────────────────────────────────────────────
+// Forms anyone can post. Their text has angle brackets removed (stripAngle_ in doPost).
+var PUBLIC_FORM_ACTIONS_ = ['addContact', 'lesson-request', 'save-lesson', 'dining-reservation',
+  'event-rsvp', 'save-league-reg', 'create-pin', ''];
+function stripAngle_(v) {
+  if (typeof v === 'string') return v.replace(/[<>]/g, '');
+  if (Array.isArray(v)) return v.map(stripAngle_);
+  if (v && typeof v === 'object') {
+    var o = {};
+    Object.keys(v).forEach(function(k) { o[k] = stripAngle_(v[k]); });
+    return o;
+  }
+  return v;
+}
+
+// The public forms email whatever address is typed into them, from the club's own account. Cap that so
+// the forms can't be used to mail-bomb someone, or to use up the daily mail quota that the members'
+// daily email depends on. The submission itself is still saved; only the auto-reply is skipped.
+var GUEST_MAIL_PER_ADDRESS_ = 3;   // per address, per 6 hours
+var GUEST_MAIL_ALL_ = 40;          // all addresses together, per 6 hours
+function guestMailOk_(email) {
+  var cache = CacheService.getScriptCache();
+  var addr = String(email || '').toLowerCase().trim();
+  if (!addr) return false;
+  var perKey = 'gm_to_' + Utilities.base64EncodeWebSafe(addr).slice(0, 100);
+  var perN = parseInt(cache.get(perKey) || '0', 10);
+  var allN = parseInt(cache.get('gm_all') || '0', 10);
+  if (perN >= GUEST_MAIL_PER_ADDRESS_ || allN >= GUEST_MAIL_ALL_) return false;
+  cache.put(perKey, String(perN + 1), 21600);
+  cache.put('gm_all', String(allN + 1), 21600);
+  return true;
+}
+
+// Sign-in check shared by the GET (older app builds) and POST (current app) forms of validate-login.
+// The POST form keeps the PIN out of the web address, where it would end up in history and logs.
+function validateLogin_(emailRaw, pinRaw) {
+  var loginEmail = String(emailRaw || '').toLowerCase().trim();
+  var loginPin   = String(pinRaw   || '').trim();
+  if (!loginEmail || !loginPin) return jsonResponse({ ok: false, error: 'missing fields' });
+  // Rate-limit per email (not globally) so brute-forcing one member's PIN
+  // doesn't also lock every other member out of logging in.
+  var loginRlKey = 'login_fail_' + loginEmail;
+  if (pinRateLimited_(loginRlKey)) return jsonResponse({ ok: false, error: 'Too many attempts. Try again later.', locked: true });
+  var authSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('App Users');
+  if (!authSheet) {
+    authSheet = SpreadsheetApp.getActiveSpreadsheet().insertSheet('App Users');
+    authSheet.appendRow(['Email','PIN','Role','Name','Title','Member Number','Membership','Handicap']);
+    authSheet.setFrozenRows(1);
+    return jsonResponse({ ok: false, error: 'no users configured' });
+  }
+  var authRows = authSheet.getDataRange().getValues();
+  var authHdr  = authRows[0];
+  var aEmail  = authHdr.indexOf('Email');
+  var aPin    = authHdr.indexOf('PIN');
+  var aRole   = authHdr.indexOf('Role');
+  var aName   = authHdr.indexOf('Name');
+  var aTitle  = authHdr.indexOf('Title');
+  var aMemNum = authHdr.indexOf('Member Number');
+  var aMem    = authHdr.indexOf('Membership');
+  var aHcp    = authHdr.indexOf('Handicap');
+  for (var ai = 1; ai < authRows.length; ai++) {
+    var row = authRows[ai];
+    if (String(row[aEmail]).toLowerCase().trim() === loginEmail && String(row[aPin]).trim() === loginPin) {
+      clearPinFailures_(loginRlKey);
+      var role = String(row[aRole] || 'member').toLowerCase();
+      var acct = { role: role, name: String(row[aName] || '') };
+      if (role === 'staff' || role === 'admin') {
+        acct.title = String(row[aTitle] || (role === 'admin' ? 'Admin' : 'Staff'));
+      } else {
+        acct.memberNumber = String(row[aMemNum] || '');
+        acct.membership   = String(row[aMem]    || '');
+        acct.handicap     = String(row[aHcp]    || '');
+      }
+      return jsonResponse({ ok: true, account: acct });
+    }
+  }
+  recordPinFailure_(loginRlKey);
+  return jsonResponse({ ok: false, error: 'invalid credentials' });
+}
+// ── end public-form guards
 
 // ── CONTENT VERSION (website and mobile app refresh) ──────────────────────────
 // Every admin save (menus, site content, daily conditions) stamps the "Updated" cell in row 2 of its tab.
