@@ -383,11 +383,9 @@ function diningDateStr_(v) {
   return String(v || '').slice(0, 10);
 }
 
+// The Westwood Grill is the club's only dining venue, whatever an older row or client calls it.
 function venueDisplay_(v) {
-  var key = String(v || '').toLowerCase();
-  if (key === 'grille' || key === 'grill') return 'Westwood Grill';
-  if (key === 'hoovers') return "Hoover's Bar & Grille";
-  return v ? String(v) : 'Dining Room';
+  return 'Westwood Grill';
 }
 
 // Fires when staff move a reservation to Confirmed — the initial request
@@ -1217,10 +1215,10 @@ function doPost(e) {
       if ((resVenue === 'grille' || resVenue === 'grill') && resDow === 1) {
         return jsonResponse({ ok: false, error: 'The Westwood Grill is closed on Mondays.' });
       }
-      // Hoover's no longer operates — reject outright rather than validating
-      // against its old schedule, in case a stale cached client still sends it.
-      if (resVenue === 'hoovers') {
-        return jsonResponse({ ok: false, error: "Hoover's is no longer open. Please reserve at the Westwood Grill." });
+      // The Westwood Grill is the only venue: reject any other venue name outright rather than
+      // validating it against a schedule, in case a stale cached client still sends one.
+      if (resVenue && resVenue !== 'grille' && resVenue !== 'grill') {
+        return jsonResponse({ ok: false, error: 'That venue is no longer available. Please reserve at the Westwood Grill.' });
       }
       // Reservation hours come from the "Reservation Hours" sheet (see getReservationRows_).
       // Staff-entered bookings (portal / mobile staff) are exempt, like the Monday rule above.
