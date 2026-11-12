@@ -755,7 +755,8 @@ function doGet(e) {
   }
 
   if (action === 'validate-login') {
-    return validateLogin_(e.parameter.email, e.parameter.pin);
+    // Retired: a PIN must not travel in a web address (history, logs). The app signs in with a POST — see doPost.
+    return jsonResponse({ ok: false, error: 'Please update the app to sign in.' });
   }
 
   if (action === 'verify-member') {
@@ -2593,8 +2594,8 @@ function guestMailOk_(email) {
   return true;
 }
 
-// Sign-in check shared by the GET (older app builds) and POST (current app) forms of validate-login.
-// The POST form keeps the PIN out of the web address, where it would end up in history and logs.
+// Sign-in check for the validate-login POST. (The GET form is retired: it put the PIN in the web address,
+// where it ends up in history and logs.)
 function validateLogin_(emailRaw, pinRaw) {
   var loginEmail = String(emailRaw || '').toLowerCase().trim();
   var loginPin   = String(pinRaw   || '').trim();
