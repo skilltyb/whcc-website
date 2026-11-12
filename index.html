@@ -3979,15 +3979,23 @@ var WHCC_SYNC = {
   },
 
   // Fetch ALL registrations from Sheet → rebuild localStorage + counts cache
+  // Full registration rows (email, phone, GHIN…) are staff-only: a signed-in staff session asks with a
+  // POST that carries its login. Everyone else gets the public roster (names and events only).
   fetchAll: function(cb) {
     try {
-      fetch(WHCC_SCRIPT_URL + '?action=all')
+      var staffAuth = (typeof _staffSessionPin !== 'undefined' && _staffSessionPin) || (typeof _adminEmail !== 'undefined' && _adminEmail);
+      var req = staffAuth
+        ? fetch(WHCC_SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, cache: 'no-store',
+            body: JSON.stringify({ action: 'all', staffPin: _staffSessionPin, staffEmail: _adminEmail, staffUserPin: _adminPin }) })
+        : fetch(WHCC_SCRIPT_URL + '?action=all', { cache: 'no-store' });
+      req
         .then(function(r) {
           if (!r.ok) throw new Error('HTTP ' + r.status);
           return r.json();
         })
         .then(function(rows) {
-          if (!Array.isArray(rows)) { if (cb) cb(null, 'bad data'); return; }
+          // A refused staff login comes back as {error}: keep the cached rows rather than overwrite them
+          if (!Array.isArray(rows)) { if (cb) cb(null, (rows && rows.error) || 'bad data'); return; }
           // Capture actual column names from first row for debugging
           if (rows.length) window._lastSheetColumns = Object.keys(rows[0]);
 

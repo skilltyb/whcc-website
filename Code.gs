@@ -562,7 +562,9 @@ function doGet(e) {
   var action = e.parameter.action || '';
 
   // Registrations for the website and mobile app also come from the per-event tabs (see regsWithEventTabs_).
-  if (action === 'counts' || action === 'all' || action === 'get-regs') return regsWithEventTabs_(action);
+  // A plain GET is public (the URL is in the website's source), so all / get-regs return only the redacted
+  // roster; the full rows (email, phone, GHIN…) are POST-only and need a staff login — see doPost.
+  if (action === 'counts' || action === 'all' || action === 'get-regs') return regsWithEventTabs_(action, false);
   if (action === 'content-version') return jsonResponse({ v: contentVersion_() });
 
   if (action === 'counts') {
@@ -913,35 +915,9 @@ function doGet(e) {
   }
 
   if (action === 'get-members') {
-    // Mobile member directory — display-shaped objects, PINs never included
-    var gmSh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Members');
-    if (!gmSh || gmSh.getLastRow() < 2) return jsonResponse([]);
-    var gmVals = gmSh.getDataRange().getValues();
-    var gmHdr  = gmVals[0];
-    var gmNum  = gmHdr.indexOf('Member Number');
-    var gmFn   = gmHdr.indexOf('First Name');
-    var gmLn   = gmHdr.indexOf('Last Name');
-    var gmEm   = gmHdr.indexOf('Email');
-    var gmMem  = gmHdr.indexOf('Membership');
-    var gmHcp  = gmHdr.indexOf('Handicap');
-    var gmPh   = gmHdr.indexOf('Phone');
-    var gmOut  = [];
-    for (var gmi = 1; gmi < gmVals.length; gmi++) {
-      var gmName = ((gmFn >= 0 ? String(gmVals[gmi][gmFn] || '') : '') + ' ' +
-                    (gmLn >= 0 ? String(gmVals[gmi][gmLn] || '') : '')).trim();
-      var gmN = gmNum >= 0 ? String(gmVals[gmi][gmNum] || '') : '';
-      var gmE = gmEm  >= 0 ? String(gmVals[gmi][gmEm]  || '') : '';
-      if (!gmName && !gmN && !gmE) continue;
-      gmOut.push({
-        name:       gmName,
-        number:     gmN,
-        email:      gmE,
-        phone:      gmPh  >= 0 ? String(gmVals[gmi][gmPh]  || '') : '',
-        membership: gmMem >= 0 ? String(gmVals[gmi][gmMem] || '') : '',
-        handicap:   gmHcp >= 0 ? String(gmVals[gmi][gmHcp] || '') : ''
-      });
-    }
-    return jsonResponse(gmOut);
+    // Whole-membership contact details: staff only (the mobile app asks with a POST, see doPost).
+    if (!requireStaffAuth_(e.parameter)) return jsonResponse({ error: 'Not authorized.' });
+    return membersResponse_();
   }
 
   if (action === 'cancel-dining') {
@@ -1853,6 +1829,18 @@ function doPost(e) {
     return jsonResponse(gtsResult);
   }
 
+  // Full registration rows (email, phone, GHIN…) and the member directory are staff-only. A plain GET
+  // gets just the redacted roster (see doGet).
+  if (data.action === 'all' || data.action === 'get-regs') {
+    if (!requireStaffAuth_(data)) return jsonResponse({ error: 'Not authorized.' });
+    return regsWithEventTabs_(data.action, true);
+  }
+
+  if (data.action === 'get-members') {
+    if (!requireStaffAuth_(data)) return jsonResponse({ error: 'Not authorized.' });
+    return membersResponse_();
+  }
+
   if (data.action === 'get-dining') {
     if (!requireStaffAuth_(data)) return jsonResponse({ error: 'Not authorized.' });
     var gdSheet = getOrCreateDiningSheet();
@@ -2512,7 +2500,7 @@ var EVENT_TABS_ = ['St. Pattys', 'Ladies Opening', 'Ozark Inv', 'Spring 2-Man', 
   'Masters Dinner', 'Couples', 'Ladies Inv', 'Mules Inv', 'MGA Draft', 'Mens Opening', '4th of July',
   'Member-Guest', 'Club Champ', 'Ladies Champ', 'Fall 2-Man', 'Senior', 'Closing Day', 'Halloween'];
 
-function regsWithEventTabs_(action) {
+function regsWithEventTabs_(action, full) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var main = getRegSheet();
   var sheets = [main];
@@ -2549,15 +2537,62 @@ function regsWithEventTabs_(action) {
     });
     return jsonResponse(counts);
   }
+  var rows = out;
   if (action === 'get-regs') {
     // Mobile app variant of 'all' — includes the column aliases the app reads
-    return jsonResponse(out.filter(function(r) { return r['First Name'] || r['Last Name']; }).map(function(r) {
+    rows = out.filter(function(r) { return r['First Name'] || r['Last Name']; }).map(function(r) {
       if (r['Partner/Team'] === undefined) r['Partner/Team'] = r['Partner'] || '';
       if (r['GHIN'] === undefined) r['GHIN'] = r['GHIN Handicap'] || '';
       return r;
-    }));
+    });
   }
-  return jsonResponse(out);
+  // Without a staff login (a plain GET), return only what a public roster shows
+  if (!full) rows = rows.map(redactRegRow_);
+  return jsonResponse(rows);
+}
+
+// A registration as the public may see it: who is signed up for which event, and nothing that
+// identifies or contacts them (email, phone, member number, GHIN, notes, source). Allow-list, so a
+// column added to the sheet later stays private until it is added here on purpose.
+var PUBLIC_REG_FIELDS_ = ['ID', 'Event', 'Event Date/Time', 'First Name', 'Last Name',
+  'Partner', 'Partners', 'Partner/Team', 'Players', 'Registered At'];
+function redactRegRow_(r) {
+  var o = {};
+  PUBLIC_REG_FIELDS_.forEach(function(k) { if (r[k] !== undefined) o[k] = r[k]; });
+  return o;
+}
+
+// Member directory (name, number, email, phone, membership, handicap) for the mobile app's staff
+// "Member Lookup". Staff only — it holds the whole membership's contact details.
+function membersResponse_() {
+  var gmSh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Members');
+  if (!gmSh || gmSh.getLastRow() < 2) return jsonResponse([]);
+  var gmVals = gmSh.getDataRange().getValues();
+  var gmHdr  = gmVals[0];
+  var gmNum  = gmHdr.indexOf('Member Number');
+  var gmFn   = gmHdr.indexOf('First Name');
+  var gmLn   = gmHdr.indexOf('Last Name');
+  var gmEm   = gmHdr.indexOf('Email');
+  var gmMem  = gmHdr.indexOf('Membership');
+  var gmHcp  = gmHdr.indexOf('Handicap');
+  var gmPh   = gmHdr.indexOf('Phone');
+  var gmOut  = [];
+  for (var gmi = 1; gmi < gmVals.length; gmi++) {
+    var gmName = ((gmFn >= 0 ? String(gmVals[gmi][gmFn] || '') : '') + ' ' +
+                  (gmLn >= 0 ? String(gmVals[gmi][gmLn] || '') : '')).trim();
+    var gmN = gmNum >= 0 ? String(gmVals[gmi][gmNum] || '') : '';
+    var gmE = gmEm  >= 0 ? String(gmVals[gmi][gmEm]  || '') : '';
+    if (!gmName && !gmN && !gmE) continue;
+    gmOut.push({
+      name:       gmName,
+      number:     gmN,
+      email:      gmE,
+      phone:      gmPh  >= 0 ? String(gmVals[gmi][gmPh]  || '') : '',
+      membership: gmMem >= 0 ? String(gmVals[gmi][gmMem] || '') : '',
+      handicap:   gmHcp >= 0 ? String(gmVals[gmi][gmHcp] || '') : ''
+    });
+  }
+  return jsonResponse(gmOut);
 }
 
 // ── CONTENT VERSION (website and mobile app refresh) ──────────────────────────
