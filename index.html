@@ -1424,7 +1424,7 @@ button[data-admin-only]:disabled{opacity:.4;cursor:not-allowed}
 
   <!-- -- THIS WEEK'S SPECIALS: one row; each card appears only when it has a name and was saved since Monday 12 a.m. -- -->
   <div id="dining-specials" class="specials-band" style="display:none;">
-    <p class="eyebrow">This Week's Specials</p>
+    <p class="eyebrow" role="heading" aria-level="2">This Week's Specials</p>
     <div class="specials-row">
       <div id="dining-weekly-special" class="special-card" style="display:none;">
         <p class="sc-label">Weekly Lunch Special</p>
@@ -1501,7 +1501,7 @@ button[data-admin-only]:disabled{opacity:.4;cursor:not-allowed}
         <div class="hrf-row">
           <div class="hrf-group" style="position:relative;">
             <label class="hrf-label">Date</label>
-            <div class="hrf-date-display" id="res-date-display" onclick="toggleDatePicker()">
+            <div class="hrf-date-display" id="res-date-display" role="button" tabindex="0" aria-haspopup="true" aria-controls="res-cal" onclick="toggleDatePicker()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleDatePicker();}">
               <span id="res-date-text">Choose a date</span>
               <span class="hrf-date-arrow">▾</span>
             </div>
@@ -1518,7 +1518,7 @@ button[data-admin-only]:disabled{opacity:.4;cursor:not-allowed}
               <div class="hrf-cal-grid" id="cal-grid"></div>
             </div>
           </div>
-          <div class="hrf-group"><label class="hrf-label">Time</label>
+          <div class="hrf-group"><label class="hrf-label" for="res-time">Time</label>
             <select class="hrf-select" id="res-time">
               <option value="">Select a time</option>
               <optgroup label="Lunch" id="res-time-grille-lunch">
@@ -2006,7 +2006,7 @@ button[data-admin-only]:disabled{opacity:.4;cursor:not-allowed}
         <div class="cb"><div class="cb-lbl">Golf Shop</div><div class="cb-val" data-wh-contact="phone_golf">(573) 785-8211</div><div class="cb-sub">Tee times, lessons, green fees</div></div>
         <div class="cb"><div class="cb-lbl">Clubhouse &amp; Events</div><div class="cb-val" data-wh-contact="phone_main">(573) 785-5253</div><div class="cb-sub">Reservations, membership, events</div></div>
         <div class="cb"><div class="cb-lbl">Email</div><div class="cb-val" style="font-size:17px;" data-wh-contact="email"><a href="mailto:info@westwoodhillscountryclub.com" style="color:inherit;text-decoration:none;">info@westwoodhillscountryclub.com</a></div></div>
-        <div class="cb"><div class="cb-lbl">Office Hours</div><div class="cb-sub" style="font-size:14px;color:var(--text);"><span data-wh-contact="hours_weekday">Mon – Fri: 8 a.m. – 5 p.m.</span><br><span data-wh-contact="hours_saturday">Saturday: 8 a.m. – 2 p.m.</span><br><span data-wh-contact="hours_sunday">Sunday: Closed (Golf Shop open)</span></div></div>
+        <div class="cb"><div class="cb-lbl">Pro Shop Hours</div><div class="cb-sub" style="font-size:14px;color:var(--text);"><span id="about-hours-1">Tuesday – Sunday: posted daily on the home page</span><br><span id="about-hours-2">Monday: Closed</span></div></div>
       </div>
       <div class="fade-up d2">
         <div class="cf-g"><label class="cf-l" for="cf-name">Full Name</label><input class="cf-i" id="cf-name" type="text" placeholder="Your name" /></div>
@@ -2891,9 +2891,6 @@ button[data-admin-only]:disabled{opacity:.4;cursor:not-allowed}
             <div class="hrf-group"><label class="hrf-label" for="cms-ct-phone-golf">Golf Shop Phone</label><input class="hrf-input" id="cms-ct-phone-golf" /></div>
             <div class="hrf-group"><label class="hrf-label" for="cms-ct-email">Email Address</label><input class="hrf-input" id="cms-ct-email" /></div>
             <div class="hrf-group"><label class="hrf-label" for="cms-ct-address">Mailing Address</label><input class="hrf-input" id="cms-ct-address" /></div>
-            <div class="hrf-group"><label class="hrf-label" for="cms-ct-hours-wd">Office Hours — Weekdays</label><input class="hrf-input" id="cms-ct-hours-wd" /></div>
-            <div class="hrf-group"><label class="hrf-label" for="cms-ct-hours-sa">Office Hours — Saturday</label><input class="hrf-input" id="cms-ct-hours-sa" /></div>
-            <div class="hrf-group"><label class="hrf-label" for="cms-ct-hours-su">Office Hours — Sunday</label><input class="hrf-input" id="cms-ct-hours-su" /></div>
             <div class="hrf-group"><label class="hrf-label" for="cms-ct-grill-hours">Westwood Grill Hours</label><input class="hrf-input" id="cms-ct-grill-hours" /></div>
           </div>
           <button class="btn-p" style="margin-top:20px;width:100%;max-width:520px;" onclick="cmsContactSave()">Save Contact Info</button>
@@ -3325,9 +3322,6 @@ var WH_SITE_DEFAULTS = {
     phone_main:       '(573) 785-5253',
     email:            'info@westwoodhillscountryclub.com',
     address:          '1 Birdie Ln, Poplar Bluff, Missouri 63901',
-    hours_weekday:    'Mon\u2013Fri: 8 a.m. – 5 p.m.',
-    hours_saturday:   'Saturday: 8 a.m. – 2 p.m.',
-    hours_sunday:     'Sunday: Closed (Golf Shop open)',
     grill_hours:      'Casual \u00b7 Tue\u2013Sun'
   },
   pool: {
@@ -3520,6 +3514,7 @@ function applySiteContent(sc) {
            + '<div class="pf-sub">' + h.time + (h.note ? ' \u00b7 ' + h.note : '') + '</div></div>';
     }).join('');
   }
+  whApplyDailyHours(window._whDaily);
   // About stats
   var statsData = sc.about_stats || WH_SITE_DEFAULTS.about_stats;
   document.querySelectorAll('[data-wh-stat]').forEach(function(el) {
@@ -5456,6 +5451,33 @@ var duDefaults = {
   clubhouseHours: '', poolHours: ''
 };
 
+// The hours on the About and Aquatics pages follow the Daily Update (the same values as the home page's
+// Today's Conditions), so there is one place to change them.
+function whApplyDailyHours(d) {
+  d = d || {};
+  window._whDaily = d;
+  var ps = String(d.proShop || '').trim();
+  var l1 = document.getElementById('about-hours-1'), l2 = document.getElementById('about-hours-2');
+  if (l1 && l2) {
+    if (!ps || ps === '—') l1.textContent = 'Tuesday – Sunday: posted daily on the home page';
+    else if (/closed/i.test(ps)) l1.textContent = 'Pro Shop: ' + ps;
+    else l1.textContent = 'Tuesday – Sunday: ' + ps;
+    l2.textContent = 'Monday: Closed';
+  }
+  var pool = String(d.poolHours || '').trim();
+  var grid = document.getElementById('pool-hours');
+  if (pool && pool !== '—' && grid) {
+    var items = grid.querySelectorAll('.pf-item');
+    for (var i = 0; i < items.length; i++) {
+      var nm = items[i].querySelector('.pf-name'), sub = items[i].querySelector('.pf-sub');
+      if (nm && sub && /sunday/i.test(nm.textContent)) {
+        sub.textContent = (/closed/i.test(pool) || /^open/i.test(pool)) ? pool : 'Open ' + pool;
+        break;
+      }
+    }
+  }
+}
+
 async function loadDailyUpdate() {
   var data = Object.assign({}, duDefaults);
   try {
@@ -5481,6 +5503,7 @@ async function loadDailyUpdate() {
     document.getElementById('du-pro-shop').textContent      = remote.proShop      || '—';
     document.getElementById('du-clubhouse-hours').textContent = remote.clubhouseHours || '—';
     document.getElementById('du-pool-hours').textContent      = remote.poolHours      || '—';
+    whApplyDailyHours(remote);
     var noticeEl = document.getElementById('du-notice');
     if (remote.notice && remote.notice.trim()) { noticeEl.textContent = remote.notice; noticeEl.style.display = 'block'; }
     else { noticeEl.style.display = 'none'; }
@@ -5505,6 +5528,7 @@ async function loadDailyUpdate() {
   document.getElementById('du-pro-shop').textContent = data.proShop || '—';
   document.getElementById('du-clubhouse-hours').textContent = data.clubhouseHours || '—';
   document.getElementById('du-pool-hours').textContent = data.poolHours || '—';
+  whApplyDailyHours(data);
 
   var noticeEl = document.getElementById('du-notice');
   if (data.notice && data.notice.trim()) {
@@ -8369,9 +8393,6 @@ function cmsContactLoad() {
   document.getElementById('cms-ct-phone-golf').value    = ct.phone_golf      || '';
   document.getElementById('cms-ct-email').value         = ct.email           || '';
   document.getElementById('cms-ct-address').value       = ct.address         || '';
-  document.getElementById('cms-ct-hours-wd').value      = ct.hours_weekday   || '';
-  document.getElementById('cms-ct-hours-sa').value      = ct.hours_saturday  || '';
-  document.getElementById('cms-ct-hours-su').value      = ct.hours_sunday    || '';
   document.getElementById('cms-ct-grill-hours').value   = ct.grill_hours     || '';
 }
 
@@ -8382,9 +8403,6 @@ function cmsContactSave() {
     phone_golf:     document.getElementById('cms-ct-phone-golf').value.trim(),
     email:          document.getElementById('cms-ct-email').value.trim(),
     address:        document.getElementById('cms-ct-address').value.trim(),
-    hours_weekday:  document.getElementById('cms-ct-hours-wd').value.trim(),
-    hours_saturday: document.getElementById('cms-ct-hours-sa').value.trim(),
-    hours_sunday:   document.getElementById('cms-ct-hours-su').value.trim(),
     grill_hours:    document.getElementById('cms-ct-grill-hours').value.trim()
   };
   cmsSave(sc, 'cms-contact-status');
