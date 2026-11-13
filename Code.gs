@@ -472,48 +472,57 @@ function escapeHtml_(v) {
 // itself only ever grants view-level access). Anything that writes data
 // must use requireAdminAuth_ instead — see below.
 function requireStaffAuth_(data) {
+  // Guessing protection: a wrong portal PIN or a wrong email + PIN is counted, and after PIN_MAX_FAILURES
+  // wrong guesses the credential is refused for PIN_LOCKOUT_SECONDS, even if the next guess is right. Calls that
+  // carry no credentials at all are not counted. (The sign-in screen, validate-login, shares the per-email counter.)
   var stored = opsGet_('staff_pin');
-  if (stored !== null && stored !== '' && String(data.staffPin || '') === String(stored)) return true;
+  var portalPin = String(data.staffPin || '');
+  if (portalPin !== '' && stored !== null && stored !== '' && !pinRateLimited_('staffpin_fail')) {
+    if (portalPin === String(stored)) return true;
+    recordPinFailure_('staffpin_fail');
+  }
 
   var email = String(data.staffEmail || '').toLowerCase().trim();
   var pin   = String(data.staffUserPin || '').trim();
   if (!email || !pin) return false;
+  var failKey = 'login_fail_' + email;
+  if (pinRateLimited_(failKey)) return false;
+  var role = appUserRole_(email, pin);
+  if (role === null) { recordPinFailure_(failKey); return false; }
+  return role === 'staff' || role === 'both' || role === 'admin';
+}
+
+// Role of the App Users row that matches this email + PIN, or null when nothing matches.
+function appUserRole_(email, pin) {
   var authSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('App Users');
-  if (!authSheet) return false;
+  if (!authSheet) return null;
   var rows = authSheet.getDataRange().getValues();
   var hdrs = rows[0];
   var emailCol = hdrs.indexOf('Email'), pinCol = hdrs.indexOf('PIN'), roleCol = hdrs.indexOf('Role');
-  if (emailCol < 0 || pinCol < 0 || roleCol < 0) return false;
+  if (emailCol < 0 || pinCol < 0 || roleCol < 0) return null;
   for (var i = 1; i < rows.length; i++) {
     if (String(rows[i][emailCol]).toLowerCase().trim() === email && String(rows[i][pinCol]).trim() === pin) {
-      var role = String(rows[i][roleCol] || '').toLowerCase();
-      return role === 'staff' || role === 'both' || role === 'admin';
+      return String(rows[i][roleCol] || '').toLowerCase();
     }
   }
-  return false;
+  return null;
 }
 
 // Gate for every WRITE action (saves, deletes, sends). Unlike requireStaffAuth_,
 // this does NOT accept the shared portal PIN — that PIN is now a view-only
 // credential shared by every staff member, so it can no longer prove someone
 // is specifically an admin. Only an individual App Users row with role
-// 'admin', proven via that person's own email + PIN, is accepted.
+// 'admin', proven via that person's own email + PIN, is accepted. Wrong guesses are
+// counted and locked out exactly as in requireStaffAuth_.
 function requireAdminAuth_(data) {
   var email = String(data.staffEmail || '').toLowerCase().trim();
   var pin   = String(data.staffUserPin || '').trim();
   if (!email || !pin) return false;
-  var authSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('App Users');
-  if (!authSheet) return false;
-  var rows = authSheet.getDataRange().getValues();
-  var hdrs = rows[0];
-  var emailCol = hdrs.indexOf('Email'), pinCol = hdrs.indexOf('PIN'), roleCol = hdrs.indexOf('Role');
-  if (emailCol < 0 || pinCol < 0 || roleCol < 0) return false;
-  for (var i = 1; i < rows.length; i++) {
-    if (String(rows[i][emailCol]).toLowerCase().trim() === email && String(rows[i][pinCol]).trim() === pin) {
-      return String(rows[i][roleCol] || '').toLowerCase() === 'admin';
-    }
-  }
-  return false;
+  var failKey = 'login_fail_' + email;
+  if (pinRateLimited_(failKey)) return false;
+  var role = appUserRole_(email, pin);
+  if (role === null) { recordPinFailure_(failKey); return false; }
+  return role === 'admin';
 }
 
 // Confirms a Drive file lives inside the WHCC Photos folder tree (root or
