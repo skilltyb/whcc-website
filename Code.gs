@@ -1001,7 +1001,7 @@ function doPost(e) {
         }
       }
       MailApp.sendEmail({
-        to: 'sctr1217@gmail.com,mfiehtner@westwoodhillscountryclub.com',
+        to: 'sctr1217@gmail.com',
         subject: 'New Contact Inquiry: ' + data.subject + ' - ' + data.name,
         body: 'New contact form submission:\n\n' +
           'Name: '    + data.name    + '\n' +
@@ -1298,7 +1298,7 @@ function doPost(e) {
         });
       }
       MailApp.sendEmail({
-        to: 'sctr1217@gmail.com,mfiehtner@westwoodhillscountryclub.com',
+        to: 'sctr1217@gmail.com',
         subject: 'New Dining Reservation: ' + guestFirst + ' ' + (data.lastName || '') + ' — ' + dateStr + ' ' + timeStr,
         body: 'New dining reservation request:\n\n' +
           'Name: '   + guestFirst + ' ' + (data.lastName || '') + '\n' +
@@ -1597,7 +1597,7 @@ function doPost(e) {
     lSh.appendRow(sanitizeRow_(lRow));
     try {
       // Recipients are fixed here: a request must never be able to add its own address to the list
-      var notifyAddrs = ['sctr1217@gmail.com', 'mfiehtner@westwoodhillscountryclub.com'];
+      var notifyAddrs = ['sctr1217@gmail.com'];
       var typeMap = { private:'Private (1-on-1)', playing:'Playing Lesson', group:'Group Clinic', junior:'Junior Program', other:'Other' };
       var skillMap = { beginner:'Beginner', intermediate:'Intermediate', low:'Low Handicap', junior:'Junior' };
       MailApp.sendEmail({
